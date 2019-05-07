@@ -1,0 +1,195 @@
+@import "./variables.scss";
+
+.center {
+  text-align: center;
+}
+
+.el-button {
+  color: $textColor_gray;
+  border-color: $textColor_gray;
+  border-radius: 2px;
+  height: 50px;
+  &:hover {
+
+  }
+  &.white {
+    color: #fff;
+    border-color: #fff;
+  }
+  &.el-button--primary {
+    color: #fff;
+    background-color: $primaryColor;
+    &:hover {
+      background-color: $primaryColor;
+      opacity: 0.8;
+    }
+  }
+  &.el-button--medium {
+    height: 44px;
+    font-size: 16px;
+  }
+  &.el-button--mini {
+    height: 32px;
+  }
+  &.lg {
+    height: 60px;
+  }
+  &.fs18 {
+    font-size: 18px;
+  }
+  &.long {
+    width: 100%;
+  }
+  &.transparent {
+    background-color: transparent;
+  }
+}
+
+.el-dropdown {
+  .el-button {
+
+  }
+}
+
+.el-icon-back.r {
+  transform: rotateY(180deg);
+}
+
+.box {
+  width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: $boxBgColor;
+}
+
+.left-wrap {
+  background-color: #FEFEFE;
+  border: 1px solid #7A8CA1;
+  border-radius: 4px;
+}
+
+.right-wrap {
+  background-color: #FFF;
+  border: 1px solid #A4B0BF;
+}
+.border-box {
+
+}
+
+.mini-slide {
+  .el-slider__runway {
+    height: 2px;
+    margin: 25px 0;
+    .el-slider__bar {
+      height: 2px;
+      background-color: $primaryColor;
+    }
+    .el-slider__button-wrapper {
+      top: -17px;
+      .el-slider__button {
+        width: 8px;
+        height: 8px;
+        background-color: $primaryColor;
+        border-color: $primaryColor;
+      }
+    }
+  }
+}
+
+.border-box {
+  padding: 30px;
+  border: 1px solid #A4B0BF;
+  background-color: #fff;
+}
+
+.radio-item {
+  .el-radio__input {
+    &.is-checked .el-radio__inner {
+      background-color: transparent;
+      border-color: $primaryColor;
+      &:after {
+        width: 8px;
+        height: 8px;
+        background-color: $primaryColor;
+      }
+    }
+    .el-radio__inner {
+      width: 20px;
+      height: 20px;
+      vertical-align: middle;
+      border-color: #6E8299;
+    }
+  }
+  .el-radio__label {
+    font-size: 18px;
+    color: #47495A;
+    font-weight: 400;
+    vertical-align: middle;
+  }
+}
+
+.dbc-input {
+  height: 36px;
+  line-height: 36px;
+  border-width: 0 0 1px 0;
+  outline: none;
+  border-color: #47495A;
+  font-size: 18px;
+  &:focus {
+    border-color: $primaryColor;
+  }
+}
+
+.money-input{
+  padding-bottom: 16px;
+  border-width: 0 0 1px 0;
+  outline: none;
+  border-color: rgba(71,73,90,0.6);
+  font-size: 40px;
+  line-height: 40px;
+  color: #6E8299;
+  &:focus {
+    border-color: $primaryColor;
+  }
+}
+
+.tb-theme {
+  width: 100%;
+  table-layout: fixed;
+  border-spacing: 0;
+  border: 1px solid #979797;
+  thead {
+    th {
+      padding: 0;
+      height: 48px;
+      background-color: #F6F9FC;
+      text-align: center;
+      color: #666;
+    }
+  }
+  tbody {
+    td {
+      padding: 0;
+      height: 44px;
+      text-align: center;
+      border-top: 1px solid #E1E6EC;
+      color: #666;
+    }
+  }
+}
+
+.trade-bottom-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  .confirm-btn {
+    width: 150px;
+  }
+  .service {
+    line-height: 28px;
+    color: rgba(71,73,90,0.65);
+    a {
+      color: $primaryColor
+    }
+  }
+}
