@@ -1,36 +1,64 @@
 <template>
   <div class="navi">
     <ul class="btn-list">
-      <li>
-        <el-button class="lg naviBtn active" v-on:click="pushTo('/gpu/myWallet')">
-          <i class="iconfont iconwallet"></i>
-          <span>我的钱包</span>
+      <li v-for="item in menus">
+        <el-button class="lg naviBtn" :class="{active: curNaviIndex === item.index}" v-on:click="pushTo(item)">
+          <i class="iconfont" :class="item.iconClass"></i>
+          <span>{{item.title}}</span>
         </el-button>
       </li>
-      <li>
-        <el-button class="lg naviBtn" v-on:click="pushTo('/gpu/list')">
+      <!--<li>
+        <el-button class="lg naviBtn" :class="{active: curNaviIndex === '/gpu/myMachineUnlock'}" v-on:click="pushTo('/gpu/myMachineUnlock')">
           <i class="iconfont iconmachine"></i>
           <span>我的机器</span>
         </el-button>
       </li>
       <li>
-        <el-button class="lg naviBtn" v-on:click="pushTo('/gpu/machine')">
+        <el-button class="lg naviBtn" :class="{active: curNaviIndex === '/gpu/list'}" v-on:click="pushTo('/gpu/list')">
           <i class="iconfont iconlist"></i>
           <span>机器列表</span>
         </el-button>
-      </li>
+      </li>-->
     </ul>
   </div>
 </template>
 
 <script>
   export default {
-    name: "index",
+    name: "curNaviIndex",
     created () {
+      const curRoute = this.$route.matched.find(item => item.path === this.$route.path)
+      this.curNaviIndex = curRoute.meta.menuIndex
+    },
+    data() {
+      return {
+        curNaviIndex: -1,
+        menus: [
+          {
+            title: this.$t('gpu.myWallet'),
+            to: '/gpu/myWallet',
+            index: 0,
+            iconClass: 'iconwallet'
+          },
+          {
+            title: this.$t('gpu.myMachine'),
+            to: '/gpu/myMachine',
+            index: 1,
+            iconClass: 'iconmachine'
+          },
+          {
+            title: this.$t('gpu.machineList'),
+            to: '/gpu/list',
+            index: 2,
+            iconClass: 'iconlist'
+          }
+        ]
+      }
     },
     methods: {
-      pushTo(to) {
-        this.$router.push(to)
+      pushTo(item) {
+        this.$router.push(item.to)
+        this.curNaviIndex = item.index
       }
     }
   }

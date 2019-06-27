@@ -1,17 +1,12 @@
 <template>
   <div class="my-wallet">
+    <h3></h3>
     <div class="wallet-btns">
-      <el-button type="primary" v-on:click="openCreateWallet('/createWallet')">创建钱包账号</el-button>
-      <el-button type="primary" v-on:click="openWallet">打开钱包账号</el-button>
+      <el-button type="primary" v-on:click="openCreateWallet('/createWallet')">{{$t('gpu.createWallet')}}</el-button>
+      <el-button type="primary" v-on:click="openWallet">{{$t('gpu.openWallet')}}</el-button>
     </div>
     <div class="center-box">
-      <el-button plain>Open or create a wallet to 租用机</el-button>
-    </div>
-    <div class="center-box">
-      <el-button class="btn lg" plain>
-        Transfer Details<br>
-        Open or create a wallet to view wallet transfer details.
-      </el-button>
+      <el-button plain>{{$t('gpu.rentMachine')}}</el-button>
     </div>
   </div>
 </template>
@@ -34,7 +29,7 @@
       },
       openWallet() {
         this.getAccountState().then(data => {
-          this.$router.push('/gpu/myWalletUnlock')
+          this.$router.push('/gpu/myMachine_unlock')
         }).catch(err => {
           this.$router.push('/openWallet')
         })

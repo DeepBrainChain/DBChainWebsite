@@ -4,16 +4,11 @@
       <el-col class="flex" :md="12">
         <div class="content">
           <div class="text">
-            <p>
-              {{$t('home.intr_4')}}
-            </p>
-            <p>
-              {{$t('home.intr_5')}}
-            </p>
+            {{$t('home.intr_1')}}
           </div>
           <div class="btn-wrap mt60">
             <el-button class="lg fs18 long" type="primary" @click="pushToWallet">
-              {{$t('home.start')}}<i class="el-icon-back r"></i>
+              {{$t('home.startMiner')}}<i class="el-icon-back r"></i>
             </el-button>
           </div>
           <div class="btn-wrap flex mt40">
@@ -83,10 +78,7 @@
             <img src="~@/assets/imgs/gpu_img_1.jpg" alt="">
             <div class="text">
               <p>
-                {{$t('home.intr_2')}}
-              </p>
-              <p>
-                {{$t('home.intr_3')}}
+                {{$t('home.intr_7')}}
               </p>
             </div>
           </div>
@@ -96,7 +88,7 @@
             <img src="~@/assets/imgs/gpu_img_2.jpg" alt="">
             <div class="text">
               <p>
-                {{$t('home.intr_6')}}
+                {{$t('home.intr_8')}}
               </p>
             </div>
           </div>

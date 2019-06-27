@@ -1,5 +1,5 @@
 <template>
-  <div class="home wrap1200">
+  <div class="home wrap1440">
     <div class="tab">
       <a :class="{active: tabIndex === 0}" href="javascript:" @click="pushTo('home')">DBCTrade</a>
       <a :class="{active: tabIndex === 1}" href="javascript:" @click="pushTo('buy_1')">购买DBC</a>
@@ -10,7 +10,7 @@
 
 <script>
   export default {
-    name: "home",
+    name: "tradeHome",
     data() {
       return {
 

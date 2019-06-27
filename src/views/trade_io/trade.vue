@@ -4,39 +4,34 @@
       <h3>DBCTrade智能合约交易记录：</h3>
       <p>合约交易地址：<a href="javascript:">www.baxxxxxxx</a></p>
     </div>
-    <div class="tb-wrap">
-      <table class="tb-theme">
-        <thead>
-          <tr>
-            <th>transfer</th>
-            <th>from</th>
-            <th>to</th>
-            <th>value</th>
-            <th>assets</th>
-          </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td>
-            sdafd34gsghd34567865
-          </td>
-          <td>sdafd34gsghd34567865复制 5</td>
-          <td>sdafd34gsghd3456786</td>
-          <td>$ 3456.00</td>
-          <td>DBC</td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
+    <trade-list class="tb-wrap"></trade-list>
   </div>
 </template>
 
 <script>
-  import Head from "../../components/head/index";
+  // import Head from "../../components/head/index";
+  import {mapActions, mapState} from 'vuex'
+  import TradeList from "../../components/wallet/tradeList";
 
   export default {
     name: "trade",
-    components: {Head}
+    created () {
+      this.getExchangeRate()
+      this.getAccountState().then(data => {
+        this.symbol = data.symbol
+        this.getTransferList()
+      }).catch(err => {
+        this.$router.push('/openWallet')
+      })
+    },
+    methods: {
+      ...mapActions([
+        'getAccountState',
+        'getTransferList',
+        'getExchangeRate'
+      ]),
+    },
+    components: {TradeList}
   }
 </script>
 

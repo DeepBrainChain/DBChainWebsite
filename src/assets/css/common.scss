@@ -1,4 +1,8 @@
-@import "./variables";
+//@import "./variables";
+.wrap1440 {
+  width: 1440px;
+  margin: 0 auto;
+}
 .wrap1200 {
   width: 1200px;
   margin: 0 auto;
@@ -20,17 +24,63 @@
 .pb120 {
   padding-bottom: 120px;
 }
+.ml10 {
+  margin-left: 10px!important;
+}
+.ml15 {
+  margin-left: 15px;
+}
+.pt40 {
+  padding-top: 40px!important;
+}
+.pb20 {
+  padding-bottom: 20px!important;
+}
+.pl30 {
+  padding-left: 30px!important;
+}
+.pr20 {
+  padding-right: 20px!important;
+}
+.pr30 {
+  padding-right: 30px!important;
+}
+.pl75{
+  padding-left: 75px;
+}
+.pl100 {
+  padding-left: 100px;
+}
+.pr15 {
+  padding-right: 15px!important;
+}
+.mt30 {
+  margin-top: 30px;
+}
+.ml20 {
+  margin-left: 20px;
+}
+.mr60 {
+  margin-right: 60px!important;
+}
 
 .mt60 {
   margin-top: 60px;
 }
 
+.mt20 {
+  margin-top: 20px;
+}
 .mt40 {
   margin-top: 40px;
 }
 
 .mt100 {
   margin-top: 100px !important;
+}
+
+.mb100 {
+  margin-bottom: 100px !important;
 }
 
 .bg-white {

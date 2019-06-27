@@ -10,7 +10,6 @@
         </el-main>
       </el-container>
     </div>
-
   </div>
 </template>
 

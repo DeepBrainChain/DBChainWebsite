@@ -1,7 +1,7 @@
 //setup.js
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
-import en from '../locales/EN'
+import en from './locales/EN'
 import axios from 'axios'
 import {
   DatePicker,
@@ -16,9 +16,16 @@ import {
   Main,
   Slider,
   Radio,
-  Dialog
+  Dialog,
+  Card,
+  Upload,
+  RadioGroup,
+  Message, Alert, Rate, MessageBox
 } from 'element-ui'
 import ElementLocale from 'element-ui/lib/locale'
+import {TextField} from "muse-ui"
+import 'muse-ui/lib/styles/base.less'
+import 'muse-ui/lib/styles/theme.less'
 
 Vue.use(VueI18n)
 export const i18n = new VueI18n({
@@ -29,7 +36,6 @@ export const i18n = new VueI18n({
   }// 设置语言环境信息
 })
 
-// Vue.use(Button)
 Vue.use(DatePicker)
 Vue.use(Dropdown)
 Vue.use(DropdownMenu)
@@ -42,7 +48,19 @@ Vue.use(Aside)
 Vue.use(Main)
 Vue.use(Slider)
 Vue.use(Radio)
+Vue.use(RadioGroup)
 Vue.use(Dialog)
+Vue.use(Card)
+Vue.use(Upload)
+Vue.use(Alert)
+Vue.use(Rate)
+Vue.component(Message)
+Vue.component(MessageBox)
+
+Vue.use(TextField)
+
+Vue.prototype.$message = Message
+
 ElementLocale.i18n((key, value) => i18n.t(key, value))
 
 const loadedLanguages = ['en'] // 我们的预装默认语言

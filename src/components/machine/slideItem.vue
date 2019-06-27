@@ -1,6 +1,6 @@
 <template>
   <div class="slide-item">
-    <h3>国家</h3>
+    <h3>{{title}}</h3>
     <div class="slide-wrap">
       <el-slider
         :disabled="disabled"
@@ -10,7 +10,9 @@
         v-on:change="slideChange"
       ></el-slider>
     </div>
-    <span class="remark">1h 51min</span>
+    <span class="remark">
+      <slot></slot>
+    </span>
   </div>
 </template>
 
@@ -18,6 +20,7 @@
   export default {
     name: "slideItem",
     props: {
+      title: String,
       value: {
         type: Number,
         default: 0
@@ -44,8 +47,9 @@
   @import "~@/assets/css/variables.scss";
   .slide-item {
     text-align: left;
-    width: 155px;
+    width: 168px;
     h3 {
+      font-weight: 400;
       margin-top: 0;
       margin-bottom: 0;
       font-size: 16px;
