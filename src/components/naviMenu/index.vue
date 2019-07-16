@@ -26,33 +26,17 @@
 <script>
   export default {
     name: "curNaviIndex",
+    props: {
+      menus: Array
+    },
     created () {
       const curRoute = this.$route.matched.find(item => item.path === this.$route.path)
       this.curNaviIndex = curRoute.meta.menuIndex
     },
     data() {
+      // const isMiner = this.$route.path.indexOf('miner') !== -1
       return {
         curNaviIndex: -1,
-        menus: [
-          {
-            title: this.$t('gpu.myWallet'),
-            to: '/gpu/myWallet',
-            index: 0,
-            iconClass: 'iconwallet'
-          },
-          {
-            title: this.$t('gpu.myMachine'),
-            to: '/gpu/myMachine',
-            index: 1,
-            iconClass: 'iconmachine'
-          },
-          {
-            title: this.$t('gpu.machineList'),
-            to: '/gpu/list',
-            index: 2,
-            iconClass: 'iconlist'
-          }
-        ]
       }
     },
     methods: {

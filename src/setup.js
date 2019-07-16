@@ -20,7 +20,8 @@ import {
   Card,
   Upload,
   RadioGroup,
-  Message, Alert, Rate, MessageBox
+  Message, Alert, Rate,
+  Select, Option, Input
 } from 'element-ui'
 import ElementLocale from 'element-ui/lib/locale'
 import {TextField} from "muse-ui"
@@ -54,8 +55,10 @@ Vue.use(Card)
 Vue.use(Upload)
 Vue.use(Alert)
 Vue.use(Rate)
+Vue.use(Select)
+Vue.use(Option)
+Vue.use(Input)
 Vue.component(Message)
-Vue.component(MessageBox)
 
 Vue.use(TextField)
 

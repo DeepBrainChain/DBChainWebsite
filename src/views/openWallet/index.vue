@@ -44,7 +44,7 @@
           <el-button class="w200" type="primary" @click="continueEncryptedKey">continue</el-button>
         </div>
         <div v-if="canInputPassword" class="btn-wrap">
-          <el-button class="w200" type="primary" @click="unlockWalletFromEncryptedKey">unlock</el-button>
+          <el-button class="w200" type="primary" @click="unlockWalletFromEncryptedKey" :loading="isLoading">unlock</el-button>
         </div>
       </div>
 
@@ -54,7 +54,7 @@
           <ps-input v-model="privateKey" placeholder="Paste or type private key."></ps-input>
         </div>
         <div class="btn-wrap">
-          <el-button class="w200" type="primary" @click="unlockWalletFromPrivateKey">unlock</el-button>
+          <el-button class="w200" type="primary" @click="unlockWalletFromPrivateKey" :loading="isLoading">unlock</el-button>
         </div>
       </div>
 
@@ -87,7 +87,8 @@
         keyFile: undefined,
         disableBtn: false,
         errText: '',
-        canInputPassword: ''
+        canInputPassword: '',
+        isLoading: false
       }
     },
     methods: {
@@ -96,6 +97,7 @@
         'createAccountFromEncryptedKey',
       ]),
       unlockWalletFromEncryptedKey() {
+        this.isLoading = true
         if (this.password.length > 0) {
           this.createAccountFromEncryptedKey({
             encryptedKey: this.encryptedKey,
@@ -104,14 +106,19 @@
             this.pushToMyWalletUnlock()
           }).catch(() => {
             this.errText = 'then key or password is wrong~!'
+          }).finally(() => {
+            this.isLoading = false
           })
         }
       },
       unlockWalletFromPrivateKey() {
+        this.isLoading = true
         this.createAccountFromPrivateKey(this.privateKey).then(() => {
           this.pushToMyWalletUnlock()
         }).catch(err => {
           this.errText = this.$t('msg.wallet_4')
+        }).finally(() => {
+          this.isLoading = false
         })
       },
       continueEncryptedKey() {

@@ -107,7 +107,7 @@
     },
     methods: {
       pushToWallet() {
-        this.$router.push('/gpu/myWallet')
+        this.$router.push('/miner/myWallet')
       }
     }
   }

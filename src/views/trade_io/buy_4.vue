@@ -1,26 +1,12 @@
 <template>
   <div class="border-box">
-    <step :step-index="3"></step>
+    <step :step-index="4"></step>
     <div class="main">
-      <h3 class="title">请选择支付方式：</h3>
-      <div class="pay-chs">
-        <!--<div class="item" :class="{active:open_paypal}" @click="open_paypal = true">
-          <div class="logo-wrap">
-            <i class="iconfont iconpaypal" v-if="open_paypal === false"></i>
-            <i class="iconfont iconpaypalcolor" v-else></i>
-          </div>
-        </div>-->
-        <!--<div class="item" :class="{active:open_wx}" @click="open_wx = true">
-          <div class="logo-wrap">
-            <i class="iconfont iconweixin"></i><span class="wx center">微信支付</span>
-          </div>
-        </div>-->
-        <div class="item" :class="{active:open_alipay}" @click="alipay">
-          <div class="logo-wrap">
-            <i class="iconfont iconzhifubao"></i><span class="alipay center">支付宝</span>
-          </div>
-        </div>
+      <div class="title">
+        <h3>支付已完成，请查看转账合约记录</h3>
       </div>
+      <trade-list class="tb-wrap"></trade-list>
+
       <div class="trade-bottom-wrap">
         <div></div>
         <span class="service">客服支持： <a href="mailto:support@dbctra.io">support@dbctra.io</a> ,客服会在24小时内回复</span>
@@ -31,6 +17,7 @@
 
 <script>
   import Step from '@/components/trade_io/stepNavi'
+  import TradeList from "../../components/wallet/tradeList";
 
   export default {
     name: "buy_3",
@@ -42,23 +29,11 @@
       }
     },
     methods:{
-      alipay() {
-        window.open(`http://39.108.49.162:8009/dbc/alipay?price=${this.$route.query.rmb}&dbcAddress="${this.$route.query.address}"&dbcCount=${this.$route.query.dbc}`)
-        this.$confirm('请在新打开的页面完成支付，支付完成前请不要关闭窗口。', '支付确认', {
-          confirmButtonText: '支付完成',
-          cancelButtonText: '更换支付方式',
-        }).then(() => {
-          this.$router.push('/trade/buy_4')
-        }).catch(() => {
 
-        })
-      },
-      clickPay() {
-
-      }
     },
     components: {
-      Step
+      Step,
+      TradeList
     }
 
   }
@@ -74,10 +49,26 @@
     padding: 30px;
   }
   .title {
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 20px;
-    color: #47495A;
+    display: flex;
+    justify-content: space-between;
+    h3 {
+      margin: 0;
+      line-height: 20px;
+      font-size: 20px;
+      color: #47495A;
+    }
+    p {
+      margin: 0;
+      color: #666;
+      font-size: 16px;
+      a {
+        color: $primaryColor;
+      }
+    }
+  }
+
+  .tb-wrap {
+    margin-top: 30px;
   }
 
   .trade-bottom-wrap {

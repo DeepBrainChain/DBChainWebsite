@@ -17,25 +17,25 @@
   import Navi from '@/components/naviMenu'
 
   export default {
-    name: "gpu",
+    name: "miner",
     data() {
       return {
         menus: [
           {
             title: this.$t('gpu.myWallet'),
-            to:  '/gpu/myWallet',
+            to:  '/miner/myWallet',
             index: 0,
             iconClass: 'iconwallet'
           },
           {
             title: this.$t('gpu.myMachine'),
-            to: '/gpu/myMachine',
+            to: '/miner/myMachine',
             index: 1,
             iconClass: 'iconmachine'
           },
           {
             title: this.$t('gpu.machineList'),
-            to: '/gpu/list',
+            to: '/miner/list',
             index: 2,
             iconClass: 'iconlist'
           }

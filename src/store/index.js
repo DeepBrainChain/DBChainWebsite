@@ -54,7 +54,7 @@ export default new Vuex.Store({
   actions: {
     getExchangeRate({commit, state}) {
       axios.get('https://api.coinmarketcap.com/v1/ticker/deepbrain-chain/').then(res => {
-        console.log(res.data[0])
+        // console.log(res.data[0])
         commit('setdbcToUS', res.data[0].price_usd)
       }).catch(err => {
 

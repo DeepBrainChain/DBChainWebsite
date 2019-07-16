@@ -1,0 +1,96 @@
+<template>
+  <div class="bg-box wrap1440 mb100">
+    <div class="border-box">
+      <div class="title">
+        <h3>{{$t('gpu.mcTradeInfo')}}</h3>
+        <div class="flex right vCenter">
+          <p>xxx人参与评分，评分：</p>
+          <el-rate></el-rate>
+        </div>
+      </div>
+      <table class="tb-theme hAuto">
+        <thead>
+        <tr>
+          <th>{{$t('gpu.mcDetails.th_1')}}</th>
+          <th>{{$t('gpu.mcDetails.th_2')}}</th>
+          <th>{{$t('gpu.mcDetails.th_3')}}</th>
+          <th>{{$t('gpu.mcDetails.th_4')}}</th>
+          <th>{{$t('gpu.mcDetails.th_5')}}</th>
+          <th>{{$t('gpu.mcDetails.th_6')}}</th>
+          <th width="300">{{$t('gpu.mcDetails.th_7')}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>xxxxx</td>
+          <td>34585</td>
+          <td>是</td>
+          <td>3231</td>
+          <td>24d 34h</td>
+          <td>24d 34h</td>
+          <td>
+            <div class="flex right vCenter">
+              <el-rate v-model="rateValue"></el-rate>
+              <span class="ml10">7.7{{$t('scores')}}</span>
+            </div>
+            <div class="rate-wrap">
+              <label>{{$t('gpu.userRate')}}：</label>
+              <span>胜多负少的稿和老地方市领导反馈是的水电费胜多负少放大速度快黑寡妇</span>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</template>
+
+<script>
+  export default {
+    name: "machineDetail",
+    data() {
+      return {
+        rateValue: 0
+      }
+    }
+  }
+</script>
+
+<style lang="scss" scoped>
+  .rate-wrap {
+    label {
+      vertical-align: top;
+    }
+
+    span {
+      display: inline-block;
+      width: 200px;
+      vertical-align: top;
+      text-align: left;
+    }
+  }
+
+  .title {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+
+    h3 {
+      margin: 0;
+      line-height: 20px;
+      font-size: 20px;
+      color: #47495A;
+    }
+
+    p {
+      margin: 0;
+      color: #666;
+      font-size: 16px;
+
+      a {
+        color: $primaryColor;
+      }
+    }
+  }
+
+</style>

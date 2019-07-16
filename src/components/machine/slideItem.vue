@@ -7,7 +7,11 @@
         :show-tooltip="false"
         class="mini-slide"
         v-model="curVal"
-        v-on:change="slideChange"
+        @input="slideInput"
+        @change="slideChange"
+        :step="step"
+        :min="min"
+        :max="max"
       ></el-slider>
     </div>
     <span class="remark">
@@ -21,6 +25,18 @@
     name: "slideItem",
     props: {
       title: String,
+      min: {
+        type: Number,
+        default: 0
+      },
+      max: {
+        type: Number,
+        default: 0
+      },
+      step: {
+        type: Number,
+        default: 10
+      },
       value: {
         type: Number,
         default: 0
@@ -30,14 +46,20 @@
         default: false
       }
     },
+    create() {
+      this.curVal = this.value
+    },
     data() {
       return {
-        curVal: 50
+        curVal: this.value
       }
     },
     methods: {
-      slideChange (value) {
+      slideInput(value) {
         this.$emit('input', value)
+      },
+      slideChange(value) {
+        this.$emit('change', value)
       }
     }
   }
@@ -45,9 +67,11 @@
 
 <style lang="scss" scoped>
   @import "~@/assets/css/variables.scss";
+
   .slide-item {
     text-align: left;
     width: 168px;
+
     h3 {
       font-weight: 400;
       margin-top: 0;
@@ -55,10 +79,12 @@
       font-size: 16px;
       color: #666;
     }
+
     .slide-wrap {
       width: 100px;
     }
   }
+
   .remark {
     font-size: 12px;
     color: $textColor_gray;

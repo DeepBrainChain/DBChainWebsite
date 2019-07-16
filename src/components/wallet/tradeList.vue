@@ -7,13 +7,13 @@
         <th>{{$t('from')}}</th>
         <th>{{$t('to')}}</th>
         <th width="100">{{$t('value')}}</th>
-        <th width="100">{{$t('asset')}}</th>
+<!--        <th width="100">{{$t('asset')}}</th>-->
       </tr>
       </thead>
       <tbody>
       <tr v-for="(item,index) in transferList" :key="index">
         <td class="cPrimaryColor">
-          <a class="cPrimaryColor" :title="item.txHash" :href="`https://neotracker.io/tx/${item.txHash}`">{{item.txHash}}</a>
+          <a class="cPrimaryColor" :title="item.txHash" :href="`https://neotracker.io/tx/${item.txHash}`" target="_blank">{{item.txHash}}</a>
         </td>
         <td>
           <span v-if="item.fromAddress === address">{{item.fromAddress}}</span>
@@ -23,8 +23,8 @@
           <span v-if="item.toAddress === address">{{item.toAddress}}</span>
           <a v-else class="cPrimaryColor" :href="`https://neotracker.io/address/${item.toAddress}`">{{item.toAddress}}</a>
         </td>
-        <td>{{$thousandsNum((item.amount/100000000).toFixed(3))}}</td>
-        <td>DBC</td>
+        <td>{{$thousandsNum((item.amount/100000000).toFixed(4))}}</td>
+<!--        <td>DBC</td>-->
       </tr>
       </tbody>
     </table>

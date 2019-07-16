@@ -74,6 +74,57 @@ export default new Router({
       ]
     },
     {
+      path: '/miner',
+      name: 'miner',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('./views/miner'),
+      redirect: '/miner/myWallet',
+      children: [
+        {
+          meta: {
+            menuIndex: 0
+          },
+          path: 'myWallet',
+          component: () => import('./views/miner/myWallet')
+        },
+        {
+          meta: {
+            menuIndex: 0
+          },
+          path: 'myWalletUnlock',
+          component: () => import('./views/miner/myWallet_unlock')
+        },
+        {
+          meta: {
+            menuIndex: 2
+          },
+          path: 'list',
+          component: () => import('./views/miner/list')
+        },
+        {
+          meta: {
+            menuIndex: 1
+          },
+          path: 'myMachine',
+          component: () => import('./views/miner/myMachine')
+        },
+        {
+          meta: {
+            menuIndex: 1
+          },
+          path: 'myMachineUnlock',
+          component: () => import('./views/miner/myMachine_unlock')
+        }
+      ]
+    },
+    {
+      path: '/machineDetail',
+      name: 'machineDetail',
+      component: () => import('./views/machineDetail')
+    },
+    {
       name: 'createWallet',
       path: '/createWallet',
       component: () => import('./views/createWallet/index.vue')
@@ -104,6 +155,10 @@ export default new Router({
         {
           path: 'buy_3',
           component: () => import('./views/trade_io/buy_3')
+        },
+        {
+          path: 'buy_4',
+          component: () => import('./views/trade_io/buy_4')
         }
       ]
     },
@@ -116,6 +171,11 @@ export default new Router({
       name: 'minerHome',
       path: '/minerHome',
       component: () => import('./views/minerHome')
+    },
+    {
+      name: 'miner_addMc',
+      path: '/addMc',
+      component: () => import('./views/miner/addMachine')
     }
   ]
 })

@@ -6,13 +6,13 @@
       <el-button type="primary" v-on:click="openWallet">{{$t('gpu.openWallet')}}</el-button>
     </div>
     <div class="center-box">
-      <el-button plain>{{$t('gpu.rentMachine')}}</el-button>
+      <el-button plain>{{$t('miner.rentMachine')}}</el-button>
     </div>
   </div>
 </template>
 
 <script>
-  import {mapActions, mapState} from 'vuex'
+  import {mapActions} from 'vuex'
   import {getAccount} from '@/utlis'
 
   export default {
@@ -27,7 +27,7 @@
       ]),
       initData() {
         if(getAccount()) {
-          this.$router.push('/gpu/myMachineUnlock')
+          this.$router.push('/miner/myMachineUnlock')
         }
       },
       openCreateWallet() {
@@ -35,7 +35,7 @@
       },
       openWallet() {
         this.getAccountState().then(data => {
-          this.$router.push('/gpu/myMachine_unlock')
+          this.$router.push('/miner/myMachine_unlock')
         }).catch(err => {
           this.$router.push('/openWallet')
         })

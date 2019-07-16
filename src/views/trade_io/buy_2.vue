@@ -1,33 +1,33 @@
 <template>
   <div class="buy border-box">
-    <step></step>
+    <step :step-index="2"></step>
     <div class="main">
       <div>
         <label>
           请输入收取DBC的钱包地址：
-          <input class="dbc-input" type="text">
+          <input class="dbc-input" type="text" v-model="address">
         </label>
       </div>
       <p class="info">如果没有DBC钱包，可以到下面任一支持dbc的钱包创建地址</p>
       <div class="other-wallet">
-        <a class="wallet" href="javascript:">DBChain</a>
-        <a class="wallet" href="javascript:">DBChain</a>
-        <a class="wallet" href="javascript:">DBChain</a>
-        <a class="wallet" href="javascript:">DBChain</a>
+        <a class="wallet" href="/createWallet" target="_blank">DBCHAIN</a>
+        <a class="wallet" href="https://neotracker.io" target="_blank">NEOTRACKER.IO</a>
+        <a class="wallet" href="https://otcgo.cn/download/" target="_blank">SEA钱包</a>
+        <a class="wallet" href="http://www.mathwallet.org/cn/" target="_blank">麦子钱包</a>
       </div>
       <div class="trade-bottom-wrap">
-        <el-button class="confirm-btn" type="primary" size="medium" @click="pushTo('buy_3')">继续</el-button>
+        <el-button class="confirm-btn" type="primary" size="medium" @click="showDlg">继续</el-button>
         <span class="service">客服支持： <a href="mailto:support@dbctra.io">support@dbctra.io</a> ,客服会在24小时内回复</span>
       </div>
     </div>
     <el-dialog
       :visible.sync="isOpen"
       title="重要提示："
-    width="560px">
+      width="560px">
       <p class="dlg-content">DBCTrade平台是通过智能合约进行dbc转账，支付完成后， 智能合约会自动将购买的dbc打入到你指定的DBC地址.</p>
       <p class="dlg-content">您可以查询合约转账地址：<a href="javascript:">https://www.gateio.co/trade/DBC</a></p>
       <div class="center">
-        <el-button class="dlg-btn" type="primary" size="medium">继续</el-button>
+        <el-button class="dlg-btn" type="primary" size="medium" @click="next">继续</el-button>
       </div>
     </el-dialog>
   </div>
@@ -35,20 +35,40 @@
 
 <script>
   import Step from '@/components/trade_io/stepNavi'
+  import {isAddress} from '@/utlis'
+
 
   export default {
     name: "buy_1",
     data() {
       return {
-        isOpen: true
+        isOpen: false,
+        address: ''
       }
     },
     components: {
       Step
     },
     methods: {
-      pushTo(to) {
-        this.$router.push(`/trade/${to}`)
+      showDlg() {
+        if (isAddress(this.address)) {
+          this.isOpen = true
+        } else {
+          this.$message({
+            showClose: true,
+            message: '请输入正确的地址',
+            type: 'error'
+          })
+        }
+      },
+      next() {
+        this.$router.push({
+          path: '/trade/buy_3',
+          query: {
+            address: this.address,
+            ...this.$route.query
+          }
+        })
       }
     }
   }
@@ -68,10 +88,15 @@
   label {
     font-size: 20px;
     color: #47495A;
+
     .dbc-input {
       width: 780px;
       border-bottom-width: 2px;
       border-bottom-color: rgba(71, 73, 90, 0.6);
+
+      &:focus {
+        border-color: $primaryColor;
+      }
     }
   }
 
@@ -85,6 +110,7 @@
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+
     .wallet {
       display: block;
       box-sizing: border-box;
@@ -97,6 +123,7 @@
       color: #7A8CA1;
       font-size: 30px;
       text-align: center;
+
       &:hover {
         color: $primaryColor;
         border-color: $primaryColor;
@@ -112,6 +139,7 @@
     line-height: 28px;
     color: rgba(71, 73, 90, 0.8);
   }
+
   .dlg-btn {
     width: 150px;
   }

@@ -2,14 +2,21 @@
   <div>
     <div class="title">
       <span>{{$t('gpu.myMachineTitle')}}：{{$t('gpu.pcs')}} <i class="iconfont iconwenhao ml15"></i></span>
-      <div v-if="true" class="bind">
-        <el-button size="small" plain @click="openDlgMail(true)">{{$t('gpu.bindMail')}}</el-button>
-        <span class="bindInfo ml10" v-html="$t('gpu.bindMailInfo')"></span>
+      <div>
+        <div v-if="true" class="bind">
+          <el-button size="small" plain @click="openDlgMail(true)">{{$t('gpu.bindMail')}}</el-button>
+          <span class="bindInfo ml10" v-html="$t('gpu.bindMailInfo')"></span>
+        </div>
+        <div v-else class="binding">
+          <span class="bindingInfo">绑定的邮箱：xxxxx@xxxxx</span>
+          <el-button class="ml10" size="mini" plain @click="openDlgMail(false)">{{$t('gpu.modifyMail')}}</el-button>
+        </div>
+        <div class="bind mt20">
+          <el-button size="small" plain @click="pushAddMachine()">{{$t('miner.rent')}}</el-button>
+          <span class="bindInfo ml10" v-html="$t('miner.mc_msg_1')"></span>
+        </div>
       </div>
-      <div v-else class="binding">
-        <span class="bindingInfo">绑定的邮箱：xxxxx@xxxxx</span>
-        <el-button class="ml10" size="mini" plain @click="openDlgMail(false)">{{$t('gpu.modifyMail')}}</el-button>
-      </div>
+
     </div>
     <div class="border-content">
       <div class="tools-head">
@@ -135,10 +142,10 @@
           <span class="tools-title small">{{$t('gpu.machineLoginInfo')}}：ssh -p 20049 root@116.85.24.172，{{$t('password')}}：xxxxx</span>
         </div>
         <div class="r-wrap">
-          <el-button style="width: 86px" class="tool-btn blue" size="mini" @click="dlgReload_open = true">{{$t('gpu.reload')}}</el-button>
-          <el-button class="tool-btn blue" size="mini" @click="dlgHD_open = true">{{$t('gpu.increaseHD')}}</el-button>
-          <el-button class="tool-btn blue" style="width: 86px" size="mini" @click="dlgUnsubscribe_open=true">{{$t('unsubscribe')}}</el-button>
-          <el-button class="tool-btn blue" size="mini" style="width: 86px" @click="dlgRate_open=true">{{$t('gpu.rate')}}</el-button>
+<!--          <el-button style="width: 86px" class="tool-btn blue" size="mini" @click="dlgReload_open = true">{{$t('gpu.reload')}}</el-button>-->
+<!--          <el-button class="tool-btn blue" size="mini" @click="dlgHD_open = true">{{$t('gpu.increaseHD')}}</el-button>-->
+<!--          <el-button class="tool-btn blue" style="width: 86px" size="mini" @click="dlgUnsubscribe_open=true">{{$t('unsubscribe')}}</el-button>-->
+          <el-button class="tool-btn blue" size="mini" style="width: 86px" @click="pushAddMachine(true)">{{$t('reEdit')}}</el-button>
         </div>
       </div>
     </div>
@@ -150,7 +157,6 @@
     <dlg-mail :open.sync="dlgMail_open" :is-new-mail="isNewMail"></dlg-mail>
 <!--    Unsubscribe-->
     <dlg-unsubscribe :open.sync="dlgUnsubscribe_open"></dlg-unsubscribe>
-<!--    rate-->
     <dlg-rate :open.sync="dlgRate_open"></dlg-rate>
   </div>
 </template>
@@ -176,6 +182,14 @@
       }
     },
     methods:{
+      pushAddMachine(isEditor) {
+        this.$router.push({
+          path:'/addMc',
+          query: {
+            isEditor
+          }
+        })
+      },
       pushDetail() {
         this.$router.push('/machineDetail')
       },

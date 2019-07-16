@@ -1,14 +1,22 @@
 <template>
   <div class="drop-item">
     <h3>{{title}}</h3>
-    <el-dropdown trigger="click" @command="select">
+    <!--<el-dropdown trigger="click" @command="select">
       <el-button class="dropBtn" size="mini" plain>
         <span class="drop-title">{{selected.name}}</span><i class="el-icon-caret-bottom"></i>
       </el-button>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item v-for="(item,index) in dropList" :command="item.value" :key="index">{{item.name}}</el-dropdown-item>
       </el-dropdown-menu>
-    </el-dropdown>
+    </el-dropdown>-->
+    <el-select class="dropBtn" size="small" v-model="selectedVal" filterable placeholder="请选择" @change="select">
+      <el-option
+        v-for="item in dropList"
+        :key="item.value"
+        :label="item.name"
+        :value="item.value">
+      </el-option>
+    </el-select>
   </div>
 </template>
 
@@ -17,33 +25,23 @@
     name: "dropItem",
     props: {
       title: String,
+      value: [Number,String],
       dropList: {
         type: Array,
         default: () => [
-          {
-            name: '中国',
-            value: 1
-          },
-          {
-            name: '美国',
-            value: 2
-          },
-          {
-            name: '俄罗斯',
-            value: 3
-          },
+          {name: '无数据', value: -1},
         ]
       }
     },
     data() {
       return{
-        selected: this.dropList[0]
+        selectedVal: this.value
       }
     },
     methods: {
-      select(command) {
-        this.selected = this.dropList.find(item => item.value === command)
-        this.$emit('selected', this.selected)
+      select() {
+        this.$emit('selected', this.selectedVal)
+        this.$emit('input', this.selectedVal)
       }
     }
   }
@@ -66,7 +64,7 @@
       font-size: 14px;
     }
     .dropBtn {
-      width: 100px;
+      width: 120px;
     }
   }
 </style>

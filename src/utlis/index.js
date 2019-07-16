@@ -1,9 +1,10 @@
-import Neon, {rpc, wallet, nep5, api} from "@cityofzion/neon-js";
+import Neon, {rpc, wallet, nep5, api, sc, u} from "@cityofzion/neon-js";
 import cookie from "js-cookie";
 
 const netType = 'https://seed12.ngd.network:10331'
 // const netType = 'http://seed2.aphelion-neo.com:10332'
 const DBCHash = 'b951ecbbc5fe37a9c280a76cb0ce0014827294cf'  // DBC assetId
+const DBC_NAME = 'DEEPBRAIN COIN'
 
 export let account = undefined
 
@@ -55,7 +56,27 @@ export function getBalance() {
   return new Promise((resolve, reject) => {
     if (account) {
       const scriptHash = DBCHash
-      nep5.getToken(netType, scriptHash, account.address).then(res => {
+      const apiProvider = new api.neoscan.instance('MainNet')
+      apiProvider.getBalance(account.address).then(res => {
+        // console.log(res)
+        const nep5AssetsArray = []
+        res.tokenSymbols.forEach(symbol => {
+          const fixed8 = res.tokens[symbol]
+          const balance = fixed8.toNumber()
+          nep5AssetsArray.push({
+            symbol,
+            balance
+          })
+        })
+        const dbc_info = nep5AssetsArray.find(item => item.symbol === DBC_NAME)
+        console.log(dbc_info)
+        resolve(dbc_info)
+      }).catch(err => {
+        console.log(err)
+        reject('please open wallet')
+      })
+
+      /*nep5.getToken(netType, scriptHash, account.address).then(res => {
         console.log(res)
         resolve({
           name: res.name,
@@ -66,7 +87,7 @@ export function getBalance() {
       }).catch(err => {
         console.log(err)
         reject('please open wallet')
-      })
+      })*/
     } else {
       reject('please open wallet')
     }
@@ -100,6 +121,7 @@ export function isAddress(address) {
 
 export function getAccount() {
   if (account) {
+    console.log(account)
     return account
   } else {
     return initAccount(cookie.get('privateKey'))

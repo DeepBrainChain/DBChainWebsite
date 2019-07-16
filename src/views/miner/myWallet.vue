@@ -1,41 +1,40 @@
 <template>
   <div class="my-wallet">
-    <h3></h3>
     <div class="wallet-btns">
-      <el-button type="primary" v-on:click="openCreateWallet('/createWallet')">{{$t('gpu.createWallet')}}</el-button>
-      <el-button type="primary" v-on:click="openWallet">{{$t('gpu.openWallet')}}</el-button>
+      <el-button type="primary" v-on:click="openCreateWallet('/createWallet')">创建钱包账号</el-button>
+      <el-button type="primary" v-on:click="openWallet">打开钱包账号</el-button>
     </div>
     <div class="center-box">
-      <el-button plain>{{$t('gpu.rentMachine')}}</el-button>
+      <el-button plain>Open or create a wallet to 出租机器</el-button>
+    </div>
+    <div class="center-box">
+      <el-button class="btn lg" plain>
+        Transfer Details<br>
+        Open or create a wallet to view wallet transfer details.
+      </el-button>
     </div>
   </div>
 </template>
 
 <script>
   import {mapActions, mapState} from 'vuex'
-  import {getAccount} from '@/utlis'
 
   export default {
     name: "myWallet",
     created() {
-      this.initData()
+
     },
     methods: {
       ...mapActions([
         'getAccountState',
         'getTransferList'
       ]),
-      initData() {
-        if(getAccount()) {
-          this.$router.push('/gpu/myMachineUnlock')
-        }
-      },
       openCreateWallet() {
         this.$router.push('/createWallet')
       },
       openWallet() {
         this.getAccountState().then(data => {
-          this.$router.push('/gpu/myMachine_unlock')
+          this.$router.push('/miner/myWalletUnlock')
         }).catch(err => {
           this.$router.push('/openWallet')
         })
@@ -56,7 +55,6 @@
     border-radius: 2px;
     margin-bottom: 30px;
     text-align: center;
-
     .btn {
       line-height: 22px;
     }

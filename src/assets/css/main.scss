@@ -1,4 +1,3 @@
-//@import "./variables.scss";
 
 .f16{
   font-size: 16px!important;
@@ -11,6 +10,9 @@
 }
 .cPrimaryColor {
   color: $primaryColor;
+}
+.cDefColor {
+  color: $textColor_def;
 }
 .cGray {
   color: #666;
@@ -74,6 +76,12 @@
 .el-dropdown {
   .el-button {
     border-color: #D9D9D9;
+  }
+}
+
+.el-select {
+  .el-input__inner {
+    border-radius: 2px;
   }
 }
 
@@ -226,6 +234,15 @@
       font-size: 14px;
     }
   }
+  &.hAuto{
+    tbody {
+      td {
+        padding: 10px;
+        overflow: visible;
+        white-space: normal;
+      }
+    }
+  }
 }
 
 .trade-bottom-wrap {
@@ -275,10 +292,15 @@
   padding: 0 10px;
   border: 1px solid #D9D9D9;
   border-radius: 2px;
+  outline: none;
+
 }
 
 .flex {
   display: flex;
+  &.center {
+    justify-content: center;
+  }
   &.between {
     justify-content: space-between;
   }
@@ -287,5 +309,12 @@
   }
   &.vCenter {
     align-items: center;
+  }
+}
+
+.is-link {
+  color: $primaryColor;
+  &:hover {
+    opacity: 0.7;
   }
 }
