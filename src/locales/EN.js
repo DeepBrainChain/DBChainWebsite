@@ -2,7 +2,7 @@ import enLocale from 'element-ui/lib/locale/lang/en'
 
 export default {
   message: "hello i18n !!",
-  $: '￥',
+  $: '$',
   send: '发送',
   closeWallet: '关闭钱包',
   toAddress: 'TO ADDRESS',
@@ -15,7 +15,7 @@ export default {
   day: '天',
   hour: '小时',
   password: '密码',
-  unsubscribe: '退订',
+  unsubscribe: '退租',
   subscribe: '订阅',
   tips: '温馨提示',
   total: '总计',
@@ -150,7 +150,7 @@ export default {
     rateMsg: '你想给他/她评几星',
   },
   msg: {
-    dlg_0: '机器最长可以租用90天时间，最短1个小时时间',
+    dlg_0: '机器最长可以租用{time}时间，最短1个小时时间',
     dlg_1: 'DBChain平台收取 3%的服务费（不支持退款）',
     dlg_2: '1.续租机器退订，将收取实际产生费用的2倍，最多收取合约中所有DBC',
     dlg_3: '2.如果机器使用过程中出现中断，将最多额外退回7天机器已使用量的DBC。',

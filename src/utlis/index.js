@@ -58,7 +58,7 @@ export function getBalance() {
       const scriptHash = DBCHash
       const apiProvider = new api.neoscan.instance('MainNet')
       apiProvider.getBalance(account.address).then(res => {
-        // console.log(res)
+        console.log(res)
         const nep5AssetsArray = []
         res.tokenSymbols.forEach(symbol => {
           const fixed8 = res.tokens[symbol]
@@ -69,8 +69,11 @@ export function getBalance() {
           })
         })
         const dbc_info = nep5AssetsArray.find(item => item.symbol === DBC_NAME)
-        console.log(dbc_info)
-        resolve(dbc_info)
+        if (dbc_info) {
+          resolve(dbc_info)
+        } else {
+          resolve({balance: 0})
+        }
       }).catch(err => {
         console.log(err)
         reject('please open wallet')
@@ -121,7 +124,7 @@ export function isAddress(address) {
 
 export function getAccount() {
   if (account) {
-    console.log(account)
+    // console.log(account)
     return account
   } else {
     return initAccount(cookie.get('privateKey'))

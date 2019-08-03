@@ -1,7 +1,7 @@
 <template>
   <div class="machine">
     <div class="machineData-wrap">
-      <drop-item class="machine-item" title="国家"></drop-item>
+      <drop-item class="machine-item" title="国家" :drop-list="countries"></drop-item>
       <!--      <drop-item class="machine-item" title="Image" :dropList="images"></drop-item>-->
       <drop-item class="machine-item" :title="$t('gpu.mcStatusTitle')" v-model="req_body.status" :dropList="mcStatus"
                  @selected="queryMc"></drop-item>
@@ -150,83 +150,151 @@
       </slide-item>
 
     </div>
-    <div class="info-wrap">
-      <div class="flex status-title">
-        <div>
-          <span class="fs16">ID: <a class="is-link" href="javascript:" @click="pushDetail">sfssfsfsdfgsdfdf</a>
-            <span class="pl100">$ 0.404/hr</span></span>
-        </div>
-        <el-button style="width: 100px" type="primary" size="mini" @click="openDlg">租用</el-button>
-      </div>
-      <div class="flex">
-        <div class="td">
-          <div>2X RTX 2080TI</div>
-          <div></div>
-        </div>
-        <div class="td">
+    <ul>
+      <li v-for="(item, index) in res_body.content" class="info-wrap">
+        <div class="flex status-title">
           <div>
-            Z10PE
+            <span class="fs16">
+              ID: <a class="is-link" href="javascript:" @click="pushDetail">{{item.machine_id}}</a>
+              <span class="pl100">$ {{item.gpu_price_dollar * item.gpu_count}}/hr</span>
+            </span>
           </div>
-          <div class="cPrimaryColor fs12">
-            PCIE 3.0, 16x 5.5GB/s
-          </div>
-        </div>
-        <div class="td">
           <div>
-            {{$t('gpu.totalTime')}}
+            <el-button style="width: 100px" plain size="mini" @click="openDlg(item, true)"
+                       :disabled="!item.idle_status">试用
+            </el-button>
+            <el-button style="width: 100px" type="primary" size="mini" @click="openDlg(item)"
+                       :disabled="!item.idle_status" :loading="rentLoading">租用
+            </el-button>
           </div>
-          <div class="cPrimaryColor">
-            100h
+        </div>
+        <div class="flex">
+          <div class="td">
+            <div class="bold">GPU数量</div>
+            <div class="cPrimaryColor fs14">{{item.gpu_count}}</div>
+          </div>
+          <div class="td">
+            <div class="bold">GPU数量</div>
+            <div class="cPrimaryColor fs14">{{item.gpu_type}}</div>
           </div>
         </div>
-        <div class="td">
-          <div>Up Speed</div>
-          <div class="cPrimaryColor fs12">26.7 Mbps</div>
+        <div class="flex">
+          <div class="td">
+            <div>闲置gpu次数</div>
+            <div class="cPrimaryColor">{{item.gpu_count - item.gpu_be_used}}</div>
+          </div>
+          <div class="td">
+            <div>最长可租用时间</div>
+            <div class="cPrimaryColor">{{item.length_of_available_time}}h</div>
+          </div>
+          <div class="td">
+            <div>
+              累计出租时长
+            </div>
+            <div class="cPrimaryColor">
+              {{item.total_rent_count}}h
+            </div>
+          </div>
+          <div class="td">
+            <div>
+              出租总次数
+            </div>
+            <div class="cPrimaryColor">
+              {{item.total_time_be_used}}
+            </div>
+          </div>
+          <div class="td">
+            <div>
+              中断次数
+            </div>
+            <div class="cPrimaryColor">
+              {{item.error_rent_count}}
+            </div>
+          </div>
         </div>
-        <div class="td">
-          <div>Down Speed</div>
-          <div class="cPrimaryColor fs12">26.7 Mbps</div>
+        <div class="flex">
+          <div class="td">
+            <div>Tensor Core</div>
+            <div class="cPrimaryColor">{{item.tensor_core}}</div>
+          </div>
+          <div class="td">
+            <div>CUDA版本号</div>
+            <div class="cPrimaryColor">{{item.cuda_core}}</div>
+          </div>
+          <div class="td">
+            <div>硬盘</div>
+            <div class="cPrimaryColor">{{item.disk_type}}</div>
+          </div>
+          <div class="td">
+            <div>CPU型号</div>
+            <div class="cPrimaryColor">{{item.cpu_type}}</div>
+          </div>
+          <div class="td">
+            <div class="bold">机器所在国家</div>
+            <div class="cPrimaryColor">中国</div>
+          </div>
         </div>
-      </div>
-      <div class="flex">
-        <div class="td">
-          <div>Max Duration</div>
-          <div class="cPrimaryColor fs12">1 mon, 28d</div>
+        <div class="flex">
+          <div class="td">
+            <div>半精度浮点运算数</div>
+            <div class="cPrimaryColor">{{item.half_precision_tflops}}</div>
+          </div>
+          <div class="td">
+            <div>GPU显存</div>
+            <div class="cPrimaryColor">{{item.gpu_ram_size}}</div>
+          </div>
+          <div class="td">
+            <div>硬盘带宽</div>
+            <div class="cPrimaryColor">{{item.disk_bandwidth}}</div>
+          </div>
+          <div class="td">
+            <div>内核数</div>
+            <div class="cPrimaryColor">{{item.cpu_numbers}}</div>
+          </div>
         </div>
-        <div class="td">
-          <div>Max CUDA</div>
-          <div class="cPrimaryColor fs12">1234</div>
+        <div class="flex">
+          <div class="td">
+            <div>单精度浮点运算数</div>
+            <div class="cPrimaryColor">{{item.single_precision_tflops}}</div>
+          </div>
+          <div class="td">
+            <div>GPU显存带宽</div>
+            <div class="cPrimaryColor">{{item.gpu_ram_bandwidth}}</div>
+          </div>
+          <div class="td">
+            <div>上行带宽</div>
+            <div class="cPrimaryColor">{{item.inet_up}}</div>
+          </div>
+          <div class="td">
+            <div>内存数</div>
+            <div class="cPrimaryColor">{{item.ram_size}}</div>
+          </div>
         </div>
-        <div class="td">
-          <div>TFLOPS</div>
-          <div class="cPrimaryColor fs12">36.6</div>
+        <div class="flex">
+          <div class="td">
+            <div>双精度浮点运算数</div>
+            <div class="cPrimaryColor">{{item.duoble_precision_tflops}}</div>
+          </div>
+          <div class="td">
+            <div>总线传输速度</div>
+            <div class="cPrimaryColor">{{item.pcie_bandwidth}}</div>
+          </div>
+          <div class="td">
+            <div>下行带宽</div>
+            <div class="cPrimaryColor">{{item.inet_down}}</div>
+          </div>
+          <div class="td">
+            <div>操作系统</div>
+            <div class="cPrimaryColor">{{item.os}}</div>
+          </div>
+          <div class="td">
+            <div>DBC版本</div>
+            <div class="cPrimaryColor">{{item.dbc_version}}</div>
+          </div>
         </div>
-        <div class="td">
-
-        </div>
-        <div class="td">
-          <div class="cPrimaryColor">Xeon E5-2620 v3</div>
-          <div class="cPrimaryColor fs12">12.0/24 Cores 64/129 GB</div>
-        </div>
-      </div>
-      <div class="flex">
-        <div class="td">
-          <div>{{$t('gpu.storage')}}</div>
-          <div class="cPrimaryColor fs12">2106MB/s 590.5GB</div>
-        </div>
-        <div class="td">
-          <div class="cPrimaryColor">38.6 DLPerf</div>
-          <div class="cPrimaryColor ps12">95.5 DLP/$/hr</div>
-        </div>
-        <div class="td">
-          <div>{{$t('gpu.reliable')}}</div>
-          <div class="cPrimaryColor fs12">98%</div>
-        </div>
-        <div class="td"></div>
-        <div class="td"></div>
-      </div>
-    </div>
-    <dlg-lease :open.sync="dlg_open"></dlg-lease>
+      </li>
+    </ul>
+    <dlg-lease :open.sync="dlg_open" :place-order-data="placeOrderData" @confirm="createOrder"></dlg-lease>
   </div>
 </template>
 
@@ -234,13 +302,35 @@
   import DropItem from '@/components/machine/dropItem'
   import SlideItem from '@/components/machine/slideItem'
   import DlgLease from '@/components/machine/dlg_lease'
+  import {
+    getMcList,
+    try_place_order,
+    place_order,
+    create_order,
+    get_dbc_price
+  } from '@/api'
+  import {getAccount} from "@/utlis";
 
   export default {
     name: "list",
+    components: {
+      DropItem,
+      SlideItem,
+      DlgLease
+    },
     data() {
       return {
+        rentLoading: false,
+        try_rentLoading: false,
         dlg_open: false,
         curVal: 0,
+        // countries
+        countries: [
+          {
+            name: '所有',
+            value: 'all'
+          }
+        ],
         // 机器状态下拉
         mcStatus: [
           {
@@ -303,7 +393,11 @@
           diskBandwidth: 50,
           inetUp: 0.5,
           inetDown: 0.5
-        }
+        },
+        res_body: {
+          content: []
+        },
+        placeOrderData: undefined,
       }
     },
     watch: {
@@ -311,15 +405,89 @@
 
       }
     },
+    created() {
+      this.queryMc()
+    },
     methods: {
       pushDetail() {
         this.$router.push('/gpu/machineDetail')
       },
-      openDlg() {
-        this.dlg_open = true
+      // 打开弹窗
+      openDlg(item, isTry) {
+        if (!getAccount()) {
+          this.$router.push('/openWallet')
+          return
+        }
+        if (isTry) {
+          try_place_order({
+            machine_id: item.machine_id,
+            wallet_address_user: getAccount().address
+          }).then(res => {
+            if (res.status === 1) {
+              this.dlg_open = true
+            }
+          }).catch(err => {
+            console.log(err)
+          })
+        } else {
+          this.rentLoading = true
+          place_order({
+            machine_id: item.machine_id,
+            wallet_address_user: getAccount().address
+          }).then(res_1 => {
+            this.placeOrderData = res_1.content
+            this.placeOrderData.dbc_price = 0.0026
+            return get_dbc_price({order_id: this.placeOrderData.order_id})
+          }).then(res_2 => {
+            this.placeOrderData.dbc_price = res_2.content
+            console.log()
+            this.dlg_open = true
+          }).catch(err => {
+            console.log(err)
+          }).finally(() => {
+            this.rentLoading = false
+          })
+        }
+      },
+      // 创建订单
+      createOrder(params) {
+        const loading = this.$loading()
+        create_order(params).then(res => {
+          this.$message(res.msg)
+          this.dlg_open = false
+          this.$router.push('/gpu/myMachine')
+        }).finally(() => {
+          loading.close()
+        })
       },
       queryMc() {
-        console.log(this.req_body)
+        const params = {
+          county: 'all',
+          idle_status: 0,
+          total_time: 0,
+          total_rent_count: 0,
+          error_rent_count: 0,
+          disk_GB_perhour_dollar: 0,
+          length_of_available_time: 1,
+          gpu_price_dollar: 0.000001,
+          gpu_count: 1,
+          tflops: 5,
+          gpu_ram_size: 10485760,
+          gpu_ram_bandwidth: 10485760,
+          pcie_bandwidth: 51200,
+          cpu_numbers: 1,
+          ram_size: 1048576,
+          disk_bandwidth: 51200,
+          inet_up: 512,
+          inet_down: 512,
+          have_ip: 0,
+          onlines_tatus: 0,
+          disk_space: 10485760,
+          dbc_version: '0.3.7.2'
+        }
+        getMcList(params).then(res => {
+          this.res_body = res
+        })
       }
     },
     computed: {
@@ -751,11 +919,6 @@
       }
 
     },
-    components: {
-      DropItem,
-      SlideItem,
-      DlgLease
-    }
   }
 </script>
 
@@ -771,6 +934,7 @@
   }
 
   .info-wrap {
+    margin-bottom: 20px;
     padding: 15px 20px 12px;
     border: 1px solid #979797;
     color: #666;
@@ -782,13 +946,25 @@
 
     .flex {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       padding: 5px 0;
+
+      &.status-title {
+        justify-content: space-between;
+        align-items: center;
+      }
 
       .td {
         width: 20%;
         line-height: 24px;
+
+        .cPrimaryColor {
+          font-size: 12px;
+
+          &.fs14 {
+            font-size: 14px;
+          }
+        }
 
         .upSpeed, .downSpeed {
           display: inline-block;
@@ -801,10 +977,6 @@
 
         .downSpeed {
           transform: rotateZ(180deg);
-        }
-
-        div {
-          height: 24px;
         }
       }
     }

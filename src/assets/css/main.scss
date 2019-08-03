@@ -40,14 +40,6 @@
     color: #fff;
     border-color: #fff;
   }
-  &.el-button--primary {
-    color: #fff;
-    background-color: $primaryColor;
-    &:hover {
-      background-color: $primaryColor;
-      opacity: 0.8;
-    }
-  }
   &.el-button--small {
     height: 36px;
     font-size: 16px;
@@ -70,6 +62,14 @@
   }
   &.transparent {
     background-color: transparent;
+  }
+}
+.el-button--primary {
+  color: #fff;
+  background-color: $primaryColor;
+  &:hover {
+    background-color: $primaryColor;
+    opacity: 0.8;
   }
 }
 

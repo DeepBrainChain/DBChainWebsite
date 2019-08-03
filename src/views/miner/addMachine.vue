@@ -87,17 +87,37 @@
       :visible.sync="isDateDlgOpen">
       <div slot="title">{{$t('miner.addMc_date')}}</div>
       <div class="dlg-content">
-
+        <el-calendar v-model="curDate"></el-calendar>
+        <div class="tools">
+          <el-time-picker
+            is-range
+            value-format="HH:mm:ss"
+            v-model="curDT.timeArea"
+            range-separator="至"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            placeholder="选择时间范围"
+            :picker-options="{
+              format: 'HH:mm'
+            }">
+          </el-time-picker>
+        </div>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
+
   export default {
     name: "addMachine",
     data() {
       return {
+        curDate: new Date(),
+        curDT: {
+          date: '',
+          timeArea: ''
+        },
         isEditor: this.$route.query.isEditor,
         minerKey: '',
         area: [
@@ -113,6 +133,11 @@
         dbcNum: undefined,
         isDateDlgOpen: false,
         isWeekDlgOpen: false
+      }
+    },
+    computed: {
+      showTime() {
+        // return this.curDT.startTime.toLocaleTimeString()
       }
     }
   }
@@ -209,5 +234,8 @@
     .el-radio__label {
       color: rgba($color: #333, $alpha: 0.85);
     }
+  }
+  .tools {
+    text-align: center;
   }
 </style>

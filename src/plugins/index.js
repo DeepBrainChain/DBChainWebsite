@@ -366,4 +366,9 @@ export default function install(Vue, options) {
 
     return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
   }
+  Vue.prototype.$hourToDT = (hours) => {
+    const day = Math.floor(hours/24)
+    const h = Math.floor(hours - day * 24)
+    return `${day > 0 ? day + '天':''}${h}小时`
+  }
 }

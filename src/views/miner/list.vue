@@ -154,9 +154,10 @@
       <div class="flex status-title">
         <div>
           <span class="fs16">ID: <a class="is-link" href="javascript:" @click="pushDetail">sfssfsfsdfgsdfdf</a>
-            <span class="pl100">$ 0.404/hr</span></span>
+          <span class="pl100">$ 0.404/hr</span>
+          </span>
         </div>
-<!--        <el-button style="width: 100px" type="primary" size="mini" @click="openDlg">租用</el-button>-->
+        <!--        <el-button style="width: 100px" type="primary" size="mini" @click="openDlg">租用</el-button>-->
       </div>
       <div class="flex">
         <div class="td">

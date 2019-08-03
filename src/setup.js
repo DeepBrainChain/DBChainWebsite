@@ -21,7 +21,9 @@ import {
   Upload,
   RadioGroup,
   Message, Alert, Rate,
-  Select, Option, Input
+  Select, Option, Input,
+  Calendar, ButtonGroup, TimePicker,
+  Form, FormItem
 } from 'element-ui'
 import ElementLocale from 'element-ui/lib/locale'
 import {TextField} from "muse-ui"
@@ -38,6 +40,7 @@ export const i18n = new VueI18n({
 })
 
 Vue.use(DatePicker)
+Vue.use(TimePicker)
 Vue.use(Dropdown)
 Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
@@ -58,6 +61,10 @@ Vue.use(Rate)
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(Input)
+Vue.use(Calendar)
+Vue.use(ButtonGroup)
+Vue.use(Form)
+Vue.use(FormItem)
 Vue.component(Message)
 
 Vue.use(TextField)

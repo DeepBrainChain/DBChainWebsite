@@ -103,6 +103,7 @@
           this.symbol = data.symbol
           this.getTransferList()
         }).catch(err => {
+          console.log(err)
           this.$router.push('/openWallet')
         })
       },

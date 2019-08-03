@@ -15,58 +15,60 @@
         </div>
       </el-radio-group>
 
+      <el-form @submit.native.prevent>
+        <!--      keyfileStore-->
+        <div v-if="radio ==='1' || radio === '3'">
+          <div v-if="radio === '1'">
+            <!--          read filekey-->
+            <el-upload
+              class="upload-demo"
+              action="/"
+              ref="upload"
+              :multiple="false"
+              :show-file-list="false"
+              :auto-upload="false"
+              :on-change="keyFileChange"
+              :disabled="disableBtn">
+              <el-button slot="trigger" size="small" type="primary">select wallet file</el-button>
+            </el-upload>
+          </div>
+          <!--      EncryptedKey input-->
+          <div v-else-if="radio === '3'" class="input-wrap">
+            <ps-input v-model="encryptedKey" placeholder="Paste or type encrypted key."></ps-input>
+          </div>
+          <!--         password input-->
+          <div v-if="canInputPassword" class="input-wrap mt20">
+            <ps-input v-model.trim="password" :isPassword="true" placeholder="Enter password"></ps-input>
+          </div>
+          <div v-if="radio === '3' && !canInputPassword" class="btn-wrap">
+            <el-button class="w200" type="primary" @click="continueEncryptedKey">continue</el-button>
+          </div>
+          <div v-if="canInputPassword" class="btn-wrap">
+            <el-button class="w200" type="primary" native-type="submit" @keyup.enter.native="unlockWalletFromEncryptedKey" @click.native="unlockWalletFromEncryptedKey" :loading="isLoading">unlock</el-button>
+          </div>
+        </div>
 
-<!--      keyfileStore-->
-      <div v-if="radio ==='1' || radio === '3'">
-        <div v-if="radio === '1'">
-<!--          read filekey-->
-          <el-upload
-            class="upload-demo"
-            action="/"
-            ref="upload"
-            :multiple="false"
-            :show-file-list="false"
-            :auto-upload="false"
-            :on-change="keyFileChange"
-            :disabled="disableBtn">
-            <el-button slot="trigger" size="small" type="primary">select wallet file</el-button>
-          </el-upload>
+        <!--      privatekey-->
+        <div v-else-if="radio === '2'">
+          <div class="input-wrap">
+            <ps-input v-model="privateKey" placeholder="Paste or type private key."></ps-input>
+          </div>
+          <div class="btn-wrap">
+            <el-button class="w200" type="primary" @click="unlockWalletFromPrivateKey" :loading="isLoading">unlock</el-button>
+          </div>
         </div>
-        <!--      EncryptedKey input-->
-        <div v-else-if="radio === '3'" class="input-wrap">
-          <ps-input v-model="encryptedKey" placeholder="Paste or type encrypted key."></ps-input>
-        </div>
-<!--         password input-->
-        <div v-if="canInputPassword" class="input-wrap mt20">
-          <ps-input v-model.trim="password" :isPassword="true" placeholder="Enter password"></ps-input>
-        </div>
-        <div v-if="radio === '3' && !canInputPassword" class="btn-wrap">
-          <el-button class="w200" type="primary" @click="continueEncryptedKey">continue</el-button>
-        </div>
-        <div v-if="canInputPassword" class="btn-wrap">
-          <el-button class="w200" type="primary" @click="unlockWalletFromEncryptedKey" :loading="isLoading">unlock</el-button>
-        </div>
-      </div>
 
-<!--      privatekey-->
-      <div v-else-if="radio === '2'">
-        <div class="input-wrap">
-          <ps-input v-model="privateKey" placeholder="Paste or type private key."></ps-input>
-        </div>
-        <div class="btn-wrap">
-          <el-button class="w200" type="primary" @click="unlockWalletFromPrivateKey" :loading="isLoading">unlock</el-button>
-        </div>
-      </div>
+        <el-alert class="mt20"
+                  v-if="errText.length > 0"
+                  title="error"
+                  type="error"
+                  :description="errText"
+                  show-icon
+                  :closable="false"
+                  @close="closeAlert">
+        </el-alert>
+      </el-form>
 
-      <el-alert class="mt20"
-        v-if="errText.length > 0"
-        title="error"
-        type="error"
-        :description="errText"
-        show-icon
-        :closable="false"
-        @close="closeAlert">
-      </el-alert>
     </div>
   </div>
 </template>
