@@ -128,3 +128,20 @@ export const get_all_order = params => {
   })
 }
 
+// 获得取消订单的验证码
+export const get_cancer_code = params => {
+  return axios({
+    method: 'post',
+    url: host + '/rent/get_cancer_code',
+    params
+  })
+}
+
+// 取消订单
+export const cancer_order = params => {
+  return axios({
+    method: 'post',
+    url: host + '/rent/cancer_order',
+    params
+  })
+}

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="title">
-      <span>{{$t('gpu.myMachineTitle')}}：{{$t('gpu.pcs')}} <i class="iconfont iconwenhao ml15"></i></span>
+      <span>{{$t('gpu.myMachineTitle')}}：{{res_body.content.length}} {{$t('gpu.pcs')}} </span>
       <div v-if="!isBinding && bindMail" class="binding">
         <span class="bindingInfo">绑定的邮箱：{{bindMail}}</span>
         <el-button class="ml10" size="mini" plain @click="openDlgMail(false)">{{$t('gpu.modifyMail')}}</el-button>
@@ -17,12 +17,13 @@
     <div v-for="(item, index) in res_body.content" class="border-content">
       <div class="tools-head">
         <div class="l-wrap">
-          <span class="tools-title">{{$t('gpu.mcStatusTitle')}}：<b>{{$t('gpu.machineOnLine')}}</b></span>
-          <span class="fs14 cGray">{{$t('gpu.remainingTime')}}：{{$hourToDT(item.orderData.rest_time_rent/60)}}</span>
+          <!--          <span class="tools-title">{{$t('gpu.mcStatusTitle')}}：<b>{{$t('gpu.machineOnLine')}}</b></span>-->
+          <span class="tools-title">{{$t('gpu.remainingTime')}}：{{$hourToDT(item.orderData.rest_time_rent/60)}}</span>
         </div>
         <div class="r-wrap">
           <span v-if="item.rent_success">正在使用中</span>
-          <span v-if="Math.floor((new Date().getTime() - item.orderData.milli_create_order_time)/60000) <= 15">等待支付</span>
+          <span
+            v-if="Math.floor((new Date().getTime() - item.orderData.milli_create_order_time)/60000) <= 15">等待支付</span>
           <span v-else-if="item.orderData.order_is_cancer">未支付</span>
           <span v-if="item.orderData.order_is_cancer === false" class="ml10">剩余支付时间：{{
             15 - Math.floor((new Date().getTime() - item.orderData.milli_create_order_time)/60000)
@@ -39,7 +40,7 @@
         </div>
         <div>
           <span class="td">{{$t('gpu.payDBCs')}}：{{item.orderData.dbc_total_count}}</span>
-          <span class="td">已使用时间：{{item.orderData.rent_time_length}} h</span>
+          <span class="td">已使用时间：{{item.orderData.rent_time_length/60}} h</span>
         </div>
         <div>
           <span class="td">{{$t('gpu.actualPrice')}}：{{item.orderData.dbc_real_need_count}}DBC</span>
@@ -50,14 +51,14 @@
           <span class="td">{{$t('gpu.payPrice')}}：$ {{item.orderData.dbc_price.toFixed(4)}}</span>
 
         </div>
-<!--        <div>-->
+        <!--        <div>-->
         <!--          <span class="td">{{$t('gpu.gpuRemainTime')}}（DBC）：422</span>-->
         <!--          <span class="td">{{$t('gpu.storeBilling')}}：45 DBC/hr</span>-->
         <!--          <span class="td">{{$t('gpu.gpuCost')}}：{{item.orderData.dbc_price/item.orderData.gpu_price_dollar}} DBC</span>-->
-          <!--          <span class="td">{{$t('gpu.storeCost')}}：{{item.orderData.rent_time_length}}</span>-->
-          <!--          <span class="td">{{$t('gpu.storeBilling')}}（DBC）：45/hr</span>-->
-          <!--          <span class="td">{{$t('gpu.storeRemainTime')}}（DBC）：422</span>-->
-<!--        </div>-->
+        <!--          <span class="td">{{$t('gpu.storeCost')}}：{{item.orderData.rent_time_length}}</span>-->
+        <!--          <span class="td">{{$t('gpu.storeBilling')}}（DBC）：45/hr</span>-->
+        <!--          <span class="td">{{$t('gpu.storeRemainTime')}}（DBC）：422</span>-->
+        <!--        </div>-->
       </div>
       <div class="status-wrap">
         <div class="flex status-title">
@@ -194,13 +195,13 @@
           <span class="tools-title small">{{$t('gpu.machineLoginInfo')}}：ssh -p 20049 root@116.85.24.172，{{$t('password')}}：xxxxx</span>
         </div>
       </div>
-      <div v-if="item.orderData.order_is_cancer === true" class="tools-head">
+      <div v-if="item.orderData.order_is_cancer === false" class="tools-head">
         <div class="l-wrap"></div>
         <div class="r-wrap">
-          <el-button style="width: 86px" class="tool-btn blue" size="mini" @click="payOrder = true">
+          <el-button style="width: 86px" class="tool-btn blue" size="mini" @click="payOrder(item)">
             确认支付
           </el-button>
-          <el-button style="width: 86px" class="tool-btn blue" size="mini" @click="cancelOrder = true">
+          <el-button style="width: 86px" class="tool-btn blue" size="mini" @click="cancelOrder(item)">
             取消订单
           </el-button>
           <el-button style="width: 86px" class="tool-btn blue" size="mini" @click="dlgReload_open = true">
@@ -212,7 +213,8 @@
           <el-button class="tool-btn blue" style="width: 86px" size="mini" @click="dlgUnsubscribe_open=true">
             退币
           </el-button>
-          <el-button class="tool-btn blue" size="mini" style="width: 86px" @click="dlgRate_open=true">
+          <el-button v-if="item.orderData.order_is_over" class="tool-btn blue" size="mini" style="width: 86px"
+                     @click="dlgRate_open=true">
             {{$t('gpu.rate')}}
           </el-button>
         </div>
@@ -243,9 +245,14 @@
     query_machine_by_wallet,
     get_all_order,
     can_rent_this_machine,
-
+    pay,
+    get_cancer_code,
+    cancer_order
   } from '@/api'
-  import {getAccount} from '@/utlis'
+  import {
+    getAccount,
+    transfer,
+  } from '@/utlis'
 
   export default {
     name: "myMachine",
@@ -279,12 +286,91 @@
     },
     methods: {
       // pay
-      payOrder(order_id) {
-
+      payOrder(item) {
+        const loading = this.$loading()
+        can_rent_this_machine({
+          order_id: item.orderData.order_id
+        }).then(res => {
+            if (res.status === 1) {
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: 'success'
+              })
+              const amount = item.orderData.dbc_total_count + item.orderData.code * 1
+            debugger
+              return transfer({
+                toAddress: getAccount().address,
+                amount
+              })
+            } else {
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: 'error'
+              })
+            }
+          }
+        ).then(res => {
+          const txid = res.response.txid
+          return pay({
+            order_id: item.orderData.order_id,
+            dbc_hash: txid
+          })
+        }).then(res => {
+          if (res.status === 1) {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: 'success'
+            })
+          } else {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: 'error'
+            })
+          }
+        }).finally(() => {
+          loading.close()
+        })
       },
       // cancel
-      cancelOrder() {
+      cancelOrder(item) {
+        get_cancer_code({
+          order_id: item.orderData.order_id
+        }).then(res => {
+          if (res.status === 1) {
+            this.$prompt('验证码已发送至您的邮箱，请填写验证码', '取消订单', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+            }).then(({value}) => {
+              return cancer_order({
+                order_id: item.orderData.order_id,
+                code: res.code
+              })
+            }).catch(() => {
+            });
+            /*this.$confirm('验证码已发送至您的邮箱。', '取消订单', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+            }).then(() => {
 
+            }).catch(() => {
+
+            })*/
+          }
+        }).then(res => {
+          if (res.status === 1) {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: 'success'
+            })
+          }
+        }).finally(() => {
+
+        })
       },
       // get Order List
       queryOrderList() {
@@ -391,9 +477,11 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
+
     &.bd {
       border-bottom: 1px solid #E1E6EC;
     }
+
     .tools-title {
       font-size: 16px;
       color: #050D68;

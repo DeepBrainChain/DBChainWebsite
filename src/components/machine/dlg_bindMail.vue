@@ -86,7 +86,7 @@
           amount: this.form.dbcNum
         }).then(res => {
           if (res.response.result) {
-            console.log('t -> success')
+            console.log(res)
             this.closed()
             this.$emit('binding')
             if (this.isNewMail) {
