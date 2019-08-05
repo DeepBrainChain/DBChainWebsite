@@ -5,8 +5,8 @@ module.exports = {
 
   pluginOptions: {
     i18n: {
-      locale: 'en',
-      fallbackLocale: 'en',
+      locale: 'cn',
+      fallbackLocale: 'cn',
       localeDir: 'locales',
       enableInSFC: true
     }
@@ -14,7 +14,7 @@ module.exports = {
   css: {
     loaderOptions: {
       sass: {
-        data:'@import "@/assets/css/variables.scss";'
+        data: '@import "@/assets/css/variables.scss";'
       }
     }
   },
@@ -50,7 +50,7 @@ module.exports = {
         ws: true,
         changeOrigin: true
       },
-      'get_all_order':{
+      'get_all_order': {
         target: 'http://13.124.237.200:8031',
         ws: true,
         changeOrigin: true
