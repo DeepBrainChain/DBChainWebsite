@@ -212,10 +212,10 @@
             {{$t('gpu.rate')}}
           </el-button>
           <template v-else-if="item.orderData.rent_success">
-            <el-button plain style="width: 86px" class="tool-btn" size="mini"
+            <!--<el-button plain style="width: 86px" class="tool-btn" size="mini"
                        @click="dlgReload_open = true">
               {{$t('gpu.reload')}}
-            </el-button>
+            </el-button>-->
             <el-button plain class="tool-btn " style="width: 86px" size="mini"
                        @click="stopRent(item)">
               {{$t('unsubscribe')}}
@@ -226,8 +226,7 @@
                        @click="payOrder(item)">
               确认支付
             </el-button>
-            <el-button v-if="!(item.orderData.container_is_exist && item.orderData.rent_success === false)" :loading="isPaying" class="tool-btn" size="mini"
-                       @click="cancelOrder(item)">
+            <el-button v-if="!(item.orderData.container_is_exist && item.orderData.rent_success === false)" :loading="isPaying" class="tool-btn" size="mini" plain @click="cancelOrder(item)">
               取消订单
             </el-button>
           </template>
@@ -321,10 +320,9 @@
                   message: res.msg,
                   type: 'success'
                 })
-                this.isPaying = false
                 const amount = item.orderData.dbc_total_count + (item.orderData.code * 1)
-                console.log(amount)
-                console.log(res.content)
+                // console.log(amount)
+                // console.log(res.content)
                 return transfer({
                   toAddress: res.content,
                   amount
@@ -378,6 +376,7 @@
                 type: 'error'
               })
             }
+            this.isPaying = false
             this.queryOrderList()
           })
         }, 5000)
