@@ -1,4 +1,6 @@
 console.log(process.env.NODE_ENV)
+// const proxyHost = 'http://13.124.237.200:8031
+const proxyHost = 'http://116.85.24.172:8031'
 module.exports = {
   // publicPath: process.env.NODE_ENV === 'production' ? '/DBC_GPU' : '/',
   publicPath: process.env.NODE_ENV === 'production' ? '/' : '/',
@@ -26,32 +28,32 @@ module.exports = {
         changeOrigin: true
       },
       '/binding_email_rent': {
-        target: 'http://13.124.237.200:8031',
+        target: proxyHost,
         ws: true,
         changeOrigin: true
       },
       'query_all_machines': {
-        target: 'http://13.124.237.200:8031',
+        target: proxyHost,
         ws: true,
         changeOrigin: true
       },
       'rent': {
-        target: 'http://13.124.237.200:8031',
+        target: proxyHost,
         ws: true,
         changeOrigin: true
       },
       'try_rent': {
-        target: 'http://13.124.237.200:8031',
+        target: proxyHost,
         ws: true,
         changeOrigin: true
       },
       'query_machine_by_wallet': {
-        target: 'http://13.124.237.200:8031',
+        target: proxyHost,
         ws: true,
         changeOrigin: true
       },
       'get_all_order': {
-        target: 'http://13.124.237.200:8031',
+        target: proxyHost,
         ws: true,
         changeOrigin: true
       }

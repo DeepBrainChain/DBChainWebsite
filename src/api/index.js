@@ -20,6 +20,24 @@ export const bindMail_rent = params => {
   })
 }
 
+//验证邮箱是否绑定ok
+export const binding_is_ok = params => {
+  return axios({
+    method: 'post',
+    url: host + '/binding_email_rent/binding_is_ok',
+    params
+  })
+}
+
+//验证修改邮箱是否绑定ok
+export const binding_is_ok_modify = params => {
+  return axios({
+    method: 'post',
+    url: host + '/binding_email_rent/binding_is_ok_modify',
+    params
+  })
+}
+
 // 查询绑定邮箱
 export const queryBindMail_rent = params => {
   return axios({
@@ -142,6 +160,42 @@ export const cancer_order = params => {
   return axios({
     method: 'post',
     url: host + '/rent/cancer_order',
+    params
+  })
+}
+
+// 获得退租验证码
+export const get_stop_code = params => {
+  return axios({
+    method: 'post',
+    url: host + '/rent/get_stop_code',
+    params
+  })
+}
+
+// 退租
+export const stop = params => {
+  return axios({
+    method: 'post',
+    url: host + '/rent/stop',
+    params
+  })
+}
+
+// 获取评价接口
+export const get_evaluation_code = params => {
+  return axios({
+    method: 'post',
+    url: host + '/rent/get_evaluation_code',
+    params
+  })
+}
+
+// 评价
+export const evaluate_machine = params => {
+  return axios({
+    method: 'post',
+    url: host + '/rent/evaluate_machine',
     params
   })
 }

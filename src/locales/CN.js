@@ -80,7 +80,7 @@ export default {
     machineOnLine: '机器在线',
     machineOffLine: '机器离线',
     remainingTime: '剩余时间',
-    //reload: '续费',
+    reload: '续费',
     payDBCs: '支付的DBC总数',
     payPrice: '支付时DBC价格',
     actualPrice: '产生实际的费用',

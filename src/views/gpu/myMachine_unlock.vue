@@ -195,27 +195,44 @@
           <span class="tools-title small">{{$t('gpu.machineLoginInfo')}}：ssh -p 20049 root@116.85.24.172，{{$t('password')}}：xxxxx</span>
         </div>
       </div>
-      <div v-if="item.orderData.order_is_cancer === false" class="tools-head">
-        <div class="l-wrap"></div>
-        <div class="r-wrap">
-          <el-button style="width: 86px" class="tool-btn blue" size="mini" @click="payOrder(item)">
-            确认支付
-          </el-button>
-          <el-button style="width: 86px" class="tool-btn blue" size="mini" @click="cancelOrder(item)">
-            取消订单
-          </el-button>
-          <el-button style="width: 86px" class="tool-btn blue" size="mini" @click="dlgReload_open = true">
-            {{$t('gpu.reload')}}
-          </el-button>
-          <el-button class="tool-btn blue" style="width: 86px" size="mini" @click="dlgUnsubscribe_open=true">
-            {{$t('unsubscribe')}}
-          </el-button>
-          <el-button class="tool-btn blue" style="width: 86px" size="mini" @click="dlgUnsubscribe_open=true">
-            退币
-          </el-button>
-          <el-button v-if="item.orderData.order_is_over" class="tool-btn blue" size="mini" style="width: 86px"
+      <div class="tools-head">
+        <div class="l-wrap">
+          <span v-if="item.orderData.order_is_over && item.orderData.order_isnormal_over">订单中断</span>
+          <span v-else-if="item.orderData.order_is_over && item.orderData.rder_isnormal_over">订单中断</span>
+          <span v-else-if="item.orderData.order_is_cancer">订单取消</span>
+          <span v-else-if="item.orderData.rent_success">正在使用中</span>
+          <span v-else-if="item.orderData.ontainer_is_exis && item.orderData.rent_success===fasle">支付验证中</span>
+          <span v-else-if="item.orderData.pay_error && item.orderData.is_return_dbc===false">支付验证失败</span>
+          <span v-else-if="item.orderData.pay_error && item.orderData.is_return_dbc">退币成功</span>
+        </div>
+        <div v-if="item.orderData.order_is_cancer === false" class="r-wrap">
+          <el-button v-if="item.orderData.order_is_over" plain class="tool-btn "
+                     size="mini" style="width: 86px"
                      @click="dlgRate_open=true">
             {{$t('gpu.rate')}}
+          </el-button>
+          <template v-else-if="item.orderData.rent_success">
+            <el-button plain style="width: 86px" class="tool-btn" size="mini"
+                       @click="dlgReload_open = true">
+              {{$t('gpu.reload')}}
+            </el-button>
+            <el-button plain class="tool-btn " style="width: 86px" size="mini"
+                       @click="stopRent(item)">
+              {{$t('unsubscribe')}}
+            </el-button>
+          </template>
+          <template v-else-if="item.orderData.rent_success === false">
+            <el-button :disabled="item.orderData.container_is_exist && item.orderData.rent_success === false" plain :loading="isPaying" class="tool-btn" size="mini"
+                       @click="payOrder(item)">
+              确认支付
+            </el-button>
+            <el-button v-if="!(item.orderData.container_is_exist && item.orderData.rent_success === false)" :loading="isPaying" class="tool-btn" size="mini"
+                       @click="cancelOrder(item)">
+              取消订单
+            </el-button>
+          </template>
+          <el-button v-else-if="item.orderData.is_return_dbc && item.orderData.pay_error" class="tool-btn" style="width: 86px" plain size="mini" @click="dlgUnsubscribe_open=true">
+            退币
           </el-button>
         </div>
       </div>
@@ -225,12 +242,11 @@
     <!--    increaseHD-dlg-->
     <dlg-hd :open.sync="dlgHD_open"></dlg-hd>
     <!--    bindMail-dlg-->
-    <dlg-mail :open.sync="dlgMail_open" :is-new-mail="isNewMail" @binding="isBinding=true" @fail="bindFail"
-              @success="bindSuccess"></dlg-mail>
+    <dlg-mail :open.sync="dlgMail_open" :is-new-mail="isNewMail" @binding="binding" @fail="bindFail"></dlg-mail>
     <!--    Unsubscribe-->
-    <dlg-unsubscribe :open.sync="dlgUnsubscribe_open"></dlg-unsubscribe>
+    <dlg-unsubscribe :item="curItem" :open.sync="dlgUnsubscribe_open" @success="stopRentSuccess"></dlg-unsubscribe>
     <!--    rate-->
-    <dlg-rate :open.sync="dlgRate_open"></dlg-rate>
+    <dlg-rate :open.sync="dlgRate_open" :isEdit="isRateEdit"></dlg-rate>
   </div>
 </template>
 
@@ -247,7 +263,11 @@
     can_rent_this_machine,
     pay,
     get_cancer_code,
-    cancer_order
+    cancer_order,
+    binding_is_ok,
+    binding_is_ok_modify,
+    get_stop_code,
+    stop
   } from '@/api'
   import {
     getAccount,
@@ -278,6 +298,9 @@
         res_body: {
           content: []
         },
+        isPaying: false,
+        curItem: undefined,
+        isRateEdit: false
       }
     },
     created() {
@@ -287,21 +310,66 @@
     methods: {
       // pay
       payOrder(item) {
-        const loading = this.$loading()
-        can_rent_this_machine({
-          order_id: item.orderData.order_id
-        }).then(res => {
+        this.isPaying = true
+        const si = setInterval(() => {
+          can_rent_this_machine({
+            order_id: item.orderData.order_id
+          }).then(res => {
+              if (res.status === 1) {
+                this.$message({
+                  showClose: true,
+                  message: res.msg,
+                  type: 'success'
+                })
+                this.isPaying = false
+                const amount = item.orderData.dbc_total_count + (item.orderData.code * 1)
+                console.log(amount)
+                console.log(res.content)
+                return transfer({
+                  toAddress: res.content,
+                  amount
+                })
+              } else if (res.status === 2) {
+                this.$message({
+                  showClose: true,
+                  message: res.msg,
+                  type: 'info'
+                })
+              } else {
+                this.$message({
+                  showClose: true,
+                  message: res.msg,
+                  type: 'error'
+                })
+                clearInterval(si)
+                this.isPaying = false
+              }
+            }
+          ).then(res => {
+            if (res.response.result) {
+              const txid = res.response.txid
+              this.isPaying = false
+              clearInterval(si)
+              return pay({
+                order_id: item.orderData.order_id,
+                dbc_hash: txid
+              })
+            } else {
+              this.$message({
+                showClose: true,
+                message: '支付失败',
+                type: 'error'
+              })
+              this.isPaying = false
+              clearInterval(si)
+              return Promise.reject('pay fail')
+            }
+          }).then(res => {
             if (res.status === 1) {
               this.$message({
                 showClose: true,
                 message: res.msg,
                 type: 'success'
-              })
-              const amount = item.orderData.dbc_total_count + item.orderData.code * 1
-            debugger
-              return transfer({
-                toAddress: getAccount().address,
-                amount
               })
             } else {
               this.$message({
@@ -310,30 +378,9 @@
                 type: 'error'
               })
             }
-          }
-        ).then(res => {
-          const txid = res.response.txid
-          return pay({
-            order_id: item.orderData.order_id,
-            dbc_hash: txid
+            this.queryOrderList()
           })
-        }).then(res => {
-          if (res.status === 1) {
-            this.$message({
-              showClose: true,
-              message: res.msg,
-              type: 'success'
-            })
-          } else {
-            this.$message({
-              showClose: true,
-              message: res.msg,
-              type: 'error'
-            })
-          }
-        }).finally(() => {
-          loading.close()
-        })
+        }, 5000)
       },
       // cancel
       cancelOrder(item) {
@@ -347,18 +394,35 @@
             }).then(({value}) => {
               return cancer_order({
                 order_id: item.orderData.order_id,
-                code: res.code
+                cancer_code: value
               })
-            }).catch(() => {
-            });
-            /*this.$confirm('验证码已发送至您的邮箱。', '取消订单', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-            }).then(() => {
-
-            }).catch(() => {
-
-            })*/
+            }).then(res => {
+              if (res.status === 1) {
+                this.$message({
+                  showClose: true,
+                  message: res.msg,
+                  type: 'success'
+                })
+                this.queryOrderList()
+              } else {
+                this.$message({
+                  showClose: true,
+                  message: res.msg,
+                  type: 'error'
+                })
+              }
+            }).catch(err => {
+              if (err) {
+                console.log(err)
+              }
+            })
+          } else {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: 'error'
+            })
+            return Promise.reject()
           }
         }).then(res => {
           if (res.status === 1) {
@@ -412,10 +476,38 @@
         queryBindMail_rent({
           wallet_address: address
         }).then(res => {
-          if (res.content) {
+          if (res.status === 1) {
             this.bindMail = res.content
           }
         })
+      },
+      binding(isNewMail) {
+        this.isBinding = true
+        let binding = true
+        const si = setInterval(async () => {
+          if (binding) {
+            if (isNewMail) {
+              binding = false
+              const res = await binding_is_ok({
+                wallet_address: getAccount().address
+              })
+              if (res.status === 1) {
+                clearInterval(si)
+                this.bindSuccess()
+              }
+            } else {
+              binding = false
+              const res = await binding_is_ok_modify({
+                wallet_address: getAccount().address
+              })
+              if (res.status === 1) {
+                clearInterval(si)
+                this.bindSuccess()
+              }
+            }
+          }
+          binding = true
+        }, 10000)
       },
       // bind fail
       bindFail() {
@@ -423,11 +515,18 @@
       },
       // bind success
       bindSuccess() {
-        this.queryMail()
         this.isBinding = false
+        this.queryMail()
+      },
+      // stop rent
+      stopRent(item) {
+        this.dlgUnsubscribe_open = true
+        this.curItem = item
+      },
+      stopRentSuccess() {
+        this.queryOrderList()
       }
     },
-
   }
 </script>
 
