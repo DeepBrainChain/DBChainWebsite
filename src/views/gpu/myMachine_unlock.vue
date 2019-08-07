@@ -217,7 +217,7 @@
             class="tool-btn"
             size="mini"
             style="width: 86px"
-            @click="dlgRate_open=true"
+            @click="openRateDlg(item)"
           >{{$t('gpu.rate')}}</el-button>
           <template v-else-if="item.orderData.rent_success">
             <!--<el-button plain style="width: 86px" class="tool-btn" size="mini"
@@ -275,7 +275,7 @@
     <!--    Unsubscribe-->
     <dlg-unsubscribe :item="curItem" :open.sync="dlgUnsubscribe_open" @success="stopRentSuccess"></dlg-unsubscribe>
     <!--    rate-->
-    <dlg-rate :open.sync="dlgRate_open" :isEdit="isRateEdit"></dlg-rate>
+    <dlg-rate :open.sync="dlgRate_open" :isEdit="isRateEdit" :item="curItem" @success="successRate"></dlg-rate>
   </div>
 </template>
 
@@ -535,8 +535,6 @@ export default {
           });
         }
       });
-
-      b;
     },
     binding(isNewMail) {
       this.isBinding = true;
@@ -582,6 +580,13 @@ export default {
     },
     stopRentSuccess() {
       this.queryOrderList();
+    },
+    openRateDlg(item) {
+      this.curItem = item
+      this.dlgRate_open = true
+    },
+    successRate() {
+      this.queryOrderList()
     }
   }
 };

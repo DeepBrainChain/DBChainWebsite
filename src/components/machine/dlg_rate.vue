@@ -21,8 +21,8 @@
         </el-input>
       </div>
       <el-form-item label="请输入验证码：">
-        <el-input class="w200" size="small"></el-input>
-        <el-button class="ml10" plain size="mini" >发送验证码</el-button>
+        <el-input v-model="evalution_code" class="w200" size="small"></el-input>
+        <el-button :loading="isCoding" class="ml10" plain size="mini" @click="getEvaluationCode">发送验证码</el-button>
       </el-form-item>
     </el-form>
     <div class="dlg-bottom">
@@ -33,11 +33,16 @@
 </template>
 
 <script>
+  import {
+    get_evaluation_code,
+    evaluate_machine
+  } from "@/api"
 
   export default {
     name: "popup_reload",
     props: {
       open: Boolean,
+      item: Object,
       isEdit: {
         type: Boolean,
         default: false
@@ -52,17 +57,63 @@
       return {
         isOpen: this.open,
         isLoading: false,
+        isCoding: false,
         textarea: '',
         rateVal: 0,
+        evalution_code: ''
       }
     },
     methods: {
+      getEvaluationCode() {
+        this.isCoding = true
+        get_evaluation_code({
+          order_id: this.item.orderData.order_id
+        }).then(res => {
+          if (res.status === 1) {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: 'success'
+            })
+          } else {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: 'error'
+            })
+          }
+        }).finally(() => {
+          this.isCoding = false
+        })
+      },
       closed() {
         this.isOpen = false
         this.$emit('update:open', false)
       },
+
       confirm() {
-        this.closed()
+        evaluate_machine({
+          evaluation_content: this.textarea,
+          evaluation_score: this.rateVal * 2,
+          order_id: this.item.orderData.order_id,
+          evalution_code: this.evalution_code
+        }).then(res => {
+          if(res.status === 1) {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: 'success'
+            })
+            this.closed()
+            this.$emit('success')
+          } else {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: 'error'
+            })
+          }
+        })
       },
       cancel() {
         this.closed()
