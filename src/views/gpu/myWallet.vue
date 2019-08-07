@@ -18,14 +18,20 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import {getAccount} from '@/utlis'
 
 export default {
   name: "myWallet",
   created() {
-    this.openWallet();
+    this.initData()
   },
   methods: {
     ...mapActions(["getAccountState", "getTransferList"]),
+    initData() {
+      if(getAccount()) {
+        this.$router.push('/gpu/myWalletUnlock')
+      }
+    },
     openCreateWallet() {
       this.$router.push("/createWallet");
     },
