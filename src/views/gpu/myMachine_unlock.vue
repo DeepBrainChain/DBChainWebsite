@@ -113,7 +113,7 @@
         <div class="flex">
           <div class="td">
             <div>Tensor Core</div>
-            <div class="cPrimaryColor">{{item.mcData.tensor_core}}</div>
+            <div class="cPrimaryColor">{{item.mcData.tensor_cores}}</div>
           </div>
           <div class="td">
             <div>CUDA版本号</div>

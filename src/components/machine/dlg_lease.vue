@@ -33,15 +33,15 @@
             :value="item.value"
           ></el-option>
         </el-select>
-        <span class="fs12 cGray ml10">${{(placeOrderData.gpu_price_dollar*timeSelect).toFixed(4) }}</span>
+        <span class="fs12 cGray ml10">{{(placeOrderData.gpu_price_dollar)}}$/小时</span>
       </div>
       <div class="form-notice">{{$t('tips')}}：{{$t('msg.dlg_0',{time: outDayTime})}}</div>
       <div class="computer-dbc mt30">
         <!--          <span>{{$t('gpu.DBCRemaining')}}：349</span>-->
-        <span>{{$t('total')}}({{$t('$')}})：{{ totalPrice.toFixed(4) }}</span>
+        <span>{{$t('total')}}：{{ totalPrice.toFixed(4) }}{{$t('$')}}</span>
         <span class="ml20">{{$t('gpu.exchangeDBC')}}：{{dbcNum}}</span>
       </div>
-      <div class="form-notice">{{$t('msg.dlg_1')}}</div>
+      <div class="form-notice">当前钱包DBC余额:{{$t('this.balance')}}</div>
       <div class="desc-box" v-html="$t('msg.dlg_5')"></div>
     </div>
     <div class="dlg-bottom">
