@@ -21,7 +21,9 @@ import { mapActions, mapState } from "vuex";
 
 export default {
   name: "myWallet",
-  created() {},
+  created() {
+    this.openWallet();
+  },
   methods: {
     ...mapActions(["getAccountState", "getTransferList"]),
     openCreateWallet() {
