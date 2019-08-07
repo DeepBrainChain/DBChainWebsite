@@ -4,7 +4,7 @@
     width="540px"
     @close="closed">
     <div slot="title">{{$t('gpu.rate')}}</div>
-    <div class="dlg-content">
+    <el-form class="dlg-content">
       <div class="flex center">
         <el-rate v-model="rateVal" :max="5" allow-half></el-rate>
         <span>{{showRate}}{{$t('scores')}}</span>
@@ -20,7 +20,11 @@
           v-model="textarea">
         </el-input>
       </div>
-    </div>
+      <el-form-item label="请输入验证码：">
+        <el-input class="w200" size="small"></el-input>
+        <el-button class="ml10" plain size="mini" >发送验证码</el-button>
+      </el-form-item>
+    </el-form>
     <div class="dlg-bottom">
       <el-button class="dlg-btn" type="primary" size="small" @click="confirm">{{$t('confirm')}}</el-button>
       <el-button class="dlg-btn" plain size="small" @click="cancel">{{$t('cancel')}}</el-button>
@@ -34,6 +38,10 @@
     name: "popup_reload",
     props: {
       open: Boolean,
+      isEdit: {
+        type: Boolean,
+        default: false
+      }
     },
     watch: {
       open(newVal) {

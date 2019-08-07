@@ -435,13 +435,30 @@
             machine_id: item.machine_id,
             wallet_address_user: getAccount().address
           }).then(res_1 => {
-            this.placeOrderData = res_1.content
-            this.placeOrderData.dbc_price = 0.0026
-            return get_dbc_price({order_id: this.placeOrderData.order_id})
+            if (res_1.status === 1) {
+              this.placeOrderData = res_1.content
+              this.placeOrderData.dbc_price = 0.0026
+              return get_dbc_price({order_id: this.placeOrderData.order_id})
+            } else {
+              this.$message({
+                showClose: true,
+                message: res_1.msg,
+                type: 'error'
+              })
+              return Promise.reject(res_1.msg)
+            }
           }).then(res_2 => {
-            this.placeOrderData.dbc_price = res_2.content
-            console.log()
-            this.dlg_open = true
+            if (res_2.status === 1) {
+              this.placeOrderData.dbc_price = res_2.content
+              this.dlg_open = true
+            } else {
+              this.$message({
+                showClose: true,
+                message: res_2.msg,
+                type: 'success'
+              })
+              return Promise.reject(res_2.msg)
+            }
           }).catch(err => {
             console.log(err)
           }).finally(() => {
@@ -453,9 +470,13 @@
       createOrder(params) {
         const loading = this.$loading()
         create_order(params).then(res => {
-          this.$message(res.msg)
-          this.dlg_open = false
-          this.$router.push('/gpu/myMachine')
+          if (res.status === 1) {
+            this.$message(res.msg)
+            this.dlg_open = false
+            this.$router.push('/gpu/myMachine')
+          } else {
+            this.$message(res.msg)
+          }
         }).finally(() => {
           loading.close()
         })

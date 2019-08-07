@@ -63,6 +63,14 @@
   &.transparent {
     background-color: transparent;
   }
+  &.is-plain {
+    border-color: $primaryColor;
+    color: $primaryColor;
+    &:hover {
+      background-color: $primaryColor;
+      color: #fff;
+    }
+  }
 }
 .el-button--primary {
   color: #fff;

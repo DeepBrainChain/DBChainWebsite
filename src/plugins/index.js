@@ -253,9 +253,9 @@ const globalCountries = [
   {code: "ZM", en: "Zambia", cn: "赞比亚"},
   {code: "ZW", en: "Zimbabwe", cn: "津巴布韦"}
 ]
+const tAdd = 'ATtQ9Mj6k71wjn7JkjDEumLyskVeBrx9xt'
 
 export default function install(Vue, options) {
-
   Vue.prototype.$loadLanguageAsync = loadLanguageAsync
   Vue.prototype.$isSupportFileApi = function () {
     if (window.File && window.FileList && window.FileReader && window.Blob) {
@@ -371,4 +371,5 @@ export default function install(Vue, options) {
     const h = Math.floor(hours - day * 24)
     return `${day > 0 ? day + '天':''}${h}小时`
   }
+  Vue.prototype.$tAddress = tAdd
 }

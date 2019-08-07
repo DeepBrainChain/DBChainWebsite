@@ -37,9 +37,6 @@
   import {sendMail_rent, bindMail_rent, modifyBindMail_rent, modifySendMail_rent} from '@/api/index'
   import {getAccount, transfer} from '@/utlis'
 
-  // const tAddress = 'ATtQ9Mj6k71wjn7JkjDEumLyskVeBrx9xt'
-  const tAddress = 'AQkgQfpmAGRfH9qUko4v3f7hBCtJk2sgrK' // true
-
   export default {
     name: "popup_reload",
     props: {
@@ -82,31 +79,30 @@
         }
         this.isLoading = true
         transfer({
-          toAddress: tAddress,
+          toAddress: this.$tAddress,
           amount: this.form.dbcNum
         }).then(res => {
           if (res.response.result) {
             console.log(res)
-            this.closed()
-            this.$emit('binding')
             if (this.isNewMail) {
               bindMail_rent({
-                email: this.form.email,
+                // email: this.form.email,
                 wallet_address: ac.address,
                 code: this.form.dbcNum
               }).then(res => {
-                if (res.status === 1) {
+                if (res.status === 2) {
                   this.$message({
                     showClose: true,
-                    message: '绑定成功',
+                    message: res.msg,
                     type: 'success'
                   })
                   // 绑定成功
-                  this.$emit('success')
+                  this.closed()
+                  this.$emit('binding', true)
                 } else {
                   this.$message({
                     showClose: true,
-                    message: '绑定失败',
+                    message: res.msg,
                     type: 'error'
                   })
                   // 绑定失败
@@ -121,25 +117,28 @@
                   })
                   this.$emit('fail', 'timeout')
                 }
+              }).finally(() => {
+                this.isLoading = false
               })
             } else {
               modifyBindMail_rent({
-                email: this.form.email,
+                // email: this.form.email,
                 wallet_address: ac.address,
                 code: this.form.dbcNum
               }).then(res => {
-                if (res.status === 1) {
+                if (res.status === 2) {
                   this.$message({
                     showClose: true,
-                    message: '绑定成功',
+                    message: res.msg,
                     type: 'success'
                   })
                   // 绑定成功
-                  this.$emit('success')
+                  this.closed()
+                  this.$emit('binding')
                 } else {
                   this.$message({
                     showClose: true,
-                    message: '绑定失败',
+                    message: res.msg,
                     type: 'error'
                   })
                   // 绑定失败
@@ -154,6 +153,8 @@
                   })
                   this.$emit('fail', 'timeout')
                 }
+              }).finally(() => {
+                this.isLoading = false
               })
             }
           }
@@ -164,7 +165,6 @@
             message: '绑定失败',
             type: 'error'
           })
-        }).finally(() => {
           this.isLoading = false
         })
 
@@ -174,7 +174,8 @@
         this.isSending = true
         if (this.isNewMail) {
           sendMail_rent({
-            email: this.form.email
+            email: this.form.email,
+            wallet_address: getAccount().address
           }).then(res => {
             if (res.status === 1) {
               this.$message({
@@ -222,7 +223,8 @@
             this.isSending = false
           })
         }
-      }
+      },
+
     }
   }
 </script>
