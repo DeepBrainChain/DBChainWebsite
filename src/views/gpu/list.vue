@@ -665,9 +665,9 @@ export default {
       }
       return showTotalTime;
     },
-    showReliability() {
-      this.req_body.reliability = this.reliabilityVal / 100;
-      return this.reliabilityVal > 0 ? `${this.reliabilityVal}%` : "New";
+  //  showReliability() {
+  //    this.req_body.reliability = this.reliabilityVal / 100;
+  //    return this.reliabilityVal > 0 ? `${this.reliabilityVal}%` : "New";
     },
     showDiskSpace() {
       let val = 0;
