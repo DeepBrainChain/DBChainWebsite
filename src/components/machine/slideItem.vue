@@ -70,7 +70,7 @@
 
   .slide-item {
     text-align: left;
-    width: 168px;
+    width: 162px;
 
     h3 {
       font-weight: 400;

@@ -1,7 +1,7 @@
 <template>
   <div class="machine">
     <div class="machineData-wrap">
-      <drop-item class="machine-item" title="国家" :drop-list="countries"></drop-item>
+      <drop-item v-model="req_body.county" class="machine-item" title="国家" :drop-list="countries"></drop-item>
       <!--      <drop-item class="machine-item" title="Image" :dropList="images"></drop-item>-->
       <drop-item
         class="machine-item"
@@ -502,7 +502,7 @@ export default {
         }
       ],
       req_body: {
-        county: "中国",
+        county: "all",
         status: 0,
         totalTime: 1,
         reliability: 0.9,
@@ -616,7 +616,7 @@ export default {
     },
     queryMc() {
       const params = {
-        county: "all",
+        county: this.req_body.county,
         idle_status: 0,
         total_time: 0,
         total_rent_count: 0,

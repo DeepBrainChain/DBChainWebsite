@@ -28,7 +28,7 @@
           >{{$t('gpu.remainingTime')}}：{{$hourToDT(item.orderData.rest_time_rent/60)}}</span>
         </div>
         <div class="r-wrap">
-          <span v-if="item.rent_success">正在使用中</span>
+          <!--<span v-if="item.rent_success">正在使用中</span>
           <span
             v-if="Math.floor((new Date().getTime() - item.orderData.milli_create_order_time)/60000) <= 15"
           >等待支付</span>
@@ -37,14 +37,22 @@
             剩余支付时间：{{
             15 - Math.floor((new Date().getTime() - item.orderData.milli_create_order_time)/60000)
             }}分钟
-          </span>
+          </span>-->
+          <span v-if="item.orderData.order_is_over && item.orderData.order_isnormal_over">订单中断</span>
+          <span v-else-if="item.orderData.order_is_over && item.orderData.rder_isnormal_over">订单中断</span>
+          <span v-else-if="item.orderData.order_is_cancer">订单取消</span>
+          <span v-else-if="item.orderData.rent_success">正在使用中</span>
+          <span v-else-if="item.orderData.ontainer_is_exis && item.orderData.rent_success===fasle"
+          >支付验证中</span>
+          <span v-else-if="item.orderData.pay_error && item.orderData.is_return_dbc===false">支付验证失败</span>
+          <span v-else-if="item.orderData.pay_error && item.orderData.is_return_dbc">退币成功</span>
         </div>
       </div>
       <div class="pay-wrap">
         <div class="rate-head">
           <div class="flex right vCenter">
-            <el-rate v-model="rateValue"></el-rate>
-            <span>7.7{{$t('scores')}}</span>
+            <el-rate :value="item.orderData.evaluation_score/2"></el-rate>
+            <span>{{item.orderData.evaluation_score}}{{$t('scores')}}</span>
           </div>
         </div>
         <div>
@@ -71,7 +79,7 @@
         <!--        </div>-->
       </div>
       <div class="status-wrap">
-        <div class="flex status-title">
+        <!--<div class="flex status-title">
           <span class="cPrimaryColor">
             ID :
             <a class="is-link" href="javascript:" @click="pushDetail">{{item.mcData.machine_id}}</a>
@@ -189,26 +197,183 @@
             <div>DBC版本</div>
             <div class="cPrimaryColor">{{item.mcData.dbc_version}}</div>
           </div>
+        </div>-->
+        <div class="flex status-title">
+          <div>
+            <el-button plain class="is-link" @click="pushDetail">{{item.mcData.machine_id}}</el-button>
+            <span class="fs28">
+              <span
+                class="cPrimaryColor"
+              >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$ {{item.mcData.gpu_price_dollar }}/小时</span>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              DBC版本：
+              <a class="cPrimaryColor">{{item.mcData.dbc_version}}</a>
+            </span>
+          </div>
+        </div>
+        <div class="flex">
+          <div class="td2">
+            <span class="fs28">
+              <a class="cPrimaryColor">{{item.mcData.gpu_type}}</a>
+              <a class="cPrimaryColor">x{{item.mcData.gpu_count}}</a>
+            </span>
+          </div>
+          <div class="td2">
+            <span class="fs28">
+              <a class="cPrimaryColor">{{item.mcData.county}}中国</a>
+            </span>
+          </div>
+        </div>
+        <div class="flex">
+          <div class="td">
+            <span class="fs16">
+              闲置GPU数:
+              <a class="cPrimaryColor">{{item.mcData.gpu_count - item.mcData.gpu_be_used}}</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              最长可租用时间：
+              <a class="cPrimaryColor">{{item.mcData.length_of_available_time}}小时</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              累计出租时长：
+              <a
+                class="cPrimaryColor"
+              >{{item.mcData.total_time_be_used/60}}小时{{item.mcData.total_time_be_used%60}}分钟</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              出租总次数：
+              <a class="cPrimaryColor">{{item.mcData.total_rent_count}}</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              中断次数：
+              <a class="cPrimaryColor">{{item.mcData.error_rent_count}}</a>
+            </span>
+          </div>
+        </div>
+        <div class="flex">
+          <div class="td">
+            <span class="fs16">
+              Tensor Core：
+              <a class="cPrimaryColor">{{item.mcData.tensor_core}}</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              CUDA版本号：
+              <a class="cPrimaryColor">{{item.mcData.cuda_version}}</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              硬盘：
+              <a class="cPrimaryColor">{{parseInt(item.mcData.disk_space/(1024*1024))}}GB</a>
+              <a class="cPrimaryColor">&nbsp;&nbsp;{{item.mcData.disk_type}}</a>
+            </span>
+          </div>
+          <div class="td3">
+            <span class="fs16">
+              CPU型号：
+              <a class="cPrimaryColor">{{item.mcData.cpu_type}}</a>
+            </span>
+          </div>
+        </div>
+        <div class="flex">
+          <div class="td">
+            <span class="fs16">
+              半精度浮点运算数：
+              <a class="cPrimaryColor">{{item.mcData.half_precision_tflops}}TFLOPS</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              GPU显存：
+              <a class="cPrimaryColor">{{parseInt(item.mcData.gpu_ram_size/(1024*1024))}}GB</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              硬盘带宽：
+              <a class="cPrimaryColor">{{parseInt(item.mcData.disk_bandwidth/1024)}}MB/s</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              CPU内核数：
+              <a class="cPrimaryColor">{{item.mcData.cpu_numbers}}</a>
+            </span>
+          </div>
+        </div>
+        <div class="flex">
+          <div class="td">
+            <span class="fs16">
+              单精度浮点运算数：
+              <a class="cPrimaryColor">{{item.mcData.single_precision_tflops}}TFLOPS</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              GPU显存带宽：
+              <a class="cPrimaryColor">{{parseInt(item.mcData.gpu_ram_bandwidth/(1024*1024))}}GB/s</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              上行带宽：
+              <a class="cPrimaryColor">{{parseInt(item.mcData.inet_up/1024)}}Mbps</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              内存数：
+              <a class="cPrimaryColor">{{parseInt(item.mcData.ram_size/(1024*1024))}}GB</a>
+            </span>
+          </div>
+        </div>
+        <div class="flex">
+          <div class="td">
+            <span class="fs16">
+              双精度浮点运算数：
+              <a class="cPrimaryColor">{{item.mcData.duoble_precision_tflops}}TFLOPS</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              总线传输速度：
+              <a class="cPrimaryColor">{{parseInt(item.mcData.pcie_bandwidth/(1024*1024))}}GB/s</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              下行带宽：
+              <a class="cPrimaryColor">{{parseInt(item.mcData.inet_down/1024)}}Mbps</a>
+            </span>
+          </div>
+          <div class="td3">
+            <span class="fs16">
+              操作系统：
+              <a class="cPrimaryColor">{{item.mcData.os}}</a>
+            </span>
+          </div>
         </div>
       </div>
-      <div class="tools-head bd">
+      <!--<div class="tools-head bd">
         <div class="l-wrap">
-          <span
-            class="tools-title small"
-          >{{$t('gpu.machineLoginInfo')}}：ssh -p 20049 root@116.85.24.172，{{$t('password')}}：xxxxx</span>
+          <span class="tools-title small">{{$t('gpu.machineLoginInfo')}}：ssh -p 20049 root@116.85.24.172，{{$t('password')}}：xxxxx</span>
         </div>
-      </div>
+      </div>-->
       <div class="tools-head">
         <div class="l-wrap">
-          <span v-if="item.orderData.order_is_over && item.orderData.order_isnormal_over">订单中断</span>
-          <span v-else-if="item.orderData.order_is_over && item.orderData.rder_isnormal_over">订单中断</span>
-          <span v-else-if="item.orderData.order_is_cancer">订单取消</span>
-          <span v-else-if="item.orderData.rent_success">正在使用中</span>
-          <span
-            v-else-if="item.orderData.ontainer_is_exis && item.orderData.rent_success===fasle"
-          >支付验证中</span>
-          <span v-else-if="item.orderData.pay_error && item.orderData.is_return_dbc===false">支付验证失败</span>
-          <span v-else-if="item.orderData.pay_error && item.orderData.is_return_dbc">退币成功</span>
         </div>
         <div v-if="item.orderData.order_is_cancer === false" class="r-wrap">
           <el-button
@@ -217,7 +382,7 @@
             class="tool-btn"
             size="mini"
             style="width: 86px"
-            @click="dlgRate_open=true"
+            @click="openRateDlg(item)"
           >{{$t('gpu.rate')}}</el-button>
           <template v-else-if="item.orderData.rent_success">
             <!--<el-button plain style="width: 86px" class="tool-btn" size="mini"
@@ -275,7 +440,7 @@
     <!--    Unsubscribe-->
     <dlg-unsubscribe :item="curItem" :open.sync="dlgUnsubscribe_open" @success="stopRentSuccess"></dlg-unsubscribe>
     <!--    rate-->
-    <dlg-rate :open.sync="dlgRate_open" :isEdit="isRateEdit"></dlg-rate>
+    <dlg-rate :open.sync="dlgRate_open" :isEdit="isRateEdit" :item="curItem" @success="successRate"></dlg-rate>
   </div>
 </template>
 
@@ -535,8 +700,6 @@ export default {
           });
         }
       });
-
-      b;
     },
     binding(isNewMail) {
       this.isBinding = true;
@@ -582,6 +745,13 @@ export default {
     },
     stopRentSuccess() {
       this.queryOrderList();
+    },
+    openRateDlg(item) {
+      this.curItem = item
+      this.dlgRate_open = true
+    },
+    successRate() {
+      this.queryOrderList()
     }
   }
 };
@@ -686,8 +856,65 @@ export default {
   .status-title {
     padding-bottom: 17px;
   }
-
   .flex {
+    display: flex;
+    align-items: flex-start;
+    padding: 5px 0;
+
+    &.status-title {
+      justify-content: space-between;
+      align-items: center;
+    }
+    .td3 {
+      width: 40%;
+      line-height: 24px;
+
+      .cPrimaryColor {
+        font-size: 12px;
+        &.fs16 {
+          font-size: 28px;
+        }
+      }
+    }
+    .td2 {
+      width: 50%;
+
+      line-height: 24px;
+      .cPrimaryColor {
+        font-size: 32px;
+        &.fs28 {
+          font-size: 32px;
+        }
+      }
+    }
+    .td {
+      width: 20%;
+      line-height: 24px;
+
+      .cPrimaryColor {
+        font-size: 12px;
+
+        &.fs16 {
+          font-size: 16px;
+        }
+      }
+
+      .upSpeed,
+      .downSpeed {
+        display: inline-block;
+        height: 16px;
+        line-height: 16px;
+        margin-right: 8px;
+        border: 1px dashed #666;
+        font-size: 14px;
+      }
+
+      .downSpeed {
+        transform: rotateZ(180deg);
+      }
+    }
+  }
+  /*.flex {
     display: flex;
     padding: 5px 0;
 
@@ -713,6 +940,6 @@ export default {
         transform: rotateZ(180deg);
       }
     }
-  }
+  }*/
 }
 </style>
