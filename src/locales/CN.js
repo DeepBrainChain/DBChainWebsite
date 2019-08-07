@@ -128,6 +128,16 @@ export default {
       '空闲机器',
       '被租机器'
     ], // new
+
+    dbc_version: [
+      '全部',
+      'V0.3.7.2'
+    ],
+    have_ip: [
+      '全部',
+      '没有',
+      '有'
+    ],
     cumulativeDuration: '累计出租时长', // new
     // reliability: '历史可靠性', // new
     lengthOfAvailableTime: '最长可用时间', // new
@@ -159,8 +169,35 @@ export default {
     backDbcNum: '退回DBC数量为',
     rateMsg: '你想给它评几星',
   },
+
+  county: '国家',
+  idle_status: '机器使用状态',
+  total_time: '累计出租时间',
+  total_rent_count: '出租总次数',
+  error_rent_count: '中断次数',
+  disk_GB_perhour_dollar: '',
+  length_of_available_time: '最长可用时间',
+  gpu_price_dollar: '单GPU每小时价格',
+  gpu_count: 'GPU数量',
+  tensor_cores: 'Tensor Cores',
+  half_precision_tflops: '半精度浮点数',
+  single_precision_tflops: '单精度浮点数',
+  double_precision_tflops: '双精度浮点数',
+  gpu_ram_size: 'GPU显存',
+  gpu_ram_bandwidth: 'GPU显存带宽',
+  pcie_bandwidth: '总线传输速度',
+  cpu_numbers: 'CPU内核数',
+  ram_size: '内存大小',
+  disk_bandwidth: '硬盘带宽',
+  inet_up: '上行带宽',
+  inet_down: '下行带宽',
+  have_ip_title: '独立IP',
+  onlines_tatus: '机器在线状态',
+  disk_space: '硬盘空间',
+  dbc_version_title: 'DBC版本',
+
   msg: {
-    dlg_0: '温馨提示：当前机器最长可以租用{time}小时，最短1个小时',
+    dlg_0: '当前机器最长可以租用{time}，最短1个小时',
     //dlg_1: 'DBChain平台收取 3%的服务费（不支持退款）',
     // dlg_2: '1.续租机器退订，将收取实际产生费用的2倍，最多收取合约中所有DBC',
     // dlg_3: '2.如果机器使用过程中出现中断，将最多额外退回7天机器已使用量的DBC。',
@@ -197,7 +234,7 @@ export default {
     intr_2: '这里的GPU来自于全球各地，通过DBC分布式网络连接在一起，这里面没有中心化服务器，你的数据不会被窃取。',
     intr_3: '在这个DBC网络购买机器需要使用DBC Token进行支付。GPU是按照美元定价，DBC价格越高需要的数量越少。',
     intr_4: 'DBC是区块链技术驱动的人工智能算力网络，它将分布在全球的GPU通过区块链技术连接在一起。',
-    intr_5: '在DBC网络中你可以找到便宜且类型多样的GPU。当你进行的时候，所有的数据都是加密传输的',
+    intr_5: '在DBC网络中你可以找到便宜且类型多样的GPU。当你使用的时候，所有的数据都是加密传输的',
     intr_6: 'GPU租用按照分钟计费，GPU使用过程中如果出现中断，将会最多补偿144小时的费用',
     intr_7: '深脑链从2020年开始每年挖矿产出5亿，3年后，每年产出2.5亿，并且以后每5年产出减半，总计有40亿',
     intr_8: '加入深脑链收益组成：超级节点收益+挖矿收益+租金收益',

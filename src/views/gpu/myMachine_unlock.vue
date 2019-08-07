@@ -1,10 +1,15 @@
 <template>
   <div>
     <div class="title">
-      <span>{{$t('gpu.myMachineTitle')}}：{{res_body.content.length}} {{$t('gpu.pcs')}} </span>
+      <span>{{$t('gpu.myMachineTitle')}}：{{res_body.content.length}} {{$t('gpu.pcs')}}</span>
       <div v-if="!isBinding && bindMail" class="binding">
         <span class="bindingInfo">绑定的邮箱：{{bindMail}}</span>
-        <el-button class="ml10" size="mini" plain @click="openDlgMail(false)">{{$t('gpu.modifyMail')}}</el-button>
+        <el-button
+          class="ml10"
+          size="mini"
+          plain
+          @click="openDlgMail(false)"
+        >{{$t('gpu.modifyMail')}}</el-button>
       </div>
       <div v-else-if="!isBinding" class="bind">
         <el-button size="small" plain @click="openDlgMail(true)">{{$t('gpu.bindMail')}}</el-button>
@@ -18,16 +23,21 @@
       <div class="tools-head">
         <div class="l-wrap">
           <!--          <span class="tools-title">{{$t('gpu.mcStatusTitle')}}：<b>{{$t('gpu.machineOnLine')}}</b></span>-->
-          <span class="tools-title">{{$t('gpu.remainingTime')}}：{{$hourToDT(item.orderData.rest_time_rent/60)}}</span>
+          <span
+            class="tools-title"
+          >{{$t('gpu.remainingTime')}}：{{$hourToDT(item.orderData.rest_time_rent/60)}}</span>
         </div>
         <div class="r-wrap">
           <span v-if="item.rent_success">正在使用中</span>
           <span
-            v-if="Math.floor((new Date().getTime() - item.orderData.milli_create_order_time)/60000) <= 15">等待支付</span>
+            v-if="Math.floor((new Date().getTime() - item.orderData.milli_create_order_time)/60000) <= 15"
+          >等待支付</span>
           <span v-else-if="item.orderData.order_is_cancer">未支付</span>
-          <span v-if="item.orderData.order_is_cancer === false" class="ml10">剩余支付时间：{{
+          <span v-if="item.orderData.order_is_cancer === false" class="ml10">
+            剩余支付时间：{{
             15 - Math.floor((new Date().getTime() - item.orderData.milli_create_order_time)/60000)
-            }}分钟</span>
+            }}分钟
+          </span>
         </div>
       </div>
       <div class="pay-wrap">
@@ -35,7 +45,6 @@
           <div class="flex right vCenter">
             <el-rate v-model="rateValue"></el-rate>
             <span>7.7{{$t('scores')}}</span>
-
           </div>
         </div>
         <div>
@@ -47,9 +56,10 @@
           <span class="td">{{$t('gpu.gpuBilling')}}：$ {{item.orderData.gpu_price_dollar}}/hr</span>
         </div>
         <div>
-          <span class="td">{{$t('gpu.currentRemaining')}}：{{item.orderData.dbc_total_count - item.orderData.dbc_real_need_count}} DBC</span>
+          <span
+            class="td"
+          >{{$t('gpu.currentRemaining')}}：{{item.orderData.dbc_total_count - item.orderData.dbc_real_need_count}} DBC</span>
           <span class="td">{{$t('gpu.payPrice')}}：$ {{item.orderData.dbc_price.toFixed(4)}}</span>
-
         </div>
         <!--        <div>-->
         <!--          <span class="td">{{$t('gpu.gpuRemainTime')}}（DBC）：422</span>-->
@@ -62,7 +72,10 @@
       </div>
       <div class="status-wrap">
         <div class="flex status-title">
-          <span class="cPrimaryColor">ID : <a class="is-link" href="javascript:" @click="pushDetail">{{item.mcData.machine_id}}</a></span>
+          <span class="cPrimaryColor">
+            ID :
+            <a class="is-link" href="javascript:" @click="pushDetail">{{item.mcData.machine_id}}</a>
+          </span>
           <span class="pl100">$ {{item.mcData.gpu_price_dollar * item.mcData.gpu_count}}/hr</span>
         </div>
         <div class="flex">
@@ -85,28 +98,16 @@
             <div class="cPrimaryColor">{{item.mcData.length_of_available_time}}h</div>
           </div>
           <div class="td">
-            <div>
-              累计出租时长
-            </div>
-            <div class="cPrimaryColor">
-              {{item.mcData.total_rent_count}}h
-            </div>
+            <div>累计出租时长</div>
+            <div class="cPrimaryColor">{{item.mcData.total_rent_count}}h</div>
           </div>
           <div class="td">
-            <div>
-              出租总次数
-            </div>
-            <div class="cPrimaryColor">
-              {{item.mcData.total_time_be_used}}
-            </div>
+            <div>出租总次数</div>
+            <div class="cPrimaryColor">{{item.mcData.total_time_be_used}}</div>
           </div>
           <div class="td">
-            <div>
-              中断次数
-            </div>
-            <div class="cPrimaryColor">
-              {{item.mcData.error_rent_count}}
-            </div>
+            <div>中断次数</div>
+            <div class="cPrimaryColor">{{item.mcData.error_rent_count}}</div>
           </div>
         </div>
         <div class="flex">
@@ -192,7 +193,9 @@
       </div>
       <div class="tools-head bd">
         <div class="l-wrap">
-          <span class="tools-title small">{{$t('gpu.machineLoginInfo')}}：ssh -p 20049 root@116.85.24.172，{{$t('password')}}：xxxxx</span>
+          <span
+            class="tools-title small"
+          >{{$t('gpu.machineLoginInfo')}}：ssh -p 20049 root@116.85.24.172，{{$t('password')}}：xxxxx</span>
         </div>
       </div>
       <div class="tools-head">
@@ -201,38 +204,60 @@
           <span v-else-if="item.orderData.order_is_over && item.orderData.rder_isnormal_over">订单中断</span>
           <span v-else-if="item.orderData.order_is_cancer">订单取消</span>
           <span v-else-if="item.orderData.rent_success">正在使用中</span>
-          <span v-else-if="item.orderData.ontainer_is_exis && item.orderData.rent_success===fasle">支付验证中</span>
+          <span
+            v-else-if="item.orderData.ontainer_is_exis && item.orderData.rent_success===fasle"
+          >支付验证中</span>
           <span v-else-if="item.orderData.pay_error && item.orderData.is_return_dbc===false">支付验证失败</span>
           <span v-else-if="item.orderData.pay_error && item.orderData.is_return_dbc">退币成功</span>
         </div>
         <div v-if="item.orderData.order_is_cancer === false" class="r-wrap">
-          <el-button v-if="item.orderData.order_is_over" plain class="tool-btn "
-                     size="mini" style="width: 86px"
-                     @click="dlgRate_open=true">
-            {{$t('gpu.rate')}}
-          </el-button>
+          <el-button
+            v-if="item.orderData.order_is_over"
+            plain
+            class="tool-btn"
+            size="mini"
+            style="width: 86px"
+            @click="dlgRate_open=true"
+          >{{$t('gpu.rate')}}</el-button>
           <template v-else-if="item.orderData.rent_success">
             <!--<el-button plain style="width: 86px" class="tool-btn" size="mini"
                        @click="dlgReload_open = true">
               {{$t('gpu.reload')}}
             </el-button>-->
-            <el-button plain class="tool-btn " style="width: 86px" size="mini"
-                       @click="stopRent(item)">
-              {{$t('unsubscribe')}}
-            </el-button>
+            <el-button
+              plain
+              class="tool-btn"
+              style="width: 86px"
+              size="mini"
+              @click="stopRent(item)"
+            >{{$t('unsubscribe')}}</el-button>
           </template>
           <template v-else-if="item.orderData.rent_success === false">
-            <el-button :disabled="item.orderData.container_is_exist && item.orderData.rent_success === false" plain :loading="isPaying" class="tool-btn" size="mini"
-                       @click="payOrder(item)">
-              确认支付
-            </el-button>
-            <el-button v-if="!(item.orderData.container_is_exist && item.orderData.rent_success === false)" :loading="isPaying" class="tool-btn" size="mini" plain @click="cancelOrder(item)">
-              取消订单
-            </el-button>
+            <el-button
+              :disabled="item.orderData.container_is_exist && item.orderData.rent_success === false"
+              plain
+              :loading="isPaying"
+              class="tool-btn"
+              size="mini"
+              @click="payOrder(item)"
+            >确认支付</el-button>
+            <el-button
+              v-if="!(item.orderData.container_is_exist && item.orderData.rent_success === false)"
+              :loading="isPaying"
+              class="tool-btn"
+              size="mini"
+              plain
+              @click="cancelOrder(item)"
+            >取消订单</el-button>
           </template>
-          <el-button v-else-if="item.orderData.is_return_dbc && item.orderData.pay_error" class="tool-btn" style="width: 86px" plain size="mini" @click="dlgUnsubscribe_open=true">
-            退币
-          </el-button>
+          <el-button
+            v-else-if="item.orderData.is_return_dbc && item.orderData.pay_error"
+            class="tool-btn"
+            style="width: 86px"
+            plain
+            size="mini"
+            @click="dlgUnsubscribe_open=true"
+          >退币</el-button>
         </div>
       </div>
     </div>
@@ -241,7 +266,12 @@
     <!--    increaseHD-dlg-->
     <dlg-hd :open.sync="dlgHD_open"></dlg-hd>
     <!--    bindMail-dlg-->
-    <dlg-mail :open.sync="dlgMail_open" :is-new-mail="isNewMail" @binding="binding" @fail="bindFail"></dlg-mail>
+    <dlg-mail
+      :open.sync="dlgMail_open"
+      :is-new-mail="isNewMail"
+      @binding="binding"
+      @fail="bindFail"
+    ></dlg-mail>
     <!--    Unsubscribe-->
     <dlg-unsubscribe :item="curItem" :open.sync="dlgUnsubscribe_open" @success="stopRentSuccess"></dlg-unsubscribe>
     <!--    rate-->
@@ -250,411 +280,439 @@
 </template>
 
 <script>
-  import DlgReload from '@/components/machine/dlg_reload'
-  import DlgHd from '@/components/machine/dlg_increaseHD'
-  import DlgMail from '@/components/machine/dlg_bindMail'
-  import DlgUnsubscribe from '@/components/machine/dlg_unsubscribe'
-  import DlgRate from '@/components/machine/dlg_rate'
-  import {
-    queryBindMail_rent,
-    query_machine_by_wallet,
-    get_all_order,
-    can_rent_this_machine,
-    pay,
-    get_cancer_code,
-    cancer_order,
-    binding_is_ok,
-    binding_is_ok_modify,
-    get_stop_code,
-    stop
-  } from '@/api'
-  import {
-    getAccount,
-    transfer,
-  } from '@/utlis'
+import DlgReload from "@/components/machine/dlg_reload";
+import DlgHd from "@/components/machine/dlg_increaseHD";
+import DlgMail from "@/components/machine/dlg_bindMail";
+import DlgUnsubscribe from "@/components/machine/dlg_unsubscribe";
+import DlgRate from "@/components/machine/dlg_rate";
+import {
+  queryBindMail_rent,
+  query_machine_by_wallet,
+  get_all_order,
+  can_rent_this_machine,
+  pay,
+  get_cancer_code,
+  cancer_order,
+  binding_is_ok,
+  binding_is_ok_modify,
+  get_stop_code,
+  stop
+} from "@/api";
+import { getAccount, transfer } from "@/utlis";
 
-  export default {
-    name: "myMachine",
-    components: {
-      DlgReload,
-      DlgHd,
-      DlgMail,
-      DlgUnsubscribe,
-      DlgRate
-    },
-    data() {
-      return {
-        rateValue: undefined,
-        dlgReload_open: false,
-        dlgHD_open: false,
-        dlgMail_open: false,
-        dlgUnsubscribe_open: false,
-        dlgRate_open: false,
-        isNewMail: false,
-        isBinding: false,
-        isBinded: false,
-        bindMail: '',
-        res_body: {
-          content: []
-        },
-        isPaying: false,
-        curItem: undefined,
-        isRateEdit: false
-      }
-    },
-    created() {
-      this.queryMail()
-      this.queryOrderList()
-    },
-    methods: {
-      // pay
-      payOrder(item) {
-        this.isPaying = true
-        const si = setInterval(() => {
-          can_rent_this_machine({
-            order_id: item.orderData.order_id
-          }).then(res => {
-              if (res.status === 1) {
-                this.$message({
-                  showClose: true,
-                  message: res.msg,
-                  type: 'success'
-                })
-                const amount = item.orderData.dbc_total_count + (item.orderData.code * 1)
-                // console.log(amount)
-                // console.log(res.content)
-                return transfer({
-                  toAddress: res.content,
-                  amount
-                })
-              } else if (res.status === 2) {
-                this.$message({
-                  showClose: true,
-                  message: res.msg,
-                  type: 'info'
-                })
-              } else {
-                this.$message({
-                  showClose: true,
-                  message: res.msg,
-                  type: 'error'
-                })
-                clearInterval(si)
-                this.isPaying = false
-              }
-            }
-          ).then(res => {
-            if (res.response.result) {
-              const txid = res.response.txid
-              this.isPaying = false
-              clearInterval(si)
-              return pay({
-                order_id: item.orderData.order_id,
-                dbc_hash: txid
-              })
-            } else {
-              this.$message({
-                showClose: true,
-                message: '支付失败',
-                type: 'error'
-              })
-              this.isPaying = false
-              clearInterval(si)
-              return Promise.reject('pay fail')
-            }
-          }).then(res => {
+export default {
+  name: "myMachine",
+  components: {
+    DlgReload,
+    DlgHd,
+    DlgMail,
+    DlgUnsubscribe,
+    DlgRate
+  },
+  data() {
+    return {
+      rateValue: undefined,
+      dlgReload_open: false,
+      dlgHD_open: false,
+      dlgMail_open: false,
+      dlgUnsubscribe_open: false,
+      dlgRate_open: false,
+      isNewMail: false,
+      isBinding: false,
+      isBinded: false,
+      bindMail: "",
+      res_body: {
+        content: []
+      },
+      isPaying: false,
+      curItem: undefined,
+      isRateEdit: false
+    };
+  },
+  created() {
+    // this.binding(isNewMail);
+    this.queryMail();
+    this.queryOrderList();
+  },
+  methods: {
+    // pay
+    payOrder(item) {
+      this.isPaying = true;
+      const si = setInterval(() => {
+        can_rent_this_machine({
+          order_id: item.orderData.order_id
+        })
+          .then(res => {
             if (res.status === 1) {
               this.$message({
                 showClose: true,
                 message: res.msg,
-                type: 'success'
-              })
+                type: "success"
+              });
+              const amount =
+                item.orderData.dbc_total_count + item.orderData.code * 1;
+              // console.log(amount)
+              // console.log(res.content)
+              return transfer({
+                toAddress: res.content,
+                amount
+              });
+            } else if (res.status === 2) {
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: "info"
+              });
             } else {
               this.$message({
                 showClose: true,
                 message: res.msg,
-                type: 'error'
-              })
+                type: "error"
+              });
+              clearInterval(si);
+              this.isPaying = false;
             }
-            this.isPaying = false
-            this.queryOrderList()
           })
-        }, 5000)
-      },
-      // cancel
-      cancelOrder(item) {
-        get_cancer_code({
-          order_id: item.orderData.order_id
-        }).then(res => {
-          if (res.status === 1) {
-            this.$prompt('验证码已发送至您的邮箱，请填写验证码', '取消订单', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-            }).then(({value}) => {
-              return cancer_order({
+          .then(res => {
+            if (res.response.result) {
+              const txid = res.response.txid;
+              this.isPaying = false;
+              clearInterval(si);
+              return pay({
                 order_id: item.orderData.order_id,
-                cancer_code: value
-              })
-            }).then(res => {
-              if (res.status === 1) {
-                this.$message({
-                  showClose: true,
-                  message: res.msg,
-                  type: 'success'
-                })
-                this.queryOrderList()
-              } else {
-                this.$message({
-                  showClose: true,
-                  message: res.msg,
-                  type: 'error'
-                })
-              }
-            }).catch(err => {
-              if (err) {
-                console.log(err)
-              }
+                dbc_hash: txid
+              });
+            } else {
+              this.$message({
+                showClose: true,
+                message: "支付失败",
+                type: "error"
+              });
+              this.isPaying = false;
+              clearInterval(si);
+              return Promise.reject("pay fail");
+            }
+          })
+          .then(res => {
+            if (res.status === 1) {
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: "success"
+              });
+            } else {
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: "error"
+              });
+            }
+            this.isPaying = false;
+            this.queryOrderList();
+          });
+      }, 5000);
+    },
+    // cancel
+    cancelOrder(item) {
+      get_cancer_code({
+        order_id: item.orderData.order_id
+      })
+        .then(res => {
+          if (res.status === 1) {
+            this.$prompt("验证码已发送至您的邮箱，请填写验证码", "取消订单", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消"
             })
+              .then(({ value }) => {
+                return cancer_order({
+                  order_id: item.orderData.order_id,
+                  cancer_code: value
+                });
+              })
+              .then(res => {
+                if (res.status === 1) {
+                  this.$message({
+                    showClose: true,
+                    message: res.msg,
+                    type: "success"
+                  });
+                  this.queryOrderList();
+                } else {
+                  this.$message({
+                    showClose: true,
+                    message: res.msg,
+                    type: "error"
+                  });
+                }
+              })
+              .catch(err => {
+                if (err) {
+                  console.log(err);
+                }
+              });
           } else {
             this.$message({
               showClose: true,
               message: res.msg,
-              type: 'error'
-            })
-            return Promise.reject()
+              type: "error"
+            });
+            return Promise.reject();
           }
-        }).then(res => {
+        })
+        .then(res => {
           if (res.status === 1) {
             this.$message({
               showClose: true,
               message: res.msg,
-              type: 'success'
-            })
+              type: "success"
+            });
           }
-        }).finally(() => {
-
         })
-      },
-      // get Order List
-      queryOrderList() {
-        if (!getAccount()) {
-          this.$router.push('/openWallet')
-          return
-        }
-        const wallet_address_user = getAccount().address
-        const promiseList = [
-          query_machine_by_wallet({
-            wallet_address_user
-          }),
-          get_all_order({
-            wallet_address_user
-          })
-        ]
-        Promise.all(promiseList).then(([res_1, res_2]) => {
+        .finally(() => {});
+    },
+    // get Order List
+    queryOrderList() {
+      if (!getAccount()) {
+        this.$router.push("/openWallet");
+        return;
+      }
+      const wallet_address_user = getAccount().address;
+      const promiseList = [
+        query_machine_by_wallet({
+          wallet_address_user
+        }),
+        get_all_order({
+          wallet_address_user
+        })
+      ];
+      Promise.all(promiseList)
+        .then(([res_1, res_2]) => {
           this.res_body.content = res_2.content.map(item => {
-            const mcItem = res_1.content.find(mc => item.machine_id === mc.machine_id)
+            const mcItem = res_1.content.find(
+              mc => item.machine_id === mc.machine_id
+            );
             return {
               orderData: item,
               mcData: mcItem
-            }
-          })
-        }).catch(err => {
-          console.log(err)
+            };
+          });
         })
-      },
-      pushDetail() {
-        this.$router.push('/machineDetail')
-      },
-      openDlgMail(isNewMail) {
-        this.isNewMail = isNewMail
-        this.dlgMail_open = true
-      },
-      //
-      queryMail() {
-        const address = getAccount().address
-        queryBindMail_rent({
-          wallet_address: address
-        }).then(res => {
-          if (res.status === 1) {
-            this.bindMail = res.content
-          }
-        })
-      },
-      binding(isNewMail) {
-        this.isBinding = true
-        let binding = true
-        const si = setInterval(async () => {
-          if (binding) {
-            if (isNewMail) {
-              binding = false
-              const res = await binding_is_ok({
-                wallet_address: getAccount().address
-              })
-              if (res.status === 1) {
-                clearInterval(si)
-                this.bindSuccess()
-              }
-            } else {
-              binding = false
-              const res = await binding_is_ok_modify({
-                wallet_address: getAccount().address
-              })
-              if (res.status === 1) {
-                clearInterval(si)
-                this.bindSuccess()
-              }
-            }
-          }
-          binding = true
-        }, 10000)
-      },
-      // bind fail
-      bindFail() {
-        this.isBinding = false
-      },
-      // bind success
-      bindSuccess() {
-        this.isBinding = false
-        this.queryMail()
-      },
-      // stop rent
-      stopRent(item) {
-        this.dlgUnsubscribe_open = true
-        this.curItem = item
-      },
-      stopRentSuccess() {
-        this.queryOrderList()
-      }
+        .catch(err => {
+          console.log(err);
+        });
     },
+    pushDetail() {
+      this.$router.push("/machineDetail");
+    },
+    openDlgMail(isNewMail) {
+      this.isNewMail = isNewMail;
+      this.dlgMail_open = true;
+    },
+    //
+    queryMail() {
+      const address = getAccount().address;
+
+      queryBindMail_rent({
+        wallet_address: address
+      }).then(res => {
+        if (res.status === 1) {
+          this.bindMail = res.content;
+        } else {
+          binding_is_ok({
+            wallet_address: address
+          }).then(ren => {
+            if (ren.status === 2) {
+              this.isBinding = true;
+            }
+          });
+
+          binding_is_ok_modify({
+            wallet_address: address
+          }).then(ren => {
+            if (ren.status === 2) {
+              this.isBinding = true;
+            }
+          });
+        }
+      });
+
+      b;
+    },
+    binding(isNewMail) {
+      this.isBinding = true;
+      let binding = true;
+      const si = setInterval(async () => {
+        if (binding) {
+          if (isNewMail) {
+            binding = false;
+            const res = await binding_is_ok({
+              wallet_address: getAccount().address
+            });
+            if (res.status === 1) {
+              clearInterval(si);
+              this.bindSuccess();
+            }
+          } else {
+            binding = false;
+            const res = await binding_is_ok_modify({
+              wallet_address: getAccount().address
+            });
+            if (res.status === 1) {
+              clearInterval(si);
+              this.bindSuccess();
+            }
+          }
+        }
+        binding = true;
+      }, 10000);
+    },
+    // bind fail
+    bindFail() {
+      this.isBinding = false;
+    },
+    // bind success
+    bindSuccess() {
+      this.isBinding = false;
+      this.queryMail();
+    },
+    // stop rent
+    stopRent(item) {
+      this.dlgUnsubscribe_open = true;
+      this.curItem = item;
+    },
+    stopRentSuccess() {
+      this.queryOrderList();
+    }
   }
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "~@/assets/css/variables.scss";
+@import "~@/assets/css/variables.scss";
 
-  .title {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 20px;
-    line-height: 20px;
+.title {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 20px;
+  line-height: 20px;
 
-    .bindInfo {
-      display: inline-block;
-      font-size: 12px;
-      min-height: 40px;
-      color: $textColor_def;
-      vertical-align: middle;
+  .bindInfo {
+    display: inline-block;
+    font-size: 12px;
+    min-height: 40px;
+    color: $textColor_def;
+    vertical-align: middle;
+  }
+
+  .bindingInfo {
+    font-size: 12px;
+    color: $textColor_def;
+    vertical-align: middle;
+  }
+
+  .iconwenhao {
+    color: $primaryColor;
+  }
+}
+
+.border-content {
+  border: 1px solid #979797;
+  margin-bottom: 20px;
+}
+
+.rate-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tools-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+
+  &.bd {
+    border-bottom: 1px solid #e1e6ec;
+  }
+
+  .tools-title {
+    font-size: 16px;
+    color: #050d68;
+
+    &.small {
+      font-size: 14px;
+      color: #333;
     }
+  }
 
-    .bindingInfo {
-      font-size: 12px;
-      color: $textColor_def;
-      vertical-align: middle;
-    }
+  .tool-btn {
+    font-size: 14px;
 
-    .iconwenhao {
+    &.blue {
+      border-color: $primaryColor;
       color: $primaryColor;
     }
   }
 
-  .border-content {
-    border: 1px solid #979797;
-    margin-bottom: 20px;
+  .cGray {
+    padding-left: 44px;
+  }
+}
+
+.pay-wrap {
+  padding: 10px 20px;
+  border-top: 1px solid #e1e6ec;
+  font-size: 14px;
+  line-height: 28px;
+  color: #666;
+  background-color: #f6f9fc;
+
+  .td {
+    display: inline-block;
+    width: 33.3%;
+  }
+}
+
+.status-wrap {
+  padding: 15px 20px 12px;
+  border-top: 1px solid #e1e6ec;
+  border-bottom: 1px solid #e1e6ec;
+  color: #666;
+  font-size: 14px;
+
+  .status-title {
+    padding-bottom: 17px;
   }
 
-  .rate-head {
+  .flex {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .tools-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-
-    &.bd {
-      border-bottom: 1px solid #E1E6EC;
-    }
-
-    .tools-title {
-      font-size: 16px;
-      color: #050D68;
-
-      &.small {
-        font-size: 14px;
-        color: #333;
-      }
-    }
-
-    .tool-btn {
-      font-size: 14px;
-
-      &.blue {
-        border-color: $primaryColor;
-        color: $primaryColor;
-      }
-    }
-
-    .cGray {
-      padding-left: 44px;
-    }
-  }
-
-  .pay-wrap {
-    padding: 10px 20px;
-    border-top: 1px solid #E1E6EC;
-    font-size: 14px;
-    line-height: 28px;
-    color: #666;
-    background-color: #F6F9FC;
+    padding: 5px 0;
 
     .td {
-      display: inline-block;
-      width: 33.3%;
+      width: 20%;
+      line-height: 24px;
 
-    }
-  }
+      .bold {
+        font-weight: 700;
+      }
 
-  .status-wrap {
-    padding: 15px 20px 12px;
-    border-top: 1px solid #E1E6EC;
-    border-bottom: 1px solid #E1E6EC;
-    color: #666;
-    font-size: 14px;
+      .upSpeed,
+      .downSpeed {
+        display: inline-block;
+        height: 16px;
+        line-height: 16px;
+        margin-right: 8px;
+        border: 1px dashed #666;
+        font-size: 14px;
+      }
 
-    .status-title {
-      padding-bottom: 17px;
-    }
-
-    .flex {
-      display: flex;
-      padding: 5px 0;
-
-      .td {
-        width: 20%;
-        line-height: 24px;
-
-        .bold {
-          font-weight: 700;
-        }
-
-        .upSpeed, .downSpeed {
-          display: inline-block;
-          height: 16px;
-          line-height: 16px;
-          margin-right: 8px;
-          border: 1px dashed #666;
-          font-size: 14px;
-        }
-
-        .downSpeed {
-          transform: rotateZ(180deg);
-        }
+      .downSpeed {
+        transform: rotateZ(180deg);
       }
     }
   }
+}
 </style>
