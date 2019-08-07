@@ -1,6 +1,6 @@
 import axios from '@/utlis/axios'
 // const host = 'http://13.124.237.200:8031'
-const host = ''
+const host = 'http://116.85.24.172:8031'
 
 // 发送邮箱验证码
 export const sendMail_rent = params => {

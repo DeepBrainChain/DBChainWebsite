@@ -26,32 +26,32 @@ module.exports = {
         changeOrigin: true
       },
       '/binding_email_rent': {
-        target: 'http://13.124.237.200:8031',
+        target: 'http://116.85.24.172:8031',
         ws: true,
         changeOrigin: true
       },
       'query_all_machines': {
-        target: 'http://13.124.237.200:8031',
+        target: 'http://116.85.24.172:8031',
         ws: true,
         changeOrigin: true
       },
       'rent': {
-        target: 'http://13.124.237.200:8031',
+        target: 'http://116.85.24.172:8031',
         ws: true,
         changeOrigin: true
       },
       'try_rent': {
-        target: 'http://13.124.237.200:8031',
+        target: 'http://116.85.24.172:8031',
         ws: true,
         changeOrigin: true
       },
       'query_machine_by_wallet': {
-        target: 'http://13.124.237.200:8031',
+        target: 'http://116.85.24.172:8031',
         ws: true,
         changeOrigin: true
       },
       'get_all_order': {
-        target: 'http://13.124.237.200:8031',
+        target: 'http://116.85.24.172:8031',
         ws: true,
         changeOrigin: true
       }

@@ -112,7 +112,7 @@ export default {
     rate: '评价',
     createWallet: '创建钱包账号',
     openWallet: '打开钱包账号',
-    rentMachine: 'Open or create a wallet to 租用机',
+    rentMachine: '打开或者创建钱包租用机器',
     mcStatusTitle: '机器状态', // new
     mcStatus: [
       '所有',
@@ -206,7 +206,7 @@ export default {
     '5': '5.从其他支持DBC的钱包转账到钱包账号',
     'reloadWallet': '充值进入钱包账号',
   },
-  miner:{
+  miner: {
     addMc_Title: '请按照如下步骤添加机器：',
     addMc_editTitle: '重新编辑',
     addMc_setupApp: '安装软件',
@@ -220,8 +220,8 @@ export default {
     period_1: '全天（所有时段）',
     period_2: '指定时间段',
     rent: '出租机器',
-    rentMachine: 'Open or create a wallet to 出租机器',
-    addMc_msg_1:[
+    rentMachine: '打开或者创建钱包租用机器',
+    addMc_msg_1: [
       '安装DBC挖矿软件',
       '请根据操作手册进行安装.'
     ],

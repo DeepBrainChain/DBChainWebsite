@@ -7,11 +7,11 @@ export default {
   closeWallet: '关闭钱包',
   toAddress: '目标地址',
   amount: '数量',
-  from: '转账地址',
+  from: '源地址',
   to: '目标地址',
   value: '数量',
   asset: '资产名称',
-  transfer: '转账',
+  transfer: '转账记录Hash值',
   day: '天',
   hour: '小时',
   password: '密码',
@@ -26,7 +26,6 @@ export default {
   newWallet: '新的钱包',
   inputPsWarning: '密码至少需要8个字符',
   create: '创建',
-  continue: '继续',
   dlEncryptedKey: '下载加密后的私钥',
   finished: '完成',
   amountNoMore: '转账数量不能超过您的钱包的余额', // new
@@ -43,6 +42,16 @@ export default {
   scores: '分',
   back: '返回',
   reEdit: '重新编辑',
+  open_wallet: '打开钱包',
+  access_wallet: '选择打开钱包的方式',
+  keystore_file: 'Keystore文件',
+  private_key: '私钥',
+  select_wallet_file: '选择钱包文件',
+  paste_key: '粘贴或者输入私钥',
+  enter_key: '输入密码',
+  continue: '继续',
+  unlock: '解锁',
+
   heads: {
     logo: "DBChain",
     home: "首页",
@@ -71,9 +80,9 @@ export default {
     notice_1: '请保管好私钥信息，私钥丢失，任何人都将无法帮你找回DBC资产!',
     amount: '数量',
     howBuyDBC: '如何购买DBC',
-    exchangeCash: '等值美金',
+    exchangeCash: '等值美元',
     showDeitailDBC: '查看dbc详细信息:',
-    clickCoinmarktcap: '点击coinmarktcap',
+    clickCoinmarktcap: '进入了解',
     transfer: '转账',
     myMachineTitle: '我租用的机器',
     pcs: '台 机器',
@@ -158,12 +167,12 @@ export default {
     // dlg_4: '3.如果租用时间不超过7天，则全部退回',
     dlg_5: '使用过程中机器出现中断，如果使用时间不超过144小时，则退回全部DBC \n' +
       '<br>' + '如果使用时间超过144小时，则退回144小时使用量的DBC',
-    wallet_0: '存储你的私钥文件',
+    wallet_0: '存储你的私钥文件，将文件保存到安全的地方。比如手动抄写下来，放到保险箱',
     wallet_1: '' +
       '<b>千万不要丢失它!</b>' +
       '如果丢失将无法恢复' +
       '<br>' +
-      '也不要分享它！' +
+      '也不要分享它！不要在微信、QQ、Facebook、Line、KakaoTalk、WhatsApp等社交软件互相传输' +
       '如果您在恶意钓鱼网站上使用此文件，您的资金将被窃取！' +
       '<br>' +
       '一定要备份！' +
@@ -171,11 +180,13 @@ export default {
     wallet_2: '保存你的私钥',
     wallet_3: '<b>千万不要丢失它！</b>' +
       '如果丢失将无法恢复<br>' +
-      '<b>也不要分享它！</b>' +
+      '<b>也不要分享它！不要在微信、QQ、Facebook、Line、KakaoTalk、WhatsApp等社交软件互相传输</b>' +
       '如果您在恶意钓鱼网站上使用此文件，您的资金将被窃取！<br>' +
-      '<b>定要备份</b>' +
+      '<b>一定要备份</b>' +
       '就像它有一天可能价值数百万美元一样',
-    wallet_4: '私钥可能是错误的！'
+    wallet_4: '私钥不正确！',
+    wallet_5: '一定要记住密码！不能丢失，' +
+      '你需要这个密码和你的私钥才能解锁钱包 '
   },
   home: {
     intr_1: 'DBC是区块链技术驱动的人工智能算力网络，它将分布在全球的GPU通过区块链技术连接在一起。\n' +
@@ -186,7 +197,7 @@ export default {
     intr_2: '这里的GPU来自于全球各地，通过DBC分布式网络连接在一起，这里面没有中心化服务器，你的数据不会被窃取。',
     intr_3: '在这个DBC网络购买机器需要使用DBC Token进行支付。GPU是按照美元定价，DBC价格越高需要的数量越少。',
     intr_4: 'DBC是区块链技术驱动的人工智能算力网络，它将分布在全球的GPU通过区块链技术连接在一起。',
-    intr_5: '在DBC平台你可以找到便宜且类型多样的GPU。当你进行的时候，所有的数据都是加密传输的',
+    intr_5: '在DBC网络中你可以找到便宜且类型多样的GPU。当你进行的时候，所有的数据都是加密传输的',
     intr_6: 'GPU租用按照分钟计费，GPU使用过程中如果出现中断，将会最多补偿144小时的费用',
     intr_7: '深脑链从2020年开始每年挖矿产出5亿，3年后，每年产出2.5亿，并且以后每5年产出减半，总计有40亿',
     intr_8: '加入深脑链收益组成：超级节点收益+挖矿收益+租金收益',
