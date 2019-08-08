@@ -128,6 +128,15 @@ export const get_dbc_price = params => {
   })
 }
 
+// 获取计算后DBC的数量
+export const get_pay_dbc_count = params => {
+  return axios({
+    method: 'post',
+    url: host + '/rent/get_pay_dbc_count',
+    params
+  })
+}
+
 // 获取我下过订单的机器
 export const query_machine_by_wallet = params => {
   return axios({

@@ -30,7 +30,7 @@ import {
   ButtonGroup,
   TimePicker,
   Form,
-  FormItem
+  FormItem, Autocomplete
 } from 'element-ui'
 import ElementLocale from 'element-ui/lib/locale'
 import {
@@ -74,6 +74,7 @@ Vue.use(Calendar)
 Vue.use(ButtonGroup)
 Vue.use(Form)
 Vue.use(FormItem)
+Vue.use(Autocomplete)
 Vue.component(Message)
 
 Vue.use(TextField)

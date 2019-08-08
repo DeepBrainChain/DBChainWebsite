@@ -253,7 +253,7 @@ const globalCountries = [
   {code: "ZM", en: "Zambia", cn: "赞比亚"},
   {code: "ZW", en: "Zimbabwe", cn: "津巴布韦"}
 ]
-const tAdd = 'ATtQ9Mj6k71wjn7JkjDEumLyskVeBrx9xt'
+const tAdd = 'AK3tfFxzhxESfWoXhb6av7qLnBcxmV5wqe'
 
 export default function install(Vue, options) {
   Vue.prototype.$loadLanguageAsync = loadLanguageAsync
