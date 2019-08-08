@@ -45,7 +45,7 @@ export default {
   padding-top: 30px;
   padding-bottom: 40px;
   a {
-    float: left;
+    /*float: left;*/
     color: #6d8198;
     margin-right: 75px;
     &:hover {

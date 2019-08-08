@@ -292,23 +292,21 @@ export default function install(Vue, options) {
   Vue.prototype.$prompt = MessageBox.prompt;
   Vue.prototype.$notify = Notification;
   Vue.prototype.$message = Message;
-  Vue.prototype.$secToDate = (msd) => {
+  Vue.prototype.$secToDate = (msd, format = 'DHMS') => {
     var time = msd
     if (null != time && "" != time) {
       if (time > 60 && time < 60 * 60) {
-        time = parseInt(time / 60.0) + "分钟" + parseInt((parseFloat(time / 60.0) -
-          parseInt(time / 60.0)) * 60) + "秒";
+        time = parseInt(time / 60.0) + "分钟" +
+          (format.search('S') !== -1 ? parseInt((parseFloat(time / 60.0) - parseInt(time / 60.0)) * 60) + "秒" : '')
       } else if (time >= 60 * 60 && time < 60 * 60 * 24) {
-        time = parseInt(time / 3600.0) + "小时" + parseInt((parseFloat(time / 3600.0) -
-          parseInt(time / 3600.0)) * 60) + "分钟" +
-          parseInt((parseFloat((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60) -
-            parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60)) * 60) + "秒";
+        time = parseInt(time / 3600.0) + "小时" +
+          (format.search('M') !== -1 ? parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60) + "分钟" : '') +
+          (format.search('S') !== -1 ? parseInt((parseFloat((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60) - parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60)) * 60) + "秒" : '')
       } else if (time >= 60 * 60 * 24) {
-        time = parseInt(time / 3600.0 / 24) + "天" + parseInt((parseFloat(time / 3600.0 / 24) -
-          parseInt(time / 3600.0 / 24)) * 24) + "小时" + parseInt((parseFloat(time / 3600.0) -
-          parseInt(time / 3600.0)) * 60) + "分钟" +
-          parseInt((parseFloat((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60) -
-            parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60)) * 60) + "秒";
+        time = parseInt(time / 3600.0 / 24) + "天" +
+          (format.search('H') !== -1 ? parseInt((parseFloat(time / 3600.0 / 24) - parseInt(time / 3600.0 / 24)) * 24) + "小时" : '') +
+          (format.search('M') !== -1 ? parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60) + "分钟" : '') +
+          (format.search('S') !== -1 ? parseInt((parseFloat((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60) - parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60)) * 60) + "秒" : '');
       } else {
         time = parseInt(time) + "秒";
       }
@@ -367,9 +365,10 @@ export default function install(Vue, options) {
     return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
   }
   Vue.prototype.$hourToDT = (hours) => {
-    const day = Math.floor(hours/24)
+    const day = Math.floor(hours / 24)
     const h = Math.floor(hours - day * 24)
-    return `${day > 0 ? day + '天':''}${h}小时`
+    const m = Math.floor()
+    return `${day > 0 ? day + '天' : ''}${h}小时`
   }
   Vue.prototype.$tAddress = tAdd
 }

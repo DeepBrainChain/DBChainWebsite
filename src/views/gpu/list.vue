@@ -1,19 +1,25 @@
 <template>
   <div class="machine">
     <div class="machineData-wrap">
-      <drop-item v-model="req_body.county" class="machine-item" title="国家" :drop-list="countries"></drop-item>
+      <drop-item
+        v-model="req_body.county"
+        class="machine-item"
+        title="国家"
+        :drop-list="countries"
+        @selected="queryMc"
+      ></drop-item>
       <!--      <drop-item class="machine-item" title="Image" :dropList="images"></drop-item>-->
       <drop-item
         class="machine-item"
         :title="$t('dbc_version_title')"
-        v-model="req_body.status"
+        v-model="req_body.dbcVersion"
         :dropList="dbc_version"
         @selected="queryMc"
       ></drop-item>
       <drop-item
         class="machine-item"
         :title="$t('have_ip_title')"
-        v-model="req_body.status"
+        v-model="req_body.have_ip"
         :dropList="have_ip"
         @selected="queryMc"
       ></drop-item>
@@ -469,7 +475,7 @@ export default {
         }
       ],
 
-      totalTimeVal: 1, // 使用时长
+      totalTimeVal: 0, // 使用时长
       //reliabilityVal: 90, // 历史可靠性
       diskSpaceVal: 0, // 硬盘空间
       // diskPriceVal: 0.00001, // 硬盘价格
@@ -504,8 +510,9 @@ export default {
       req_body: {
         county: "all",
         dbcVersion: "V0.3.7.2",
+        have_ip: 0,
         status: 0,
-        totalTime: 1,
+        totalTime: 0,
         reliability: 0.9,
         diskSpace: 10,
         diskPrice: 0.00001,
@@ -520,7 +527,14 @@ export default {
         cpuRamSize: 1,
         diskBandwidth: 50,
         inetUp: 0.5,
-        inetDown: 0.5
+        inetDown: 0.5,
+        total_rent_count: 0,
+        error_rent_count: 0,
+        disk_GB_perhour_dollar: 0,
+        tensor_cores: 1,
+        half_precision_tflops: 1,
+        single_precision_tflops: 1,
+        double_precision_tflops: 1
       },
       res_body: {
         content: []
@@ -618,26 +632,29 @@ export default {
     queryMc() {
       const params = {
         county: this.req_body.county,
-        idle_status: 0,
-        total_time: 0,
-        total_rent_count: 0,
-        error_rent_count: 0,
-        disk_GB_perhour_dollar: 0,
-        length_of_available_time: 1,
-        gpu_price_dollar: 0.000001,
-        gpu_count: 1,
-        tflops: 5,
-        gpu_ram_size: 10485760,
-        gpu_ram_bandwidth: 10485760,
-        pcie_bandwidth: 51200,
-        cpu_numbers: 1,
-        ram_size: 1048576,
-        disk_bandwidth: 51200,
-        inet_up: 512,
-        inet_down: 512,
-        have_ip: 0,
+        idle_status: this.req_body.status,
+        total_time: this.req_body.totalTime,
+        total_rent_count: this.req_body.total_rent_count,
+        error_rent_count: this.req_body.error_rent_count,
+        disk_GB_perhour_dollar: this.req_body.disk_GB_perhour_dollar,
+        length_of_available_time: this.req_body.lengthOfAvailableTime,
+        gpu_price_dollar: this.req_body.gpuPrice,
+        gpu_count: this.req_body.gpuCount,
+        gpu_ram_size: this.req_body.gpuRamSize,
+        gpu_ram_bandwidth: this.req_body.gpuRamBandwidth,
+        pcie_bandwidth: this.req_body.piceBandwidth,
+        cpu_numbers: this.req_body.cpuCores,
+        ram_size: this.req_body.cpuRamSize,
+        disk_bandwidth: this.req_body.diskBandwidth,
+        inet_up: this.req_body.inetUp,
+        inet_down: this.req_body.inetDown,
+        have_ip: this.req_body.have_ip,
         onlines_tatus: 0,
-        disk_space: 10485760,
+        disk_space: this.req_body.diskSpace,
+        tensor_cores: this.req_body.tensor_cores,
+        half_precision_tflops: this.req_body.half_precision_tflops,
+        single_precision_tflops: this.req_body.single_precision_tflops,
+        double_precision_tflops: this.req_body.double_precision_tflops,
         dbc_version: "0.3.7.2"
       };
       getMcList(params).then(res => {
@@ -852,7 +869,7 @@ export default {
     },
 
     show_total_rent_count() {
-      const min = 1;
+      const min = 0;
       const max = 1024;
       const stepArray = [
         {
@@ -884,7 +901,7 @@ export default {
     },
 
     show_error_rent_count() {
-      const min = 1;
+      const min = 0;
       const max = 1024;
       const stepArray = [
         {
@@ -1333,28 +1350,34 @@ export default {
       justify-content: space-between;
       align-items: center;
     }
+
     .td3 {
       width: 40%;
       line-height: 24px;
 
       .cPrimaryColor {
         font-size: 12px;
+
         &.fs16 {
           font-size: 28px;
         }
       }
     }
+
     .td2 {
       width: 50%;
 
       line-height: 24px;
+
       .cPrimaryColor {
         font-size: 32px;
+
         &.fs28 {
           font-size: 32px;
         }
       }
     }
+
     .td {
       width: 20%;
       line-height: 24px;
