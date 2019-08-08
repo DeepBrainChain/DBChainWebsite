@@ -503,6 +503,7 @@ export default {
       ],
       req_body: {
         county: "all",
+        dbcVersion: "V0.3.7.2",
         status: 0,
         totalTime: 1,
         reliability: 0.9,
@@ -665,9 +666,9 @@ export default {
       }
       return showTotalTime;
     },
-  //  showReliability() {
-  //    this.req_body.reliability = this.reliabilityVal / 100;
-  //    return this.reliabilityVal > 0 ? `${this.reliabilityVal}%` : "New";
+    showReliability() {
+      this.req_body.reliability = this.reliabilityVal / 100;
+      return this.reliabilityVal > 0 ? `${this.reliabilityVal}%` : "New";
     },
     showDiskSpace() {
       let val = 0;
