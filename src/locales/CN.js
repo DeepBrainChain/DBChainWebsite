@@ -144,7 +144,7 @@ export default {
     choseGpuCount: '选择GPU数量', // new
     bindMail: '绑定邮箱', // new
     bindMailInfo: '绑定的邮箱用来收取GPU的SSH账户登陆信息，<br>' +
-      '租用GPU之前必须绑定邮箱',
+      '租用GPU之前必须先到我的机器界面绑定邮箱',
     modifyMail: '修改邮箱',
     mailAddress: '邮箱地址',
     inputMail: '请输入邮箱地址',
