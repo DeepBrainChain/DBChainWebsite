@@ -93,10 +93,8 @@ export default {
       transfer({
         toAddress: this.$tAddress,
         amount: this.form.dbcNum
-      })
-        .then(res => {
+      }).then(res => {
           if (res.response.result) {
-            console.log(res);
             if (this.isNewMail) {
               bindMail_rent({
                 // email: this.form.email,
@@ -177,14 +175,15 @@ export default {
                 });
             }
           }
-        })
-        .catch(err => {
-          console.log("t -> fail");
-          this.$message({
-            showClose: true,
-            message: "绑定失败",
-            type: "error"
-          });
+        }).catch(err => {
+          // console.log(err)
+          if (err) {
+            this.$message({
+              showClose: true,
+              message: 'DBC余额不足，无法绑定邮箱，请最少充值1个DBC',
+              type: "error"
+            });
+          }
           this.isLoading = false;
         });
     },

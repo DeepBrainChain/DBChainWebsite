@@ -25,6 +25,7 @@ export function saveCookie(account) {
 
 export function closeAc() {
   cookie.remove('privateKey')
+  cookie.remove('address')
   account = undefined
 }
 
@@ -70,6 +71,7 @@ export function getBalance() {
         })
         const dbc_info = nep5AssetsArray.find(item => item.symbol === DBC_NAME)
         if (dbc_info) {
+          console.log(dbc_info)
           resolve(dbc_info)
         } else {
           resolve({balance: 0})
@@ -140,7 +142,7 @@ export function getTransfer(address) {
   return new Promise((resolve, reject) => {
     rpcClient.execute(query).then(data => {
       resolve(data.result)
-    }).catch(err=>{
+    }).catch(err => {
       console.log(err)
       reject(err)
     })
@@ -149,21 +151,27 @@ export function getTransfer(address) {
 }
 
 // send assets to address
-export function transfer({toAddress,amount, gas=0 }) {
-  const apiProvider = new api.neoscan.instance('MainNet')
-  // console.log(apiProvider)
-  const generator = nep5.abi.transfer(DBCHash,account.address,toAddress,amount)
-  // console.log(generator)
-  const script = generator().str
-  // console.log(script)
-  const config = {
-    api: apiProvider, // The API Provider that we rely on for balance and rpc information
-    account: account, // The sending Account
-    // intents: undefined, // Additional intents to move assets
-    script: script, // The Smart Contract invocation script
-    gas // Additional GAS for invocation.
-  };
-  return Neon.doInvoke(config)
+export function transfer({toAddress, amount, gas = 0}) {
+  return getBalance().then(res => {
+    if (res.balance > amount) {
+      const apiProvider = new api.neoscan.instance('MainNet')
+      // console.log(apiProvider)
+      const generator = nep5.abi.transfer(DBCHash, account.address, toAddress, amount)
+      // console.log(generator)
+      const script = generator().str
+      // console.log(script)
+      const config = {
+        api: apiProvider, // The API Provider that we rely on for balance and rpc information
+        account: account, // The sending Account
+        // intents: undefined, // Additional intents to move assets
+        script: script, // The Smart Contract invocation script
+        gas // Additional GAS for invocation.
+      }
+      return Neon.doInvoke(config)
+    } else {
+      return Promise.reject({status: -1, msg: 'DBC余额不足'})
+    }
+  })
 }
 
 // initAccount()
