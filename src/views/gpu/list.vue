@@ -227,7 +227,7 @@
               style="width: 100px"
               plain
               size="mini"
-              @click="openDlg(item, true)"
+              @click="openTry(item)"
               :disabled="!item.idle_status"
             >试用</el-button>
             <el-button
@@ -395,13 +395,16 @@
       </li>
     </ul>
     <dlg-lease :open.sync="dlg_open" :place-order-data="placeOrderData" @confirm="createOrder"></dlg-lease>
+    <!--    try-dlg-->
+    <dlg-try :open.sync="dlg_open_try" @confirm="createTry"></dlg-try>
   </div>
 </template>
 
 <script>
-import DropItem from "@/components/machine/dropItem";
-import SlideItem from "@/components/machine/slideItem";
-import DlgLease from "@/components/machine/dlg_lease";
+import DropItem from "@/components/machine/dropItem"
+import SlideItem from "@/components/machine/slideItem"
+import DlgLease from "@/components/machine/dlg_lease"
+import DlgTry from '@/components/machine/dlg_try'
 import {
   getMcList,
   try_place_order,
@@ -416,13 +419,15 @@ export default {
   components: {
     DropItem,
     SlideItem,
-    DlgLease
+    DlgLease,
+    DlgTry
   },
   data() {
     return {
       rentLoading: false,
       try_rentLoading: false,
       dlg_open: false,
+      dlg_open_try: false,
       curVal: 0,
       // countries
       countries: [
@@ -612,7 +617,12 @@ export default {
           });
       }
     },
-    // 创建订单
+
+    // open try
+    openTry(item) {
+      this.dlg_open_try = true
+    },
+    // create order
     createOrder(params) {
       const loading = this.$loading();
       create_order(params)
@@ -628,6 +638,10 @@ export default {
         .finally(() => {
           loading.close();
         });
+    },
+    // try order
+    createTry(params) {
+
     },
     queryMc() {
       const params = {
