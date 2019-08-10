@@ -98,7 +98,7 @@ export default {
     //storeTime: '存储使用时间',
     //storeSpace: '存储空间',
     //gpuCost: 'GPU费用',
-    gpuBilling: 'GPU价格',
+    gpuBilling: '支付时GPU价格',
     //gpuRemainTime: 'GPU使用剩余时间',
     //storeCost: '存储费用',
     //storeBilling: '存储价格',
