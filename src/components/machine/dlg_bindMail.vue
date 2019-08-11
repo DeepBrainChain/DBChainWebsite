@@ -94,7 +94,7 @@ export default {
         toAddress: this.$tAddress,
         amount: this.form.dbcNum
       }).then(res => {
-          if (res.response.result) {
+          if (res.status === 1) {
             if (this.isNewMail) {
               bindMail_rent({
                 // email: this.form.email,
@@ -177,10 +177,16 @@ export default {
           }
         }).catch(err => {
           // console.log(err)
-          if (err) {
+          if (err.status  === -1) {
             this.$message({
               showClose: true,
               message: 'DBC余额不足，无法绑定邮箱，请最少充值1个DBC',
+              type: "error"
+            });
+          } else {
+            this.$message({
+              showClose: true,
+              message: err.msg,
               type: "error"
             });
           }

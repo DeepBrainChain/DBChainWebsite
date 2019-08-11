@@ -228,7 +228,7 @@
       <li v-for="(item, index) in res_body.content" class="info-wrap">
         <div class="flex status-title">
           <div>
-            <el-button plain class="is-link" @click="pushDetail">{{item.machine_id}}</el-button>
+            <el-button plain class="is-link" @click="pushDetail(item.machine_id)">{{item.machine_id}}</el-button>
             <span class="fs28">
               <span
                 class="cPrimaryColor"
@@ -577,8 +577,8 @@
       this.queryMc();
     },
     methods: {
-      pushDetail() {
-        this.$router.push("/gpu/machineDetail");
+      pushDetail(machine_id) {
+        this.$router.push("/machineDetail?machine_id=" + machine_id)
       },
       // 打开弹窗
       openDlg(item, isTry) {

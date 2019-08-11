@@ -3,39 +3,45 @@
     <div class="border-box">
       <div class="title">
         <h3>{{$t('gpu.mcTradeInfo')}}</h3>
-        <div class="flex right vCenter">
-          <p>xxx人参与评分，评分：</p>
-          <el-rate></el-rate>
+        <div v-if="mcData" class="flex right vCenter">
+          <p>{{mcData.evaluation_count}}人参与评分，评分：</p>
+          <el-rate :value="mcData.evaluation_score_average/2"
+                   disabled
+                   ></el-rate>
+          <span>{{mcData.evaluation_score_average}}分</span>
         </div>
       </div>
       <table class="tb-theme hAuto">
         <thead>
         <tr>
-          <th>{{$t('gpu.mcDetails.th_1')}}</th>
+          <th width="350">{{$t('gpu.mcDetails.th_1')}}</th>
           <th>{{$t('gpu.mcDetails.th_2')}}</th>
           <th>{{$t('gpu.mcDetails.th_3')}}</th>
           <th>{{$t('gpu.mcDetails.th_4')}}</th>
-          <th>{{$t('gpu.mcDetails.th_5')}}</th>
+<!--          <th>{{$t('gpu.mcDetails.th_5')}}</th>-->
           <th>{{$t('gpu.mcDetails.th_6')}}</th>
-          <th width="300">{{$t('gpu.mcDetails.th_7')}}</th>
+          <th width="300"></th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <td>xxxxx</td>
-          <td>34585</td>
-          <td>是</td>
-          <td>3231</td>
-          <td>24d 34h</td>
-          <td>24d 34h</td>
+        <tr v-for="item in content">
+          <td>{{item.wallet_address_user}}</td>
+          <td>{{item.dbc_real_need_count}}</td>
+          <td>{{item.order_isnormal_over?'是':'否'}}</td>
+          <td>{{item.gpu_count}}</td>
+<!--          <td>24d 34h</td>-->
+          <td>{{$secToDate(item.rent_time_length * 60, 'DH')}}</td>
           <td>
             <div class="flex right vCenter">
-              <el-rate v-model="rateValue"></el-rate>
-              <span class="ml10">7.7{{$t('scores')}}</span>
+              <el-rate
+                :value="item.evaluation_score/2"
+                disabled
+                ></el-rate>
+              <span>{{item.evaluation_score}}分</span>
             </div>
             <div class="rate-wrap">
               <label>{{$t('gpu.userRate')}}：</label>
-              <span>胜多负少的稿和老地方市领导反馈是的水电费胜多负少放大速度快黑寡妇</span>
+              <span>{{item.evaluation_content}}</span>
             </div>
           </td>
         </tr>
@@ -46,11 +52,46 @@
 </template>
 
 <script>
+  import {
+    query_evaluation_list_by_machine_id,
+    query_machine_by_id
+  } from '@/api'
+
   export default {
     name: "machineDetail",
     data() {
       return {
-        rateValue: 0
+        rateValue: 0,
+        mcData: undefined,
+        content: [],
+      }
+    },
+    created() {
+      this.queryMcDetail()
+    },
+    computed: {
+      rateList() {
+        content.map(item => {
+          return {}
+        })
+      }
+    },
+    methods: {
+      queryMcDetail() {
+        query_machine_by_id({
+          machine_id: this.$route.query.machine_id
+        }).then(res => {
+          if (res.status === 1) {
+            this.mcData = res.content
+          }
+        })
+        query_evaluation_list_by_machine_id({
+          machine_id: this.$route.query.machine_id
+        }).then(res => {
+          if (res.status === 1) {
+            this.content = res.content
+          }
+        })
       }
     }
   }

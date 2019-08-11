@@ -59,7 +59,7 @@ export function getBalance() {
       const scriptHash = DBCHash
       const apiProvider = new api.neoscan.instance('MainNet')
       apiProvider.getBalance(account.address).then(res => {
-        console.log(res)
+        // console.log(res)
         const nep5AssetsArray = []
         res.tokenSymbols.forEach(symbol => {
           const fixed8 = res.tokens[symbol]
@@ -152,26 +152,42 @@ export function getTransfer(address) {
 
 // send assets to address
 export function transfer({toAddress, amount, gas = 0}) {
-  return getBalance().then(res => {
-    if (res.balance > amount) {
-      const apiProvider = new api.neoscan.instance('MainNet')
-      // console.log(apiProvider)
-      const generator = nep5.abi.transfer(DBCHash, account.address, toAddress, amount)
-      // console.log(generator)
-      const script = generator().str
-      // console.log(script)
-      const config = {
-        api: apiProvider, // The API Provider that we rely on for balance and rpc information
-        account: account, // The sending Account
-        // intents: undefined, // Additional intents to move assets
-        script: script, // The Smart Contract invocation script
-        gas // Additional GAS for invocation.
+  return getBalance()
+    .then(res => {
+      if (res.balance > amount) {
+        const apiProvider = new api.neoscan.instance('MainNet')
+        // console.log(apiProvider)
+        const generator = nep5.abi.transfer(DBCHash, account.address, toAddress, amount)
+        // console.log(generator)
+        const script = generator().str
+        // console.log(script)
+        const config = {
+          api: apiProvider, // The API Provider that we rely on for balance and rpc information
+          account: account, // The sending Account
+          // intents: undefined, // Additional intents to move assets
+          script: script, // The Smart Contract invocation script
+          gas // Additional GAS for invocation.
+        }
+        return Neon.doInvoke(config)
+      } else {
+        return Promise.reject({status: -1, msg: 'DBC余额不足'})
       }
-      return Neon.doInvoke(config)
-    } else {
-      return Promise.reject({status: -1, msg: 'DBC余额不足'})
-    }
-  })
+    })
+    .then(res => {
+      if (res.response && res.response.result) {
+        console.log(res)
+        return Promise.resolve({
+          status: 1,
+          msg: `you paied ${amount}DBC to ${toAddress}, txid is ${res.response.txid}`,
+          ...res
+        })
+      } else {
+        return Promise.reject({
+          status: -2,
+          msg: '转账失败'
+        })
+      }
+    })
 }
 
 // initAccount()

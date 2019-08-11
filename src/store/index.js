@@ -9,6 +9,10 @@ import {
   getBalance,
   getTransfer
 } from '../utlis'
+
+import {
+  get_dbc_price
+} from '@/api'
 import cookie from 'js-cookie'
 
 Vue.use(Vuex)

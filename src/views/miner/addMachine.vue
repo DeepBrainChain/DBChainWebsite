@@ -19,7 +19,7 @@
       <mu-text-field class="mb20" v-model.trim="minerKey" :label="$t('miner.addMc_msg_3')" label-float
                      :full-width="true"></mu-text-field>
     </div>-->
-    <div class="label">
+    <!--<div class="label">
       {{!isEditor ? 2 : 1}}.{{$t('miner.addMc_area')}}
     </div>
     <div class="text">
@@ -45,38 +45,66 @@
         </el-button>
       </template>
 
+    </div>-->
+    <div class="label mt20">
+      2.输入时间
+    </div>
+    <div class="text">
+      <span>
+        出租开始时间:
+      </span>
+      <mu-text-field class="mc-input" v-model.number="can_rent_start_time_later" style="width: 162px;"
+                     type="number"></mu-text-field>
+      小时以后
+    </div>
+    <div class="text">
+      <span>
+        出租结束时间:
+      </span>
+      <mu-text-field class="mc-input" v-model.number="end_rent_out_time_later" style="width: 162px;"
+                     type="number"></mu-text-field>
+      小时以后
     </div>
     <div class="label mt20">
-      {{!isEditor ? 3 : 2}}.{{$t('miner.addMc_price')}}
+      3.输入机器id
+    </div>
+    <div class="text">
+      <span>
+        机器id:
+      </span>
+      <mu-text-field class="mc-input" v-model.trim="machine_id" type="text" style="width: 700px;"></mu-text-field>
+    </div>
+    <div class="label mt20">
+      4.{{$t('miner.addMc_price')}}
     </div>
     <div class="text">
       <span>
         {{$t('miner.addMc_msg_4[0]')}}:
       </span>
-      <mu-text-field class="mc-input" v-model.number="cpuPrice" style="width: 162px;" type="number"></mu-text-field>
+      <mu-text-field class="mc-input" v-model.number="gpu_price_dollar" style="width: 162px;" type="number"></mu-text-field>
       $/{{$t('hour')}}
-      <span class="ml60">
+      <!--<span class="ml60">
         {{$t('miner.addMc_msg_4[1]')}}:
       </span>
       <mu-text-field class="mc-input" v-model.number="storePrice" style="width: 162px;" type="number"></mu-text-field>
-      $/{{$t('hour')}}
+      $/{{$t('hour')}}-->
     </div>
     <div class="subText">
-      {{$t('miner.addMc_msg_5')}}
+      其中4%代币用于DBC共识节点奖励，4%代币会被燃烧掉。深脑链基金会和DBChain平台不收取任何费
     </div>
     <div class="label mt30">
-      {{!isEditor ? 4 : 3}}.{{$t('miner.addMc_dbc')}}
+      5.{{$t('miner.addMc_dbc')}}
     </div>
     <div>
-      <mu-text-field class="verityMail-input" v-model="dbcNum" type="number"></mu-text-field>
-      <el-button class="ml20" type="primary" size="mini">
+      <mu-text-field class="verityMail-input" v-model="code" type="number"></mu-text-field>
+      <el-button class="ml20" type="primary" size="mini" :loading="isCoding" @click="getCode">
         {{$t('miner.addMc_mail')}}
       </el-button>
     </div>
 
     <div class="btn-wrap mt100">
-      <el-button class="addMc-btn" type="primary" size="medium">{{$t('confirm')}}</el-button>
-      <el-button class="addMc-btn blue ml20" size="medium">{{$t('back')}}</el-button>
+      <el-button class="addMc-btn" type="primary" size="medium" @click="confirm">{{$t('confirm')}}</el-button>
+      <el-button class="addMc-btn blue ml20" size="medium" @click="back">{{$t('back')}}</el-button>
       <span class="info ml60">
         {{$t('miner.addMc_msg_6[0]')}}
         <span class="red">{{$t('miner.addMc_msg_6[1]')}}</span>
@@ -108,11 +136,19 @@
 </template>
 
 <script>
+  import {
+    add_or_modify,
+    get_rentout_code
+  } from '@/api'
+
+  import {getAccount} from '@/utlis'
 
   export default {
     name: "addMachine",
     data() {
       return {
+        isCoding: false,
+        isLoading: false,
         curDate: new Date(),
         curDT: {
           date: '',
@@ -126,13 +162,84 @@
             value: '1'
           }
         ],
+        isDateDlgOpen: false,
+        isWeekDlgOpen: false,
         selArea: '',
         period: "",
-        cpuPrice: undefined,
-        storePrice: undefined,
-        dbcNum: undefined,
-        isDateDlgOpen: false,
-        isWeekDlgOpen: false
+
+        gpu_price_dollar: '',
+        code: '',
+        can_rent_start_time_later: '',
+        end_rent_out_time_later: '',
+        machine_id: ''
+      }
+    },
+    methods: {
+      getCode() {
+        if (!getAccount()) {
+          this.$router.push('/openWallet')
+          return
+        }
+        if (this.machine_id.trim().length === 0) {
+          this.$message({
+            showClose: true,
+            message: '请输入机器id',
+            type: 'error'
+          })
+          return
+        }
+        const address = getAccount().address
+        this.isCoding = true
+        get_rentout_code({
+          wallet_address: address,
+          machine_id: this.machine_id
+        }).then(res => {
+          if (res.status === 1) {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: 'success'
+            })
+          } else {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: 'error'
+            })
+          }
+        }).finally(() => {
+          this.isCoding = false
+        })
+      },
+      confirm() {
+        this.isLoading = true
+        add_or_modify({
+          machine_id: this.machine_id,
+          gpu_price_dollar: this.gpu_price_dollar,
+          can_rent_start_time_later: this.can_rent_start_time_later,
+          end_rent_out_time_later: this.end_rent_out_time_later,
+          code: this.code,
+        }).then(res => {
+          if (res.status === 1) {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: 'success'
+            })
+          } else {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: 'error'
+            })
+          }
+        }).finally(()=>{
+          this.isLoading = false
+        })
+
+      },
+      back() {
+        this.$router.back()
       }
     },
     computed: {
@@ -235,6 +342,7 @@
       color: rgba($color: #333, $alpha: 0.85);
     }
   }
+
   .tools {
     text-align: center;
   }

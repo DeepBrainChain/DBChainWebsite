@@ -3,7 +3,7 @@
     :visible.sync="isOpen"
     width="540px"
     @close="closed">
-    <div slot="title">{{$t('gpu.rate')}}</div>
+    <div slot="title">{{isEdit ? '编辑评价':$t('gpu.rate')}}</div>
     <el-form class="dlg-content">
       <div class="flex center">
         <el-rate v-model="rateVal" :max="5" allow-half></el-rate>
@@ -35,7 +35,8 @@
 <script>
   import {
     get_evaluation_code,
-    evaluate_machine
+    evaluate_machine,
+    modify_evaluate_machine
   } from "@/api"
 
   export default {
@@ -51,6 +52,9 @@
     watch: {
       open(newVal) {
         this.isOpen = newVal
+        if (newVal) {
+          this.getItem()
+        }
       }
     },
     data() {
@@ -64,6 +68,10 @@
       }
     },
     methods: {
+      getItem() {
+        this.textarea = this.item.orderData.evaluation_content
+        this.rateVal = this.item.orderData.evaluation_score/2
+      },
       getEvaluationCode() {
         this.isCoding = true
         get_evaluation_code({
@@ -90,36 +98,63 @@
         this.isOpen = false
         this.$emit('update:open', false)
       },
-
       confirm() {
-        evaluate_machine({
-          evaluation_content: this.textarea,
-          evaluation_score: this.rateVal * 2,
-          order_id: this.item.orderData.order_id,
-          evalution_code: this.evalution_code
-        }).then(res => {
-          if(res.status === 1) {
-            this.$message({
-              showClose: true,
-              message: res.msg,
-              type: 'success'
-            })
-            this.closed()
-            this.$emit('success')
-          } else {
-            this.$message({
-              showClose: true,
-              message: res.msg,
-              type: 'error'
-            })
-          }
-        })
+        if (this.isEdit) {
+          modify_evaluate_machine({
+            evaluation_content: this.textarea,
+            evaluation_score: this.rateVal * 2,
+            order_id: this.item.orderData.order_id,
+            evalution_code: this.evalution_code
+          }).then(res => {
+            if(res.status === 1) {
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: 'success'
+              })
+              this.closed()
+              this.$emit('success')
+            } else {
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: 'error'
+              })
+            }
+          })
+        } else {
+          evaluate_machine({
+            evaluation_content: this.textarea,
+            evaluation_score: this.rateVal * 2,
+            order_id: this.item.orderData.order_id,
+            evalution_code: this.evalution_code
+          }).then(res => {
+            if(res.status === 1) {
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: 'success'
+              })
+              this.closed()
+              this.$emit('success')
+            } else {
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: 'error'
+              })
+            }
+          })
+        }
       },
       cancel() {
         this.closed()
       },
     },
     computed: {
+      isEdit() {
+        return this.item && this.item.orderData.milli_evaluation_time > 0
+      },
       showRate() {
         return this.rateVal * 2
       }

@@ -54,6 +54,16 @@ module.exports = {
         target: 'http://116.85.24.172:8031',
         ws: true,
         changeOrigin: true
+      },
+      '/rentout': {
+        target: 'http://116.85.24.172:8031',
+        ws: true,
+        changeOrigin: true
+      },
+      'query_machine_by_id': {
+        target: 'http://116.85.24.172:8031',
+        ws: true,
+        changeOrigin: true
       }
     }
   }

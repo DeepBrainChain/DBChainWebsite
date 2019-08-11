@@ -191,6 +191,24 @@ export const stop = params => {
   })
 }
 
+// 退币验证码
+export const get_return_dbc_code = params => {
+  return axios({
+    method: 'post',
+    url: host + '/rent/get_return_dbc_code',
+    params
+  })
+}
+
+// 退币
+export const request_return_dbc = params => {
+  return axios({
+    method: 'post',
+    url: host + '/rent/request_return_dbc',
+    params
+  })
+}
+
 // 获取评价接口
 export const get_evaluation_code = params => {
   return axios({
@@ -205,6 +223,51 @@ export const evaluate_machine = params => {
   return axios({
     method: 'post',
     url: host + '/rent/evaluate_machine',
+    params
+  })
+}
+
+// 修改评价内容
+export const modify_evaluate_machine = params => {
+  return axios({
+    method: 'post',
+    url: host + '/rent/modify_evaluate_machine',
+    params
+  })
+}
+
+// 获得机器评价内容
+export const query_evaluation_list_by_machine_id = params => {
+  return axios({
+    method: 'post',
+    url: host + '/rent/query_evaluation_list_by_machine_id',
+    params
+  })
+}
+
+// 获取出租机器验证码
+export const get_rentout_code = params => {
+  return axios({
+    method: 'post',
+    url: host + '/rentout/get_rentout_code',
+    params
+  })
+}
+
+// 添加或者修改出租信息
+export const add_or_modify = params => {
+  return axios({
+    method: 'post',
+    url: host + '/rentout/add_or_modify',
+    params
+  })
+}
+
+// 从id查询机器信息
+export const query_machine_by_id = params => {
+  return axios({
+    method: 'post',
+    url: host + '/query_machine_by_id',
     params
   })
 }
