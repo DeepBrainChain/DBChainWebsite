@@ -6,10 +6,13 @@
         试用条件：当前钱包持有大于等于1000 DBC
       </div>
       <div>
-        试用费用：1 DBC
+        试用费用：0 DBC
       </div>
       <div>
         试用时间：10分钟
+      </div>
+      <div>
+        GPU 数量：1
       </div>
     </div>
     <div class="dlg-bottom">
@@ -127,7 +130,7 @@
       },
       confirm() {
         this.closed()
-        this.$emit("confirm", params);
+        this.$emit("confirm");
       },
       cancel() {
         this.closed();

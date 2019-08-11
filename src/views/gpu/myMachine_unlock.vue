@@ -54,7 +54,7 @@
           <span v-else-if="item.orderData.order_is_cancer">订单已取消</span>
           <span v-else-if="item.orderData.rent_success">正在使用中</span>
           <span
-            v-else-if="item.orderData.container_is_exist && item.orderData.rent_success===fasle"
+            v-else-if="item.orderData.container_is_exist && item.orderData.rent_success===false"
           >支付验证中</span>
           <span v-else-if="item.orderData.pay_error && item.orderData.return_dbc===false">支付验证失败</span>
           <span v-else-if="item.orderData.pay_error && item.orderData.return_dbc">退币成功</span>
