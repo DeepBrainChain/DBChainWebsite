@@ -2,11 +2,11 @@
   <div class="head">
     <div class="content wrap1440">
       <img class="logo" src="~@/assets/imgs/logo@1x.png"/>
-      <router-link class="item" to="/">{{$t('heads.home')}}</router-link>
-      <router-link class="item" to="/gpu">{{$t('heads.gpu')}}</router-link>
+<!--      <router-link class="item" to="/">{{$t('heads.home')}}</router-link>-->
+<!--      <router-link class="item" to="/gpu">{{$t('heads.gpu')}}</router-link>-->
       <!--      <router-link class="item" to="/network">{{$t('heads.network')}}</router-link>-->
-      <router-link class="item" to="/miner">{{$t('heads.miner')}}</router-link>
-      <a class="item" href="http://www.dbctalk.ai" target="_blank">{{$t('heads.talk')}}</a>
+<!--      <router-link class="item" to="/miner">{{$t('heads.miner')}}</router-link>-->
+<!--      <a class="item" href="http://www.dbctalk.ai" target="_blank">{{$t('heads.talk')}}</a>-->
       <!--      <router-link class="item" to="/home">{{$t('heads.api')}}</router-link>-->
       <!--  <router-link class="item" to="/home">{{$t('heads.help')}}</router-link>-->
       <!--  <el-dropdown class="drop-lang" trigger="click" v-on:command="drop_command">
