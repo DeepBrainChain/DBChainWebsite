@@ -24,7 +24,7 @@
       </div>-->
       <div class="form mt20">
         <label>使用时长：</label>
-        <el-input style="width: 180px" size="small" type="number" v-model.number="time" @input="computeTotalDBC"/>
+        <el-input style="width: 180px" size="small" type="number" v-model.number.trim="time" @input="computeTotalDBC"/>
         <el-select class="time-select ml10" v-model="timeSelect" size="small" @change="computeTotalDBC">
           <el-option
             v-for="item in timeOptions"
@@ -41,11 +41,12 @@
         <span>{{$t('total')}}：{{ totalPrice.toFixed(4) }}{{$t('$')}}</span>
         <span class="ml20">{{$t('gpu.exchangeDBC')}}：{{total_price}}</span>
       </div>
-      <div class="form-notice">当前钱包DBC余额:{{$t('this.balance')}}</div>
+      <div class="form-notice">当前钱包DBC余额: {{balance}}</div>
       <div class="desc-box" v-html="$t('msg.dlg_5')"></div>
     </div>
     <div class="dlg-bottom">
-      <el-button class="dlg-btn" type="primary" size="small" @click="confirm">生成订单</el-button>
+      <el-button class="dlg-btn" type="primary" size="small" @click="confirm" :disabled="!isCanCreateOrder">生成订单
+      </el-button>
       <el-button class="dlg-btn" plain size="small" @click="cancel">{{$t('cancel')}}</el-button>
     </div>
   </el-dialog>
@@ -53,6 +54,7 @@
 
 <script>
   import {get_pay_dbc_count} from '@/api'
+  import {getBalance} from '@/utlis'
 
   export default {
     name: "popup_reload",
@@ -91,7 +93,9 @@
         time: 1,
         total_price: '',
         isGetTotalPrice: false,
-        reqSt: undefined
+        reqSt: undefined,
+        isCanCreateOrder: true,
+        balance: ''
       };
     },
     watch: {
@@ -100,10 +104,20 @@
         if (newVal) {
           this.time = 1;
           this.dbc_price = ''
+          this.getPayDbcCount()
+          this.getBalance()
+        }
+      },
+      time(newVal) {
+        if (newVal) {
+          this.isCanCreateOrder = true
+        } else {
+          this.isCanCreateOrder = false
         }
       }
     },
     computed: {
+
       outDayTime() {
         const hours = parseInt(this.placeOrderData.time_max / 60);
         const day = Math.floor(hours / 24);
@@ -133,26 +147,35 @@
       }
     },
     methods: {
+      getBalance() {
+        getBalance().then(res => {
+          this.balance = res.balance
+        })
+      },
       computeTotalDBC() {
-        console.log('改变')
-        clearTimeout(this.reqSt)
-        this.reqSt = setTimeout(() => {
-          get_pay_dbc_count({
-            rent_time_length: this.time * 60 * this.timeSelect,
-            gpu_count: this.gpuCount,
-            order_id: this.placeOrderData.order_id
-          }).then(res => {
-            if (res.status === 1) {
-              this.total_price = res.content
-            } else {
-              this.$message({
-                showClose: true,
-                message: res.msg,
-                type: "error"
-              });
-            }
-          })
-        }, 1000)
+        if (this.time) {
+          clearTimeout(this.reqSt)
+          this.reqSt = setTimeout(() => {
+            this.getPayDbcCount()
+          }, 1000)
+        }
+      },
+      getPayDbcCount() {
+        get_pay_dbc_count({
+          rent_time_length: this.time * 60 * this.timeSelect,
+          gpu_count: this.gpuCount,
+          order_id: this.placeOrderData.order_id
+        }).then(res => {
+          if (res.status === 1) {
+            this.total_price = res.content
+          } else {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "error"
+            });
+          }
+        })
       },
       confirm() {
         const params = {

@@ -279,7 +279,7 @@
             v-if="isShowRendSuccessMsg(item.orderData.milli_rent_success_time)"
           >机器租用成功，登陆信息已发送至您的邮箱，请查收并妥善保管</span>
         </div>
-        <div v-if="item.orderData.order_is_cancer === false" class="r-wrap">
+        <div v-if="item.orderData.order_is_cancer === false && !(item.orderData.return_dbc === true && item.orderData.pay_error === true)" class="r-wrap">
           <el-button
             v-if="item.orderData.order_is_over"
             plain
@@ -288,6 +288,14 @@
             style="width: 86px"
             @click="openRateDlg(item)"
           >{{$t('gpu.rate')}}
+          </el-button>
+          <el-button v-else-if="item.orderData.return_dbc === false && item.orderData.pay_error"
+                     class="tool-btn"
+                     style="width: 86px"
+                     plain
+                     size="mini"
+                     @click="openReturnDbc(item)"
+          >退币
           </el-button>
           <template v-else-if="item.orderData.rent_success">
             <!--<el-button plain style="width: 86px" class="tool-btn" size="mini"
@@ -323,17 +331,6 @@
             >取消订单
             </el-button>
           </template>
-<!--          v-if="item.orderData.return_dbc === false && item.orderData.pay_error"-->
-          <el-button
-                    v-if="item.orderData.return_dbc === false && item.orderData.pay_error"
-
-            class="tool-btn"
-            style="width: 86px"
-            plain
-            size="mini"
-            @click="openReturnDbc(item)"
-          >退币
-          </el-button>
 
         </div>
       </div>
@@ -352,7 +349,7 @@
     <!--    Unsubscribe-->
     <dlg-unsubscribe :item="curItem" :open.sync="dlgUnsubscribe_open" @success="stopRentSuccess"></dlg-unsubscribe>
     <!--    rate-->
-    <dlg-rate :open.sync="dlgRate_open" :isEdit="isRateEdit" :item="curItem" @success="successRate"></dlg-rate>
+    <dlg-rate :open.sync="dlgRate_open" :item="curItem" @success="successRate"></dlg-rate>
 <!--    return dbc-->
     <dlg-return-dbc :open.sync="dlgReturnDbc_open" :item="curItem" @success="returnSuccess"></dlg-return-dbc>
   </div>
@@ -435,6 +432,7 @@
           (new Date().getTime() - milli_rent_success_time) / 1000 / 3600;
         return hours < 1;
       },
+
       // pay
       payOrder(item) {
         this.isPaying = true;
@@ -450,7 +448,8 @@
                   showClose: true,
                   message: res.msg,
                   type: "success"
-                });
+                })
+                clearInterval(this.si)
                 const amount = item.orderData.dbc_total_count + item.orderData.code * 1;
                 // pay
                 return transfer({
@@ -468,7 +467,7 @@
                   showClose: true,
                   message: res.msg,
                   type: "info"
-                });
+                })
               } else {
                 this.$message({
                   showClose: true,
@@ -627,6 +626,14 @@
                 });
               }
             });
+
+            // 判断如果有订单没有支付完成，强制支付
+            const order = this.res_body.content.find(item => {
+              return item.orderData.container_is_exist === true && item.orderData.rent_success === false
+            })
+            if (order) {
+              // this.payOrder(order)
+            }
           })
           .catch(err => {
             console.log(err);

@@ -44,10 +44,6 @@
     props: {
       open: Boolean,
       item: Object,
-      isEdit: {
-        type: Boolean,
-        default: false
-      }
     },
     watch: {
       open(newVal) {

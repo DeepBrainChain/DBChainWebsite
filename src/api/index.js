@@ -271,3 +271,21 @@ export const query_machine_by_id = params => {
     params
   })
 }
+
+// 获取机器被出租后的订单列表
+export const rentout_get_machines_orders_list = params => {
+  return axios({
+    method: 'post',
+    url: host + '/rentout_get_machines_orders_list',
+    params
+  })
+}
+
+// 获取出租的机器列表
+export const rentout_get_machines_list = params => {
+  return axios({
+    method: 'post',
+    url: host + '/rentout_get_machines_list',
+    params
+  })
+}

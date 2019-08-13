@@ -87,7 +87,8 @@
         </tbody>
       </table>
     </div>
-    <trade-list></trade-list>
+    <trade-list class="mb20"></trade-list>
+    <wallet-detail></wallet-detail>
   </div>
 </template>
 
@@ -95,11 +96,15 @@
   import {mapActions, mapState} from "vuex";
   import {closeAc, transfer, isAddress} from "@/utlis";
   import tradeList from "@/components/wallet/tradeList";
+  import walletDetail from '@/components/wallet/walletBox'
   import {MessageBox} from "element-ui";
 
   export default {
     name: "myWallet-unlock",
-
+    components: {
+      tradeList,
+      walletDetail
+    },
     data() {
       return {
         sendLoading: false,
@@ -113,8 +118,8 @@
     created() {
       this.initData();
       this.si = setInterval(() => {
-        // this.initData()
-      }, 5000);
+        this.initData()
+      }, 30000);
     },
     beforeDestroy() {
       if (this.si) {
@@ -124,7 +129,7 @@
     methods: {
       ...mapActions(["getAccountState", "getTransferList", "getExchangeRate"]),
       initData() {
-        this.getExchangeRate();
+        this.getExchangeRate()
         this.getAccountState()
           .then(data => {
             this.symbol = data.symbol;
@@ -223,9 +228,6 @@
     },
     computed: {
       ...mapState(["address", "balance", "transferList", "dbcToUS"])
-    },
-    components: {
-      tradeList
     }
   };
 </script>

@@ -168,6 +168,7 @@ export function transfer({toAddress, amount, gas = 0}) {
           script: script, // The Smart Contract invocation script
           gas // Additional GAS for invocation.
         }
+        console.log(res.balance)
         return Neon.doInvoke(config)
       } else {
         return Promise.reject({status: -1, msg: 'DBC余额不足'})
