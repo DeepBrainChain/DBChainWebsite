@@ -76,10 +76,7 @@ export default new Router({
     {
       path: '/miner',
       name: 'miner',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('./views/miner'),
+      component: () => import('./views/gpu'),
       redirect: '/miner/myWallet',
       children: [
         {
@@ -87,28 +84,28 @@ export default new Router({
             menuIndex: 0
           },
           path: 'myWallet',
-          component: () => import('./views/miner/myWallet')
+          component: () => import('./views/gpu/myWallet')
         },
         {
           meta: {
             menuIndex: 0
           },
           path: 'myWalletUnlock',
-          component: () => import('./views/miner/myWallet_unlock')
+          component: () => import('./views/gpu/myWallet_unlock')
         },
         {
           meta: {
             menuIndex: 2
           },
           path: 'list',
-          component: () => import('./views/miner/list')
+          component: () => import('./views/gpu/list')
         },
         {
           meta: {
             menuIndex: 1
           },
           path: 'myMachine',
-          component: () => import('./views/miner/myMachine')
+          component: () => import('./views/gpu/myMachine')
         },
         {
           meta: {
@@ -176,6 +173,16 @@ export default new Router({
       name: 'miner_addMc',
       path: '/addMc',
       component: () => import('./views/miner/addMachine')
-    }
+    },
+    {
+      name: 'miner_addMc',
+      path: '/editMc',
+      component: () => import('./views/miner/addMachine')
+    },
+    {
+      path: '/machineOrder',
+      name: 'machineOrder',
+      component: () => import('./views/machineOrder')
+    },
   ]
 })

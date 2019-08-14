@@ -2,47 +2,29 @@
   <div class="navi">
     <ul class="btn-list">
       <li v-for="item in menus">
-        <el-button class="lg naviBtn" :class="{active: curNaviIndex === item.index}" v-on:click="pushTo(item)">
+        <el-button class="lg naviBtn" :class="{active: index === item.index}" v-on:click="pushTo(item)">
           <i class="iconfont" :class="item.iconClass"></i>
           <span>{{item.title}}</span>
         </el-button>
       </li>
-      <!--<li>
-        <el-button class="lg naviBtn" :class="{active: curNaviIndex === '/gpu/myMachineUnlock'}" v-on:click="pushTo('/gpu/myMachineUnlock')">
-          <i class="iconfont iconmachine"></i>
-          <span>我的机器</span>
-        </el-button>
-      </li>
-      <li>
-        <el-button class="lg naviBtn" :class="{active: curNaviIndex === '/gpu/list'}" v-on:click="pushTo('/gpu/list')">
-          <i class="iconfont iconlist"></i>
-          <span>机器列表</span>
-        </el-button>
-      </li>-->
     </ul>
   </div>
 </template>
 
 <script>
   export default {
-    name: "curNaviIndex",
+    name: "naviMenu",
     props: {
-      menus: Array
-    },
-    created () {
-      const curRoute = this.$route.matched.find(item => item.path === this.$route.path)
-      this.curNaviIndex = curRoute.meta.menuIndex
+      menus: Array,
+      index: Number
     },
     data() {
-      // const isMiner = this.$route.path.indexOf('miner') !== -1
       return {
-        curNaviIndex: -1,
       }
     },
     methods: {
       pushTo(item) {
         this.$router.push(item.to)
-        this.curNaviIndex = item.index
       }
     }
   }

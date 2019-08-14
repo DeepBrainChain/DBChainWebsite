@@ -29,7 +29,7 @@ export default {
     ...mapActions(["getAccountState", "getTransferList"]),
     initData() {
       if(getAccount()) {
-        this.$router.push('/gpu/myWalletUnlock')
+        this.$router.push('myWalletUnlock')
       }
     },
     openCreateWallet() {
