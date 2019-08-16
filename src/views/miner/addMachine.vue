@@ -47,7 +47,7 @@
 
     </div>-->
     <div class="label mt20">
-      2.输入时间
+      {{isEditor ? 1:2}} .输入时间
     </div>
     <div class="text">
       <span>
@@ -66,22 +66,24 @@
       小时以后
     </div>
     <div class="label mt20">
-      3.输入机器id
+      {{isEditor ? 2:3}}.输入机器id
     </div>
     <div class="text">
       <span>
         机器id:
       </span>
-      <mu-text-field class="mc-input" v-model.trim="machine_id" type="text" style="width: 700px;"></mu-text-field>
+      <mu-text-field :disabled="isEditor" class="mc-input" v-model.trim="machine_id" type="text"
+                     style="width: 700px;"></mu-text-field>
     </div>
     <div class="label mt20">
-      4.{{$t('miner.addMc_price')}}
+      {{isEditor ? 3:4}}.{{$t('miner.addMc_price')}}
     </div>
     <div class="text">
       <span>
         {{$t('miner.addMc_msg_4[0]')}}:
       </span>
-      <mu-text-field class="mc-input" v-model.number="gpu_price_dollar" style="width: 162px;" type="number"></mu-text-field>
+      <mu-text-field class="mc-input" v-model.number="gpu_price_dollar" style="width: 162px;"
+                     type="number"></mu-text-field>
       $/{{$t('hour')}}
       <!--<span class="ml60">
         {{$t('miner.addMc_msg_4[1]')}}:
@@ -93,7 +95,7 @@
       其中4%代币用于DBC共识节点奖励，4%代币会被燃烧掉。深脑链基金会和DBChain平台不收取任何费
     </div>
     <div class="label mt30">
-      5.{{$t('miner.addMc_dbc')}}
+      {{isEditor ? 4:5}}.{{$t('miner.addMc_dbc')}}
     </div>
     <div>
       <mu-text-field class="verityMail-input" v-model="code" type="number"></mu-text-field>
@@ -103,7 +105,7 @@
     </div>
 
     <div class="btn-wrap mt100">
-      <el-button class="addMc-btn" type="primary" size="medium" @click="confirm">{{$t('confirm')}}</el-button>
+      <el-button :loading="isLoading" class="addMc-btn" type="primary" size="medium" @click="confirm">{{$t('confirm')}}</el-button>
       <el-button class="addMc-btn blue ml20" size="medium" @click="back">{{$t('back')}}</el-button>
       <span class="info ml60">
         {{$t('miner.addMc_msg_6[0]')}}
@@ -154,7 +156,6 @@
           date: '',
           timeArea: ''
         },
-        isEditor: this.$route.query.isEditor,
         minerKey: '',
         area: [
           {
@@ -172,6 +173,18 @@
         can_rent_start_time_later: '',
         end_rent_out_time_later: '',
         machine_id: ''
+      }
+    },
+    created() {
+      console.log('创建')
+      this.gpu_price_dollar = this.$route.query.gpu_price_dollar
+      this.can_rent_start_time_later = Math.floor(this.$route.query.can_rent_start_time_later / 60)
+      this.end_rent_out_time_later = Math.floor(this.$route.query.end_rent_out_time_later / 60)
+      this.machine_id = this.$route.query.machine_id
+    },
+    computed: {
+      isEditor() {
+        return this.$route.query.machine_id ? true : false
       }
     },
     methods: {
@@ -214,10 +227,11 @@
       confirm() {
         this.isLoading = true
         add_or_modify({
+          wallet_address: getAccount().address,
           machine_id: this.machine_id,
           gpu_price_dollar: this.gpu_price_dollar,
-          can_rent_start_time_later: this.can_rent_start_time_later,
-          end_rent_out_time_later: this.end_rent_out_time_later,
+          can_rent_start_time_later: this.can_rent_start_time_later * 60,
+          end_rent_out_time_later: this.end_rent_out_time_later * 60,
           code: this.code,
         }).then(res => {
           if (res.status === 1) {
@@ -226,6 +240,7 @@
               message: res.msg,
               type: 'success'
             })
+            this.$router.back()
           } else {
             this.$message({
               showClose: true,
@@ -233,7 +248,7 @@
               type: 'error'
             })
           }
-        }).finally(()=>{
+        }).finally(() => {
           this.isLoading = false
         })
 
@@ -242,11 +257,6 @@
         this.$router.back()
       }
     },
-    computed: {
-      showTime() {
-        // return this.curDT.startTime.toLocaleTimeString()
-      }
-    }
   }
 </script>
 

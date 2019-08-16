@@ -18,6 +18,7 @@
   export default {
     name: "myWallet",
     created() {
+      console.log(this.$route)
       this.initData()
     },
     methods: {
@@ -27,7 +28,7 @@
       ]),
       initData() {
         if(getAccount()) {
-          this.$router.push('/gpu/myMachineUnlock')
+          this.$router.replace('myMachineUnlock')
         }
       },
       openCreateWallet() {
