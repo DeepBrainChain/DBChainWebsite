@@ -57,7 +57,7 @@ export default {
     home: "首页",
     gpu: "租用GPU",
     // network: "DBC NETWORK",
-    // miner: "GPU出租",
+    miner: "GPU出租",
     talk: "AI开发者论坛",
     // api: "DBC API",
     //help: "帮助",
