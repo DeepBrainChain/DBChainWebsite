@@ -278,8 +278,16 @@
           <span
             v-if="isShowRendSuccessMsg(item.orderData.milli_rent_success_time)"
           >机器租用成功，登陆信息已发送至您的邮箱，请查收并妥善保管</span>
+          <span v-else-if="item.orderData.container_is_exist === true && item.orderData.rent_success === false">
+            支付确认中
+          </span>
+          <span class="cRed" v-else-if="item.orderData.creating_container">
+            正在确认中，请耐心等待，大概需要1-3分钟
+          </span>
         </div>
-        <div v-if="item.orderData.order_is_cancer === false && !(item.orderData.return_dbc === true && item.orderData.pay_error === true)" class="r-wrap">
+        <div
+          v-if="item.orderData.order_is_cancer === false && !(item.orderData.return_dbc === true && item.orderData.pay_error === true)"
+          class="r-wrap">
           <el-button
             v-if="item.orderData.order_is_over"
             plain
@@ -313,7 +321,7 @@
           </template>
           <template v-else-if="item.orderData.rent_success === false">
             <el-button
-              :disabled="item.orderData.container_is_exist && item.orderData.rent_success === false"
+              :disabled="item.verifing === true || (item.orderData.container_is_exist && item.orderData.rent_success === false)"
               plain
               :loading="isPaying"
               class="tool-btn"
@@ -349,7 +357,7 @@
     <dlg-unsubscribe :item="curItem" :open.sync="dlgUnsubscribe_open" @success="stopRentSuccess"></dlg-unsubscribe>
     <!--    rate-->
     <dlg-rate :open.sync="dlgRate_open" :item="curItem" @success="successRate"></dlg-rate>
-<!--    return dbc-->
+    <!--    return dbc-->
     <dlg-return-dbc :open.sync="dlgReturnDbc_open" :item="curItem" @success="returnSuccess"></dlg-return-dbc>
   </div>
 </template>
@@ -415,7 +423,9 @@
       this.queryMail();
       this.queryOrderList();
       setInterval(() => {
-        // this.queryOrderList();
+        if (this.isPaying !== true) {
+          // this.queryOrderList();
+        }
       }, 60000);
     },
     computed: {
@@ -427,9 +437,9 @@
     },
     methods: {
       isShowRendSuccessMsg(milli_rent_success_time) {
-        const hours =
-          (new Date().getTime() - milli_rent_success_time) / 1000 / 3600;
-        return hours < 1;
+        const minutes =
+          (new Date().getTime() - milli_rent_success_time) / 1000 / 60;
+        return minutes < 10;
       },
 
       // pay
@@ -443,11 +453,8 @@
           })
             .then(res => {
               if (res.status === 1) {
-                this.$message({
-                  showClose: true,
-                  message: res.msg,
-                  type: "success"
-                })
+                console.log(res.msg)
+                item.notice = ''
                 clearInterval(this.si)
                 const amount = item.orderData.dbc_total_count + item.orderData.code * 1;
                 // pay
@@ -462,11 +469,7 @@
                   }
                 })*/
               } else if (res.status === 2) {
-                this.$message({
-                  showClose: true,
-                  message: res.msg,
-                  type: "info"
-                })
+                item.orderData.creating_container = true
               } else {
                 this.$message({
                   showClose: true,
@@ -484,6 +487,7 @@
                 this.isPaying = false;
                 clearInterval(this.si);
                 // pay after
+                item.verifing = true
                 return pay({
                   order_id: item.orderData.order_id,
                   dbc_hash: txid
@@ -620,9 +624,11 @@
               );
               if (mcItem) {
                 this.res_body.content.push({
+                  verifing: false,
+                  notice: '',
                   orderData: item,
                   mcData: mcItem
-                });
+                })
               }
             });
 

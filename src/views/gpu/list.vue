@@ -225,14 +225,12 @@
       </slide-item>
     </div>
     <ul>
-      <li v-for="(item, index) in res_body.content" class="info-wrap">
+      <li v-for="(item, index) in res_body.content" v-if="item.online_status" class="info-wrap">
         <div class="flex status-title">
           <div>
             <el-button plain class="is-link" @click="pushDetail(item.machine_id)">{{item.machine_id}}</el-button>
             <span class="fs28">
-              <span
-                class="cPrimaryColor"
-              >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$ {{item.gpu_price_dollar }}/小时</span>
+              <span class="cPrimaryColor">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$ {{item.gpu_price_dollar }}/小时</span>
             </span>
           </div>
           <div class="td">
@@ -257,7 +255,7 @@
               size="mini"
               @click="openDlg(item)"
               :disabled="!item.idle_status"
-              :loading="rentLoading"
+              :loading="item.rentLoading"
             >租用
             </el-button>
           </div>
@@ -586,7 +584,7 @@
           this.$router.push("/openWallet");
           return;
         }
-        this.rentLoading = true;
+        item.rentLoading = true;
         place_order({
           machine_id: item.machine_id,
           wallet_address_user: getAccount().address
@@ -622,7 +620,7 @@
             console.log(err);
           })
           .finally(() => {
-            this.rentLoading = false;
+            item.rentLoading = false;
           });
 
       },

@@ -4,7 +4,7 @@
     width="540px"
     @close="closed">
     <div slot="title">{{isEdit ? '编辑评价':$t('gpu.rate')}}</div>
-    <el-form class="dlg-content">
+    <el-form :model="$data" ref="ruleForm" class="dlg-content">
       <div class="flex center">
         <el-rate v-model="rateVal" :max="5" allow-half></el-rate>
         <span>{{showRate}}{{$t('scores')}}</span>
@@ -20,7 +20,7 @@
           v-model="textarea">
         </el-input>
       </div>
-      <el-form-item label="请输入验证码：">
+      <el-form-item label="请输入验证码：" :rules="rules.evalution_code"  prop="evalution_code" label-width="130px">
         <el-input v-model="evalution_code" class="w200" size="small"></el-input>
         <el-button :loading="isCoding" class="ml10" plain size="mini" @click="getEvaluationCode">发送验证码</el-button>
       </el-form-item>
@@ -50,6 +50,7 @@
         this.isOpen = newVal
         if (newVal) {
           this.getItem()
+          this.evalution_code = ''
         }
       }
     },
@@ -60,7 +61,14 @@
         isCoding: false,
         textarea: '',
         rateVal: 0,
-        evalution_code: ''
+        evalution_code: '',
+        rules: {
+          evalution_code: [
+            {
+              required: true, message: '请输入验证码', trigger: 'blur'
+            }
+          ]
+        }
       }
     },
     methods: {
@@ -95,53 +103,59 @@
         this.$emit('update:open', false)
       },
       confirm() {
-        if (this.isEdit) {
-          modify_evaluate_machine({
-            evaluation_content: this.textarea,
-            evaluation_score: this.rateVal * 2,
-            order_id: this.item.orderData.order_id,
-            evalution_code: this.evalution_code
-          }).then(res => {
-            if(res.status === 1) {
-              this.$message({
-                showClose: true,
-                message: res.msg,
-                type: 'success'
+        this.$refs['ruleForm'].validate(valid => {
+          if (valid) {
+            if (this.isEdit) {
+              modify_evaluate_machine({
+                evaluation_content: this.textarea,
+                evaluation_score: this.rateVal * 2,
+                order_id: this.item.orderData.order_id,
+                evalution_code: this.evalution_code
+              }).then(res => {
+                if(res.status === 1) {
+                  this.$message({
+                    showClose: true,
+                    message: res.msg,
+                    type: 'success'
+                  })
+                  this.closed()
+                  this.$emit('success')
+                } else {
+                  this.$message({
+                    showClose: true,
+                    message: res.msg,
+                    type: 'error'
+                  })
+                }
               })
-              this.closed()
-              this.$emit('success')
             } else {
-              this.$message({
-                showClose: true,
-                message: res.msg,
-                type: 'error'
+              evaluate_machine({
+                evaluation_content: this.textarea,
+                evaluation_score: this.rateVal * 2,
+                order_id: this.item.orderData.order_id,
+                evalution_code: this.evalution_code
+              }).then(res => {
+                if(res.status === 1) {
+                  this.$message({
+                    showClose: true,
+                    message: res.msg,
+                    type: 'success'
+                  })
+                  this.closed()
+                  this.$emit('success')
+                } else {
+                  this.$message({
+                    showClose: true,
+                    message: res.msg,
+                    type: 'error'
+                  })
+                }
               })
             }
-          })
-        } else {
-          evaluate_machine({
-            evaluation_content: this.textarea,
-            evaluation_score: this.rateVal * 2,
-            order_id: this.item.orderData.order_id,
-            evalution_code: this.evalution_code
-          }).then(res => {
-            if(res.status === 1) {
-              this.$message({
-                showClose: true,
-                message: res.msg,
-                type: 'success'
-              })
-              this.closed()
-              this.$emit('success')
-            } else {
-              this.$message({
-                showClose: true,
-                message: res.msg,
-                type: 'error'
-              })
-            }
-          })
-        }
+          } else {
+            return false
+          }
+        })
       },
       cancel() {
         this.closed()
