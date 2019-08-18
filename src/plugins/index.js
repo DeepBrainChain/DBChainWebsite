@@ -372,7 +372,7 @@ export default function install(Vue, options) {
   }
   Vue.prototype.$minsToHourMins = (mins) => {
     if (mins < 60) {
-      return mins
+      return mins + '分钟'
     } else {
       const h = Math.floor(mins / 60)
       const m = mins % 60

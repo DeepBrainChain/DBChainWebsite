@@ -6,7 +6,7 @@ import Preview from './views/preview'
 Vue.use(Router)
 
 console.log(process.env.NODE_ENV)
-export default new Router({
+const router = new Router({
   // base: process.env.NODE_ENV === 'production' ? '/DBC_GPU' : '/',
   base: process.env.NODE_ENV === 'production' ? '/' : '/',
 
@@ -19,6 +19,10 @@ export default new Router({
     },
     {
       path: '/',
+      redirect: '/home'
+    },
+    {
+      path: '/home',
       name: 'home',
       component: Home
     },
@@ -122,14 +126,39 @@ export default new Router({
       component: () => import('./views/machineDetail')
     },
     {
-      name: 'createWallet',
       path: '/createWallet',
+      name: 'createWallet',
       component: () => import('./views/createWallet/index.vue')
     },
     {
       name: 'openWallet',
       path: '/openWallet',
       component: () => import('./views/openWallet/index.vue')
+    },
+    {
+      path: '/howBuy',
+      name: 'howBuy',
+      component: () => import('./views/help/howBuy'),
+    },
+    {
+      path: '/minerHome',
+      name: 'minerHome',
+      component: () => import('./views/minerHome')
+    },
+    {
+      path: '/addMc',
+      name: 'miner_addMc',
+      component: () => import('./views/miner/addMachine')
+    },
+    {
+      path: '/editMc',
+      name: 'miner_addMc',
+      component: () => import('./views/miner/addMachine')
+    },
+    {
+      path: '/machineOrder',
+      name: 'machineOrder',
+      component: () => import('./views/machineOrder')
     },
     {
       name: 'trade',
@@ -159,30 +188,11 @@ export default new Router({
         }
       ]
     },
-    {
-      name: 'howBuy',
-      path: '/howBuy',
-      component: () => import('./views/help/howBuy'),
-    },
-    {
-      name: 'minerHome',
-      path: '/minerHome',
-      component: () => import('./views/minerHome')
-    },
-    {
-      name: 'miner_addMc',
-      path: '/addMc',
-      component: () => import('./views/miner/addMachine')
-    },
-    {
-      name: 'miner_addMc',
-      path: '/editMc',
-      component: () => import('./views/miner/addMachine')
-    },
-    {
-      path: '/machineOrder',
-      name: 'machineOrder',
-      component: () => import('./views/machineOrder')
-    },
   ]
 })
+
+/*router.beforeEach((to, from, next) => {
+
+})*/
+
+export default router

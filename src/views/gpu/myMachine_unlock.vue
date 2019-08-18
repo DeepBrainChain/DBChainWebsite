@@ -140,7 +140,7 @@
           <div class="td">
             <span class="fs16">
               累计出租时长：
-              <a class="cPrimaryColor">{{$minsToHourMins(item.mcData.total_time_be_used)}}小时</a>
+              <a class="cPrimaryColor">{{$minsToHourMins(item.mcData.total_time_be_used)}}</a>
             </span>
           </div>
           <div class="td">
