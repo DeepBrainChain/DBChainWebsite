@@ -34,7 +34,7 @@
         </div>
       </el-col>
       <el-col class="center" :md="12">
-        <img src="~@/assets/imgs/building@1x.png" alt="">
+        <img src="~@/assets/imgs/building_2@1x.png" alt="">
       </el-col>
     </el-row>
     <!--<el-row class="wrap1440 pb120">
@@ -75,7 +75,7 @@
       <el-row class="wrap1440">
         <el-col class="flex" :sm="12">
           <div class="gpu-info">
-            <img src="~@/assets/imgs/gpu_img_1.jpg" alt="">
+            <img src="~@/assets/imgs/gpu_img_3.png" alt="">
             <div class="text">
               <p>
                 {{$t('home.intr_7')}}
@@ -85,7 +85,7 @@
         </el-col>
         <el-col class="flex" :sm="12">
           <div class="gpu-info">
-            <img src="~@/assets/imgs/gpu_img_2.jpg" alt="">
+            <img src="~@/assets/imgs/gpu_img_4.png" alt="">
             <div class="text">
               <p>
                 {{$t('home.intr_8')}}

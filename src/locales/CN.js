@@ -238,10 +238,10 @@ export default {
     intr_6: 'GPU租用按照分钟计费，GPU使用过程中如果出现中断，将会最多补偿144小时的费用',
     intr_7: '深脑链从2020年开始每年挖矿产出5亿，3年后，每年产出2.5亿，并且以后每5年产出减半，总计有40亿',
     intr_8: '加入深脑链收益组成：超级节点收益+挖矿收益+租金收益',
-    start: '开始使用',
+    start: '开始租用GPU',
     github: 'GitHub',
     video: '视频',
-    startMiner: '开始挖矿'
+    startMiner: '开始出租GPU'
   },
   help: {
     'title': '如何购买DBC',
