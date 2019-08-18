@@ -7,7 +7,8 @@ import {
   initAccount,
   initAccountFromEncryptedKey,
   getBalance,
-  getTransfer
+  getTransfer,
+  getTransactions
 } from '../utlis'
 
 import {
@@ -65,7 +66,19 @@ export default new Vuex.Store({
       })
     },
     getTransferList({commit, state}) {
-      getTransfer(state.address).then(data => {
+      getTransactions(state.address,1).then(res => {
+        const array = res.entries.map(item => {
+          return {
+            txHash: item.txid,
+            fromAddress: item.address_from,
+            toAddress: item.address_to,
+            time: item.time,
+            amount: item.amount
+          }
+        })
+        commit('setTransferList', array)
+      })
+      /*getTransfer(state.address).then(data => {
         const recArray = data.received.map(item => {
           return {
             txHash: item.tx_hash,
@@ -88,7 +101,7 @@ export default new Vuex.Store({
           return b.time - a.time
         })
         commit('setTransferList', array)
-      })
+      })*/
     },
     getAccountState({commit, state}) {
       return new Promise((resolve, reject) => {

@@ -6,16 +6,18 @@
       </div>
       <div v-for="item in content" class="border-content">
         <div class="tools-head">
-          <div class="l-wrap">
-            <!--          <span class="tools-title">{{$t('gpu.mcStatusTitle')}}：<b>{{$t('gpu.machineOnLine')}}</b></span>-->
-            <span
-              v-if="item.orderData.order_is_cancer ||item.orderData.order_is_over"
+          <div class="l-wrap" style="width: 70%">
+            <span v-if="item.orderData.evaluation_content">
+              <b>用户评价：</b>{{item.orderData.evaluation_content}}
+            </span>
+           <!-- <span
+              v-if="item.orderData.order_is_cancer || item.orderData.order_is_over"
               class="tools-title"
             ></span>
             <span
               v-else
               class="tools-title"
-            >{{$t('gpu.remainingTime')}}：{{$secToDate(item.orderData.rest_time_rent*60, 'DHM')}}</span>
+            >{{$t('gpu.remainingTime')}}：{{$secToDate(item.orderData.rest_time_rent*60, 'DHM')}}</span>-->
           </div>
           <div class="r-wrap">
             <!--<span v-if="item.rent_success">正在使用中</span>
@@ -43,7 +45,7 @@
         </div>
         <div class="pay-wrap">
           <div class="rate-head">
-            <div class="flex right vCenter">
+            <div class="flex right vCenter" v-if="item.orderData.evaluation_time">
               <el-rate :value="item.orderData.evaluation_score/2"></el-rate>
               <span>{{item.orderData.evaluation_score}}{{$t('scores')}}</span>
             </div>
@@ -159,6 +161,7 @@
     border: 1px solid #979797;
     margin-bottom: 20px;
   }
+
   .pay-wrap {
     padding: 10px 20px;
     border-top: 1px solid #e1e6ec;
@@ -171,6 +174,7 @@
       display: inline-block;
       width: 33.3%;
     }
+
     .rate-head {
       display: flex;
       justify-content: space-between;
@@ -211,6 +215,7 @@
       padding-left: 44px;
     }
   }
+
   .rate-wrap {
     label {
       vertical-align: top;

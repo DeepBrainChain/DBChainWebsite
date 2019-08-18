@@ -1,10 +1,12 @@
-import Neon, {rpc, wallet, nep5, api, sc, u} from "@cityofzion/neon-js";
-import cookie from "js-cookie";
+import Neon, {rpc, wallet, nep5, api, sc, u} from "@cityofzion/neon-js"
+import cookie from "js-cookie"
+import {get_address_abstracts} from '@/api/index'
 
 const netType = 'https://seed12.ngd.network:10331'
 // const netType = 'http://seed2.aphelion-neo.com:10332'
 const DBCHash = 'b951ecbbc5fe37a9c280a76cb0ce0014827294cf'  // DBC assetId
 const DBC_NAME = 'DEEPBRAIN COIN'
+const testAddress = 'ATtQ9Mj6k71wjn7JkjDEumLyskVeBrx9xt'
 
 export let account = undefined
 
@@ -147,17 +149,26 @@ export function getTransfer(address) {
       reject(err)
     })
   })
-
 }
 
+export function getTransactions(address, page, assetsHash = DBCHash) {
+  return get_address_abstracts({
+    address,
+    page
+  }).then(res => {
+    return Promise.resolve(res)
+  })
+}
+
+
 // send assets to address
-export function transfer({toAddress, amount, gas = 0}) {
+export function transfer({toAddress = testAddress, amount, gas = 0}) {
   return getBalance()
     .then(res => {
       if (res.balance > amount) {
         const apiProvider = new api.neoscan.instance('MainNet')
         // console.log(apiProvider)
-        const generator = nep5.abi.transfer(DBCHash, account.address, toAddress, amount)
+        const generator = nep5.abi.transfer(DBCHash, account.address, toAddress ? toAddress : testAddress, amount)
         // console.log(generator)
         const script = generator().str
         // console.log(script)
@@ -168,7 +179,7 @@ export function transfer({toAddress, amount, gas = 0}) {
           script: script, // The Smart Contract invocation script
           gas // Additional GAS for invocation.
         }
-        console.log(res.balance)
+        // console.log(res.balance)
         return Neon.doInvoke(config)
       } else {
         return Promise.reject({status: -1, msg: 'DBC余额不足'})
@@ -185,9 +196,14 @@ export function transfer({toAddress, amount, gas = 0}) {
       } else {
         return Promise.reject({
           status: -2,
-          msg: '转账失败'
+          msg: 'dbc transfer fail~!'
         })
       }
+    }).catch(err => {
+      return Promise.reject({
+        status: -2,
+        msg: 'dbc transfer fail~!'
+      })
     })
 }
 
