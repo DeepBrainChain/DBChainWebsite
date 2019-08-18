@@ -9,7 +9,7 @@
       <a class="item" href="http://www.dbctalk.ai" target="_blank">{{$t('heads.talk')}}</a>
       <!--      <router-link class="item" to="/home">{{$t('heads.api')}}</router-link>-->
       <!--  <router-link class="item" to="/home">{{$t('heads.help')}}</router-link>-->
-      <!--  <el-dropdown class="drop-lang" trigger="click" v-on:command="drop_command">
+        <!--<el-dropdown class="drop-lang" trigger="click" v-on:command="drop_command">
         <span class="el-dropdown-link">
           <i class="icon-language"></i>
           <span>{{curLang.toUpperCase()}}</span>
@@ -34,11 +34,6 @@
         curLang: this.$i18n.locale,
         menuName: ''
       }
-    },
-    computed:{
-      ...mapState([
-        'route'
-      ]),
     },
     methods: {
       pushMenu(name) {
