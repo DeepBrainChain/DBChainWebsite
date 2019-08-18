@@ -259,15 +259,15 @@ export default function install(Vue, options) {
   Vue.prototype.$loadLanguageAsync = loadLanguageAsync
   Vue.prototype.$isSupportFileApi = function () {
     if (window.File && window.FileList && window.FileReader && window.Blob) {
-      return true;
+      return true
     }
-    return false;
+    return false
   }
   Vue.prototype.$getAddressFromCookie = function () {
     return cookie.get('address') || false
   }
   Vue.prototype.$isCn = function () {
-    var language = (navigator.browserLanguage || navigator.language).toLowerCase();
+    var language = (navigator.browserLanguage || navigator.language).toLowerCase()
     if (language.indexOf('zh') > -1) {
       return true
     } else if (language.indexOf('en') > -1) {
@@ -285,13 +285,13 @@ export default function install(Vue, options) {
     const dymStr = numDym * 1 !== 0 ? `.${numDym}` : ''
     return intStr + dymStr
   }
-  Vue.prototype.$loading = Loading.service;
-  Vue.prototype.$msgbox = MessageBox;
-  Vue.prototype.$alert = MessageBox.alert;
-  Vue.prototype.$confirm = MessageBox.confirm;
-  Vue.prototype.$prompt = MessageBox.prompt;
-  Vue.prototype.$notify = Notification;
-  Vue.prototype.$message = Message;
+  Vue.prototype.$loading = Loading.service
+  Vue.prototype.$msgbox = MessageBox
+  Vue.prototype.$alert = MessageBox.alert
+  Vue.prototype.$confirm = MessageBox.confirm
+  Vue.prototype.$prompt = MessageBox.prompt
+  Vue.prototype.$notify = Notification
+  Vue.prototype.$message = Message
   Vue.prototype.$secToDate = (msd, format = 'DHMS') => {
     var time = msd
     if (null != time && "" != time) {
@@ -306,12 +306,12 @@ export default function install(Vue, options) {
         time = parseInt(time / 3600.0 / 24) + "天" +
           (format.search('H') !== -1 ? parseInt((parseFloat(time / 3600.0 / 24) - parseInt(time / 3600.0 / 24)) * 24) + "小时" : '') +
           (format.search('M') !== -1 ? parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60) + "分钟" : '') +
-          (format.search('S') !== -1 ? parseInt((parseFloat((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60) - parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60)) * 60) + "秒" : '');
+          (format.search('S') !== -1 ? parseInt((parseFloat((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60) - parseInt((parseFloat(time / 3600.0) - parseInt(time / 3600.0)) * 60)) * 60) + "秒" : '')
       } else {
-        time = parseInt(time) + "秒";
+        time = parseInt(time) + "秒"
       }
     }
-    return time;
+    return time
   }
   Vue.prototype.$globalCountries = globalCountries
   /***
@@ -357,18 +357,28 @@ export default function install(Vue, options) {
     return val
   }
   Vue.prototype.$bytesToSize = (bytes) => {
-    if (bytes === 0) return '0 B';
+    if (bytes === 0) return '0 B'
     var k = 1000, // or 1024
       sizes = ['MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
-      i = Math.floor(Math.log(bytes) / Math.log(k));
+      i = Math.floor(Math.log(bytes) / Math.log(k))
 
-    return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
+    return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i]
   }
   Vue.prototype.$hourToDT = (hours) => {
     const day = Math.floor(hours / 24)
     const h = Math.floor(hours - day * 24)
     const m = Math.floor()
     return `${day > 0 ? day + '天' : ''}${h}小时`
+  }
+  Vue.prototype.$minsToHourMins = (mins) => {
+    if (mins < 60) {
+      return mins
+    } else {
+      const h = Math.floor(mins / 60)
+      const m = mins % 60
+      return `${h}时${m}分`
+    }
+
   }
   Vue.prototype.$tAddress = tAdd
 }

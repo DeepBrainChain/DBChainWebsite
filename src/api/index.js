@@ -298,3 +298,11 @@ export const rentout_get_orders_list_by_machine_id = params => {
     params
   })
 }
+
+// 获取当前人的订单列表
+export const get_address_abstracts = ({address, page}) => {
+  return axios({
+    method: 'get',
+    url: `https://api.neoscan.io/api/main_net/v1/get_address_abstracts/${address}/${page}`,
+  })
+}
