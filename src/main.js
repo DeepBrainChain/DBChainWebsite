@@ -9,10 +9,15 @@ import plugins from './plugins'
 import './assets/css/normalize.scss'
 import './assets/css/common.scss'
 import './assets/css/main.scss'
+import {sync} from "vuex-router-sync"
 // import i18n from './i18n'
 
 Vue.config.productionTip = false
 Vue.use(plugins)
+
+const unsync = sync(store, router)
+
+// unsync()
 
 new Vue({
   router,

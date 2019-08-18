@@ -40,7 +40,6 @@
         @change="queryMc"
       >{{showlengthOfAvailableTime}}
       </slide-item>
-
       <slide-item
         class="machine-item"
         :title="$t('total_time')"
@@ -51,7 +50,6 @@
         @change="queryMc"
       >{{showTotalTime}}
       </slide-item>
-
       <slide-item
         class="machine-item"
         :title="$t('disk_space')"
@@ -62,7 +60,6 @@
         @change="queryMc"
       >{{showDiskSpace}}
       </slide-item>
-
       <slide-item
         class="machine-item"
         :title="$t('gpu_price_dollar')"
@@ -226,7 +223,7 @@
     </div>
     <ul>
       <li v-for="(item, index) in res_body.content" v-if="item.online_status" class="info-wrap">
-        <div class="flex vCenter">
+        <div v-if="item.evaluation_score_average > 0" class="flex vCenter">
           <el-rate :value="item.evaluation_score_average/2">
           </el-rate>
           <span>{{item.evaluation_score_average}}{{$t('scores')}}</span>
@@ -288,7 +285,7 @@
           <div class="td">
             <span class="fs16">
               最长可租用时间：
-              <a class="cPrimaryColor">{{item.length_of_available_time}}小时</a>
+              <a class="cPrimaryColor">{{Math.floor(item.length_of_available_time/60)}}小时</a>
             </span>
           </div>
           <div class="td">
@@ -296,7 +293,7 @@
               累计出租时长：
               <a
                 class="cPrimaryColor"
-              >{{item.total_time_be_used/60}}小时{{item.total_time_be_used%60}}分钟</a>
+              >{{$minsToHourMins(item.total_time_be_used)}}</a>
             </span>
           </div>
           <div class="td">
@@ -516,16 +513,16 @@
         error_rent_count_CountVal: 0,
         tensor_cores_CountVal: 0,
         half_tflopsVal: 0,
-        single_tflopsVal: 1,
-        double_tflopsVal: 1,
-        gpuRamSizeVal: 1,
-        gpuRamBandwidthVal: 1,
-        piceBandwidthVal: 1,
-        cpuCoresVal: 1,
-        cpuRamSizeVal: 1,
-        diskBandwidthVal: 1,
-        inetUpVal: 0.5,
-        inetDownVal: 0.5,
+        single_tflopsVal: 0,
+        double_tflopsVal: 0,
+        gpuRamSizeVal: 0,
+        gpuRamBandwidthVal: 0,
+        piceBandwidthVal: 0,
+        cpuCoresVal: 0,
+        cpuRamSizeVal: 0,
+        diskBandwidthVal: 0,
+        inetUpVal: 0,
+        inetDownVal: 0,
 
         images: [
           {
@@ -549,22 +546,22 @@
           lengthOfAvailableTime: 1,
           gpuPrice: 0.00001,
           gpuCount: 0,
-          tflops: 5,
-          gpuRamSize: 1,
-          gpuRamBandwidth: 10,
-          piceBandwidth: 50,
-          cpuCores: 1,
-          cpuRamSize: 1,
-          diskBandwidth: 50,
-          inetUp: 0.5,
-          inetDown: 0.5,
+          tflops: 0,
+          gpuRamSize: 0,
+          gpuRamBandwidth: 0,
+          piceBandwidth: 0,
+          cpuCores: 0,
+          cpuRamSize: 0,
+          diskBandwidth: 0,
+          inetUp: 0,
+          inetDown: 0,
           total_rent_count: 0,
           error_rent_count: 0,
           disk_GB_perhour_dollar: 0,
-          tensor_cores: 1,
-          half_precision_tflops: 1,
-          single_precision_tflops: 1,
-          double_precision_tflops: 1
+          tensor_cores: 0,
+          half_precision_tflops: 0,
+          single_precision_tflops: 0,
+          double_precision_tflops: 0
         },
         res_body: {
           content: []

@@ -2,10 +2,10 @@
   <div class="head">
     <div class="content wrap1440">
       <img class="logo" src="~@/assets/imgs/logo@1x.png"/>
-      <router-link class="item" to="/">{{$t('heads.home')}}</router-link>
-      <router-link class="item" to="/gpu">{{$t('heads.gpu')}}</router-link>
+      <a class="item" :class="{active: menuName === 'home'}" @click="pushMenu('home')">{{$t('heads.home')}}</a>
+      <a class="item" :class="{active: menuName === 'gpu'}" @click="pushMenu('gpu')">{{$t('heads.gpu')}}</a>
       <!--      <router-link class="item" to="/network">{{$t('heads.network')}}</router-link>-->
-      <router-link class="item" to="/miner">{{$t('heads.miner')}}</router-link>
+      <a class="item" :class="{active: menuName === 'miner'}" @click="pushMenu('miner')">{{$t('heads.miner')}}</a>
       <a class="item" href="http://www.dbctalk.ai" target="_blank">{{$t('heads.talk')}}</a>
       <!--      <router-link class="item" to="/home">{{$t('heads.api')}}</router-link>-->
       <!--  <router-link class="item" to="/home">{{$t('heads.help')}}</router-link>-->
@@ -25,24 +25,36 @@
 </template>
 
 <script>
+  import {mapState} from 'vuex'
+
   export default {
     name: "Head",
     data() {
       return {
-        curLang: this.$i18n.locale
-      };
+        curLang: this.$i18n.locale,
+        menuName: ''
+      }
+    },
+    computed:{
+      ...mapState([
+        'route'
+      ]),
     },
     methods: {
+      pushMenu(name) {
+        this.menuName = name
+        this.$router.push('/' + name)
+      },
       pushToPreview() {
-        this.$router.push("/preview");
+        this.$router.push("/preview")
       },
       drop_command(lang) {
         this.$loadLanguageAsync(lang).then(() => {
-          this.curLang = lang;
-        });
+          this.curLang = lang
+        })
       }
     }
-  };
+  }
 </script>
 
 <style lang="scss" scoped>
@@ -54,20 +66,26 @@
   .content {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
 
     .logo {
+      margin-top: 5px;
       margin-right: 169px;
     }
 
     .item {
-      height: 20px;
-      line-height: 20px;
       font-size: 16px;
       font-weight: 700;
-
+      cursor: pointer;
+      color: rgba(255,255,255,0.5);
+      padding-bottom: 10px;
+      border-bottom: 2px solid transparent;
       &:hover {
-        color: #fff;
+        color: rgba(255, 255, 255, 0.9);
+      }
+      &.active {
+        border-bottom-color: #fff;
+        color: rgba(255, 255, 255, 0.9);
       }
     }
 
