@@ -116,8 +116,9 @@ export default {
       fileSave.saveAs(blob, `${this.nep2Key}.txt`);
     },
     pushToMyWallet() {
+      const type = this.$route.params.type
       saveCookie(getAccount());
-      this.$router.push("/gpu/myWalletUnlock");
+      this.$router.push(`/${type}/myWalletUnlock`);
     }
   },
   components: {

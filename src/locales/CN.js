@@ -245,11 +245,12 @@ export default {
   },
   help: {
     'title': '如何购买DBC',
-    //'1': '1.直接购买DBC，进入',
-    '1': '1.从火币购买DBC',
-    '2': '2.从库币购买DBC，',
-    '3': '3.从Gate.io购买DBC',
-    '4': '4.从其他支持DBC的钱包转账到钱包账号，比如neotracker.io、O3Wallet',
+    '1': '1.直接购买DBC，进入',
+    // '1': '1.从DBCTrade购买DBC',
+    '2': '2.从火币购买DBC',
+    '3': '3.从库币购买DBC',
+    '4': '4.从Gate.io购买DBC',
+    '5': '5.从其他支持DBC的钱包转账到钱包账号，比如neotracker.io、O3Wallet',
     'reloadWallet': '充值进入钱包账号',
   },
   miner: {

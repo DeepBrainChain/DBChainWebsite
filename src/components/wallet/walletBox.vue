@@ -29,7 +29,7 @@
         <label>Your Private Key:</label>
       </div>
       <div class="pl30">
-        <mu-text-field full-width :value="wif" readonly></mu-text-field>
+        <mu-text-field full-width :value="wif" readonly :action-icon="visibility ? 'visibility_off' : 'visibility'" :action-click="() => (visibility = !visibility)" :type="visibility ? 'text' : 'password'"></mu-text-field>
       </div>
 
       <!--<div class="flex vCenter">
@@ -62,11 +62,11 @@
       return {
         address: '',
         nep2Key: '',
-        wif: ''
+        wif: '',
+        visibility: false
       }
     },
     created() {
-      console.log(getAccount())
       this.address = getAccount().address
       // this.nep2Key = getAccount().encrypted
       this.wif = getAccount().WIF
