@@ -13,7 +13,6 @@ import Footer from './components/footer'
 export default {
   name: 'app',
   beforeRouteUpdate(to, from, next) {
-    console.log(this.$route.path)
     next()
   },
   components: {
