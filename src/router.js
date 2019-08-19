@@ -25,7 +25,7 @@ const router = new Router({
       path: '/home',
       name: 'home',
       // component: Home
-      redirect: '/trade'
+      redirect: '/trade/buy_1'
     },
     {
       path:'/network',
