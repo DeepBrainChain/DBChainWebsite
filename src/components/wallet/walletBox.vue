@@ -90,6 +90,7 @@
     height: 48px;
     line-height: 48px;
     padding-left: 30px;
+    color: #666;
     border-bottom: 1px solid #979797;
   }
   .box-content {
