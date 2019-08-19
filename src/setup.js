@@ -3,6 +3,7 @@ import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import cn from './locales/CN'
 import axios from 'axios'
+import 'muse-ui/lib/styles/base.less'
 import {
   DatePicker,
   Dropdown,
@@ -36,9 +37,9 @@ import {
 } from 'element-ui'
 import ElementLocale from 'element-ui/lib/locale'
 import {
-  TextField
+  TextField,
+  Icon
 } from "muse-ui"
-import 'muse-ui/lib/styles/base.less'
 import 'muse-ui/lib/styles/theme.less'
 
 Vue.use(VueI18n)
@@ -81,6 +82,7 @@ Vue.use(Tooltip)
 Vue.component(Message)
 
 Vue.use(TextField)
+Vue.use(Icon)
 
 Vue.prototype.$message = Message
 

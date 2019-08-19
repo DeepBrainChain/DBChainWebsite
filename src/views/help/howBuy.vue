@@ -4,7 +4,7 @@
       <h2>{{$t('help.title')}}</h2>
       <h3>
         {{$t('help.1')}}
-        <router-link to="/trade">dbctrade.io</router-link>
+        <a href="http://https://www.dbctrade.com">dbctrade.io</a>
       </h3>
 
       <h3>

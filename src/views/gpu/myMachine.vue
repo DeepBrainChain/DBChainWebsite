@@ -32,13 +32,15 @@
         }
       },
       openCreateWallet() {
-        this.$router.push('/createWallet')
+        const type = this.$route.path.search('gpu') !== -1 ? 'gpu' : 'miner'
+        this.$router.push(`/createWallet/${type}`)
       },
       openWallet() {
         this.getAccountState().then(data => {
           this.$router.push('/gpu/myMachine_unlock')
         }).catch(err => {
-          this.$router.push('/openWallet')
+          const type = this.$route.path.search('gpu') !== -1 ? 'gpu' : 'miner'
+          this.$router.push(`/openWallet/${type}`)
         })
       }
     }
