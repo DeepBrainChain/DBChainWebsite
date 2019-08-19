@@ -40,7 +40,6 @@
         @change="queryMc"
       >{{showlengthOfAvailableTime}}
       </slide-item>
-
       <slide-item
         class="machine-item"
         :title="$t('total_time')"
@@ -51,7 +50,6 @@
         @change="queryMc"
       >{{showTotalTime}}
       </slide-item>
-
       <slide-item
         class="machine-item"
         :title="$t('disk_space')"
@@ -62,7 +60,6 @@
         @change="queryMc"
       >{{showDiskSpace}}
       </slide-item>
-
       <slide-item
         class="machine-item"
         :title="$t('gpu_price_dollar')"
@@ -225,14 +222,17 @@
       </slide-item>
     </div>
     <ul>
-      <li v-for="(item, index) in res_body.content" class="info-wrap">
+      <li v-for="(item, index) in res_body.content" v-if="item.online_status" class="info-wrap">
+        <div v-if="item.evaluation_score_average > 0" class="flex vCenter">
+          <el-rate :value="item.evaluation_score_average/2">
+          </el-rate>
+          <span>{{item.evaluation_score_average}}{{$t('scores')}}</span>
+        </div>
         <div class="flex status-title">
           <div>
             <el-button plain class="is-link" @click="pushDetail(item.machine_id)">{{item.machine_id}}</el-button>
             <span class="fs28">
-              <span
-                class="cPrimaryColor"
-              >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$ {{item.gpu_price_dollar }}/小时</span>
+              <span class="cPrimaryColor">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$ {{item.gpu_price_dollar }}/小时</span>
             </span>
           </div>
           <div class="td">
@@ -248,7 +248,7 @@
               size="mini"
               @click="openTry(item)"
               :disabled="!item.idle_status"
-              :loading="try_rentLoading"
+              :loading="item.try_rentLoading"
             >试用
             </el-button>
             <el-button
@@ -257,7 +257,7 @@
               size="mini"
               @click="openDlg(item)"
               :disabled="!item.idle_status"
-              :loading="rentLoading"
+              :loading="item.rentLoading"
             >租用
             </el-button>
           </div>
@@ -285,7 +285,7 @@
           <div class="td">
             <span class="fs16">
               最长可租用时间：
-              <a class="cPrimaryColor">{{item.length_of_available_time}}小时</a>
+              <a class="cPrimaryColor">{{Math.floor(item.length_of_available_time/60)}}小时</a>
             </span>
           </div>
           <div class="td">
@@ -293,7 +293,7 @@
               累计出租时长：
               <a
                 class="cPrimaryColor"
-              >{{item.total_time_be_used/60}}小时{{item.total_time_be_used%60}}分钟</a>
+              >{{$minsToHourMins(item.total_time_be_used)}}</a>
             </span>
           </div>
           <div class="td">
@@ -433,8 +433,8 @@
     place_order,
     create_order,
     get_dbc_price
-  } from "@/api";
-  import {getAccount} from "@/utlis";
+  } from "@/api"
+  import {getAccount} from "@/utlis"
 
   export default {
     name: "list",
@@ -512,17 +512,17 @@
         total_rent_count_CountVal: 0,
         error_rent_count_CountVal: 0,
         tensor_cores_CountVal: 0,
-        half_tflopsVal: 1,
-        single_tflopsVal: 1,
-        double_tflopsVal: 1,
-        gpuRamSizeVal: 1,
-        gpuRamBandwidthVal: 1,
-        piceBandwidthVal: 1,
-        cpuCoresVal: 1,
-        cpuRamSizeVal: 1,
-        diskBandwidthVal: 1,
-        inetUpVal: 0.5,
-        inetDownVal: 0.5,
+        half_tflopsVal: 0,
+        single_tflopsVal: 0,
+        double_tflopsVal: 0,
+        gpuRamSizeVal: 0,
+        gpuRamBandwidthVal: 0,
+        piceBandwidthVal: 0,
+        cpuCoresVal: 0,
+        cpuRamSizeVal: 0,
+        diskBandwidthVal: 0,
+        inetUpVal: 0,
+        inetDownVal: 0,
 
         images: [
           {
@@ -541,40 +541,41 @@
           status: 0,
           totalTime: 0,
           reliability: 0.9,
-          diskSpace: 10,
+          diskSpace: 0,
           diskPrice: 0.00001,
           lengthOfAvailableTime: 1,
           gpuPrice: 0.00001,
           gpuCount: 0,
-          tflops: 5,
-          gpuRamSize: 1,
-          gpuRamBandwidth: 10,
-          piceBandwidth: 50,
-          cpuCores: 1,
-          cpuRamSize: 1,
-          diskBandwidth: 50,
-          inetUp: 0.5,
-          inetDown: 0.5,
+          tflops: 0,
+          gpuRamSize: 0,
+          gpuRamBandwidth: 0,
+          piceBandwidth: 0,
+          cpuCores: 0,
+          cpuRamSize: 0,
+          diskBandwidth: 0,
+          inetUp: 0,
+          inetDown: 0,
           total_rent_count: 0,
           error_rent_count: 0,
           disk_GB_perhour_dollar: 0,
-          tensor_cores: 1,
-          half_precision_tflops: 1,
-          single_precision_tflops: 1,
-          double_precision_tflops: 1
+          tensor_cores: 0,
+          half_precision_tflops: 0,
+          single_precision_tflops: 0,
+          double_precision_tflops: 0
         },
         res_body: {
           content: []
         },
-        placeOrderData: undefined
-      };
+        placeOrderData: undefined,
+        st: undefined
+      }
     },
     watch: {
       curVal(newVal) {
       }
     },
     created() {
-      this.queryMc();
+      this.queryMc()
     },
     methods: {
       pushDetail(machine_id) {
@@ -583,106 +584,106 @@
       // 打开弹窗
       openDlg(item, isTry) {
         if (!getAccount()) {
-          this.$router.push("/openWallet");
-          return;
+          this.$router.push("/openWallet")
+          return
         }
-        this.rentLoading = true;
+        item.rentLoading = true
         place_order({
           machine_id: item.machine_id,
           wallet_address_user: getAccount().address
         })
           .then(res_1 => {
             if (res_1.status === 1) {
-              this.placeOrderData = res_1.content;
-              this.placeOrderData.dbc_price = 0.0026;
-              return get_dbc_price({order_id: this.placeOrderData.order_id});
+              this.placeOrderData = res_1.content
+              this.placeOrderData.dbc_price = 0.0026
+              return get_dbc_price({order_id: this.placeOrderData.order_id})
             } else {
               this.$message({
                 showClose: true,
                 message: res_1.msg,
                 type: "error"
-              });
-              return Promise.reject(res_1.msg);
+              })
+              return Promise.reject(res_1.msg)
             }
           })
           .then(res_2 => {
             if (res_2.status === 1) {
-              this.placeOrderData.dbc_price = res_2.content;
-              this.dlg_open = true;
+              this.placeOrderData.dbc_price = res_2.content
+              this.dlg_open = true
             } else {
               this.$message({
                 showClose: true,
                 message: res_2.msg,
                 type: "success"
-              });
-              return Promise.reject(res_2.msg);
+              })
+              return Promise.reject(res_2.msg)
             }
           })
           .catch(err => {
-            console.log(err);
+            console.log(err)
           })
           .finally(() => {
-            this.rentLoading = false;
-          });
+            item.rentLoading = false
+          })
 
       },
       // open try
       openTry(item) {
-        this.try_rentLoading = true
+        item.try_rentLoading = true
         try_place_order({
           machine_id: item.machine_id,
           wallet_address_user: getAccount().address
         }).then(res => {
           if (res.status === 1) {
-            this.placeOrderData = res.content;
-            this.placeOrderData.dbc_price = 0.0026;
-            return get_dbc_price({order_id: this.placeOrderData.order_id});
+            this.placeOrderData = res.content
+            this.placeOrderData.dbc_price = 0.0026
+            return get_dbc_price({order_id: this.placeOrderData.order_id})
           } else {
             this.$message({
               showClose: true,
               message: res.msg,
               type: "error"
-            });
-            return Promise.reject(res.msg);
+            })
+            return Promise.reject(res.msg)
           }
         }).then(res => {
           if (res.status === 1) {
-            this.placeOrderData.dbc_price = res.content;
-            this.dlg_open_try = true;
+            this.placeOrderData.dbc_price = res.content
+            this.dlg_open_try = true
           } else {
             this.$message({
               showClose: true,
               message: res.msg,
               type: "success"
-            });
-            return Promise.reject(res.msg);
+            })
+            return Promise.reject(res.msg)
           }
         }).catch(err => {
-          console.log(err);
+          console.log(err)
         }).finally(() => {
-          this.try_rentLoading = false;
+          item.try_rentLoading = false
         })
       },
       // create order
       createOrder(params) {
-        const loading = this.$loading();
+        const loading = this.$loading()
         create_order(params)
           .then(res => {
             if (res.status === 1) {
-              this.$message(res.msg);
-              this.dlg_open = false;
-              this.$router.push("/gpu/myMachine");
+              this.$message('创建订单成功')
+              this.dlg_open = false
+              this.$router.push("/gpu/myMachine")
             } else {
-              this.$message(res.msg);
+              this.$message(res.msg)
             }
           })
           .finally(() => {
-            loading.close();
-          });
+            loading.close()
+          })
       },
       // try order
       createTry() {
-        const loading = this.$loading();
+        const loading = this.$loading()
         create_order({
           rent_time_length: 10,
           dbc_price: this.placeOrderData.dbc_price,
@@ -690,16 +691,16 @@
           order_id: this.placeOrderData.order_id,
           dbc_total_count: 0
         }).then(res => {
-            if (res.status === 1) {
-              this.$message(res.msg);
-              this.$router.push("/gpu/myMachine");
-            } else {
-              this.$message(res.msg);
-            }
-          })
+          if (res.status === 1) {
+            this.$message(res.msg)
+            this.$router.push("/gpu/myMachine")
+          } else {
+            this.$message(res.msg)
+          }
+        })
           .finally(() => {
-            loading.close();
-          });
+            loading.close()
+          })
       },
       queryMc() {
         const params = {
@@ -728,57 +729,62 @@
           single_precision_tflops: this.req_body.single_precision_tflops,
           double_precision_tflops: this.req_body.double_precision_tflops,
           dbc_version: "0.3.7.2"
-        };
-        getMcList(params).then(res => {
-          this.res_body = res;
-        });
+        }
+        if (this.st) {
+          clearTimeout(this.st)
+        }
+        this.st = setTimeout(() => {
+          getMcList(params).then(res => {
+            this.res_body = res
+          })
+        }, 1000)
       }
     },
     computed: {
       showTotalTime() {
-        let showTotalTime = 0;
-        let hours = 0;
-        let day = 0;
-        let month = 0;
+        let showTotalTime = 0
+        let hours = 0
+        let day = 0
+        let month = 0
         if (this.totalTimeVal < 24) {
-          hours = this.totalTimeVal;
-          showTotalTime = hours + "hrs";
-          this.req_body.totalTime = hours;
+          hours = this.totalTimeVal
+          showTotalTime = hours + "hrs"
+          this.req_body.totalTime = hours
         } else if (this.totalTimeVal >= 24 && this.totalTimeVal < 54) {
-          day = this.totalTimeVal - 24 + 1;
-          showTotalTime = day + "days";
-          this.req_body.totalTime = day * 24;
+          day = this.totalTimeVal - 24 + 1
+          showTotalTime = day + "days"
+          this.req_body.totalTime = day * 24
         } else if (this.totalTimeVal >= 54 && this.totalTimeVal <= 100) {
-          month = this.totalTimeVal - 54 + 1;
-          showTotalTime = month + "mon";
-          this.req_body.totalTime = month * 720;
+          month = this.totalTimeVal - 54 + 1
+          showTotalTime = month + "mon"
+          this.req_body.totalTime = month * 720
         }
-        return showTotalTime;
+        return showTotalTime
       },
       showReliability() {
-        this.req_body.reliability = this.reliabilityVal / 100;
-        return this.reliabilityVal > 0 ? `${this.reliabilityVal}%` : "New";
+        this.req_body.reliability = this.reliabilityVal / 100
+        return this.reliabilityVal > 0 ? `${this.reliabilityVal}%` : "New"
       },
       showDiskSpace() {
-        let val = 0;
+        let val = 0
         if (this.diskSpaceVal <= 10) {
-          val = this.diskSpaceVal * 1;
+          val = this.diskSpaceVal * 1
         } else if (this.diskSpaceVal > 10 && this.diskSpaceVal <= 20) {
-          val = (this.diskSpaceVal - 10) * 10;
+          val = (this.diskSpaceVal - 10) * 10
         } else if (this.diskSpaceVal > 20 && this.diskSpaceVal <= 30) {
-          val = (this.diskSpaceVal - 20) * 100;
+          val = (this.diskSpaceVal - 20) * 100
         } else if (this.diskSpaceVal > 30 && this.diskSpaceVal <= 40) {
-          val = (this.diskSpaceVal - 30) * 1000;
+          val = (this.diskSpaceVal - 30) * 1000
         } else if (this.diskSpaceVal > 40 && this.diskSpaceVal <= 100) {
-          val = (this.diskSpaceVal - 40) * (90000 / 60) + 9990;
+          val = (this.diskSpaceVal - 40) * (90000 / 60) + 9990
         }
-        val += 10;
-        this.req_body.diskSpace = val;
-        return val >= 1000 ? (val / 1000).toFixed(1) + "T" : val + "G";
+        // val += 10;
+        this.req_body.diskSpace = val
+        return val >= 1000 ? (val / 1000).toFixed(1) + "T" : val + "G"
       },
       showDiskPrice() {
-        const min = 0.00001;
-        const max = 1;
+        const min = 0.00001
+        const max = 1
         const stepArray = [
           {
             valMax: 0.0001,
@@ -800,41 +806,41 @@
             valMax: 1,
             step: -1
           }
-        ];
-        let val = this.$noLinearNumAdd(min, max, stepArray, this.diskPriceVal);
-        const money = parseFloat(val.toFixed(5));
-        this.req_body.diskPrice = money;
-        return "$" + money;
+        ]
+        let val = this.$noLinearNumAdd(min, max, stepArray, this.diskPriceVal)
+        const money = parseFloat(val.toFixed(5))
+        this.req_body.diskPrice = money
+        return "$" + money
       },
       showlengthOfAvailableTime() {
-        let showTotalTime = 0;
-        let hours = 0;
-        let day = 0;
-        let month = 0;
+        let showTotalTime = 0
+        let hours = 0
+        let day = 0
+        let month = 0
         if (this.lengthOfAvailableTimeVal < 24) {
-          hours = this.lengthOfAvailableTimeVal;
-          showTotalTime = hours + "hrs";
-          this.req_body.lengthOfAvailableTime = hours;
+          hours = this.lengthOfAvailableTimeVal
+          showTotalTime = hours + "hrs"
+          this.req_body.lengthOfAvailableTime = hours
         } else if (
           this.lengthOfAvailableTimeVal >= 24 &&
           this.lengthOfAvailableTimeVal < 54
         ) {
-          day = this.lengthOfAvailableTimeVal - 24 + 1;
-          showTotalTime = day + "days";
-          this.req_body.lengthOfAvailableTime = day * 24;
+          day = this.lengthOfAvailableTimeVal - 24 + 1
+          showTotalTime = day + "days"
+          this.req_body.lengthOfAvailableTime = day * 24
         } else if (
           this.lengthOfAvailableTimeVal >= 54 &&
           this.lengthOfAvailableTimeVal <= 100
         ) {
-          month = this.lengthOfAvailableTimeVal - 54 + 1;
-          showTotalTime = month + "mon";
-          this.req_body.lengthOfAvailableTime = month * 720;
+          month = this.lengthOfAvailableTimeVal - 54 + 1
+          showTotalTime = month + "mon"
+          this.req_body.lengthOfAvailableTime = month * 720
         }
-        return showTotalTime;
+        return showTotalTime
       },
       showGpuPrice() {
-        const min = 0.00001;
-        const max = 1;
+        const min = 0.00001
+        const max = 1
         const stepArray = [
           {
             valMax: 0.0001,
@@ -856,15 +862,15 @@
             valMax: 1,
             step: -1
           }
-        ];
-        let val = this.$noLinearNumAdd(min, max, stepArray, this.gpuPriceVal);
-        const money = parseFloat(val.toFixed(5));
-        this.req_body.gpuPrice = money;
-        return "$" + money;
+        ]
+        let val = this.$noLinearNumAdd(min, max, stepArray, this.gpuPriceVal)
+        const money = parseFloat(val.toFixed(5))
+        this.req_body.gpuPrice = money
+        return "$" + money
       },
       showGpuCount() {
-        const min = 1;
-        const max = 1024;
+        const min = 1
+        const max = 1024
         const stepArray = [
           {
             valMax: 10,
@@ -882,11 +888,11 @@
             valMax: 1024,
             step: -1
           }
-        ];
-        let val = this.$noLinearNumAdd(min, max, stepArray, this.gpuCountVal);
-        val = Math.floor(val);
-        this.req_body.gpuCount = val;
-        return val;
+        ]
+        let val = this.$noLinearNumAdd(min, max, stepArray, this.gpuCountVal)
+        val = Math.floor(val)
+        this.req_body.gpuCount = val
+        return val
       },
       half_showTflops() {
         const stepArray = [
@@ -906,16 +912,16 @@
             valMax: 10000,
             step: -1
           }
-        ];
-        let val = this.$noLinearNumAdd(5, 10000, stepArray, this.half_tflopsVal);
-        val = Math.floor(val);
-        this.req_body.half_precision_tflops = val;
-        return val;
+        ]
+        let val = this.$noLinearNumAdd(0, 10000, stepArray, this.half_tflopsVal)
+        val = Math.floor(val)
+        this.req_body.half_precision_tflops = val
+        return val
       },
 
       showGpuCount() {
-        const min = 1;
-        const max = 1024;
+        const min = 1
+        const max = 1024
         const stepArray = [
           {
             valMax: 10,
@@ -933,16 +939,16 @@
             valMax: 1024,
             step: -1
           }
-        ];
-        let val = this.$noLinearNumAdd(min, max, stepArray, this.gpuCountVal);
-        val = Math.floor(val);
-        this.req_body.gpuCount = val;
-        return val;
+        ]
+        let val = this.$noLinearNumAdd(min, max, stepArray, this.gpuCountVal)
+        val = Math.floor(val)
+        this.req_body.gpuCount = val
+        return val
       },
 
       show_total_rent_count() {
-        const min = 0;
-        const max = 1024;
+        const min = 0
+        const max = 1024
         const stepArray = [
           {
             valMax: 10,
@@ -960,21 +966,21 @@
             valMax: 1024,
             step: -1
           }
-        ];
+        ]
         let val = this.$noLinearNumAdd(
           min,
           max,
           stepArray,
           this.total_rent_count_CountVal
-        );
-        val = Math.floor(val);
-        this.req_body.total_rent_count = val;
-        return val;
+        )
+        val = Math.floor(val)
+        this.req_body.total_rent_count = val
+        return val
       },
 
       show_error_rent_count() {
-        const min = 0;
-        const max = 1024;
+        const min = 0
+        const max = 1024
         const stepArray = [
           {
             valMax: 10,
@@ -992,21 +998,21 @@
             valMax: 1024,
             step: -1
           }
-        ];
+        ]
         let val = this.$noLinearNumAdd(
           min,
           max,
           stepArray,
           this.error_rent_count_CountVal
-        );
-        val = Math.floor(val);
-        this.req_body.error_rent_count = val;
-        return val;
+        )
+        val = Math.floor(val)
+        this.req_body.error_rent_count = val
+        return val
       },
 
       show_tensor_cores_count() {
-        const min = 1;
-        const max = 1024;
+        const min = 0
+        const max = 1024
         const stepArray = [
           {
             valMax: 10,
@@ -1024,41 +1030,16 @@
             valMax: 1024,
             step: -1
           }
-        ];
+        ]
         let val = this.$noLinearNumAdd(
           min,
           max,
           stepArray,
           this.tensor_cores_CountVal
-        );
-        val = Math.floor(val);
-        this.req_body.tensor_cores = val;
-        return val;
-      },
-
-      half_showTflops() {
-        const stepArray = [
-          {
-            valMax: 100,
-            step: 5
-          },
-          {
-            valMax: 1000,
-            step: 50
-          },
-          {
-            valMax: 5000,
-            step: 200
-          },
-          {
-            valMax: 10000,
-            step: -1
-          }
-        ];
-        let val = this.$noLinearNumAdd(5, 10000, stepArray, this.half_tflopsVal);
-        val = Math.floor(val);
-        this.req_body.half_precision_tflops = val;
-        return val;
+        )
+        val = Math.floor(val)
+        this.req_body.tensor_cores = val
+        return val
       },
       single_showTflops() {
         const stepArray = [
@@ -1078,16 +1059,16 @@
             valMax: 10000,
             step: -1
           }
-        ];
+        ]
         let val = this.$noLinearNumAdd(
-          5,
+          0,
           10000,
           stepArray,
           this.single_tflopsVal
-        );
-        val = Math.floor(val);
-        this.req_body.single_precision_tflops = val;
-        return val;
+        )
+        val = Math.floor(val)
+        this.req_body.single_precision_tflops = val
+        return val
       },
       double_showTflops() {
         const stepArray = [
@@ -1107,20 +1088,20 @@
             valMax: 10000,
             step: -1
           }
-        ];
+        ]
         let val = this.$noLinearNumAdd(
-          5,
+          0,
           10000,
           stepArray,
           this.double_tflopsVal
-        );
-        val = Math.floor(val);
-        this.req_body.double_precision_tflops = val;
-        return val;
+        )
+        val = Math.floor(val)
+        this.req_body.double_precision_tflops = val
+        return val
       },
       showGpuRamSize() {
-        const min = 1;
-        const max = 1024;
+        const min = 0
+        const max = 1024
         const stepArray = [
           {
             valMax: 10,
@@ -1138,15 +1119,15 @@
             valMax: 1024,
             step: -1
           }
-        ];
-        let val = this.$noLinearNumAdd(min, max, stepArray, this.gpuRamSizeVal);
-        val = Math.floor(val);
-        this.req_body.gpuRamSize = val;
-        return val + "G";
+        ]
+        let val = this.$noLinearNumAdd(min, max, stepArray, this.gpuRamSizeVal)
+        val = Math.floor(val)
+        this.req_body.gpuRamSize = val
+        return val + "G"
       },
       showGpuRamBandwidth() {
-        const min = 10;
-        const max = 10000;
+        const min = 0
+        const max = 10000
         const stepArray = [
           {
             valMax: 100,
@@ -1160,20 +1141,20 @@
             valMax: max,
             step: -1
           }
-        ];
+        ]
         let val = this.$noLinearNumAdd(
           min,
           max,
           stepArray,
           this.gpuRamBandwidthVal
-        );
-        val = Math.floor(val);
-        this.req_body.gpuRamBandwidth = val;
-        return val < 1000 ? val + "G" : val / 1000 + "T";
+        )
+        val = Math.floor(val)
+        this.req_body.gpuRamBandwidth = val
+        return val < 1000 ? val + "G" : val / 1000 + "T"
       },
       showPiceBandwidth() {
-        const min = 50;
-        const max = 128000;
+        const min = 0
+        const max = 128000
         const stepArray = [
           {
             valMax: 100,
@@ -1195,20 +1176,20 @@
             valMax: max,
             step: -1
           }
-        ];
+        ]
         let val = this.$noLinearNumAdd(
           min,
           max,
           stepArray,
           this.piceBandwidthVal
-        );
-        val = Math.floor(val);
-        this.req_body.piceBandwidth = val;
-        return val < 1000 ? val + "M" : val / 1000 + "G";
+        )
+        val = Math.floor(val)
+        this.req_body.piceBandwidth = val
+        return val < 1000 ? val + "M" : val / 1000 + "G"
       },
       showCpuCores() {
-        const min = 1;
-        const max = 8096;
+        const min = 0
+        const max = 8096
         const stepArray = [
           {
             valMax: 8,
@@ -1238,15 +1219,15 @@
             valMax: max,
             step: -1
           }
-        ];
-        let val = this.$noLinearNumAdd(min, max, stepArray, this.cpuCoresVal);
-        val = Math.floor(val);
-        this.req_body.cpuCores = val;
-        return val;
+        ]
+        let val = this.$noLinearNumAdd(min, max, stepArray, this.cpuCoresVal)
+        val = Math.floor(val)
+        this.req_body.cpuCores = val
+        return val
       },
       showCpuRamSize() {
-        const min = 1;
-        const max = 8096;
+        const min = 0
+        const max = 8096
         const stepArray = [
           {
             valMax: 8,
@@ -1276,15 +1257,15 @@
             valMax: max,
             step: -1
           }
-        ];
-        let val = this.$noLinearNumAdd(min, max, stepArray, this.cpuRamSizeVal);
-        val = Math.floor(val);
-        this.req_body.cpuRamSize = val;
-        return val + "G";
+        ]
+        let val = this.$noLinearNumAdd(min, max, stepArray, this.cpuRamSizeVal)
+        val = Math.floor(val)
+        this.req_body.cpuRamSize = val
+        return val + "G"
       },
       showDiskBandwidth() {
-        const min = 50;
-        const max = 20000;
+        const min = 0
+        const max = 20000
         const stepArray = [
           {
             valMax: 100,
@@ -1302,20 +1283,20 @@
             valMax: max,
             step: -1
           }
-        ];
+        ]
         let val = this.$noLinearNumAdd(
           min,
           max,
           stepArray,
           this.diskBandwidthVal
-        );
-        val = Math.floor(val);
-        this.req_body.diskBandwidth = val;
-        return val < 1000 ? val + "M" : val / 1000 + "G";
+        )
+        val = Math.floor(val)
+        this.req_body.diskBandwidth = val
+        return val < 1000 ? val + "M" : val / 1000 + "G"
       },
       showInetUp() {
-        const min = 0.5;
-        const max = 8096;
+        const min = 0
+        const max = 8096
         const stepArray = [
           {
             valMax: 8,
@@ -1345,14 +1326,14 @@
             valMax: max,
             step: -1
           }
-        ];
-        let val = this.$noLinearNumAdd(min, max, stepArray, this.inetUpVal);
-        this.req_body.inetUp = val;
-        return val < 1000 ? val + "Mbps" : (val / 1000).toFixed(3) + "Gbps";
+        ]
+        let val = this.$noLinearNumAdd(min, max, stepArray, this.inetUpVal)
+        this.req_body.inetUp = val
+        return val < 1000 ? val + "Mbps" : (val / 1000).toFixed(3) + "Gbps"
       },
       showInetDown() {
-        const min = 0.5;
-        const max = 8096;
+        const min = 0
+        const max = 8096
         const stepArray = [
           {
             valMax: 8,
@@ -1382,13 +1363,13 @@
             valMax: max,
             step: -1
           }
-        ];
-        let val = this.$noLinearNumAdd(min, max, stepArray, this.inetDownVal);
-        this.req_body.inetDown = val;
-        return val < 1000 ? val + "Mbps" : (val / 1000).toFixed(3) + "Gbps";
+        ]
+        let val = this.$noLinearNumAdd(min, max, stepArray, this.inetDownVal)
+        this.req_body.inetDown = val
+        return val < 1000 ? val + "Mbps" : (val / 1000).toFixed(3) + "Gbps"
       }
     }
-  };
+  }
 </script>
 
 <style lang="scss" scoped>

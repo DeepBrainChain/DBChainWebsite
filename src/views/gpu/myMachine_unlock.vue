@@ -55,7 +55,7 @@
           <span v-else-if="item.orderData.order_is_cancer">订单已取消</span>
           <span v-else-if="item.orderData.rent_success">正在使用中</span>
           <span
-            v-else-if="item.orderData.container_is_exist && item.orderData.rent_success===false"
+            v-else-if="item.orderData.vocing_pay===true"
           >支付验证中</span>
           <span v-else-if="item.orderData.pay_error && item.orderData.return_dbc===false">支付验证失败</span>
           <span v-else-if="item.orderData.pay_error && item.orderData.return_dbc">退币成功</span>
@@ -134,15 +134,13 @@
           <div class="td">
             <span class="fs16">
               最长可租用时间：
-              <a class="cPrimaryColor">{{item.mcData.length_of_available_time}}小时</a>
+              <a class="cPrimaryColor">{{Math.floor(item.mcData.length_of_available_time/60)}}小时</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
               累计出租时长：
-              <a
-                class="cPrimaryColor"
-              >{{item.mcData.total_time_be_used/60}}小时{{item.mcData.total_time_be_used%60}}分钟</a>
+              <a class="cPrimaryColor">{{$minsToHourMins(item.mcData.total_time_be_used)}}</a>
             </span>
           </div>
           <div class="td">
@@ -278,8 +276,16 @@
           <span
             v-if="isShowRendSuccessMsg(item.orderData.milli_rent_success_time)"
           >机器租用成功，登陆信息已发送至您的邮箱，请查收并妥善保管</span>
+          <span v-else-if="item.orderData.vocing === true">
+            支付确认中
+          </span>
+          <span class="cRed" v-else-if="item.orderData.creating_container">
+            正在确认中，请耐心等待，大概需要1-3分钟
+          </span>
         </div>
-        <div v-if="item.orderData.order_is_cancer === false && !(item.orderData.return_dbc === true && item.orderData.pay_error === true)" class="r-wrap">
+        <div
+          v-if="item.orderData.order_is_cancer === false && !(item.orderData.return_dbc === true && item.orderData.pay_error === true)"
+          class="r-wrap">
           <el-button
             v-if="item.orderData.order_is_over"
             plain
@@ -313,7 +319,7 @@
           </template>
           <template v-else-if="item.orderData.rent_success === false">
             <el-button
-              :disabled="item.orderData.container_is_exist && item.orderData.rent_success === false"
+              :disabled="item.verifing === true || item.orderData.vocing_pay"
               plain
               :loading="isPaying"
               class="tool-btn"
@@ -322,8 +328,8 @@
             >确认支付
             </el-button>
             <el-button
-              v-if="!(item.orderData.container_is_exist && item.orderData.rent_success === false)"
-              :loading="isPaying"
+              v-if="!item.orderData.vocing_pay && item.orderData.try_rent === false"
+              :disabled="isPaying"
               class="tool-btn"
               size="mini"
               plain
@@ -349,7 +355,7 @@
     <dlg-unsubscribe :item="curItem" :open.sync="dlgUnsubscribe_open" @success="stopRentSuccess"></dlg-unsubscribe>
     <!--    rate-->
     <dlg-rate :open.sync="dlgRate_open" :item="curItem" @success="successRate"></dlg-rate>
-<!--    return dbc-->
+    <!--    return dbc-->
     <dlg-return-dbc :open.sync="dlgReturnDbc_open" :item="curItem" @success="returnSuccess"></dlg-return-dbc>
   </div>
 </template>
@@ -407,16 +413,32 @@
         isPaying: false,
         curItem: undefined,
         isRateEdit: false,
-        si: undefined
+        si: undefined,
+        queryOrderListSi: undefined
       };
     },
     created() {
       // this.binding(isNewMail);
       this.queryMail();
-      this.queryOrderList();
-      setInterval(() => {
-        // this.queryOrderList();
+      this.queryOrderList().then(res => {
+        if (res.status === 1) {
+          this.forceToPay()
+        }
+      })
+      this.queryOrderListSi = setInterval(() => {
+        if (this.isPaying !== true) {
+          this.queryOrderList();
+        }
       }, 60000);
+    },
+    beforeRouteLeave(to, from ,next) {
+      if (this.queryOrderListSi) {
+        clearInterval(this.queryOrderListSi)
+      }
+      if (this.si) {
+        clearInterval(this.si)
+      }
+      next()
     },
     computed: {
       rentNumber() {
@@ -426,12 +448,28 @@
       }
     },
     methods: {
-      isShowRendSuccessMsg(milli_rent_success_time) {
-        const hours =
-          (new Date().getTime() - milli_rent_success_time) / 1000 / 3600;
-        return hours < 1;
+      forceToPay() {
+        // console.log('调用强制支付')
+        // 判断如果有订单没有支付完成，强制支付
+        const order = this.res_body.content.find((item, index) => {
+          // console.log(index)
+          // console.log(item.orderData.creating_container)
+          // console.log(item.orderData.container_is_exist)
+          return !item.orderData.order_is_over &&
+            !item.orderData.order_is_cancer &&
+            !item.orderData.rent_success &&
+            !item.orderData.vocing_pay &&
+            (item.orderData.creating_container || item.orderData.container_is_exist)
+        })
+        if (order) {
+          this.payOrder(order)
+        }
       },
-
+      isShowRendSuccessMsg(milli_rent_success_time) {
+        const minutes =
+          (new Date().getTime() - milli_rent_success_time) / 1000 / 60;
+        return minutes < 10;
+      },
       // pay
       payOrder(item) {
         this.isPaying = true;
@@ -443,11 +481,8 @@
           })
             .then(res => {
               if (res.status === 1) {
-                this.$message({
-                  showClose: true,
-                  message: res.msg,
-                  type: "success"
-                })
+                console.log(res.msg)
+                item.notice = ''
                 clearInterval(this.si)
                 const amount = item.orderData.dbc_total_count + item.orderData.code * 1;
                 // pay
@@ -462,50 +497,41 @@
                   }
                 })*/
               } else if (res.status === 2) {
-                this.$message({
-                  showClose: true,
-                  message: res.msg,
-                  type: "info"
+                item.orderData.creating_container = true
+                return Promise.reject({
+                  status: -2,
+                  msg: '正在确认是否可租用'
                 })
               } else {
-                this.$message({
-                  showClose: true,
-                  message: res.msg,
-                  type: "error"
-                });
-                clearInterval(this.si);
-                this.isPaying = false;
                 this.queryOrderList()
+                return Promise.reject({
+                  status: -1,
+                  msg: res.msg
+                })
               }
             })
             .then(res => {
               if (res.status === 1) {
+                console.log('转账成功')
                 const txid = res.response.txid;
-                this.isPaying = false;
                 clearInterval(this.si);
                 // pay after
+                item.verifing = true
+                // 支付后确认
                 return pay({
                   order_id: item.orderData.order_id,
                   dbc_hash: txid
                 });
-              } else {
-                this.$message({
-                  showClose: true,
-                  message: "支付失败",
-                  type: "error"
-                });
-                this.isPaying = false;
-                clearInterval(this.si);
-                return Promise.reject("pay fail");
               }
             })
             .then(res => {
-              if (res.status === 1) {
+              if (res.status === 2) {
                 this.$message({
                   showClose: true,
                   message: res.msg,
                   type: "success"
                 });
+                item.orderData.vocing_pay = true
               } else {
                 this.$message({
                   showClose: true,
@@ -520,19 +546,19 @@
               if (err && err.status === -1) {
                 this.$message({
                   showClose: true,
-                  message: res.msg,
+                  message: err.msg,
                   type: "error"
                 })
                 clearInterval(this.si)
+                this.isPaying = false
               } else if (err && err.status === -2) {
-                this.$message({
-                  showClose: true,
-                  message: res.msg,
-                  type: "error"
-                })
-                clearInterval(this.si)
+                console.log(err.msg)
+                // clearInterval(this.si)
               } else if (err) {
-                console.log('报错信息:' + err)
+                console.log('其他报错')
+                console.log(err)
+                clearInterval(this.si)
+                this.isPaying = false
               }
             })
         }, 5000);
@@ -611,7 +637,7 @@
             wallet_address_user
           })
         ];
-        Promise.all(promiseList)
+        return Promise.all(promiseList)
           .then(([res_1, res_2]) => {
             this.res_body.content = [];
             res_2.content.forEach(item => {
@@ -620,23 +646,22 @@
               );
               if (mcItem) {
                 this.res_body.content.push({
+                  verifing: false,
+                  notice: '',
                   orderData: item,
                   mcData: mcItem
-                });
+                })
               }
-            });
-
-            // 判断如果有订单没有支付完成，强制支付
-            const order = this.res_body.content.find(item => {
-              return item.orderData.container_is_exist === true && item.orderData.rent_success === false
             })
-            if (order) {
-              // this.payOrder(order)
-            }
+            return Promise.resolve({
+              status: 1,
+            })
           })
           .catch(err => {
-            console.log(err);
-          });
+            if (err) {
+              console.log(err);
+            }
+          })
       },
       pushDetail(machine_id) {
         this.$router.push("/machineDetail?machine_id=" + machine_id)

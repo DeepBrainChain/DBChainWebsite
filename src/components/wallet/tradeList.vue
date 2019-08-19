@@ -23,7 +23,7 @@
           <span v-if="item.toAddress === address">{{item.toAddress}}</span>
           <a v-else class="cPrimaryColor" :href="`https://neotracker.io/address/${item.toAddress}`">{{item.toAddress}}</a>
         </td>
-        <td>{{$thousandsNum((item.amount/100000000).toFixed(4))}}</td>
+        <td>{{$thousandsNum((item.amount * 1).toFixed(4))}}</td>
 <!--        <td>DBC</td>-->
       </tr>
       </tbody>

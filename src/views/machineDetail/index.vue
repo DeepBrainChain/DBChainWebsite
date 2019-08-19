@@ -27,7 +27,7 @@
         <tr v-for="item in content">
           <td>{{item.wallet_address_user}}</td>
           <td>{{item.dbc_real_need_count}}</td>
-          <td>{{item.order_isnormal_over?'是':'否'}}</td>
+          <td>{{item.order_isnormal_over?'否':'是'}}</td>
           <td>{{item.gpu_count}}</td>
 <!--          <td>24d 34h</td>-->
           <td>{{$secToDate(item.rent_time_length * 60, 'DH')}}</td>

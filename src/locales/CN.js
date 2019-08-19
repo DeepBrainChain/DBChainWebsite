@@ -57,7 +57,7 @@ export default {
     home: "首页",
     gpu: "租用GPU",
     // network: "DBC NETWORK",
-    // miner: "GPU出租",
+    miner: "GPU出租",
     talk: "AI开发者论坛",
     // api: "DBC API",
     //help: "帮助",
@@ -238,10 +238,10 @@ export default {
     intr_6: 'GPU租用按照分钟计费，GPU使用过程中如果出现中断，将会最多补偿144小时的费用',
     intr_7: '深脑链从2020年开始每年挖矿产出5亿，3年后，每年产出2.5亿，并且以后每5年产出减半，总计有40亿',
     intr_8: '加入深脑链收益组成：超级节点收益+挖矿收益+租金收益',
-    start: '开始使用',
+    start: '开始租用GPU',
     github: 'GitHub',
     video: '视频',
-    startMiner: '开始挖矿'
+    startMiner: '开始出租GPU'
   },
   help: {
     'title': '如何购买DBC',
@@ -259,8 +259,8 @@ export default {
     addMc_bind: '绑定机器',
     addMc_area: '选择时区',
     addMc_price: '定价',
-    addMc_dbc: '输入验证DBC数量',
-    addMc_mail: '点击此处从邮件获取dbc数量',
+    addMc_dbc: '输入验证码',
+    addMc_mail: '点击此处从邮件获取验证码',
     addMc_date: '指定日期',
     addMc_week: '按照星期重复',
     period_1: '全天（所有时段）',
@@ -268,7 +268,7 @@ export default {
     rent: '出租机器',
     rentMachine: '打开或者创建钱包出租机器',
     addMc_msg_1: [
-      '安装DBC挖矿软件',
+      '安装DBC软件',
       '请根据操作手册进行安装.'
     ],
     addMc_msg_2: '安装完成后，需要填入当前的钱包地址，然后才能在平台上绑定机器。',

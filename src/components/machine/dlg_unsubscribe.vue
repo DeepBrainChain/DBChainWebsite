@@ -6,11 +6,11 @@
     <div slot="title">{{$t('unsubscribe')}}</div>
     <div class="dlg-content">
       <div class="midInfo mt20">
-        <p>{{$t('gpu.backDbcNum')}}: xxx DBC</p>
+        <!--<p>{{$t('gpu.backDbcNum')}}: xxx DBC</p>
         <div>
           <span v-html="$t('msg.dlg_6')"></span>
           <span></span>
-        </div>
+        </div>-->
         <el-form>
           <el-form-item label="输入邮件验证码：">
             <el-input v-model="stop_code" size="small" style="width: 200px"></el-input>

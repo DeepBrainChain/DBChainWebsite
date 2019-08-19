@@ -289,3 +289,20 @@ export const rentout_get_machines_list = params => {
     params
   })
 }
+
+// 机器id获取订单列表
+export const rentout_get_orders_list_by_machine_id = params => {
+  return axios({
+    method: 'post',
+    url: host + '/rentout_get_orders_list_by_machine_id',
+    params
+  })
+}
+
+// 获取当前人的订单列表
+export const get_address_abstracts = ({address, page}) => {
+  return axios({
+    method: 'get',
+    url: `https://api.neoscan.io/api/main_net/v1/get_address_abstracts/${address}/${page}`,
+  })
+}
