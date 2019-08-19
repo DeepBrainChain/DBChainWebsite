@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import Head from './components/head'
-import Footer from './components/footer'
+import Head from './views/trade_io/components/head'
+import Footer from './views/trade_io/components/footer'
 
 export default {
   name: 'app',

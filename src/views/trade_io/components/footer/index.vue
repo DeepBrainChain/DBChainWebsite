@@ -1,7 +1,7 @@
 <template>
-  <div class="footer" tyle=" text-align:center">
+  <div class="footer" style=" text-align:center">
     <div class="wrap1440">
-      <p class="title">友情链接</p>
+      <!--<p class="title">友情链接</p>
       <div class="link-list clearfix" margin:0 auto>
         <a href="http://www.deepbrainchain.org" target="_blank">{{$t('footer.DBChain')}}</a>
 
@@ -9,12 +9,12 @@
         <a href="http://www.dbctalk.ai" target="_blank">{{$t('footer.DBCTalk')}}</a>
         <a href="https://www.kcs.top/" target="_blank">{{$t('footer.KuCoin')}}</a>
         <a href="/trade">{{$t('footer.DBCTrade')}}</a>
-        <!--        <a href="#">{{$t('footer.DBCloud')}}</a>-->
+        &lt;!&ndash;        <a href="#">{{$t('footer.DBCloud')}}</a>&ndash;&gt;
         <a href="https://www.huobi.co" target="_blank">{{$t('footer.HuobiPro')}}</a>
         <a href="https://www.gateio.co/" target="_blank">{{$t('footer.GateIo')}}</a>
       </div>
-      <div class="line" tyle=" text-align:center"></div>
-      <p class="contact">客服支持:support@dbchain.ai，客服会在24小时内回复</p>
+      <div class="line" tyle=" text-align:center"></div>-->
+      <p class="contact">客服支持:support@dbctrade.io，客服会在24小时内回复</p>
     </div>
   </div>
 </template>

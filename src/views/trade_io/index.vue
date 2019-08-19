@@ -1,9 +1,9 @@
 <template>
   <div class="home wrap1440">
-    <div class="tab">
+    <!--<div class="tab">
       <a :class="{active: tabIndex === 0}" href="javascript:" @click="pushTo('home')">DBCTrade</a>
       <a :class="{active: tabIndex === 1}" href="javascript:" @click="pushTo('buy_1')">购买DBC</a>
-    </div>
+    </div>-->
     <router-view></router-view>
   </div>
 </template>

@@ -5,7 +5,7 @@
       <div>
         <label>
           请输入收取DBC的钱包地址：
-          <input class="dbc-input" type="text" v-model="address">
+          <input class="dbc-input" type="text" v-model.trim="address">
         </label>
       </div>
       <p class="info">如果没有DBC钱包，可以到下面任一支持dbc的钱包创建地址</p>
