@@ -33,7 +33,7 @@
       },
       openCreateWallet() {
         const type = this.$route.path.search('gpu') !== -1 ? 'gpu' : 'miner'
-        this.$router.push(`/openWallet/${type}`)
+        this.$router.push(`/createWallet/${type}`)
       },
       openWallet() {
         this.getAccountState().then(data => {

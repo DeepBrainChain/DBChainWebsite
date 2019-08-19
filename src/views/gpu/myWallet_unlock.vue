@@ -220,7 +220,7 @@
       },
       closeWallet() {
         closeAc();
-        this.$router.push(`myMachine`);
+        this.$router.push(`myWallet`);
       },
       floorNum() {
         // this.transferAmount = Math.floor(this.transferAmount)
