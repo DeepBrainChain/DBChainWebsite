@@ -4,7 +4,6 @@ import axios from '@/utlis/axios'
 const host = 'https://info.dbchain.ai'
 const juheKey = 'b947db0498fa776b09c48d548fbdda07'
 
-
 // 发送邮箱验证码
 export const sendMail_rent = params => {
   return axios({
@@ -303,10 +302,7 @@ export const rentout_get_orders_list_by_machine_id = params => {
 }
 
 // 获取当前人的订单列表
-export const get_address_abstracts = ({
-  address,
-  page
-}) => {
+export const get_address_abstracts = ({address, page}) => {
   return axios({
     method: 'get',
     url: `https://api.neoscan.io/api/main_net/v1/get_address_abstracts/${address}/${page}`,

@@ -10,7 +10,7 @@
     "modern": "vue-cli-service build --modern"
   },
   "dependencies": {
-    "@cityofzion/neon-js": "^4.5.2",
+    "@cityofzion/neon-js": "^4.7.0",
     "axios": "^0.18.0",
     "core-js": "^2.6.5",
     "element-ui": "^2.10.1",

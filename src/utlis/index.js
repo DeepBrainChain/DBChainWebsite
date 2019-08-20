@@ -166,7 +166,7 @@ export function transfer({toAddress = testAddress, amount, gas = 0}) {
   return getBalance()
     .then(res => {
       if (res.balance > amount) {
-        const apiProvider = new api.neoscan.instance('MainNet')
+        const apiProvider = new api.neoscan.instance('https://api.neoscan.io/api/main_net')
         // console.log(apiProvider)
         const generator = nep5.abi.transfer(DBCHash, account.address, toAddress ? toAddress : testAddress, amount)
         // console.log(generator)
@@ -174,6 +174,7 @@ export function transfer({toAddress = testAddress, amount, gas = 0}) {
         // console.log(script)
         const config = {
           api: apiProvider, // The API Provider that we rely on for balance and rpc information
+          url: 'https://seed2.cityofzion.io/',
           account: account, // The sending Account
           // intents: undefined, // Additional intents to move assets
           script: script, // The Smart Contract invocation script
