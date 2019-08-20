@@ -26,42 +26,42 @@ module.exports = {
         changeOrigin: true
       },
       '/binding_email_rent': {
-        target: 'http://116.85.24.172:8031',
+        target: 'https://info.dbchain.ai',
         ws: true,
         changeOrigin: true
       },
       'query_all_machines': {
-        target: 'http://116.85.24.172:8031',
+        target: 'https://info.dbchain.ai',
         ws: true,
         changeOrigin: true
       },
       'rent': {
-        target: 'http://116.85.24.172:8031',
+        target: 'https://info.dbchain.ai',
         ws: true,
         changeOrigin: true
       },
       'try_rent': {
-        target: 'http://116.85.24.172:8031',
+        target: 'https://info.dbchain.ai',
         ws: true,
         changeOrigin: true
       },
       'query_machine_by_wallet': {
-        target: 'http://116.85.24.172:8031',
+        target: 'https://info.dbchain.ai',
         ws: true,
         changeOrigin: true
       },
       'get_all_order': {
-        target: 'http://116.85.24.172:8031',
+        target: 'https://info.dbchain.ai',
         ws: true,
         changeOrigin: true
       },
       '/rentout': {
-        target: 'http://116.85.24.172:8031',
+        target: 'https://info.dbchain.ai',
         ws: true,
         changeOrigin: true
       },
       'query_machine_by_id': {
-        target: 'http://116.85.24.172:8031',
+        target: 'https://info.dbchain.ai',
         ws: true,
         changeOrigin: true
       }
