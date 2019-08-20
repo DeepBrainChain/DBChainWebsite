@@ -3,7 +3,12 @@
     <h3>Details</h3>
     <div class="box-content">
       <div class="flex vCenter">
-        <el-tooltip class="item" effect="dark" content="提示文字">
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="钱包地址：
+您的地址也可以称为您的帐户。当你把这个地址发给对方时，对方可以给您的钱包地址打DBC代币。"
+        >
           <i class="icon-tip el-icon-question"></i>
         </el-tooltip>
         <label>your address:</label>
@@ -23,13 +28,25 @@
       </div>-->
 
       <div class="flex vCenter pt10">
-        <el-tooltip class="item" effect="dark" content="提示文字">
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="您的私钥
+这是您的私钥的未加密文本版本，意味着不需要密码。如果有人找到你的未加密的私钥，他们可以在没有密码的情况下访问你的钱包。因此，通常建议使用加密版本"
+        >
           <i class="icon-tip el-icon-question"></i>
         </el-tooltip>
         <label>Your Private Key:</label>
       </div>
       <div class="pl30">
-        <mu-text-field full-width :value="wif" readonly :action-icon="visibility ? 'visibility_off' : 'visibility'" :action-click="() => (visibility = !visibility)" :type="visibility ? 'text' : 'password'"></mu-text-field>
+        <mu-text-field
+          full-width
+          :value="wif"
+          readonly
+          :action-icon="visibility ? 'visibility_off' : 'visibility'"
+          :action-click="() => (visibility = !visibility)"
+          :type="visibility ? 'text' : 'password'"
+        ></mu-text-field>
       </div>
 
       <!--<div class="flex vCenter">
@@ -48,38 +65,38 @@
 </template>
 
 <script>
-  import {
-    createAccount,
-    getWIFFromPrivateKey,
-    saveCookie,
-    getAccount
-  } from "@/utlis";
-  import fileSave from "file-saver";
+import {
+  createAccount,
+  getWIFFromPrivateKey,
+  saveCookie,
+  getAccount
+} from "@/utlis";
+import fileSave from "file-saver";
 
-  export default {
-    name: "walletBox",
-    data() {
-      return {
-        address: '',
-        nep2Key: '',
-        wif: '',
-        visibility: false
-      }
-    },
-    created() {
-      this.address = getAccount().address
-      // this.nep2Key = getAccount().encrypted
-      this.wif = getAccount().WIF
-    },
-    methods:{
-      saveKeyFile() {
-        const blob = new Blob([this.nep2Key], {
-          type: "text/plain;charset=utf-8"
-        });
-        fileSave.saveAs(blob, `${this.nep2Key}.txt`);
-      }
+export default {
+  name: "walletBox",
+  data() {
+    return {
+      address: "",
+      nep2Key: "",
+      wif: "",
+      visibility: false
+    };
+  },
+  created() {
+    this.address = getAccount().address;
+    // this.nep2Key = getAccount().encrypted
+    this.wif = getAccount().WIF;
+  },
+  methods: {
+    saveKeyFile() {
+      const blob = new Blob([this.nep2Key], {
+        type: "text/plain;charset=utf-8"
+      });
+      fileSave.saveAs(blob, `${this.nep2Key}.txt`);
     }
   }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -106,6 +123,5 @@
       line-height: 24px;
     }
   }
-
 }
 </style>
