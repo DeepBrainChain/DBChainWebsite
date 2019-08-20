@@ -64,7 +64,12 @@ module.exports = {
         target: 'http://116.85.24.172:8031',
         ws: true,
         changeOrigin: true
-      }
+      },
+      'onebox': {
+        target: 'http://op.juhe.cn/',
+        ws: true,
+        changeOrigin: true
+      },
     }
   }
 }

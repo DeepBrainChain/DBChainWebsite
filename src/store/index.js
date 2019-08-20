@@ -10,6 +10,7 @@ import {
   getTransfer,
   getTransactions
 } from '../utlis'
+import {exchangeUSDToCNY} from '@/api'
 
 import {
   get_dbc_price
@@ -29,7 +30,8 @@ export default new Vuex.Store({
     publicKey: '',
     address: '',
     transferList: [],
-    dbcToUS: 0 // DBC对美金汇率
+    dbcToUS: 0 ,// DBC对美金汇率
+    USDToCNY: 0
   },
   mutations: {
     setAccount(state, data) {
@@ -54,6 +56,9 @@ export default new Vuex.Store({
     },
     setdbcToUS(state, data) {
       state.dbcToUS = data
+    },
+    setUSDToCNY(state, data) {
+      state.USDToCNY = data
     }
   },
   actions: {
@@ -61,12 +66,13 @@ export default new Vuex.Store({
       axios.get('https://api.coinmarketcap.com/v1/ticker/deepbrain-chain/').then(res => {
         // console.log(res.data[0])
         commit('setdbcToUS', res.data[0].price_usd)
-      }).catch(err => {
-
+      })
+      exchangeUSDToCNY().then(res =>{
+        commit('setUSDToCNY', res.result[0].exchange)
       })
     },
     getTransferList({commit, state}) {
-      getTransactions(state.address,1).then(res => {
+      getTransactions(state.address, 1).then(res => {
         const array = res.entries.map(item => {
           return {
             txHash: item.txid,

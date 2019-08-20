@@ -6,20 +6,19 @@
         <div class="l-wrap">
           <h3 class="trade-title">购买金额: <span>RMB</span></h3>
           <div>
-            <input class="money-input" type="text" v-model.trim.number="rmb">
+            <input class="money-input" type="number" v-model.trim.number="rmb" @input="rmbInput">
           </div>
           <p class="notice">平台收取3%的手续费</p>
         </div>
         <div class="r-wrap">
           <h3 class="trade-title">对应的等值数量：<span>DBC</span></h3>
-          <div class="dbc-num">{{dbc}}</div>
+          <div class="dbc-num">{{computedDBC}}</div>
           <p class="trade-info">
             DBC价格参考gate DBC/USDT交易对价格， <br>
             点击查看价格：<a href="https://www.gateio.co/trade/DBC_USDT" target="_blank">https://www.gateio.co/trade/DBC_USDT</a>
           </p>
         </div>
       </div>
-
       <div class="trade-bottom-wrap">
         <el-button class="confirm-btn" type="primary" size="medium" @click="next">继续</el-button>
         <span class="service">客服支持： <a href="mailto:support@dbctra.io">support@dbctra.io</a> ,客服会在24小时内回复</span>
@@ -30,6 +29,7 @@
 
 <script>
   import Step from '@/components/trade_io/stepNavi'
+  import {mapActions, mapState} from 'vuex'
 
   export default {
     name: "buy_1",
@@ -42,7 +42,26 @@
     components: {
       Step
     },
+    created() {
+      this.getExchangeRate()
+    },
+    computed: {
+      ...mapState([
+        'dbcToUS',
+        'USDToCNY'
+      ]),
+      computedDBC() {
+        const dbcToCNY = this.dbcToUS * this.USDToCNY
+        // debugger
+        if (dbcToCNY) {
+          return this.rmb / dbcToCNY
+        } else {
+          return 0
+        }
+      }
+    },
     methods: {
+      ...mapActions(['getExchangeRate']),
       next() {
         if (this.rmb.length === 0) {
           this.$message({
@@ -67,6 +86,9 @@
             type: 'error'
           })
         }
+      },
+      rmbInput() {
+        this.rmb = parseFloat(this.rmb).toFixed(2)
       }
     }
   }

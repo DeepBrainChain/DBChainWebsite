@@ -1,8 +1,8 @@
 import axios from '@/utlis/axios'
 // const host = 'http://13.124.237.200:8031'
-const host = 'http://116.85.24.172:8031'
+const host = 'https://info.dbchain.ai'
 const juheKey = 'b947db0498fa776b09c48d548fbdda07'
-
+const juheHost = process.env.NODE_ENV === 'production' ? host : ''
 // 发送邮箱验证码
 export const sendMail_rent = params => {
   return axios({
@@ -309,9 +309,16 @@ export const get_address_abstracts = ({address, page}) => {
 }
 
 // 获取汇率接口
-export const exchangeUSDToCNY = (from, to) => {
+export const exchangeUSDToCNY = () => {
   return axios({
     method: 'get',
-    url: `http://op.juhe.cn/onebox/exchange/currency?key=${juheKey}&from=USD&to=CNY`,
+    url: juheHost + `/onebox/exchange/currency?key=${juheKey}&from=USD&to=CNY`,
+  })
+}
+
+export const exchangeDBCToUSD = () => {
+  return axios({
+    method: 'get',
+    url: `https://api.coinmarketcap.com/v1/ticker/deepbrain-chain/`,
   })
 }
