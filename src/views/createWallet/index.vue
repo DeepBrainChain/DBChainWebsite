@@ -37,13 +37,16 @@
           :loading="btnloading"
           @click="generateAccount"
         >{{$t('create')}}</el-button>
-        <el-button
-          v-else-if="step === 1"
-          class="w200"
-          type="primary"
-          :loading="btnloading"
-          @click="step=2"
-        >{{$t('continue')}}</el-button>
+        <el-tooltip v-else-if="step === 1" :disabled="isNext" content="请下载加密后的私钥">
+          <el-button
+            class="w200"
+            :class="{'is-disabled': !isNext}"
+            type="primary"
+            :loading="btnloading"
+            @click="next"
+          >{{$t('continue')}}</el-button>
+        </el-tooltip>
+
         <el-button
           v-else-if="step === 2"
           class="w200"
@@ -76,7 +79,8 @@ export default {
       btnloading: false,
       step: 0,
       nep2Key: "",
-      wif: ""
+      wif: "",
+      isNext: false
     };
   },
   created() {},
@@ -113,11 +117,18 @@ export default {
       const blob = new Blob([this.nep2Key], {
         type: "text/plain;charset=utf-8"
       });
-      fileSave.saveAs(blob, `${this.nep2Key}.txt`);
+      fileSave.saveAs(blob, `${this.nep2Key}.txt`)
+      this.isNext = true
     },
     pushToMyWallet() {
+      const type = this.$route.params.type
       saveCookie(getAccount());
-      this.$router.push("/gpu/myWalletUnlock");
+      this.$router.push(`/${type}/myWalletUnlock`);
+    },
+    next() {
+      if (this.isNext) {
+        this.step = 2
+      }
     }
   },
   components: {

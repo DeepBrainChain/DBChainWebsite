@@ -1,6 +1,9 @@
 import axios from '@/utlis/axios'
 // const host = 'http://13.124.237.200:8031'
+
 const host = 'https://info.dbchain.ai'
+const juheKey = 'b947db0498fa776b09c48d548fbdda07'
+
 
 // 发送邮箱验证码
 export const sendMail_rent = params => {
@@ -307,5 +310,13 @@ export const get_address_abstracts = ({
   return axios({
     method: 'get',
     url: `https://api.neoscan.io/api/main_net/v1/get_address_abstracts/${address}/${page}`,
+  })
+}
+
+// 获取汇率接口
+export const exchangeUSDToCNY = (from, to) => {
+  return axios({
+    method: 'get',
+    url: `http://op.juhe.cn/onebox/exchange/currency?key=${juheKey}&from=USD&to=CNY`,
   })
 }

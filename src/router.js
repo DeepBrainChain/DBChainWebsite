@@ -126,13 +126,13 @@ const router = new Router({
       component: () => import('./views/machineDetail')
     },
     {
-      path: '/createWallet',
+      path: '/createWallet/:type',
       name: 'createWallet',
       component: () => import('./views/createWallet/index.vue')
     },
     {
+      path: '/openWallet/:type',
       name: 'openWallet',
-      path: '/openWallet',
       component: () => import('./views/openWallet/index.vue')
     },
     {
@@ -152,7 +152,7 @@ const router = new Router({
     },
     {
       path: '/editMc',
-      name: 'miner_addMc',
+      name: 'miner_editMc',
       component: () => import('./views/miner/addMachine')
     },
     {

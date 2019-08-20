@@ -186,7 +186,8 @@ export default {
       }
     },
     pushToMyWalletUnlock() {
-      this.$router.push("/gpu/myWalletUnlock");
+      const type = this.$route.params.type
+      this.$router.push(`/${type}/myWalletUnlock`)
     },
     closeAlert() {}
   },
