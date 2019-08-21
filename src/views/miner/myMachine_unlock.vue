@@ -323,6 +323,7 @@
 </template>
 
 <script>
+  import cookie from 'js-cookie'
   import DlgReload from "@/components/machine/dlg_reload"
   import DlgHd from "@/components/machine/dlg_increaseHD"
   import DlgMail from "@/components/machine/dlg_bindMail"
@@ -427,8 +428,8 @@
       },
       //
       queryMail() {
+        this.bindMail = cookie.get('mail')
         const address = getAccount().address
-
         queryBindMail_rent({
           wallet_address: address
         }).then(res => {
