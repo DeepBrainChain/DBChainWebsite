@@ -19,6 +19,7 @@ module.exports = {
     }
   },
   devServer: {
+    port: 9999,
     proxy: {
       '/api/main_net': {
         target: 'https://api.neoscan.io',
