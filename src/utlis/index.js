@@ -1,12 +1,21 @@
-import Neon, {rpc, wallet, nep5, api, sc, u} from "@cityofzion/neon-js"
+import Neon, {
+  rpc,
+  wallet,
+  nep5,
+  api,
+  sc,
+  u
+} from "@cityofzion/neon-js"
 import cookie from "js-cookie"
-import {get_address_abstracts} from '@/api/index'
+import {
+  get_address_abstracts
+} from '@/api/index'
 
 const netType = 'https://seed12.ngd.network:10331'
 // const netType = 'http://seed2.aphelion-neo.com:10332'
-const DBCHash = 'b951ecbbc5fe37a9c280a76cb0ce0014827294cf'  // DBC assetId
+const DBCHash = 'b951ecbbc5fe37a9c280a76cb0ce0014827294cf' // DBC assetId
 const DBC_NAME = 'DEEPBRAIN COIN'
-const testAddress = 'ATtQ9Mj6k71wjn7JkjDEumLyskVeBrx9xt'
+const testAddress = ''
 
 export let account = undefined
 
@@ -81,7 +90,9 @@ export function getBalance() {
           console.log(dbc_info)
           resolve(dbc_info)
         } else {
-          resolve({balance: 0})
+          resolve({
+            balance: 0
+          })
         }
       }).catch(err => {
         console.log(err)
@@ -171,7 +182,11 @@ export function getTransactions(address, page, assetsHash = DBCHash) {
 }
 
 // send assets to address
-export function transfer({toAddress = testAddress, amount, gas = 0}) {
+export function transfer({
+  toAddress = testAddress,
+  amount,
+  gas = 0
+}) {
   return getBalance()
     .then(res => {
       if (res.balance > amount) {
@@ -193,7 +208,10 @@ export function transfer({toAddress = testAddress, amount, gas = 0}) {
         // console.log(res.balance)
         return Neon.doInvoke(config)
       } else {
-        return Promise.reject({status: -1, msg: 'DBC余额不足'})
+        return Promise.reject({
+          status: -1,
+          msg: 'DBC余额不足'
+        })
       }
     })
     .then(res => {
