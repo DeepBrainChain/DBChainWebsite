@@ -228,11 +228,6 @@ export function transfer({
           msg: 'dbc transfer fail~!'
         })
       }
-    }).catch(err => {
-      return Promise.reject({
-        status: -2,
-        msg: 'dbc transfer fail~!'
-      })
     })
 }
 
