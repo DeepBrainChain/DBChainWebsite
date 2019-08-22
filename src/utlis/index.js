@@ -12,7 +12,7 @@ export let account = undefined
 
 export const client = new rpc.RPCClient(netType)
 
-export function saveCookie(account) {
+export function saveCookie(account, encryptedKey) {
   if (wallet.isAddress(account.address)) {
     cookie.set('address', account.address) // save address
   }
@@ -23,11 +23,16 @@ export function saveCookie(account) {
   if (wallet.isPublicKey(account.publicKey)) {
     cookie.set('publicKey', account.publicKey)
   }
+  if (wallet.isNEP2(encryptedKey)) {
+    cookie.set('encryptedKey', encryptedKey)
+  }
 }
 
 export function closeAc() {
   cookie.remove('privateKey')
   cookie.remove('address')
+  cookie.remove('mail')
+  cookie.remove('encryptedKey')
   account = undefined
 }
 
@@ -135,6 +140,11 @@ export function getAccount() {
   }
 }
 
+export async function getEncryptedKey(WIF, password) {
+  const nep2Key = await wallet.encrypt(WIF, password)
+  return nep2Key
+}
+
 export function getTransfer(address) {
   const rpcClient = new rpc.RPCClient(netType)
   const query = Neon.create.query({
@@ -160,7 +170,6 @@ export function getTransactions(address, page, assetsHash = DBCHash) {
   })
 }
 
-
 // send assets to address
 export function transfer({toAddress = testAddress, amount, gas = 0}) {
   return getBalance()
@@ -174,7 +183,8 @@ export function transfer({toAddress = testAddress, amount, gas = 0}) {
         // console.log(script)
         const config = {
           api: apiProvider, // The API Provider that we rely on for balance and rpc information
-          url: 'https://seed2.cityofzion.io/',
+          // url: 'https://seed2.cityofzion.io/',
+          url: 'https://neocli.dbchain.ai',
           account: account, // The sending Account
           // intents: undefined, // Additional intents to move assets
           script: script, // The Smart Contract invocation script

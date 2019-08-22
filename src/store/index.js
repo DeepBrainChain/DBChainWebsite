@@ -143,12 +143,13 @@ export default new Vuex.Store({
     // create account from encryptedKey
     createAccountFromEncryptedKey({commit, state}, {encryptedKey, password}) {
       return initAccountFromEncryptedKey(encryptedKey, password).then(account => {
-        saveCookie(account)
+        saveCookie(account, encryptedKey)
         commit('setData', {
           privateKey: account.privateKey,
           publicKey: account.publicKey,
           address: account.address
         })
+        return Promise.resolve()
       })
     }
   }
