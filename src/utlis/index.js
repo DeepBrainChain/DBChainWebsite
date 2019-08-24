@@ -15,7 +15,7 @@ const netType = 'https://seed12.ngd.network:10331'
 // const netType = 'http://seed2.aphelion-neo.com:10332'
 const DBCHash = 'b951ecbbc5fe37a9c280a76cb0ce0014827294cf' // DBC assetId
 const DBC_NAME = 'DEEPBRAIN COIN'
-const testAddress = ''
+const testAddress = 'AbpBWkCp3jcLZpvf5zCtCLRaGNRi95osik'
 
 export let account = undefined
 
