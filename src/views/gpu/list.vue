@@ -337,7 +337,7 @@
           </div>
         </div>
         <div class="flex">
-          <div class="td">
+          <div v-if="item.half_precision_tflops > 0" class="td">
             <span class="fs16">
               半精度浮点运算数：
               <a class="cPrimaryColor">{{item.half_precision_tflops}}TFLOPS</a>
@@ -363,7 +363,7 @@
           </div>
         </div>
         <div class="flex">
-          <div class="td">
+          <div v-if="item.single_precision_tflops > 0" class="td">
             <span class="fs16">
               单精度浮点运算数：
               <a class="cPrimaryColor">{{item.single_precision_tflops}}TFLOPS</a>
@@ -389,7 +389,7 @@
           </div>
         </div>
         <div class="flex">
-          <div class="td">
+          <div v-if="item.duoble_precision_tflops > 0" class="td">
             <span class="fs16">
               双精度浮点运算数：
               <a class="cPrimaryColor">{{item.duoble_precision_tflops}}TFLOPS</a>
@@ -574,8 +574,11 @@
       curVal(newVal) {
       }
     },
-    created() {
+    activated() {
       this.queryMc()
+    },
+    deactivated() {
+
     },
     methods: {
       pushDetail(machine_id) {

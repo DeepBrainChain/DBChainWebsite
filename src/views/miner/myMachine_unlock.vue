@@ -349,7 +349,7 @@
   import {getAccount, transfer} from "@/utlis"
 
   export default {
-    name: "myMachine",
+    name: "myMachine_unlock",
     components: {
       DlgReload,
       DlgHd,
@@ -380,12 +380,17 @@
         si: undefined
       }
     },
-    created() {
+    activated() {
       // this.binding(isNewMail);
       this.queryMail()
       this.queryMcList()
     },
-    computed: {},
+    deactivated() {
+      if (this.si) {
+        clearInterval(this.si)
+      }
+      next()
+    },
     methods: {
       pushToMc() {
         this.$router.push('/addMc')

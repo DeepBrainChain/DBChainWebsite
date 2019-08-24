@@ -6,7 +6,9 @@
           <navi :menus="menus" :index="curNavIndex" ></navi>
         </el-aside>
         <el-main class="right-wrap">
-          <router-view></router-view>
+          <keep-alive :include="cacheList">
+            <router-view></router-view>
+          </keep-alive>
         </el-main>
       </el-container>
     </div>
@@ -20,6 +22,8 @@
     name: "gpu",
     data() {
       return {
+        // 缓存组件列表
+        cacheList: ['myMachine_unlock', 'list'],
         curNavIndex: 0,
         menus: [
           {
