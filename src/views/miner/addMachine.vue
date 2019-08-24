@@ -229,8 +229,8 @@
           wallet_address: getAccount().address,
           machine_id: this.machine_id,
           gpu_price_dollar: this.gpu_price_dollar,
-          can_rent_start_time_later: this.can_rent_start_time_later * 60,
-          end_rent_out_time_later: this.end_rent_out_time_later * 60,
+          can_rent_start_time_later: this.can_rent_start_time_later,
+          end_rent_out_time_later: this.end_rent_out_time_later,
           code: this.code,
         }).then(res => {
           if (res.status === 1) {

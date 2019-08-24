@@ -389,7 +389,6 @@
       if (this.si) {
         clearInterval(this.si)
       }
-      next()
     },
     methods: {
       pushToMc() {
