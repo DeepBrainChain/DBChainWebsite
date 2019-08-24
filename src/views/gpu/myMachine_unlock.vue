@@ -186,7 +186,7 @@
           </div>
         </div>
         <div class="flex">
-          <div v-if="item.mcData.half_precision_tflops" class="td">
+          <div v-if="item.mcData.half_precision_tflops > 0" class="td">
             <span class="fs16">
               半精度浮点运算数：
               <a class="cPrimaryColor">{{item.mcData.half_precision_tflops}}TFLOPS</a>
@@ -212,7 +212,7 @@
           </div>
         </div>
         <div class="flex">
-          <div v-if="item.mcData.single_precision_tflops" class="td">
+          <div v-if="item.mcData.single_precision_tflops > 0" class="td">
             <span class="fs16">
               单精度浮点运算数：
               <a class="cPrimaryColor">{{item.mcData.single_precision_tflops}}TFLOPS</a>
@@ -240,7 +240,7 @@
           </div>
         </div>
         <div class="flex">
-          <div v-if="item.mcData.duoble_precision_tflops" class="td">
+          <div v-if="item.mcData.duoble_precision_tflops > 0" class="td">
             <span class="fs16">
               双精度浮点运算数：
               <a class="cPrimaryColor">{{item.mcData.duoble_precision_tflops}}TFLOPS</a>
@@ -384,7 +384,7 @@
   import {getAccount, transfer} from "@/utlis"
 
   export default {
-    name: "myMachine",
+    name: "myMachine_unlock",
     components: {
       DlgReload,
       DlgHd,
@@ -416,7 +416,7 @@
         queryOrderListSi: undefined
       }
     },
-    created() {
+    activated() {
       // this.binding(isNewMail);
       this.queryMail()
       this.queryOrderList().then(res => {
@@ -430,14 +430,13 @@
         }
       }, 60000)
     },
-    beforeRouteLeave(to, from, next) {
+    deactivated() {
       if (this.queryOrderListSi) {
         clearInterval(this.queryOrderListSi)
       }
       if (this.si) {
         clearInterval(this.si)
       }
-      next()
     },
     computed: {
       rentNumber() {
@@ -447,6 +446,7 @@
       }
     },
     methods: {
+
       forceToPay() {
         // console.log('调用强制支付')
         // 判断如果有订单没有支付完成，强制支付
@@ -504,6 +504,12 @@
                   status: -2,
                   msg: '正在确认是否可租用'
                 })
+              } else if(!res.content) {
+                this.queryOrderList()
+                return Promise.reject({
+                  status: -1,
+                  msg: '用户机器可能已经被租用，请换一台机器'
+                })
               } else {
                 this.queryOrderList()
                 return Promise.reject({
@@ -549,7 +555,7 @@
                 console.log(err.msg)
                 this.$message({
                   showClose: true,
-                  message: '支付失败，请重新支付',
+                  message: err.msg,
                   type: "error"
                 })
                 clearInterval(this.si)
