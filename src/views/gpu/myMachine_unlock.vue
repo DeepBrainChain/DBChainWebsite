@@ -294,7 +294,7 @@
 
           <span
             class="cRed"
-            v-else-if="item.mcData.idle_status ===false|| (item.orderData.container_is_exist &&item.orderData.wallet_address_dbchain===null)"
+            v-else-if="item.orderData.order_is_cancer===false&&  (item.orderData.container_is_exist &&item.orderData.wallet_address_dbchain===null)"
           >机器可能已经被租用，请取消订单，重新租用其他机器</span>
           <span
             class="cRed"

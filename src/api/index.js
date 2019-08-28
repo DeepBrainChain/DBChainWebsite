@@ -1,9 +1,9 @@
 import axios from '@/utlis/axios'
 // const host = 'http://13.124.237.200:8031'
 
-//const host = 'https://info.dbchain.ai'
+const host = 'https://info.dbchain.ai'
 //const host = 'http://116.85.24.172:8031'
-const host = 'http://192.168.1.186:8080'
+//const host = 'http://192.168.1.186:8080'
 const juheKey = 'b947db0498fa776b09c48d548fbdda07'
 
 // 发送邮箱验证码
