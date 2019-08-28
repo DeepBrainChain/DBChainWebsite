@@ -18,7 +18,12 @@
       </div>
       <template v-if="encryptedKey">
         <div class="flex vCenter">
-          <el-tooltip class="item" effect="dark" content="提示文字">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="密钥存储文件：
+密钥存储文件使用密码以加密形式存储您的私钥。建议始终使用密钥存储文件来解锁您的钱包。"
+          >
             <i class="icon-tip el-icon-question"></i>
           </el-tooltip>
           <label>Keystore File:</label>
@@ -65,67 +70,64 @@
 </template>
 
 <script>
-  import cookie from 'js-cookie'
-  import {
-    getEncryptedKey,
-    getAccount
-  } from "@/utlis"
-  import fileSave from "file-saver"
+import cookie from "js-cookie";
+import { getEncryptedKey, getAccount } from "@/utlis";
+import fileSave from "file-saver";
 
-  export default {
-    name: "walletBox",
-    data() {
-      return {
-        address: "",
-        encryptedKey: "",
-        wif: "",
-        visibility: false
-      }
-    },
-    created() {
-      this.address = getAccount().address
-      // this.nep2Key = getAccount().encrypted
-      this.wif = getAccount().WIF
-      this.encryptedKey = cookie.get('encryptedKey')
-    },
-    methods: {
-      saveKeyFile() {
-        const blob = new Blob([this.encryptedKey], {
-          type: "text/plain;charset=utf-8"
-        })
-        fileSave.saveAs(blob, `${this.encryptedKey}.txt`)
-      }
+export default {
+  name: "walletBox",
+  data() {
+    return {
+      address: "",
+      encryptedKey: "",
+      wif: "",
+      visibility: false
+    };
+  },
+  created() {
+    this.address = getAccount().address;
+    // this.nep2Key = getAccount().encrypted
+    this.wif = getAccount().WIF;
+    this.encryptedKey = cookie.get("encryptedKey");
+  },
+  methods: {
+    saveKeyFile() {
+      const blob = new Blob([this.encryptedKey], {
+        type: "text/plain;charset=utf-8"
+      });
+      fileSave.saveAs(blob, `${this.encryptedKey}.txt`);
     }
   }
+};
 </script>
 
 <style lang="scss" scoped>
-  .wallet-box {
-    border: 1px solid #979797;
+.wallet-box {
+  border: 1px solid #979797;
 
-    h3 {
-      margin: 0;
-      height: 48px;
-      line-height: 48px;
-      padding-left: 30px;
-      color: #666;
-      border-bottom: 1px solid #979797;
+  h3 {
+    margin: 0;
+    height: 48px;
+    line-height: 48px;
+    padding-left: 30px;
+    color: #666;
+    border-bottom: 1px solid #979797;
+  }
+
+  .box-content {
+    padding: 10px 30px;
+
+    .icon-tip {
+      font-size: 20px;
+      margin-right: 10px;
     }
 
-    .box-content {
-      padding: 10px 30px;
-
-      .icon-tip {
-        font-size: 20px;
-        margin-right: 10px;
-      }
-
-      label {
-        display: inline-block;
-        font-size: 16px;
-        color: #666;
-        line-height: 24px;
-      }
+    label {
+      display: inline-block;
+      font-size: 16px;
+      color: #666;
+      line-height: 24px;
     }
   }
+}
 </style>

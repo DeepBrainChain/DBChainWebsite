@@ -288,5 +288,26 @@ export default {
     mc_msg_1: '如果机器使用过程中出现中断，则将会把质押的144小时机器使用量的DBC扣除。<br>出租时间不超过144小时，则全部扣除'
   },
   mcList: {},
+  my_machine_binding_email: '绑定的邮箱',
+  my_machine_vocing: '正在验证中, 大概需要几分钟',
+  my_machine_isnormal_over: '订单已结束',
+  my_machine_nonormal_over: '订单被中断',
+  my_machine_order_cancer: '订单已取消',
+  my_machine_order_rent_success: '正在使用中',
+  my_machine_order_vocing_pay: '正在进行支付验证中，大概需要几分钟',
+  my_machine_order_pay_error: '支付验证失败',
+  my_machine_order_return_dbc: '退币成功',
+  my_machine_order_vocing_machine_success: '机器环境验证成功',
+
+  my_machine_beused_time: '已使用时间',
+  my_machine_hour: '小时',
+  my_machine_min: '分钟',
+  my_machine_dbc_version: '版本',
+  my_machine_china: '中国',
+  my_machine_idle_gpus: '闲置GPU数',
+  my_machine_length_of_available_time: '最长可租用时间',
+  my_machine_total_time_be_used: '累计出租时长',
+  my_machine_total_rent_count: '出租总次数',
+
   ...enLocale
 }
