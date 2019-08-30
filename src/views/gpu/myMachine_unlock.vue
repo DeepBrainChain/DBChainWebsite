@@ -9,7 +9,8 @@
           size="mini"
           plain
           @click="openDlgMail(false)"
-        >{{$t('gpu.modifyMail')}}</el-button>
+        >{{$t('gpu.modifyMail')}}
+        </el-button>
       </div>
       <div v-else-if="!isBinding" class="bind">
         <el-button size="small" plain @click="openDlgMail(true)">{{$t('gpu.bindMail')}}</el-button>
@@ -109,7 +110,8 @@
               plain
               class="is-link"
               @click="pushDetail(item.mcData.machine_id)"
-            >{{item.mcData.machine_id}}</el-button>
+            >{{item.mcData.machine_id}}
+            </el-button>
             <span class="fs28">
               <span
                 class="cPrimaryColor"
@@ -318,7 +320,8 @@
             size="mini"
             style="width: 86px"
             @click="openRateDlg(item)"
-          >{{$t('gpu.rate')}}</el-button>
+          >{{$t('gpu.rate')}}
+          </el-button>
           <el-button
             v-else-if="item.orderData.return_dbc === false && item.orderData.pay_error"
             class="tool-btn"
@@ -326,7 +329,8 @@
             plain
             size="mini"
             @click="openReturnDbc(item)"
-          >退币</el-button>
+          >退币
+          </el-button>
           <template v-else-if="item.orderData.rent_success">
             <!--<el-button plain style="width: 86px" class="tool-btn" size="mini"
                        @click="dlgReload_open = true">
@@ -338,7 +342,8 @@
               style="width: 86px"
               size="mini"
               @click="stopRent(item)"
-            >{{$t('unsubscribe')}}</el-button>
+            >{{$t('unsubscribe')}}
+            </el-button>
           </template>
           <template v-else-if="item.orderData.rent_success === false ">
             <el-button
@@ -349,7 +354,8 @@
               class="tool-btn"
               size="mini"
               @click="payOrder(item)"
-            >确认支付</el-button>
+            >确认支付
+            </el-button>
             <el-button
               v-if="!item.orderData.vocing_pay && item.orderData.try_rent === false"
               :disabled="isPaying"
@@ -357,7 +363,8 @@
               size="mini"
               plain
               @click="cancelOrder(item)"
-            >取消订单</el-button>
+            >取消订单
+            </el-button>
           </template>
         </div>
       </div>
@@ -383,669 +390,672 @@
 </template>
 
 <script>
-import cookie from "js-cookie";
-import DlgReload from "@/components/machine/dlg_reload";
-import DlgHd from "@/components/machine/dlg_increaseHD";
-import DlgMail from "@/components/machine/dlg_bindMail";
-import DlgUnsubscribe from "@/components/machine/dlg_unsubscribe";
-import DlgRate from "@/components/machine/dlg_rate";
-import DlgReturnDbc from "@/components/machine/dlg_returnDbc";
-import {
-  queryBindMail_rent,
-  query_machine_by_wallet,
-  get_dbchain_address,
-  get_all_order,
-  can_rent_this_machine,
-  pay,
-  get_cancer_code,
-  cancer_order,
-  binding_is_ok,
-  binding_is_ok_modify,
-  get_stop_code,
-  stop,
-  get_return_dbc_code,
-  request_return_dbc
-} from "@/api";
-import { getAccount, transfer } from "@/utlis";
+  import cookie from "js-cookie"
+  import DlgReload from "@/components/machine/dlg_reload"
+  import DlgHd from "@/components/machine/dlg_increaseHD"
+  import DlgMail from "@/components/machine/dlg_bindMail"
+  import DlgUnsubscribe from "@/components/machine/dlg_unsubscribe"
+  import DlgRate from "@/components/machine/dlg_rate"
+  import DlgReturnDbc from "@/components/machine/dlg_returnDbc"
+  import {
+    queryBindMail_rent,
+    query_machine_by_wallet,
+    get_dbchain_address,
+    get_all_order,
+    can_rent_this_machine,
+    pay,
+    get_cancer_code,
+    cancer_order,
+    binding_is_ok,
+    binding_is_ok_modify,
+    get_stop_code,
+    stop,
+    get_return_dbc_code,
+    request_return_dbc
+  } from "@/api"
+  import {getAccount, transfer} from "@/utlis"
 
-export default {
-  name: "myMachine_unlock",
-  components: {
-    DlgReload,
-    DlgHd,
-    DlgMail,
-    DlgUnsubscribe,
-    DlgRate,
-    DlgReturnDbc
-  },
-  data() {
-    return {
-      rateValue: undefined,
-      dlgReload_open: false,
-      dlgHD_open: false,
-      dlgMail_open: false,
-      dlgUnsubscribe_open: false,
-      dlgRate_open: false,
-      dlgReturnDbc_open: false,
-      isNewMail: false,
-      isBinding: false,
-      isBinded: false,
-      bindMail: "",
-      res_body: {
-        content: []
+  export default {
+    name: "myMachine_unlock",
+    components: {
+      DlgReload,
+      DlgHd,
+      DlgMail,
+      DlgUnsubscribe,
+      DlgRate,
+      DlgReturnDbc
+    },
+    data() {
+      return {
+        rateValue: undefined,
+        dlgReload_open: false,
+        dlgHD_open: false,
+        dlgMail_open: false,
+        dlgUnsubscribe_open: false,
+        dlgRate_open: false,
+        dlgReturnDbc_open: false,
+        isNewMail: false,
+        isBinding: false,
+        isBinded: false,
+        bindMail: "",
+        res_body: {
+          content: []
+        },
+        isPaying: false,
+        local_pay_error: false,
+        isPocing: false,
+        curItem: undefined,
+        isRateEdit: false,
+        si: undefined,
+        queryOrderListSi: undefined
+      }
+    },
+    activated() {
+      // this.binding(isNewMail);
+      this.queryMail()
+      this.queryOrderList().then(res => {
+        if (res.status === 1) {
+          this.forceToPocMachine()
+        }
+        //  pocMachine();
+      })
+      this.queryOrderListSi = setInterval(() => {
+        if (this.isPaying !== true) {
+          this.queryOrderList()
+        }
+      }, 60000)
+    },
+    deactivated() {
+      if (this.queryOrderListSi) {
+        clearInterval(this.queryOrderListSi)
+      }
+      if (this.si) {
+        clearInterval(this.si)
+      }
+    },
+    computed: {
+      rentNumber() {
+        return this.res_body.content.filter(item => {
+          return item.orderData.rent_success
+        }).length
+      }
+    },
+    methods: {
+      forceToPay() {
+        // console.log('调用强制支付')
+        // 判断如果有订单没有支付完成，强制支付
+        const order = this.res_body.content.find((item, index) => {
+          // console.log(index)
+          // console.log(item.orderData.creating_container)
+          // console.log(item.orderData.container_is_exist)
+          return (
+            !item.orderData.order_is_over &&
+            !item.orderData.order_is_cancer &&
+            !item.orderData.rent_success &&
+            !item.orderData.vocing_pay &&
+            (item.orderData.creating_container ||
+              item.orderData.container_is_exist)
+          )
+        })
+        if (order) {
+          this.payOrder(order)
+        }
       },
-      isPaying: false,
-      local_pay_error: false,
-      isPocing: false,
-      curItem: undefined,
-      isRateEdit: false,
-      si: undefined,
-      queryOrderListSi: undefined
-    };
-  },
-  activated() {
-    // this.binding(isNewMail);
-    this.queryMail();
-    this.queryOrderList().then(res => {
-      if (res.status === 1) {
-        this.forceToPocMachine();
-      }
-      //  pocMachine();
-    });
-    this.queryOrderListSi = setInterval(() => {
-      if (this.isPaying !== true) {
-        this.queryOrderList();
-      }
-    }, 60000);
-  },
-  deactivated() {
-    if (this.queryOrderListSi) {
-      clearInterval(this.queryOrderListSi);
-    }
-    if (this.si) {
-      clearInterval(this.si);
-    }
-  },
-  computed: {
-    rentNumber() {
-      return this.res_body.content.filter(item => {
-        return item.orderData.rent_success;
-      }).length;
-    }
-  },
-  methods: {
-    forceToPay() {
-      // console.log('调用强制支付')
-      // 判断如果有订单没有支付完成，强制支付
-      const order = this.res_body.content.find((item, index) => {
-        // console.log(index)
-        // console.log(item.orderData.creating_container)
-        // console.log(item.orderData.container_is_exist)
-        return (
-          !item.orderData.order_is_over &&
-          !item.orderData.order_is_cancer &&
-          !item.orderData.rent_success &&
-          !item.orderData.vocing_pay &&
-          (item.orderData.creating_container ||
-            item.orderData.container_is_exist)
-        );
-      });
-      if (order) {
-        this.payOrder(order);
-      }
-    },
-    isShowRendSuccessMsg(milli_rent_success_time) {
-      const minutes =
-        (new Date().getTime() - milli_rent_success_time) / 1000 / 60;
-      return minutes < 10;
-    },
+      isShowRendSuccessMsg(milli_rent_success_time) {
+        const minutes =
+          (new Date().getTime() - milli_rent_success_time) / 1000 / 60
+        return minutes < 10
+      },
 
-    forceToPocMachine() {
-      // pay before
-      const order = this.res_body.content.find((item, index) => {
-        // console.log(index)
-        // console.log(item.orderData.creating_container)
-        // console.log(item.orderData.container_is_exist)
-        return (
-          !item.orderData.order_is_over &&
-          !item.orderData.order_is_cancer &&
-          !item.orderData.rent_success &&
-          !item.orderData.vocing_pay &&
-          !item.orderData.pay_error &&
-          !item.orderData.container_is_exist
-        );
-      });
-      if (order) {
-        this.pocMachine(order);
-      }
-    },
+      forceToPocMachine() {
+        // pay before
+        const order = this.res_body.content.find((item, index) => {
+          // console.log(index)
+          // console.log(item.orderData.creating_container)
+          // console.log(item.orderData.container_is_exist)
+          return (
+            !item.orderData.order_is_over &&
+            !item.orderData.order_is_cancer &&
+            !item.orderData.rent_success &&
+            !item.orderData.vocing_pay &&
+            !item.orderData.pay_error &&
+            !item.orderData.container_is_exist
+          )
+        })
+        if (order) {
+          this.pocMachine(order)
+        }
+      },
 
-    pocMachine(item) {
-      this.isPocing = true;
-      clearInterval(this.si);
-      item.orderData.creating_container = true;
-      this.si = setInterval(() => {
-        //   if (item.orderData.isPocing) {
-        //     return;
-        //   }
-        return can_rent_this_machine({
+      pocMachine(item) {
+        this.isPocing = true
+        clearInterval(this.si)
+        item.orderData.creating_container = true
+        this.si = setInterval(() => {
+          //   if (item.orderData.isPocing) {
+          //     return;
+          //   }
+          return can_rent_this_machine({
+            order_id: item.orderData.order_id
+          }).then(res => {
+            if (res.status === 1 && res.content) {
+              console.log(res.msg)
+              item.notice = ""
+              this.queryOrderList()
+              clearInterval(this.si)
+            } else if (res.status === 2) {
+              // item.orderData.creating_container = true;
+              this.queryOrderList()
+              return Promise.reject({
+                status: 2,
+                msg: "正在验证机器环境是否可用，请耐心等待，大概需要1-3分钟"
+              })
+            } else if (!res.content) {
+              this.queryOrderList()
+              clearInterval(this.si)
+              return Promise.reject({
+                status: -1,
+                msg: "机器可能已经被租用，请取消订单，重新租用其他机器"
+              })
+            } else {
+              this.queryOrderList()
+              clearInterval(this.si)
+              return Promise.reject({
+                status: -1,
+                msg: res.msg
+              })
+            }
+
+            if (item.orderData.order_is_cancer) {
+              clearInterval(this.si)
+            }
+          })
+        }, 5000)
+      },
+      // pay
+      payOrder(item) {
+        //
+        clearInterval(this.si)
+        //    this.si = setInterval(() => {
+        //     this.queryOrderList();
+        ///      if (item.orderData.rent_success) {
+        //       clearInterval(this.si);
+        //       return;
+        //     } else if (item.orderData.pay_error) {
+        //      clearInterval(this.si);
+        //      return;
+        //    }
+        //   }, 5000);
+        get_dbchain_address({
           order_id: item.orderData.order_id
         }).then(res => {
           if (res.status === 1 && res.content) {
-            console.log(res.msg);
-            item.notice = "";
-            this.queryOrderList();
-            clearInterval(this.si);
-          } else if (res.status === 2) {
-            // item.orderData.creating_container = true;
-            this.queryOrderList();
-            return Promise.reject({
-              status: 2,
-              msg: "正在验证机器环境是否可用，请耐心等待，大概需要1-3分钟"
-            });
-          } else if (!res.content) {
-            this.queryOrderList();
-            clearInterval(this.si);
-            return Promise.reject({
-              status: -1,
-              msg: "机器可能已经被租用，请取消订单，重新租用其他机器"
-            });
-          } else {
-            this.queryOrderList();
-            clearInterval(this.si);
-            return Promise.reject({
-              status: -1,
-              msg: res.msg
-            });
-          }
-
-          if (item.orderData.order_is_cancer) {
-            clearInterval(this.si);
-          }
-        });
-      }, 5000);
-    },
-    // pay
-    payOrder(item) {
-      //
-      clearInterval(this.si);
-      //    this.si = setInterval(() => {
-      //     this.queryOrderList();
-      ///      if (item.orderData.rent_success) {
-      //       clearInterval(this.si);
-      //       return;
-      //     } else if (item.orderData.pay_error) {
-      //      clearInterval(this.si);
-      //      return;
-      //    }
-      //   }, 5000);
-      get_dbchain_address({
-        order_id: item.orderData.order_id
-      }).then(res => {
-        if (res.status === 1 && res.content) {
-          const amount =
-            item.orderData.dbc_total_count + item.orderData.code * 1;
-          this.$confirm("注意不要重复支付", "请确认支付", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消"
-          })
-            .then(({ value }) => {
-              this.isPaying = true;
-              this.local_pay_error = false;
-              return transfer({
-                toAddress: res.content,
-                amount
-              });
-            })
-            .then(res => {
-              if (res.status === 1) {
-                console.log("转账成功");
-                const txid = res.response.txid;
-
-                // pay after
-                this.isPaying = false;
-                item.orderData.vocing_pay = true;
-                // 支付后确认
-                this.si = setInterval(() => {
-                  return pay({
-                    order_id: item.orderData.order_id,
-                    dbc_hash: txid
-                  })
-                    .then(res => {
-                      this.queryOrderList();
-                      if (res.status === 1) {
-                        clearInterval(this.si);
-
-                        item.orderData.vocing_pay = false;
-                      }
-                    })
-                    .catch(err => {
-                      if (err && err.status === -1) {
-                        console.log(err.msg);
-                        this.$message({
-                          showClose: true,
-                          message: err.msg,
-                          type: "error"
-                        });
-                        clearInterval(this.si);
-                      } else if (err && err.status === -2) {
-                        console.log(err.msg);
-                        // clearInterval(this.si)
-                      } else if (err) {
-                        console.log("其他报错");
-                        console.log(err);
-                        clearInterval(this.si);
-                      }
-                    });
-                }, 5000);
-              } else {
-                this.isPaying = false;
-
-                clearInterval(this.si);
-                this.local_pay_error = true;
-                console.log("转账失败");
-              }
-            });
-        } else {
-          return Promise.reject({
-            status: -1,
-            msg: "机器可能已经被租用，请取消订单，重新租用其他机器"
-          });
-        }
-      });
-      // pay
-
-      //  }, 5000);
-    },
-    // cancel
-    cancelOrder(item) {
-      get_cancer_code({
-        order_id: item.orderData.order_id
-      })
-        .then(res => {
-          if (res.status === 1) {
-            this.$prompt("验证码已发送至您的邮箱，请填写验证码", "取消订单", {
+            const amount =
+              item.orderData.dbc_total_count + item.orderData.code * 1
+            this.$confirm("注意不要重复支付", "请确认支付", {
               confirmButtonText: "确定",
               cancelButtonText: "取消"
             })
-              .then(({ value }) => {
-                return cancer_order({
-                  order_id: item.orderData.order_id,
-                  cancer_code: value
-                });
+              .then(({value}) => {
+                this.isPaying = true
+                this.local_pay_error = false
+                return transfer({
+                  toAddress: res.content,
+                  amount
+                })
               })
               .then(res => {
                 if (res.status === 1) {
-                  this.$message({
-                    showClose: true,
-                    message: res.msg,
-                    type: "success"
-                  });
-                  this.queryOrderList();
+                  console.log("转账成功")
+                  const txid = res.response.txid
+
+                  // pay after
+                  this.isPaying = false
+                  item.orderData.vocing_pay = true
+                  // 支付后确认
+                  this.si = setInterval(() => {
+                    return pay({
+                      order_id: item.orderData.order_id,
+                      dbc_hash: txid
+                    })
+                      .then(res => {
+                        this.queryOrderList()
+                        if (res.status === 1) {
+                          clearInterval(this.si)
+
+                          item.orderData.vocing_pay = false
+                        }
+                      })
+                      .catch(err => {
+                        if (err && err.status === -1) {
+                          console.log(err.msg)
+                          this.$message({
+                            showClose: true,
+                            message: err.msg,
+                            type: "error"
+                          })
+                          clearInterval(this.si)
+                        } else if (err && err.status === -2) {
+                          console.log(err.msg)
+                          // clearInterval(this.si)
+                        } else if (err) {
+                          console.log("其他报错")
+                          console.log(err)
+                          clearInterval(this.si)
+                        }
+                      })
+                  }, 5000)
                 } else {
-                  this.$message({
-                    showClose: true,
-                    message: res.msg,
-                    type: "error"
-                  });
+                  this.isPaying = false
+
+                  clearInterval(this.si)
+                  this.local_pay_error = true
+                  console.log("转账失败")
                 }
               })
-              .catch(err => {
-                if (err) {
-                  console.log(err);
+          } else {
+            return Promise.reject({
+              status: -1,
+              msg: "机器可能已经被租用，请取消订单，重新租用其他机器"
+            })
+          }
+        })
+        // pay
+
+        //  }, 5000);
+      },
+      // cancel
+      cancelOrder(item) {
+        get_cancer_code({
+          order_id: item.orderData.order_id
+        })
+          .then(res => {
+            if (res.status === 1) {
+              this.$prompt("验证码已发送至您的邮箱，请填写验证码", "取消订单", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消"
+              })
+                .then(({value}) => {
+                  return cancer_order({
+                    order_id: item.orderData.order_id,
+                    cancer_code: value
+                  })
+                })
+                .then(res => {
+                  if (res.status === 1) {
+                    this.$message({
+                      showClose: true,
+                      message: res.msg,
+                      type: "success"
+                    })
+                    this.queryOrderList()
+                  } else {
+                    this.$message({
+                      showClose: true,
+                      message: res.msg,
+                      type: "error"
+                    })
+                  }
+                })
+                .catch(err => {
+                  if (err) {
+                    console.log(err)
+                  }
+                })
+            } else {
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: "error"
+              })
+              return Promise.reject()
+            }
+          })
+          .then(res => {
+            if (res.status === 1) {
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: "success"
+              })
+            }
+          })
+          .finally(() => {
+          })
+      },
+      // get Order List
+      queryOrderList() {
+        if (!getAccount()) {
+          this.$router.push("/openWallet")
+          return
+        }
+        const wallet_address_user = getAccount().address
+        const promiseList = [
+          query_machine_by_wallet({
+            wallet_address_user
+          }),
+          get_all_order({
+            wallet_address_user
+          })
+        ]
+        return Promise.all(promiseList)
+          .then(([res_1, res_2]) => {
+            this.res_body.content = []
+            if (res_2.content) {
+              res_2.content.forEach(item => {
+                const mcItem = res_1.content.find(
+                  mc => item.machine_id === mc.machine_id
+                )
+                if (mcItem) {
+                  this.res_body.content.push({
+                    verifing: false,
+                    notice: "",
+                    orderData: item,
+                    mcData: mcItem
+                  })
                 }
-              });
-          } else {
-            this.$message({
-              showClose: true,
-              message: res.msg,
-              type: "error"
-            });
-            return Promise.reject();
-          }
-        })
-        .then(res => {
+              })
+            }
+            return Promise.resolve({
+              status: 1
+            })
+          })
+          .catch(err => {
+            if (err) {
+              console.log(err)
+            }
+          })
+      },
+      pushDetail(machine_id) {
+        this.$router.push("/machineDetail?machine_id=" + machine_id)
+      },
+      openDlgMail(isNewMail) {
+        this.isNewMail = isNewMail
+        this.dlgMail_open = true
+      },
+      //
+      queryMail() {
+        this.bindMail = cookie.get("mail")
+        const address = getAccount().address
+        queryBindMail_rent({
+          wallet_address: address
+        }).then(res => {
           if (res.status === 1) {
-            this.$message({
-              showClose: true,
-              message: res.msg,
-              type: "success"
-            });
-          }
-        })
-        .finally(() => {});
-    },
-    // get Order List
-    queryOrderList() {
-      if (!getAccount()) {
-        this.$router.push("/openWallet");
-        return;
-      }
-      const wallet_address_user = getAccount().address;
-      const promiseList = [
-        query_machine_by_wallet({
-          wallet_address_user
-        }),
-        get_all_order({
-          wallet_address_user
-        })
-      ];
-      return Promise.all(promiseList)
-        .then(([res_1, res_2]) => {
-          this.res_body.content = [];
-          res_2.content.forEach(item => {
-            const mcItem = res_1.content.find(
-              mc => item.machine_id === mc.machine_id
-            );
-            if (mcItem) {
-              this.res_body.content.push({
-                verifing: false,
-                notice: "",
-                orderData: item,
-                mcData: mcItem
-              });
-            }
-          });
-          return Promise.resolve({
-            status: 1
-          });
-        })
-        .catch(err => {
-          if (err) {
-            console.log(err);
-          }
-        });
-    },
-    pushDetail(machine_id) {
-      this.$router.push("/machineDetail?machine_id=" + machine_id);
-    },
-    openDlgMail(isNewMail) {
-      this.isNewMail = isNewMail;
-      this.dlgMail_open = true;
-    },
-    //
-    queryMail() {
-      this.bindMail = cookie.get("mail");
-      const address = getAccount().address;
-      queryBindMail_rent({
-        wallet_address: address
-      }).then(res => {
-        if (res.status === 1) {
-          this.bindMail = res.content;
-          cookie.set("mail", res.content);
-        } else {
-          binding_is_ok({
-            wallet_address: address
-          }).then(ren => {
-            if (ren.status === 2) {
-              this.isBinding = true;
-            }
-          });
-          binding_is_ok_modify({
-            wallet_address: address
-          }).then(ren => {
-            if (ren.status === 2) {
-              this.isBinding = true;
-            }
-          });
-        }
-      });
-    },
-    binding(isNewMail) {
-      this.isBinding = true;
-      let binding = true;
-      const si = setInterval(async () => {
-        if (binding) {
-          if (isNewMail) {
-            binding = false;
-            const res = await binding_is_ok({
-              wallet_address: getAccount().address
-            });
-            if (res.status === 1) {
-              clearInterval(si);
-              this.bindSuccess();
-            }
+            this.bindMail = res.content
+            cookie.set("mail", res.content)
           } else {
-            binding = false;
-            const res = await binding_is_ok_modify({
-              wallet_address: getAccount().address
-            });
-            if (res.status === 1) {
-              clearInterval(si);
-              this.bindSuccess();
+            binding_is_ok({
+              wallet_address: address
+            }).then(ren => {
+              if (ren.status === 2) {
+                this.isBinding = true
+              }
+            })
+            binding_is_ok_modify({
+              wallet_address: address
+            }).then(ren => {
+              if (ren.status === 2) {
+                this.isBinding = true
+              }
+            })
+          }
+        })
+      },
+      binding(isNewMail) {
+        this.isBinding = true
+        let binding = true
+        const si = setInterval(async () => {
+          if (binding) {
+            if (isNewMail) {
+              binding = false
+              const res = await binding_is_ok({
+                wallet_address: getAccount().address
+              })
+              if (res.status === 1) {
+                clearInterval(si)
+                this.bindSuccess()
+              }
+            } else {
+              binding = false
+              const res = await binding_is_ok_modify({
+                wallet_address: getAccount().address
+              })
+              if (res.status === 1) {
+                clearInterval(si)
+                this.bindSuccess()
+              }
             }
           }
-        }
-        binding = true;
-      }, 10000);
-    },
-    // bind fail
-    bindFail() {
-      this.isBinding = false;
-    },
-    // bind success
-    bindSuccess() {
-      this.isBinding = false;
-      this.queryMail();
-    },
-    // stop rent
-    stopRent(item) {
-      this.dlgUnsubscribe_open = true;
-      this.curItem = item;
-    },
-    stopRentSuccess() {
-      this.queryOrderList();
-    },
-    openRateDlg(item) {
-      this.curItem = item;
-      this.dlgRate_open = true;
-    },
-    successRate() {
-      this.queryOrderList();
-    },
-    // 退币
-    openReturnDbc(item) {
-      this.curItem = item;
-      this.dlgReturnDbc_open = true;
-    },
-    returnSuccess() {
-      this.queryOrderList();
+          binding = true
+        }, 10000)
+      },
+      // bind fail
+      bindFail() {
+        this.isBinding = false
+      },
+      // bind success
+      bindSuccess() {
+        this.isBinding = false
+        this.queryMail()
+      },
+      // stop rent
+      stopRent(item) {
+        this.dlgUnsubscribe_open = true
+        this.curItem = item
+      },
+      stopRentSuccess() {
+        this.queryOrderList()
+      },
+      openRateDlg(item) {
+        this.curItem = item
+        this.dlgRate_open = true
+      },
+      successRate() {
+        this.queryOrderList()
+      },
+      // 退币
+      openReturnDbc(item) {
+        this.curItem = item
+        this.dlgReturnDbc_open = true
+      },
+      returnSuccess() {
+        this.queryOrderList()
+      }
     }
   }
-};
 </script>
 
 <style lang="scss" scoped>
-@import "~@/assets/css/variables.scss";
+  @import "~@/assets/css/variables.scss";
 
-.title {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 0;
-  margin-bottom: 20px;
-  font-size: 20px;
-  line-height: 20px;
+  .title {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 20px;
+    line-height: 20px;
 
-  .bindInfo {
-    display: inline-block;
-    font-size: 12px;
-    min-height: 40px;
-    color: $textColor_def;
-    vertical-align: middle;
-  }
-
-  .bindingInfo {
-    font-size: 12px;
-    color: $textColor_def;
-    vertical-align: middle;
-  }
-
-  .iconwenhao {
-    color: $primaryColor;
-  }
-}
-
-.border-content {
-  border: 1px solid #979797;
-  margin-bottom: 20px;
-}
-
-.rate-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.tools-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-
-  &.bd {
-    border-bottom: 1px solid #e1e6ec;
-  }
-
-  .tools-title {
-    font-size: 16px;
-    color: #050d68;
-
-    &.small {
-      font-size: 14px;
-      color: #333;
+    .bindInfo {
+      display: inline-block;
+      font-size: 12px;
+      min-height: 40px;
+      color: $textColor_def;
+      vertical-align: middle;
     }
-  }
 
-  .tool-btn {
-    font-size: 14px;
+    .bindingInfo {
+      font-size: 12px;
+      color: $textColor_def;
+      vertical-align: middle;
+    }
 
-    &.blue {
-      border-color: $primaryColor;
+    .iconwenhao {
       color: $primaryColor;
     }
   }
 
-  .cGray {
-    padding-left: 44px;
-  }
-}
-
-.pay-wrap {
-  padding: 10px 20px;
-  border-top: 1px solid #e1e6ec;
-  font-size: 14px;
-  line-height: 28px;
-  color: #666;
-  background-color: #f6f9fc;
-
-  .td {
-    display: inline-block;
-    width: 33.3%;
-  }
-}
-
-.status-wrap {
-  padding: 15px 20px 12px;
-  border-top: 1px solid #e1e6ec;
-  border-bottom: 1px solid #e1e6ec;
-  color: #666;
-  font-size: 14px;
-
-  .status-title {
-    padding-bottom: 17px;
+  .border-content {
+    border: 1px solid #979797;
+    margin-bottom: 20px;
   }
 
-  .flex {
+  .rate-head {
     display: flex;
-    align-items: flex-start;
-    padding: 5px 0;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-    &.status-title {
-      justify-content: space-between;
-      align-items: center;
+  .tools-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+
+    &.bd {
+      border-bottom: 1px solid #e1e6ec;
     }
 
-    .td3 {
-      width: 40%;
-      line-height: 24px;
+    .tools-title {
+      font-size: 16px;
+      color: #050d68;
 
-      .cPrimaryColor {
-        font-size: 12px;
-
-        &.fs16 {
-          font-size: 28px;
-        }
+      &.small {
+        font-size: 14px;
+        color: #333;
       }
     }
 
-    .td2 {
-      width: 50%;
+    .tool-btn {
+      font-size: 14px;
 
-      line-height: 24px;
-
-      .cPrimaryColor {
-        font-size: 32px;
-
-        &.fs28 {
-          font-size: 32px;
-        }
+      &.blue {
+        border-color: $primaryColor;
+        color: $primaryColor;
       }
     }
+
+    .cGray {
+      padding-left: 44px;
+    }
+  }
+
+  .pay-wrap {
+    padding: 10px 20px;
+    border-top: 1px solid #e1e6ec;
+    font-size: 14px;
+    line-height: 28px;
+    color: #666;
+    background-color: #f6f9fc;
 
     .td {
-      width: 20%;
-      line-height: 24px;
-
-      .cPrimaryColor {
-        font-size: 12px;
-
-        &.fs16 {
-          font-size: 16px;
-        }
-      }
-
-      .upSpeed,
-      .downSpeed {
-        display: inline-block;
-        height: 16px;
-        line-height: 16px;
-        margin-right: 8px;
-        border: 1px dashed #666;
-        font-size: 14px;
-      }
-
-      .downSpeed {
-        transform: rotateZ(180deg);
-      }
+      display: inline-block;
+      width: 33.3%;
     }
   }
 
-  /*.flex {
-          display: flex;
-          padding: 5px 0;
+  .status-wrap {
+    padding: 15px 20px 12px;
+    border-top: 1px solid #e1e6ec;
+    border-bottom: 1px solid #e1e6ec;
+    color: #666;
+    font-size: 14px;
 
-          .td {
-            width: 20%;
-            line-height: 24px;
+    .status-title {
+      padding-bottom: 17px;
+    }
 
-            .bold {
-              font-weight: 700;
-            }
+    .flex {
+      display: flex;
+      align-items: flex-start;
+      padding: 5px 0;
 
-            .upSpeed,
-            .downSpeed {
-              display: inline-block;
-              height: 16px;
-              line-height: 16px;
-              margin-right: 8px;
-              border: 1px dashed #666;
-              font-size: 14px;
-            }
+      &.status-title {
+        justify-content: space-between;
+        align-items: center;
+      }
 
-            .downSpeed {
-              transform: rotateZ(180deg);
-            }
+      .td3 {
+        width: 40%;
+        line-height: 24px;
+
+        .cPrimaryColor {
+          font-size: 12px;
+
+          &.fs16 {
+            font-size: 28px;
           }
-        }*/
-}
+        }
+      }
+
+      .td2 {
+        width: 50%;
+
+        line-height: 24px;
+
+        .cPrimaryColor {
+          font-size: 32px;
+
+          &.fs28 {
+            font-size: 32px;
+          }
+        }
+      }
+
+      .td {
+        width: 20%;
+        line-height: 24px;
+
+        .cPrimaryColor {
+          font-size: 12px;
+
+          &.fs16 {
+            font-size: 16px;
+          }
+        }
+
+        .upSpeed,
+        .downSpeed {
+          display: inline-block;
+          height: 16px;
+          line-height: 16px;
+          margin-right: 8px;
+          border: 1px dashed #666;
+          font-size: 14px;
+        }
+
+        .downSpeed {
+          transform: rotateZ(180deg);
+        }
+      }
+    }
+
+    /*.flex {
+            display: flex;
+            padding: 5px 0;
+
+            .td {
+              width: 20%;
+              line-height: 24px;
+
+              .bold {
+                font-weight: 700;
+              }
+
+              .upSpeed,
+              .downSpeed {
+                display: inline-block;
+                height: 16px;
+                line-height: 16px;
+                margin-right: 8px;
+                border: 1px dashed #666;
+                font-size: 14px;
+              }
+
+              .downSpeed {
+                transform: rotateZ(180deg);
+              }
+            }
+          }*/
+  }
 </style>
