@@ -21,6 +21,7 @@ module.exports = {
     }
   },
   devServer: {
+    https: true,
     port: 9999,
     proxy: {
       '/api/main_net': {

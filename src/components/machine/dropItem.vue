@@ -39,9 +39,9 @@ export default {
     };
   },
   methods: {
-    select() {
-      this.$emit("selected", this.selectedVal);
-      this.$emit("input", this.selectedVal);
+    select(val) {
+      this.$emit("input", val);
+      this.$emit("selected", val);
     }
   }
 };
