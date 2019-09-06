@@ -26,8 +26,8 @@
       <drop-item
         class="machine-item"
         :title="$t('idle_status')"
-        v-model="req_body.status"
-        :dropList="mcStatus"
+        v-model="req_body.idle_status"
+        :dropList="idle_status"
         @selected="queryMc"
       ></drop-item>
       <slide-item
@@ -269,7 +269,7 @@
           <div class="td">
             <span class="fs16">
               最长可租用时间：
-              <a class="cPrimaryColor">{{Math.floor(item.length_of_available_time/60)}}小时</a>
+              <a class="cPrimaryColor">{{Math.floor(item.length_of_available_time)}}小时</a>
             </span>
           </div>
           <div class="td">
@@ -292,7 +292,7 @@
           </div>
         </div>
         <div class="flex">
-          <div class="td">
+          <div v-if="item.tensor_cores>0" class="td">
             <span class="fs16">
               Tensor Core：
               <a class="cPrimaryColor">{{item.tensor_cores}}</a>
@@ -305,7 +305,7 @@
             </span>
           </div>
           <div class="td">
-            <span class="fs16">
+            <span v-if="item.disk_space" class="fs16">
               硬盘：
               <a class="cPrimaryColor">{{parseInt(item.disk_space/(1024*1024))}}GB</a>
               <a class="cPrimaryColor">&nbsp;&nbsp;{{item.disk_type}}</a>
@@ -325,19 +325,19 @@
               <a class="cPrimaryColor">{{item.half_precision_tflops}}TFLOPS</a>
             </span>
           </div>
-          <div class="td">
+          <div v-if="item.gpu_ram_size > 0" class="td">
             <span class="fs16">
               GPU显存：
               <a class="cPrimaryColor">{{parseInt(item.gpu_ram_size/(1024*1024))}}GB</a>
             </span>
           </div>
-          <div class="td">
+          <div v-if="item.disk_bandwidth> 0" class="td">
             <span class="fs16">
               硬盘带宽：
               <a class="cPrimaryColor">{{parseInt(item.disk_bandwidth/1024)}}MB/s</a>
             </span>
           </div>
-          <div class="td">
+          <div v-if="item.cpu_numbers> 0" class="td">
             <span class="fs16">
               CPU内核数：
               <a class="cPrimaryColor">{{item.cpu_numbers}}</a>
@@ -351,19 +351,19 @@
               <a class="cPrimaryColor">{{item.single_precision_tflops}}TFLOPS</a>
             </span>
           </div>
-          <div class="td">
+          <div v-if="item.gpu_ram_bandwidth > 0" class="td">
             <span class="fs16">
               GPU显存带宽：
               <a class="cPrimaryColor">{{parseInt(item.gpu_ram_bandwidth/(1024*1024))}}GB/s</a>
             </span>
           </div>
-          <div class="td">
+          <div v-if="item.inet_up > 0" class="td">
             <span class="fs16">
               上行带宽：
               <a class="cPrimaryColor">{{parseInt(item.inet_up/1024)}}Mbps</a>
             </span>
           </div>
-          <div class="td">
+          <div v-if="item.ram_size > 0" class="td">
             <span class="fs16">
               内存数：
               <a class="cPrimaryColor">{{parseInt(item.ram_size/(1024*1024))}}GB</a>
@@ -377,13 +377,13 @@
               <a class="cPrimaryColor">{{item.double_precision_tflops}}TFLOPS</a>
             </span>
           </div>
-          <div class="td">
+          <div v-if="item.pcie_bandwidth > 0" class="td">
             <span class="fs16">
               总线传输速度：
               <a class="cPrimaryColor">{{parseInt(item.pcie_bandwidth/(1024*1024))}}GB/s</a>
             </span>
           </div>
-          <div class="td">
+          <div v-if="item.inet_down> 0" class="td">
             <span class="fs16">
               下行带宽：
               <a class="cPrimaryColor">{{parseInt(item.inet_down/1024)}}Mbps</a>
@@ -469,17 +469,17 @@ export default {
       ],
 
       // 机器状态下拉
-      mcStatus: [
+      idle_status: [
         {
-          name: this.$t("gpu.mcStatus[0]"),
+          name: this.$t("gpu.idle_status[0]"),
           value: 0
         },
         {
-          name: this.$t("gpu.mcStatus[1]"),
+          name: this.$t("gpu.idle_status[1]"),
           value: 1
         },
         {
-          name: this.$t("gpu.mcStatus[2]"),
+          name: this.$t("gpu.idle_status[2]"),
           value: 2
         }
       ],
@@ -520,7 +520,7 @@ export default {
         county: "all",
         dbcVersion: "V0.3.7.2",
         have_ip: 0,
-        status: 0,
+        idle_status: 0,
         totalTime: 0,
         reliability: 0.9,
         diskSpace: 0,
@@ -691,7 +691,7 @@ export default {
     queryMc() {
       const params = {
         county: this.req_body.county,
-        idle_status: this.req_body.status,
+        idle_status: this.req_body.idle_status,
         total_time: this.req_body.totalTime,
         total_rent_count: this.req_body.total_rent_count,
         error_rent_count: this.req_body.error_rent_count,

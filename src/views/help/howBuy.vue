@@ -4,7 +4,7 @@
       <h2>{{$t('help.title')}}</h2>
       <h3>
         {{$t('help.1')}}
-        <a href="https://www.dbctrade.com">dbctrade.io</a>
+        <a href="javascript:" @click="tradedbcHref">dbctrade</a>
       </h3>
 
       <h3>
@@ -35,7 +35,16 @@
 
 <script>
 export default {
-  name: "howBuy"
+  name: "howBuy",
+
+  methods: {
+    tradedbcHref() {
+      location.href =
+        "https://www.dbctrade.com/trade/buy_1?address_user=" +
+        this.$route.query.address_user;
+      window.open(location.href);
+    }
+  }
 };
 </script>
 

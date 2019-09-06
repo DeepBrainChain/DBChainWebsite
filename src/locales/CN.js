@@ -123,7 +123,7 @@ export default {
     openWallet: '打开钱包账号',
     rentMachine: '打开或者创建钱包租用机器',
     mcStatusTitle: '机器状态', // new
-    mcStatus: [
+    idle_status: [
       '所有机器',
       '空闲机器',
       '被租机器'

@@ -212,6 +212,12 @@ export function transfer({
           status: -1,
           msg: 'DBC余额不足'
         })
+
+        // this.$message({
+        //  showClose: true,
+        //  message: "DBC余额不足",
+        //  type: "error"
+        //});
       }
     })
     .then(res => {

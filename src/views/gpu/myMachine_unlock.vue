@@ -148,7 +148,7 @@
               最长可租用时间：
               <a
                 class="cPrimaryColor"
-              >{{Math.floor(item.mcData.length_of_available_time/60)}}{{$t('my_machine_hour')}}</a>
+              >{{Math.floor(item.mcData.length_of_available_time)}}{{$t('my_machine_hour')}}</a>
             </span>
           </div>
           <div class="td">
