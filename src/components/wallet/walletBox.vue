@@ -3,12 +3,7 @@
     <h3>Details</h3>
     <div class="box-content">
       <div class="flex vCenter">
-        <el-tooltip
-          class="item"
-          effect="dark"
-          content="钱包地址：
-您的地址也可以称为您的帐户。当你把这个地址发给对方时，对方可以给您的钱包地址打DBC代币。"
-        >
+        <el-tooltip class="item" effect="dark" :content="this.$t('wallet_box_adddress')">
           <i class="icon-tip el-icon-question"></i>
         </el-tooltip>
         <label>your address:</label>
@@ -18,12 +13,7 @@
       </div>
       <template v-if="encryptedKey">
         <div class="flex vCenter">
-          <el-tooltip
-            class="item"
-            effect="dark"
-            content="密钥存储文件：
-密钥存储文件使用密码以加密形式存储您的私钥。建议始终使用密钥存储文件来解锁您的钱包。"
-          >
+          <el-tooltip class="item" effect="dark" :content="this.$t('wallet_box_keystore')">
             <i class="icon-tip el-icon-question"></i>
           </el-tooltip>
           <label>Keystore File:</label>
@@ -34,12 +24,7 @@
       </template>
 
       <div class="flex vCenter pt10">
-        <el-tooltip
-          class="item"
-          effect="dark"
-          content="您的私钥
-这是您的私钥的未加密文本版本，意味着不需要密码。如果有人找到你的未加密的私钥，他们可以在没有密码的情况下访问你的钱包。因此，通常建议使用加密版本。"
-        >
+        <el-tooltip class="item" effect="dark" :content="this.$t('wallet_box_key')">
           <i class="icon-tip el-icon-question"></i>
         </el-tooltip>
         <label>Your Private Key:</label>

@@ -37,7 +37,11 @@
           :loading="btnloading"
           @click="generateAccount"
         >{{$t('create')}}</el-button>
-        <el-tooltip v-else-if="step === 1" :disabled="isNext" content="请下载加密后的私钥">
+        <el-tooltip
+          v-else-if="step === 1"
+          :disabled="isNext"
+          :content="$t('creat_wallet_index_download')"
+        >
           <el-button
             class="w200"
             :class="{'is-disabled': !isNext}"
@@ -117,17 +121,17 @@ export default {
       const blob = new Blob([this.nep2Key], {
         type: "text/plain;charset=utf-8"
       });
-      fileSave.saveAs(blob, `${this.nep2Key}.txt`)
-      this.isNext = true
+      fileSave.saveAs(blob, `${this.nep2Key}.txt`);
+      this.isNext = true;
     },
     pushToMyWallet() {
-      const type = this.$route.params.type
+      const type = this.$route.params.type;
       saveCookie(getAccount());
       this.$router.push(`/${type}/myWalletUnlock`);
     },
     next() {
       if (this.isNext) {
-        this.step = 2
+        this.step = 2;
       }
     }
   },

@@ -2,15 +2,16 @@
   <div class="bg-box wrap1440 mb100">
     <div class="border-box">
       <div class="title">
-        <h3>机器出租的订单信息</h3>
+        <h3>{{$t('machine_order_rentout')}}</h3>
       </div>
       <div v-for="item in content" class="border-content">
         <div class="tools-head">
           <div class="l-wrap" style="width: 70%">
             <span v-if="item.orderData.evaluation_content">
-              <b>用户评价：</b>{{item.orderData.evaluation_content}}
+              <b>{{$t('machine_order_evaluation')}}：</b>
+              {{item.orderData.evaluation_content}}
             </span>
-           <!-- <span
+            <!-- <span
               v-if="item.orderData.order_is_cancer || item.orderData.order_is_over"
               class="tools-title"
             ></span>
@@ -30,17 +31,23 @@
               15 - Math.floor((new Date().getTime() - item.orderData.milli_create_order_time)/60000)
               }}分钟
             </span>-->
-            <span v-if="item.orderData.order_is_over && item.orderData.order_isnormal_over">订单已结束</span>
+            <span
+              v-if="item.orderData.order_is_over && item.orderData.order_isnormal_over"
+            >{{$t('machine_order_is_over')}}</span>
             <span
               v-else-if="item.orderData.order_is_over && item.orderData.order_isnormal_over===false"
-            >订单被中断</span>
-            <span v-else-if="item.orderData.order_is_cancer">订单已取消</span>
-            <span v-else-if="item.orderData.rent_success">正在使用中</span>
+            >{{$t('machine_order_is_nonormal_over')}}</span>
+            <span v-else-if="item.orderData.order_is_cancer">{{$t('machine_order_cancer')}}</span>
+            <span v-else-if="item.orderData.rent_success">{{$t('machine_order_using')}}</span>
             <span
               v-else-if="item.orderData.container_is_exist && item.orderData.rent_success===false"
-            >支付验证中</span>
-            <span v-else-if="item.orderData.pay_error && item.orderData.return_dbc===false">支付验证失败</span>
-            <span v-else-if="item.orderData.pay_error && item.orderData.return_dbc">退币成功</span>
+            >{{$t('machine_order_vocing_pay')}}</span>
+            <span
+              v-else-if="item.orderData.pay_error && item.orderData.return_dbc===false"
+            >{{$t('machine_order_vocing_failure')}}</span>
+            <span
+              v-else-if="item.orderData.pay_error && item.orderData.return_dbc"
+            >{{$t('machine_order_return_dbc_success')}}</span>
           </div>
         </div>
         <div class="pay-wrap">
@@ -52,16 +59,20 @@
           </div>
           <div>
             <span class="td">{{$t('gpu.payDBCs')}}：{{item.orderData.dbc_total_count}}</span>
-            <span class="td">已使用时间：{{parseInt(item.orderData.real_rent_time/60)}}小时{{item.orderData.real_rent_time%60}}分钟</span>
+            <span
+              class="td"
+            >{{$t('machine_order_is_used_time')}}：{{parseInt(item.orderData.real_rent_time/60)}}{{$t('machine_order_hour')}}{{item.orderData.real_rent_time%60}}{{$t('machine_order_min')}}</span>
           </div>
           <div>
             <span class="td">{{$t('gpu.actualPrice')}}：{{item.orderData.dbc_real_need_count}}DBC</span>
-            <span class="td">{{$t('gpu.gpuBilling')}}：$ {{item.orderData.gpu_price_dollar}}/小时</span>
+            <span
+              class="td"
+            >{{$t('gpu.gpuBilling')}}：$ {{item.orderData.gpu_price_dollar}}/{{$t('')}}{{$t('machine_order_hour')}}</span>
           </div>
           <div>
-          <span
-            class="td"
-          >{{$t('gpu.currentRemaining')}}：{{item.orderData.dbc_total_count - item.orderData.dbc_real_need_count}} DBC</span>
+            <span
+              class="td"
+            >{{$t('gpu.currentRemaining')}}：{{item.orderData.dbc_total_count - item.orderData.dbc_real_need_count}} DBC</span>
             <span class="td">{{$t('gpu.payPrice')}}：$ {{item.orderData.dbc_price.toFixed(4)}}</span>
           </div>
           <!--        <div>-->
@@ -115,141 +126,140 @@
 </template>
 
 <script>
-  import {
-    rentout_get_orders_list_by_machine_id
-  } from '@/api'
+import { rentout_get_orders_list_by_machine_id } from "@/api";
 
-  export default {
-    name: "machineOrder",
-    data() {
-      return {
-        rateValue: 0,
-        mcData: undefined,
-        content: [],
-      }
-    },
-    created() {
-      this.queryOrderList()
-    },
-    computed: {
-      rateList() {
-        content.map(item => {
-          return {}
-        })
-      }
-    },
-    methods: {
-      queryOrderList() {
-        rentout_get_orders_list_by_machine_id({
-          machine_id: this.$route.query.machine_id
-        }).then(res => {
-          if (res.status === 1) {
-            this.content = res.content.map(item => {
-              return {
-                orderData: item
-              }
-            })
-          }
-        })
-      }
+export default {
+  name: "machineOrder",
+  data() {
+    return {
+      rateValue: 0,
+      mcData: undefined,
+      content: []
+    };
+  },
+  created() {
+    this.queryOrderList();
+  },
+  computed: {
+    rateList() {
+      content.map(item => {
+        return {};
+      });
+    }
+  },
+  methods: {
+    queryOrderList() {
+      rentout_get_orders_list_by_machine_id({
+        machine_id: this.$route.query.machine_id,
+        user_name_platform: this.$t("website_name"),
+        language: this.$i18n.locale
+      }).then(res => {
+        if (res.status === 1) {
+          this.content = res.content.map(item => {
+            return {
+              orderData: item
+            };
+          });
+        }
+      });
     }
   }
+};
 </script>
 
 <style lang="scss" scoped>
-  .border-content {
-    border: 1px solid #979797;
-    margin-bottom: 20px;
+.border-content {
+  border: 1px solid #979797;
+  margin-bottom: 20px;
+}
+
+.pay-wrap {
+  padding: 10px 20px;
+  border-top: 1px solid #e1e6ec;
+  font-size: 14px;
+  line-height: 28px;
+  color: #666;
+  background-color: #f6f9fc;
+
+  .td {
+    display: inline-block;
+    width: 33.3%;
   }
 
-  .pay-wrap {
-    padding: 10px 20px;
-    border-top: 1px solid #e1e6ec;
-    font-size: 14px;
-    line-height: 28px;
-    color: #666;
-    background-color: #f6f9fc;
-
-    .td {
-      display: inline-block;
-      width: 33.3%;
-    }
-
-    .rate-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-  }
-
-  .tools-head {
+  .rate-head {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
+  }
+}
 
-    &.bd {
-      border-bottom: 1px solid #e1e6ec;
-    }
+.tools-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
 
-    .tools-title {
-      font-size: 16px;
-      color: #050d68;
+  &.bd {
+    border-bottom: 1px solid #e1e6ec;
+  }
 
-      &.small {
-        font-size: 14px;
-        color: #333;
-      }
-    }
+  .tools-title {
+    font-size: 16px;
+    color: #050d68;
 
-    .tool-btn {
+    &.small {
       font-size: 14px;
-
-      &.blue {
-        border-color: $primaryColor;
-        color: $primaryColor;
-      }
-    }
-
-    .cGray {
-      padding-left: 44px;
+      color: #333;
     }
   }
 
-  .rate-wrap {
-    label {
-      vertical-align: top;
-    }
+  .tool-btn {
+    font-size: 14px;
 
-    span {
-      display: inline-block;
-      width: 200px;
-      vertical-align: top;
-      text-align: left;
+    &.blue {
+      border-color: $primaryColor;
+      color: $primaryColor;
     }
   }
 
-  .title {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 30px;
+  .cGray {
+    padding-left: 44px;
+  }
+}
 
-    h3 {
-      margin: 0;
-      line-height: 20px;
-      font-size: 20px;
-      color: #47495A;
-    }
-
-    p {
-      margin: 0;
-      color: #666;
-      font-size: 16px;
-
-      a {
-        color: $primaryColor;
-      }
-    }
+.rate-wrap {
+  label {
+    vertical-align: top;
   }
 
+  span {
+    display: inline-block;
+    width: 200px;
+    vertical-align: top;
+    text-align: left;
+  }
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+
+  h3 {
+    margin: 0;
+    line-height: 20px;
+    font-size: 20px;
+    color: #47495a;
+  }
+
+  p {
+    margin: 0;
+    color: #666;
+    font-size: 16px;
+
+    a {
+      color: $primaryColor;
+    }
+  }
+}
 </style>

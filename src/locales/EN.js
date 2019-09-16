@@ -1,243 +1,440 @@
 import enLocale from 'element-ui/lib/locale/lang/en'
 
 export default {
-  message: "hello i18n !!",
+  message: 'hello i18n !!',
+  website_name: 'dbchain', //yousanai  dbchain
   $: '$',
-  send: '发送',
-  closeWallet: '关闭钱包',
-  toAddress: 'TO ADDRESS',
-  amount: 'AMOUNT',
-  from: 'FROM',
+  send: 'Send',
+  closeWallet: 'Close Wallet',
+  toAddress: 'To Address',
+  amount: 'Amount',
+  from: 'FROM ',
   to: 'TO',
   value: 'VALUE',
   asset: 'ASSET',
   transfer: 'TRANSFER',
-  day: '天',
-  hour: '小时',
-  password: '密码',
-  unsubscribe: '退租',
-  subscribe: '订阅',
-  tips: '温馨提示',
-  total: '总计',
-  confirm: '确定',
-  cancel: '取消',
-  confirmPay: '确认支付',
+  day: 'D',
+  hour: 'H',
+  password: 'Password',
+  unsubscribe: 'Unsubscribe',
+  subscribe: 'Subscribe',
+  tips: 'Reminder',
+  total: 'Total',
+  confirm: 'Confirm',
+  cancel: 'Cancel',
+  confirmPay: 'Confirm Payment',
   enterPassword: 'Enter Password',
-  newWallet: 'New Wallet',
-  inputPsWarning: 'Password must be at least 8 characters long.',
+  newWallet: ' New Wallet',
+  inputPsWarning: 'Password must  be at least 8 characters long.',
   create: 'CREATE',
-  continue: 'CONTINUE',
-  dlEncryptedKey: 'DOWNLOAD ENCRYPTED KEY',
+  dlEncryptedKey: 'Key DOWNLOAD ENCRYPTED KEY',
   finished: 'FINISHED',
-  amountNoMore: '数量不能超过你自己的余额', // new
-  noZero: '数量不能为0或以下', // new
-  errAddr: '账户地址不正确',
-  transferSuccess: '转账成功，请等待区块同步后查看',
-  transferFail: '转账失败',
+  amountNoMore: 'Transaction amount cannot be more than your wallet balance', // new
+  noZero: 'The amount cannot be smaller than or equal to 0', // new
+  errAddr: 'Wallet address incorrect',
+  transferSuccess: 'Transaction successful, please wait and check for update on blocks',
+  transferFail: 'Transaction Failed',
   confirmTrTitle: 'Confirm Transfer',
-  confirmTrMsg: 'you are about to send <b>{amount}</b>DBC to address: <br> <b>{address}</b>',
-  confirmTrWaring: 'Are you sure you want to do this?',
-  lease: '租用',
-  bind: '绑定',
-  modify: '修改',
-  scores: '分',
-  back: '返回',
-  reEdit: '重新编辑',
+  confirmTrMsg: 'You are sending <b>{amount}</b> DBC to this address:<br> <b>{address}</b>',
+  confirmTrWaring: 'Are you sure?',
+  lease: 'Rent',
+  bind: 'Bind',
+  modify: 'Modify',
+  scores: 'Score(s)',
+  back: 'Go Back',
+  reEdit: 'Edit Again',
+  open_wallet: 'Open Wallet',
+  access_wallet: 'Select method to open wallet',
+  keystore_file: 'Keystore File',
+  private_key: 'Private Key',
+  select_wallet_file: 'Select Wallet File',
+  paste_key: 'Paste or enter private key',
+  enter_key: 'Enter password',
+  continue: 'Continue',
+  unlock: 'Unlock',
+
   heads: {
-    logo: "DBChain",
-    home: "HOME",
-    gpu: "租用GPU",
-    network: "DBC NETWORK",
-    miner: "DBC MINER",
-    talk: "DBC TALK",
-    api: "DBC API",
-    help: "HELP",
+    logo: 'DBChain',
+    home: 'Home',
+    gpu: 'Rent GPU',
+
+    miner: 'Lease GPU',
+    talk: 'AI Developer Forum',
+
   },
   footer: {
-    DBChain: "DeepBrain Chain",
-    DBCMiner: "DBCMiner",
-    DBCTalk: "DBCTalk",
-    KuCoin: "KuCoin",
-    DBCTrade: "DBCTrade",
-    DBCloud: "DBCloud",
-    HuobiPro: "Huobi Pro",
-    GateIo: "Gate.io"
+    DBChain: 'DeepBrain Chain',
+    DBCMiner: 'DBCMiner',
+    DBCTalk: 'DBCTalk',
+    KuCoin: 'KuCoin',
+    DBCTrade: 'DBCTrade',
+    DBCloud: 'DBCloud',
+    HuobiPro: 'Huobi Pro',
+    GateIo: 'Gate.io'
   },
   gpu: {
-    myWallet: '我的钱包',
-    myMachine: '我的机器',
-    machineList: '机器列表',
-    walletAddress: '钱包地址',
-    notice_1: '请保管好私钥信息，私钥丢失将无法找回DBC资产，包括我们!',
-    amount: '数量',
-    howBuyDBC: '如何购买DBC',
-    exchangeCash: '等值USD',
-    showDeitailDBC: '查看dbc详细信息:',
-    clickCoinmarktcap: '点击coinmarktcap',
-    transfer: 'TRANSFER',
-    myMachineTitle: '我租用的机器信息',
-    pcs: '台',
-    machineOnLine: '在线',
-    machineOffLine: '机器离线',
-    remainingTime: '剩余时间',
-    reload: '续费',
-    payDBCs: '支付的DBC总数',
-    payPrice: '支付时DBC价格',
-    actualPrice: '产生实际费用',
-    currentRemaining: '剩余',
-    userTime: '使用时间',
-    storeTime: '存储使用时间',
-    storeSpace: '存储空间',
-    gpuCost: 'GPU费用',
-    gpuBilling: 'GPU价格',
-    gpuRemainTime: 'GPU使用剩余时间',
-    storeCost: '存储费用',
-    storeBilling: '存储价格',
-    storeRemainTime: '存储使用剩余',
-    reliable: '可靠性',
-    machineLoginInfo: '机器登录信息',
-    increaseHD: '增加硬盘空间',
-    totalTime: '累计时长',
+    myWallet: 'My Wallet',
+    myMachine: 'My Machine',
+    machineList: 'Machine List',
+    walletAddress: 'Wallet Address',
+    notice_1: 'Please keep your private key safe, once a private key is lost, no one can retrieve your DBC asset for you!',
+    amount: 'Amount',
+    howBuyDBC: 'How to buy DBC',
+    exchangeCash: 'USD value',
+    showDeitailDBC: 'See DBC information:',
+    clickCoinmarktcap: 'Click to read more',
+    transfer: 'Transfer',
+    myMachineTitle: 'My rented machine',
+    pcs: 'Machine number (how many)',
+    machineOnLine: 'Machine(s) online',
+    machineOffLine: 'Machine(s) offline',
+    remainingTime: 'Time left',
+    reload: 'Continue renting',
+    payDBCs: 'Total DBC to pay',
+    payPrice: 'DBC price when paying',
+    actualPrice: 'Total fee incurred',
+    currentRemaining: 'Remaining time',
+    userTime: 'Time used',
+
+    gpuBilling: 'GPU price at the time of payment',
+
+
     storage: 'Storage',
-    needHD: '需要硬盘空间',
-    reloadTime: '续租时长',
-    DBCRemaining: '当前DBC余额',
-    exchangeDBC: '等值DBC数量',
-    machineRemaining: '当前机器可用',
-    HDSpace: '硬盘空间',
-    from: '从',
-    addTo: '提到',
-    originalPrice: '原来价格',
-    currentPrice: '现在价格',
-    rate: '评价',
-    createWallet: '创建钱包账号',
-    openWallet: '打开钱包账号',
-    rentMachine: '打开或者创建钱包租用机器',
-    mcStatusTitle: '机器状态', // new
-    mcStatus: [
-      '所有',
-      '闲置',
-      '已被使用'
+
+    DBCRemaining: 'Current DBC balance',
+    exchangeDBC: 'DBC amount',
+    machineRemaining: 'Available machine(s)',
+    HDSpace: 'HD Space',
+    from: 'From',
+    addTo: 'To',
+    originalPrice: 'Original price',
+    currentPrice: 'Current price',
+    rate: 'Review',
+    createWallet: 'Create Wallet Account',
+    openWallet: 'Open Wallet Account',
+    rentMachine: 'Open or create wallet to rent machine(s)',
+    mcStatusTitle: 'Machine Status', // new
+    idle_status: [
+      'All Machines',
+      'Available Machine(s)',
+      'Rented Machine(s)'
     ], // new
-    cumulativeDuration: '累计使用时长', // new
-    reliability: '历史可靠性', // new
-    lengthOfAvailableTime: '可用时长', // new
-    choseGpuCount: '选择GPU数量', // new
-    bindMail: '绑定邮箱', // new
-    bindMailInfo: '绑定的邮箱用来收取GPU的SSH账户登陆信息，<br>' +
-      '租用GPU之前必须绑定邮箱',
-    modifyMail: '修改邮箱',
-    mailAddress: '邮箱地址',
-    inputMail: '请输入邮箱地址',
-    inputNewMail: '请输入新邮箱地址',
-    receiveMail: '收邮件',
-    receiveMailInfo: '点击收取邮件，并且按照邮件内容输入dbc数量完成验证',
-    verifyDbc: '请输入要验证的DBC数量',
-    attentionDecimal: '请注意输入小数点',
-    startBind: '开始绑定',
+
+    dbc_version: [
+      'All',
+      'V0.3.7.2'
+    ],
+    have_ip: [
+      'All',
+      'None',
+      'There are'
+    ],
+    cumulativeDuration: 'Cumulative rental time', // new
+
+    lengthOfAvailableTime: 'Longest available time', // new
+    choseGpuCount: 'Select GPU amount', // new
+    bindMail: 'Bind e-mail address', // new
+    bindMailInfo: 'This e-mail address is used to receive the SSH account log in information for machine<br>' +
+      'Before you rent a GPU you must go to my machine page to bind an e-mail address',
+    modifyMail: 'Modify e-mail address',
+    mailAddress: 'e-mail address',
+    inputMail: 'Please enter e-mail address',
+    inputNewMail: 'Enter e-mail address',
+    receiveMail: 'Receive e-mail',
+    receiveMailInfo: 'Please click receive e-mail and enter the DBC amount specified in the e-mail to complete verification',
+    verifyDbc: 'Please enter the amount of DBC for verification',
+    attentionDecimal: 'Please pay attention to the decimal',
+    startBind: 'Start binding',
     mcDetails: {
-      th_1: '收款钱包地址',
-      th_2: '实际dbc成交数量',
-      th_3: '使用中是否出现故障',
-      th_4: 'dbc退款数量',
-      th_5: '用户购买总时长',
-      th_6: '实际使用时长',
-      th_7: '用户评分'
+      th_1: 'User wallet address',
+      th_2: 'Actual traded DBC amount',
+      th_3: 'Was there abnormality/malfunction during usage',
+      th_4: 'Amount of GPU rented',
+      th_5: 'DBC refund amount',
+      th_6: 'Total bought time by user',
+      th_7: 'Actual usage time',
+      th_8: 'User rating'
     },
-    userRate: '用户评价',
-    mcTradeInfo: '机器交易信息',
-    backDbcNum: '退回DBC数量为',
-    rateMsg: '你想给他/她评几星',
+    userRate: 'User review',
+    mcTradeInfo: 'Machine transaction information',
+    backDbcNum: 'Amount of DBC being refunded',
+    rateMsg: 'How many stars would you rate the machine',
   },
+
+  county: 'Country',
+  idle_status: 'Machine usage status',
+  total_time: 'accumulative rental time',
+  total_rent_count: 'total rental numbers',
+  error_rent_count: 'disruption numbers',
+  disk_GB_perhour_dollar: '',
+  length_of_available_time: 'longest available time',
+  gpu_price_dollar: ' each GPU price per hour',
+  gpu_count: 'GPU amount',
+  tensor_cores: 'Tensor Cores',
+  half_precision_tflops: 'Half-precision floating-point format',
+  single_precision_tflops: 'Single-precision floating-point format',
+  double_precision_tflops: 'Double-precision floating-point format',
+  gpu_ram_size: 'GPU RAM',
+  gpu_ram_bandwidth: 'GPU RAM bandwidth',
+  pcie_bandwidth: 'Bandwidth speed',
+  cpu_numbers: 'CPU core amount',
+  ram_size: 'RAM size',
+  disk_bandwidth: 'HD bandwidth',
+  inet_up: 'Upper bandwidth',
+  inet_down: 'Lower bandwidth',
+  have_ip_title: 'Independent IP',
+  onlines_tatus: 'Machine online status',
+  disk_space: 'HD space',
+  dbc_version_title: 'DBC version',
+
   msg: {
-    dlg_0: '机器最长可以租用{time}时间，最短1个小时时间',
-    dlg_1: 'DBChain平台收取 3%的服务费（不支持退款）',
-    dlg_2: '1.续租机器退订，将收取实际产生费用的2倍，最多收取合约中所有DBC',
-    dlg_3: '2.如果机器使用过程中出现中断，将最多额外退回7天机器已使用量的DBC。',
-    dlg_4: '3.如果租用时间不超过7天，则全部退回',
-    dlg_5: '1.确认支付后，DBC将打入深脑链的智能合约中，1小时以内退订机器只收取实际产生费用的20%，超过1小时主动退订机器，将收取实际费用的2倍，最多收取合约中所有DBC（此费用是深脑链智能合约收取，非dbchain平台收取）\n' +
-      '<br>' +
-      '2.如果机器使用过程中出现中断，将最多额外退回7天机器已使用量的DBC。<br>' +
-      '如果租用时间不超过7天，则全部退回',
-    dlg_6: '计算公式，已经支付DBC的总量- 实际产生的费用*2 <br>即为：',
-    wallet_0: 'Save Your Keystore File',
+    dlg_0: 'machine current longest available time {time},minimal rental time is one hour \n ' +
+      'Once the rented time for the machine is up, all data in the machine will be cleared, so make sure you rented the sufficient amount of time.\n' +
+      'Once you are done with the machine you can cancel the rest of the rental time and receive refund in your wallet for the time you did not use, only fees incurred by actual usage will be charged. ',
+
+    dlg_5: 'If the machine stops abruptly during use and the usage time has not exceeded 144 hours, all DBC will be refunded. \n' +
+      '<br>' + 'If the usage time exceeds 144 hours then a total of DBC equal to 144 hours usage will be refunded.',
+    wallet_0: 'Save your private key file in a safe place, such as writing it down and putting it in a safe.',
     wallet_1: '' +
       '<b>Do not lose it!</b>' +
-      'It cannot be recovered if you lose it.' +
+      'If lost it can not be retrieved' +
       '<br>' +
-      'Do not share it!' +
-      'Your funds will be stolen if you use this file on a malicious phishing site.' +
+      'DO not share it. Do not send it to anyone on WeChat, QQ, Facebook, Line, KakaoTalk, WhatsApp or any other communication software' +
+      'If you use this document on a malicious phishing website your asset will be stolen!' +
       '<br>' +
-      'Make a backup!' +
-      'Secure it like the millions of dollars it may one day be worth.',
-    wallet_2: 'Save Your Private Key',
-    wallet_3: '<b>Do not lose it!</b>' +
-      'It cannot be recovered if you lose it.<br>' +
-      '<b>Do not share it!</b>' +
-      'Your funds will be stolen if you use this file on a malicious phishing site.<br>' +
-      '<b>Make a backup!</b>' +
-      'Secure it like the millions of dollars it may one day be worth.',
-    wallet_4: 'the privateKey may be wrong~!'
+      'You must have a back-up!' +
+      'Treat it as if one day if could be worth millions of USD',
+    wallet_2: 'Save your private key',
+    wallet_3: '<b>Do not lose it</b>' +
+      'If lost it can not be retrieved<br>' +
+      '<b>DO not share it. Do not send it to anyone on WeChat, QQ, Facebook, Line, KakaoTalk, WhatsApp or any other communication software</b>' +
+      'If you use this document on a malicious phishing website your asset will be stolen!<br>' +
+      '<b>You must have a back-up!</b>' +
+      'Treat it as if one day if could be worth millions of USD',
+    wallet_4: 'Private key incorrect',
+    wallet_5: 'You must remember your password, do not lose it, ' +
+      'you need this password and your private key to unlock your wallet'
   },
   home: {
-    intr_1: 'DBC  是区块链技术驱动的开源人工智能计算平台，分布在全球的GPU通过DBC网络连接在一起。\n' +
+    intr_dbchain_1: 'DBC is an AI computing power network powered by blockchain, it connect the GPU scattered across the globe using blockchain technology.\n' +
       '\n' +
-      '            只要你的gpu有空闲，就可以加入到dbc网络赚取dbc token，享受token升值带来的更多收益。\n' +
+      'If your GPU is ever idle, you can connect it to the DBC network to earn DBC tokens and enjoy the benefit of the tokens appreciation.\n ' +
       '\n' +
-      '            只要gpu闲置1小时 以上就可以加入dbc网络获取收益',
-    intr_2: '这里的GPU来自于全球各地，通过DBC分布式网络连接在一起，这里面没有中心化服务器，你的数据不会被窃取。',
-    intr_3: '在这个DBC网络购买机器需要使用DBC Token进行支付。支付通过智能合约完成，没有任何第三方参与。',
-    intr_4: 'DBC是区块链技术驱动的开源人工智能计算平台，分布在全球的GPU通过DBC网络连接在一起。',
-    intr_5: '在DBC平台你可以找到最便宜的GPU。当你进行AI训练的时候，所有的数据都是加密保存和加密传输的',
-    intr_6: 'gpu租用按照分钟计费，GPU使用过程中如果出现中断，数据和模型将会自动迁移到同等配置的机器继续训练。不影响训练体验',
-    intr_7: '深脑链总共有40亿的代币用于挖矿，前3年每年产出5亿，3年后，每年产出2.5亿，并且以后每5年产出减半。',
-    intr_8: '加入深脑链收益组成：挖矿收益+租金收益',
-    start: '开始使用',
+      'If your GPU is ever idle for more than one hour, you can connect it to the DBC network to earn DBC tokens.',
+    intr_2: 'Our GPUs come from all over the world, connected through DBC distributed network,there is not centralized server in here,your data will not be stolen.',
+    intr_3: 'In the DBC network to buy and use GPU you need to pay with DBC token. GPUs are priced in USD, the higher the price of DBC the less DBC you need in order to pay.',
+    intr_dbchain_4: 'DBC is an AI computing power network powered by blockchain, it connect the GPU scattered across the globe using blockchain technology.',
+    intr_5: 'In the DBC network you can find cheap and varied GPUs. Throughout the usage of the GPU(s) your data are encrypted during transmission.',
+    intr_6: 'GPU rental is charged by the minute, if a GPU machine stops abruptly during usage you can be compensated up to 144 hour\'s rental fee.',
+    intr_7: 'DBC will start mining from 2020 and each year 500 million DBCs are mined, starting from the 4th year, 250 millions are mined each year and the amount is halved every 5 years from then on. A total of 4 billion DBCs will be mined.',
+    intr_8: 'Join DBC income combo: supernodes reward + mining reward + rental reward',
+    start: 'Start renting GPU',
     github: 'GitHub',
     video: 'Video',
-    startMiner: '开始挖矿'
+    startMiner: 'Start renting GPU'
   },
   help: {
-    'title': '如何购买DBC',
-    '1': '1.直接购买DBC，进入',
-    '2': '2.从火币购买DBC',
-    '3': '3.从库币购买DBC，',
-    '4': '4.从Gate.io购买DBC',
-    '5': '5.从其他支持DBC的钱包转账到钱包账号',
-    'reloadWallet': '充值进入钱包账号',
+    'title': 'How to buy DBC',
+    '1': '1.Buy DBC, enter',
+
+    '2': '2.Buy DBC from Huobi',
+    '3': '3.Buy DBC from KuCoin',
+    '4': '4.Buy DBC from gate.io',
+    '5': '5.Transfer DBC to your account from other wallets that support DBC, such as neotracker.io, O3 Wallet',
+    'reloadWallet': 'Deposit and enter wallet account',
   },
   miner: {
-    addMc_Title: '请按照如下步骤添加机器：',
-    addMc_editTitle: '重新编辑',
-    addMc_setupApp: '安装软件',
-    addMc_bind: '绑定机器',
-    addMc_area: '选择时区',
-    addMc_price: '定价',
-    addMc_dbc: '输入验证码',
-    addMc_mail: '点击此处从邮件获取验证码',
-    addMc_date: '指定日期',
-    addMc_week: '按照星期重复',
-    period_1: '全天（所有时段）',
-    period_2: '指定时间段',
-    rent: '出租机器',
-    rentMachine: '打开或者创建钱包租用机器',
+    addMc_Title: 'Please add your machine according to the following steps:',
+    addMc_editTitle: 'Edit again',
+    addMc_setupApp: 'Install software',
+    addMc_bind: 'Bind machine',
+    addMc_area: 'Select time zone',
+    addMc_price: 'Set a price',
+    addMc_dbc: 'Enter verification code',
+    addMc_mail: 'Click here to receive verification code',
+    addMc_date: 'Set a date',
+    addMc_week: 'Repeat by the week',
+    period_1: 'All day (all times)',
+    period_2: 'Specified time slot',
+    rent: 'lease your machine',
+    rentMachine: 'Open or create wallet to lease your machine',
     addMc_msg_1: [
-      '安装DBC挖矿软件',
-      '请根据操作手册进行安装.'
+      'Install DBC software',
+      'Please install according to user manual.'
     ],
-    addMc_msg_2: '安装完成后，会生成一个挖矿私钥，输入后才能在平台上绑定机器。',
-    addMc_msg_3: '请输入挖矿私钥',
+    addMc_msg_2: 'After installation you need to enter current wallet address in order to bind your machine on the platform.',
+
     addMc_msg_4: [
-      '每个GPU定价',
-      '存储每个GB定价'
+      'Each GPU\'s price ',
+
     ],
-    addMc_msg_5: '收入将会扣除8%的手续费（其中2%用于DBC共识节点奖励，6%会被燃烧掉）',
+    addMc_msg_5: '',
+
     addMc_msg_6: [
-      '如果机器使用过程中出现中断，则将会把合约中质押的7天机器使用量的DBC扣除。 出租时间不超过7天，则',
-      '按照实际使用时间全部扣除！'
+      'Please ensure the internet and electricity connection of your machine, if either is stopped during usage, then the DBC equal to 144 hours of sage staked will be deducted. If the rental time is less than 144 hours, then',
+      'we will deduct DBC base on the actual usage time!'
     ],
-    mc_msg_1: '如果机器使用过程中出现中断，则将会把合约中质押的7天机器使用量的DBC扣除。<br>出租时间不超过7天，则全部扣除'
+    mc_msg_1: 'if the machine stops during usage, then the DBC equal to 144 hours of sage staked will be deducted. <br>If the rental time is less than 144 hours, then all DBC will be deducted'
   },
   mcList: {},
+  my_machine_binding_email: 'Bind e-mail address',
+  my_machine_vocing: 'Verifying, this will take a few minutes',
+  my_machine_isnormal_over: 'Order completed',
+  my_machine_nonormal_over: 'Order disrupted',
+  my_machine_order_cancer: 'Order cancelled',
+  my_machine_order_rent_success: 'Order in use',
+  my_machine_order_vocing_pay: 'Verifying payment, this will take a few minutes.',
+  my_machine_order_pay_error: 'verification for payment failed',
+  my_machine_order_return_dbc: 'Refund successful',
+  my_machine_order_vocing_machine_success: 'Verification for machine environment successful',
+
+  my_machine_beused_time: 'Time used',
+  my_machine_hour: 'Hour',
+  my_machine_min: 'Minute',
+  my_machine_dbc_version: 'Version',
+  my_machine_china: 'China',
+  my_machine_idle_gpus: 'Number of idle GPU',
+  my_machine_length_of_available_time: 'Longest available rental time',
+  my_machine_total_time_be_used: 'Accumulative rental time',
+  my_machine_total_rent_count: 'Total rental time',
+
+  list_country: 'country',
+  list_dbc_version: 'DBC version',
+  list_try: 'Trial',
+  list_rentout: 'Rent',
+  list_china: 'China',
+  list_idle_gpus: 'Number of idle GPU',
+  list_length_of_available_time: 'Longest available rental time',
+  list_total_time_be_used: 'Accumulative rental time',
+  list_total_rent_count: 'Total rental time',
+  list_error_rent_count: 'Numbers of disruption',
+  list_cuda_version: 'CUDA version serial number',
+  list_disk_space: 'HD space',
+  list_cpu_type: 'CPU model',
+  list_half_precision_tflops: 'Half-precision floating-point format',
+  list_gpu_ram_size: 'GPU RAM size',
+  list_disk_bandwidth: 'HD bandwidth',
+  list_cpu_numbers: 'CPU core amount',
+  list_ram_size: 'RAM size',
+  list_single_precision_tflops: 'Single-precision floating-point format',
+  list_gpu_ram_bandwidth: 'GPU RAM bandwidth',
+  list_inet_up: 'Upper bandwidth',
+  list_double_precision_tflops: 'Double-precision floating-point format',
+  list_pcie_bandwidth: 'Bandwidth speed',
+  list_inet_down: 'Lower bandwidth',
+  list_os: 'OS',
+  list_all: 'All',
+  list_create_order_success: 'Order created successfully',
+
+  myMachine_rent_success_msg: 'Machine has been rented successfully, log in details are sent to your e-mail, please check your e-mail and save the log in details.',
+  myMachine_is_pay_vocing: 'Paymet being verified',
+  myMachine_maybe_is_used: 'Machine might be rented by someone else already, please cancel order and rent another machine.',
+  myMachine_is_vocing_machine: 'Verifying wether machine environment is suitable, please wait, it will take a few minutes.',
+  myMachine_is_dbc_transfering: 'DBC transaction in progress',
+  myMachine_is_transfer_error: 'DBC transaction failed, please pay again',
+  myMachine_return_dbc: 'Refund tokens',
+  myMachine_confirm_pay: 'Confirm and pay',
+  myMachine_concer_order: 'Cancel order',
+  myMachine_no_double_pay: 'Pay attention to not pay twice',
+  myMachine_please_confirm_pay: 'Please confirm payment',
+  myMachine_confirm: 'Confirm',
+  myMachine_cancer: 'Cancel',
+  myMachine_code_send: 'Verification code has been sent to your e-mail, please enter the verification code',
+  myMachine_cancer_order: 'Cancel order',
+
+  footer_friend: 'Invitation link',
+  footer_service: 'Customer service: :support@dbchain.ai, the customer service will get back to you in 24 hours',
+
+  dlg_bindMail_input_email: 'Please enter correct e-mail address',
+  dlg_bindMail_binding_error: 'Binding failed',
+  dlg_bindMail_no_dbc: 'DBC balance not enough to bind e-mail address, please deposit at least 1 DBC',
+
+  dlg_lease_time: 'Usage time',
+  dlg_lease_wallet_balance: 'Current DBC wallet balance',
+  dlg_lease_create_order: 'Create order',
+
+  dlg_rate_edit_evalute: 'Edit review',
+  dlg_rate_please_input: 'Please enter content',
+  dlg_rate_please_code: 'Please enter verification code',
+  dlg_rate_send_code: 'Send verification code',
+
+  dlg_reload_one: 'One',
+  dlg_reload_tow: 'Two',
+
+  dlg_return_dbc: 'Refund token',
+  dlg_input_code: 'Please enter e-mail verification code',
+  dlg_get_code: 'Receive verification code',
+
+  dlg_try: 'Trial',
+  dlg_try_condition: 'Conditions for a trial: current wallet holds more than 1,000 DBC in balance',
+  dlg_try_fee: 'Trial fee: 0 DBC',
+  dlg_try_time: 'Trial time: 30 minutes',
+  dlg_try_gpu_count: 'GPU amount: 1',
+  dlg_try_confirm: 'Confirm payment',
+  dlg_try_msg: 'Once payment is successful, machine log in details will be sent to your e-mail address',
+
+  drop_item_select: 'Please select',
+  drop_item_no_data: 'No data',
+
+  wallet_box_adddress: 'Wallet address: your wallet address is also your account, when you give this address to another person, the other person can send DBC token to your address.',
+  wallet_box_keystore: 'Private key saved document: private key saved document exist in an encrypted password form to save your private key, we suggest you always use your private key to unlock your wallet.',
+  wallet_box_key: 'Your private key is the unencrypted version of your private key, this means no password is needed. If someone finds your unencrypted private key they can access your wallet without a password. So please always use your encrypted private key.',
+
+  creat_wallet_index_download: 'Please download the encrypted private key',
+
+  mywallet_create: 'Create wallet account',
+  mywallet_open: 'Open wallet account',
+  mywallet_open_create: 'Open or create wallet account to rent machine(s)',
+  mywallet_transfer_record: 'Transaction record',
+  mywallet_display: 'Open or create wallet to view transaction record',
+
+  machine_detail_many: 'participate in rating, rating',
+  machine_detail_no: 'No',
+  machine_detail_yes: 'Yes',
+  machine_order_rentout: 'Machine rental order information',
+  machine_order_evaluation: 'User review(s)',
+  machine_order_is_over: 'Order completed',
+  machine_order_is_nonormal_over: 'Order disrupted',
+  machine_order_cancer: 'Order cancelled',
+  machine_order_using: 'Order in use',
+  machine_order_vocing_pay: 'Verifying payment',
+  machine_order_vocing_failure: 'verification for payment failed',
+  machine_order_return_dbc_success: 'Refund successful',
+  machine_order_is_used_time: 'Time used',
+  machine_order_hour: 'Hour(s)',
+  machine_order_min: 'Minute(s)',
+
+  add_machine_download: 'Download user manual',
+  add_machine_input_time: 'Enter time',
+  add_machine_from: 'From',
+  add_machine_from_time: 'Start renting after hour(s)',
+  add_machine_to: 'To',
+  add_machine_to_time: 'Stop renting after hour(s)',
+  add_machine_input_id: 'Please enter machine ID',
+  add_machine_machine_id: 'Machine ID',
+  add_machine_msg_tips: 'the platform charges 10% fee.\n' +
+    'Once mining starts, the entire DBC network will have 95,890,000 DBC as mining rewards daily. The reward will be allocated automatically according to the overall performance of machines. We will try to connect machine(s) at the first available instance', //9.15 21.27
+
+  my_machine_miner_info: 'Information of machine(s) that I lease',
+  my_machine_miner_tips: 'If the machine stops during usage then the DBC for 7 days of usage staked in the contract will be deducted. If the rental was less than 7 days then all DBC is deducted.',
+  my_machine_miner_rentout: 'Lease machine(s)',
+  my_machine_miner_vocing: 'Verifying, it will take a few minutes',
+  my_machine_miner_status: 'Machine Status',
+  my_machine_miner_online: 'Online',
+  my_machine_miner_offline: 'Offline',
+  my_machine_miner_can_beused_time: 'Available time',
+  my_machine_before: 'Before',
+  my_machine_after: 'After',
+  my_machine_start: 'Start',
+  my_machine_end: 'Ends in (hours)',
+  my_machine_can_time: 'Available time',
+  my_machine_edit: 'Edit again',
+
+  open_wallet_cannot_read: 'Your browser does not support reading of local document',
+  footer_service_dbchain: 'Customer support :support@dbchain.ai, customer service will reply within 24 hours',
+  footer_service_yousanai: 'Customer support :longpeng@yousanai.cn, customer service will reply within 24 hours',
+
+  list_start_rentout: 'minutes later, it can be rented',
+  list_can_rentout: 'Users can rent it now',
   ...enLocale
 }

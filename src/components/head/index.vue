@@ -1,7 +1,7 @@
 <template>
   <div class="head">
     <div class="content wrap1440">
-      <img class="logo" src="~@/assets/imgs/logo@1x.png" />
+      <img class="logo" :src="logo" />
       <el-dropdown
         class="item"
         :class="{active: menuName === 'home' || menuName === 'minerHome'}"
@@ -13,8 +13,8 @@
           <i class="el-icon-caret-bottom ml5"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="home">租用GPU</el-dropdown-item>
-          <el-dropdown-item command="minerHome">出租GPU</el-dropdown-item>
+          <el-dropdown-item command="home">{{$t('heads.gpu')}}</el-dropdown-item>
+          <el-dropdown-item command="minerHome">{{$t('heads.miner')}}</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
       <!--      <a class="item" :class="{active: menuName === 'home'}" @click="pushMenu('home')">{{$t('heads.home')}}</a>-->
@@ -29,20 +29,26 @@
         :class="{active: menuName === 'miner'}"
         @click="pushMenu('miner')"
       >{{$t('heads.miner')}}</a>
-      <a class="item" href="http://www.dbctalk.ai" target="_blank">{{$t('heads.talk')}}</a>
+      <a class="item" href="http://www.dbctalk.ai" target="_blank">{{set_dbctalk}}</a>
       <!--      <router-link class="item" to="/home">{{$t('heads.api')}}</router-link>-->
       <!--  <router-link class="item" to="/home">{{$t('heads.help')}}</router-link>-->
-      <!--<el-dropdown class="drop-lang" trigger="click" v-on:command="drop_command">
-      <span class="el-dropdown-link">
-        <i class="icon-language"></i>
-        <span>{{curLang.toUpperCase()}}</span>
-        <i class="el-icon-caret-bottom"></i>
-      </span>
-          <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item command="EN">EN</el-dropdown-item>
-        <el-dropdown-item command="CN">CN</el-dropdown-item>
-      </el-dropdown-menu>
-      </el-dropdown>-->
+      <el-dropdown class="drop-lang" trigger="click" v-on:command="drop_command">
+        <span class="el-dropdown-link">
+          <i class="icon-language"></i>
+          <span>{{language_name}}</span>
+          <i class="el-icon-caret-bottom"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="CN">简体中文</el-dropdown-item>
+          <el-dropdown-item command="EN">ENGLISH</el-dropdown-item>
+          <el-dropdown-item command="VI">Việt nam</el-dropdown-item>
+          <el-dropdown-item command="KO">한국어</el-dropdown-item>
+          <el-dropdown-item command="TH">ภาษาไทย</el-dropdown-item>
+          <el-dropdown-item command="RU">Ру́сский язы́к</el-dropdown-item>
+          <el-dropdown-item command="TR">Türk Dili</el-dropdown-item>
+          <el-dropdown-item command="JA">日本語</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
   </div>
 </template>
@@ -55,10 +61,61 @@ export default {
   data() {
     return {
       curLang: this.$i18n.locale,
-      menuName: ""
+      menuName: "",
+      link: undefined,
+      title: undefined,
+      logo: undefined,
+      language_name: "简体中文"
     };
   },
+  created() {
+    this.set_ico();
+    this.set_title();
+    this.set_logo();
+  },
+  computed: {
+    set_dbctalk() {
+      if (this.$t("website_name") == "dbchain") {
+        return this.$t("heads.talk");
+      }
+      if (this.$t("website_name") == "yousanai") {
+        return "";
+      }
+
+      return this.$t("heads.talk");
+    }
+  },
   methods: {
+    set_ico() {
+      this.link =
+        document.querySelector("link[rel*='icon']") ||
+        document.createElement("link");
+      if (this.$t("website_name") == "dbchain") {
+        this.link.href = "./dbchain.ico";
+      }
+      if (this.$t("website_name") == "yousanai") {
+        this.link.href = "./yousanai.ico";
+      }
+
+      document.getElementsByTagName("head")[0].appendChild(this.link);
+    },
+
+    set_title() {
+      if (this.$t("website_name") == "dbchain") {
+        document.title = "DBChain";
+      }
+      if (this.$t("website_name") == "yousanai") {
+        document.title = "YouSanAI";
+      }
+    },
+    set_logo() {
+      if (this.$t("website_name") == "dbchain") {
+        this.logo = require("../../assets/imgs/dbchain@1x.png");
+      }
+      if (this.$t("website_name") == "yousanai") {
+        this.logo = require("../../assets/imgs/yousanai@1x.png");
+      }
+    },
     pushMenu(name) {
       this.menuName = name;
       this.$router.push("/" + name);
@@ -73,6 +130,23 @@ export default {
     drop_command(lang) {
       this.$loadLanguageAsync(lang).then(() => {
         this.curLang = lang;
+        if (lang === "CN") {
+          this.language_name = "简体中文";
+        } else if (lang === "EN") {
+          this.language_name = "ENGLISH";
+        } else if (lang === "VI") {
+          this.language_name = "Việt nam";
+        } else if (lang === "KO") {
+          this.language_name = "한국어";
+        } else if (lang === "TH") {
+          this.language_name = "ภาษาไทย";
+        } else if (lang === "RU") {
+          this.language_name = "Ру́сский язы́к";
+        } else if (lang === "TR") {
+          this.language_name = "Türk Dili";
+        } else if (lang === "JA") {
+          this.language_name = "日本語";
+        }
       });
     }
   }

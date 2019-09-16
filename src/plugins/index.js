@@ -1254,7 +1254,7 @@ const globalCountries = [{
     cn: "津巴布韦"
   }
 ]
-const tAdd = 'AbpBWkCp3jcLZpvf5zCtCLRaGNRi95osik'
+const tAdd = 'AKMqDy51FuMnc4poiGBczQvPh6819hQuLH'
 
 export default function install(Vue, options) {
   Vue.prototype.$loadLanguageAsync = loadLanguageAsync

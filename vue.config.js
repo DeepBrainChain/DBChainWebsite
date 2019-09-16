@@ -1,15 +1,15 @@
-console.log(process.env.NODE_ENV)
+console.log(process.env.NODE_ENV);
 module.exports = {
   // publicPath: process.env.NODE_ENV === 'production' ? '/DBC_GPU' : '/',
-  publicPath: process.env.NODE_ENV === 'production' ? '/' : '/',
+  publicPath: process.env.NODE_ENV === "production" ? "/" : "/",
   configureWebpack: {
-    devtool: 'source-map'
+    devtool: "source-map"
   },
   pluginOptions: {
     i18n: {
-      locale: 'cn',
-      fallbackLocale: 'cn',
-      localeDir: 'locales',
+      locale: "cn",
+      fallbackLocale: "cn",
+      localeDir: "locales",
       enableInSFC: true
     }
   },
@@ -21,54 +21,54 @@ module.exports = {
     }
   },
   devServer: {
-    https: true,
+    //  https: true,
     port: 9999,
     proxy: {
-      '/api/main_net': {
-        target: 'https://api.neoscan.io',
+      "/api/main_net": {
+        target: "https://api.neoscan.io",
         ws: true,
         changeOrigin: true
       },
-      '/binding_email_rent': {
-        target: 'https://info.dbchain.ai',
+      "/binding_email_rent": {
+        target: "https://info.dbchain.ai",
         ws: true,
         changeOrigin: true
       },
-      'query_all_machines': {
-        target: 'https://info.dbchain.ai',
+      query_all_machines: {
+        target: "https://info.dbchain.ai",
         ws: true,
         changeOrigin: true
       },
-      'rent': {
-        target: 'https://info.dbchain.ai',
+      rent: {
+        target: "https://info.dbchain.ai",
         ws: true,
         changeOrigin: true
       },
-      'try_rent': {
-        target: 'https://info.dbchain.ai',
+      try_rent: {
+        target: "https://info.dbchain.ai",
         ws: true,
         changeOrigin: true
       },
-      'query_machine_by_wallet': {
-        target: 'https://info.dbchain.ai',
+      query_machine_by_wallet: {
+        target: "https://info.dbchain.ai",
         ws: true,
         changeOrigin: true
       },
-      'get_all_order': {
-        target: 'https://info.dbchain.ai',
+      get_all_order: {
+        target: "https://info.dbchain.ai",
         ws: true,
         changeOrigin: true
       },
-      '/rentout': {
-        target: 'https://info.dbchain.ai',
+      "/rentout": {
+        target: "https://info.dbchain.ai",
         ws: true,
         changeOrigin: true
       },
-      'query_machine_by_id': {
-        target: 'https://info.dbchain.ai',
+      query_machine_by_id: {
+        target: "https://info.dbchain.ai",
         ws: true,
         changeOrigin: true
       }
     }
   }
-}
+};

@@ -73,7 +73,11 @@ export default {
       },
       rules: {
         email: [
-          { type: "email", message: "请输入正确的邮箱地址", trigger: "change" }
+          {
+            type: "email",
+            message: this.$t("dlg_bindMail_input_email"),
+            trigger: "change"
+          }
         ]
       }
     };
@@ -93,13 +97,16 @@ export default {
       transfer({
         toAddress: this.$tAddress,
         amount: this.form.dbcNum
-      }).then(res => {
+      })
+        .then(res => {
           if (res.status === 1) {
             if (this.isNewMail) {
               bindMail_rent({
                 // email: this.form.email,
                 wallet_address: ac.address,
-                code: this.form.dbcNum
+                code: this.form.dbcNum,
+                user_name_platform: this.$t("website_name"),
+                language: this.$i18n.locale
               })
                 .then(res => {
                   if (res.status === 2) {
@@ -138,7 +145,9 @@ export default {
               modifyBindMail_rent({
                 // email: this.form.email,
                 wallet_address: ac.address,
-                code: this.form.dbcNum
+                code: this.form.dbcNum,
+                user_name_platform: this.$t("website_name"),
+                language: this.$i18n.locale
               })
                 .then(res => {
                   if (res.status === 2) {
@@ -164,7 +173,7 @@ export default {
                   if (err) {
                     this.$message({
                       showClose: true,
-                      message: "绑定失败",
+                      message: this.$t("dlg_bindMail_binding_error"),
                       type: "error"
                     });
                     this.$emit("fail", "timeout");
@@ -175,12 +184,13 @@ export default {
                 });
             }
           }
-        }).catch(err => {
+        })
+        .catch(err => {
           // console.log(err)
-          if (err.status  === -1) {
+          if (err.status === -1) {
             this.$message({
               showClose: true,
-              message: 'DBC余额不足，无法绑定邮箱，请最少充值1个DBC',
+              message: this.$t("dlg_bindMail_no_dbc"),
               type: "error"
             });
           } else {
@@ -201,7 +211,9 @@ export default {
       if (this.isNewMail) {
         sendMail_rent({
           email: this.form.email,
-          wallet_address: getAccount().address
+          wallet_address: getAccount().address,
+          user_name_platform: this.$t("website_name"),
+          language: this.$i18n.locale
         })
           .then(res => {
             if (res.status === 1) {
@@ -229,7 +241,9 @@ export default {
       } else {
         modifySendMail_rent({
           email: this.form.email,
-          wallet_address: getAccount().address
+          wallet_address: getAccount().address,
+          user_name_platform: this.$t("website_name"),
+          language: this.$i18n.locale
         })
           .then(res => {
             if (res.status === 1) {

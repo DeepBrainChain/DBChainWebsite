@@ -15,10 +15,19 @@ import './assets/css/main.scss'
 Vue.config.productionTip = false
 Vue.use(plugins)
 
+import VueWechatTitle from 'vue-wechat-title'
+Vue.use(VueWechatTitle)
 // const unsync = sync(store, router)
 
 // unsync()
+router.beforeEach((to, from, next) => {
+    if (to.meta.title) {
+      document.title = to.meta.title
+    }
+    next()
+  }
 
+)
 new Vue({
   router,
   store,

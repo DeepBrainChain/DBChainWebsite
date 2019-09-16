@@ -52,8 +52,7 @@
               @keyup.enter.native="unlockWalletFromEncryptedKey"
               @click.native="unlockWalletFromEncryptedKey"
               :loading="isLoading"
-            >{{$t('unlock')}}
-            </el-button>
+            >{{$t('unlock')}}</el-button>
           </div>
         </div>
 
@@ -68,8 +67,7 @@
               type="primary"
               @click="unlockWalletFromPrivateKey"
               :loading="isLoading"
-            >{{$t('unlock')}}
-            </el-button>
+            >{{$t('unlock')}}</el-button>
           </div>
         </div>
 
@@ -88,159 +86,158 @@
 </template>
 
 <script>
-  import PsInput from "@/components/wallet/inputPassword"
-  import {mapActions, mapState} from "vuex"
-  import {wallet} from "@cityofzion/neon-js"
+import PsInput from "@/components/wallet/inputPassword";
+import { mapActions, mapState } from "vuex";
+import { wallet } from "@cityofzion/neon-js";
 
-  export default {
-    name: "index",
-    data() {
-      return {
-        radio: "1",
-        password: "",
-        encryptedKey: "",
-        privateKey: "",
-        keyFile: undefined,
-        disableBtn: false,
-        errText: "",
-        canInputPassword: "",
-        isLoading: false
-      }
-    },
-    methods: {
-      ...mapActions([
-        "createAccountFromPrivateKey",
-        "createAccountFromEncryptedKey"
-      ]),
-      unlockWalletFromEncryptedKey() {
-        this.isLoading = true
-        if (this.password.length > 0) {
-          this.createAccountFromEncryptedKey({
-            encryptedKey: this.encryptedKey,
-            password: this.password
-          })
-            .then(() => {
-              this.pushToMyWalletUnlock()
-            })
-            .catch(() => {
-              this.errText = "then key or password is wrong~!"
-            })
-            .finally(() => {
-              this.isLoading = false
-            })
-        }
-      },
-      unlockWalletFromPrivateKey() {
-        this.isLoading = true
-        this.createAccountFromPrivateKey(this.privateKey)
+export default {
+  name: "index",
+  data() {
+    return {
+      radio: "1",
+      password: "",
+      encryptedKey: "",
+      privateKey: "",
+      keyFile: undefined,
+      disableBtn: false,
+      errText: "",
+      canInputPassword: "",
+      isLoading: false
+    };
+  },
+  methods: {
+    ...mapActions([
+      "createAccountFromPrivateKey",
+      "createAccountFromEncryptedKey"
+    ]),
+    unlockWalletFromEncryptedKey() {
+      this.isLoading = true;
+      if (this.password.length > 0) {
+        this.createAccountFromEncryptedKey({
+          encryptedKey: this.encryptedKey,
+          password: this.password
+        })
           .then(() => {
-            this.pushToMyWalletUnlock()
+            this.pushToMyWalletUnlock();
           })
-          .catch(err => {
-            this.errText = this.$t("msg.wallet_4")
+          .catch(() => {
+            this.errText = "then key or password is wrong~!";
           })
           .finally(() => {
-            this.isLoading = false
-          })
-      },
-      continueEncryptedKey() {
-        if (wallet.isNEP2(this.encryptedKey)) {
-          this.canInputPassword = true
-          this.errText = ""
-        } else {
-          this.errText =
-            "Invalid Encrypted Key. A valid NEP-2 Encrypted Key looks like 6PYTp4fNNhn2oV6HZhjzfg6YoeC8r1wWsCPikEJXxcTmsitDm92mWpdqd6"
-        }
-      },
-      keyFileChange(file) {
-        const fileReader = new FileReader()
-        fileReader.onload = event => {
-          const encryptedKey = event.target.result
-          /*this.createAccountFromEncryptedKey(encryptedKey).then(account => {
+            this.isLoading = false;
+          });
+      }
+    },
+    unlockWalletFromPrivateKey() {
+      this.isLoading = true;
+      this.createAccountFromPrivateKey(this.privateKey)
+        .then(() => {
+          this.pushToMyWalletUnlock();
+        })
+        .catch(err => {
+          this.errText = this.$t("msg.wallet_4");
+        })
+        .finally(() => {
+          this.isLoading = false;
+        });
+    },
+    continueEncryptedKey() {
+      if (wallet.isNEP2(this.encryptedKey)) {
+        this.canInputPassword = true;
+        this.errText = "";
+      } else {
+        this.errText =
+          "Invalid Encrypted Key. A valid NEP-2 Encrypted Key looks like 6PYTp4fNNhn2oV6HZhjzfg6YoeC8r1wWsCPikEJXxcTmsitDm92mWpdqd6";
+      }
+    },
+    keyFileChange(file) {
+      const fileReader = new FileReader();
+      fileReader.onload = event => {
+        const encryptedKey = event.target.result;
+        /*this.createAccountFromEncryptedKey(encryptedKey).then(account => {
               this.encryptedKey = account.encrypted
               this.canInputPassword =true
               this.errText=''
             }).catch(err => {
             })*/
-          if (wallet.isNEP2(encryptedKey)) {
-            this.encryptedKey = encryptedKey
-            this.canInputPassword = true
-            this.errText = ""
-          } else {
-            this.errText =
-              "Invalid Encrypted Key. A valid NEP-2 Encrypted Key looks like 6PYTp4fNNhn2oV6HZhjzfg6YoeC8r1wWsCPikEJXxcTmsitDm92mWpdqd6"
-          }
+        if (wallet.isNEP2(encryptedKey)) {
+          this.encryptedKey = encryptedKey;
+          this.canInputPassword = true;
+          this.errText = "";
+        } else {
+          this.errText =
+            "Invalid Encrypted Key. A valid NEP-2 Encrypted Key looks like 6PYTp4fNNhn2oV6HZhjzfg6YoeC8r1wWsCPikEJXxcTmsitDm92mWpdqd6";
         }
-        fileReader.readAsText(file.raw)
-      },
-      radioChange(radio) {
-        this.canInputPassword = false
-        this.privateKey = ""
-        this.errText = ""
-        if (radio === "1") {
-          if (this.$isSupportFileApi() === false) {
-            this.$message({
-              message: "你的浏览器不支持本地文件读取",
-              type: "warning"
-            })
-            this.disableBtn = true
-          }
+      };
+      fileReader.readAsText(file.raw);
+    },
+    radioChange(radio) {
+      this.canInputPassword = false;
+      this.privateKey = "";
+      this.errText = "";
+      if (radio === "1") {
+        if (this.$isSupportFileApi() === false) {
+          this.$message({
+            message: this.$t("open_wallet_cannot_read"),
+            type: "warning"
+          });
+          this.disableBtn = true;
         }
-      },
-      pushToMyWalletUnlock() {
-        const type = this.$route.params.type
-        this.$router.push(`/${type}/myWalletUnlock`)
-      },
-      closeAlert() {
       }
     },
-    computed: {
-      ...mapState(["account"])
+    pushToMyWalletUnlock() {
+      const type = this.$route.params.type;
+      this.$router.push(`/${type}/myWalletUnlock`);
     },
-    components: {
-      PsInput
-    }
+    closeAlert() {}
+  },
+  computed: {
+    ...mapState(["account"])
+  },
+  components: {
+    PsInput
   }
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "~@/assets/css/variables.scss";
+@import "~@/assets/css/variables.scss";
 
-  .bg-box {
-    padding: 20px;
-    margin-bottom: 42px;
-    background-color: $boxBgColor;
+.bg-box {
+  padding: 20px;
+  margin-bottom: 42px;
+  background-color: $boxBgColor;
+}
+
+.wallet-title {
+  text-align: left;
+  font-size: 20px;
+  color: #47495a;
+}
+
+.wallet-subText {
+  text-align: left;
+  font-size: 18px;
+  color: #47495a;
+  line-height: 36px;
+  margin-bottom: 0;
+}
+
+.wallet-group {
+  display: block;
+  text-align: left;
+
+  .row {
+    margin: 38px 0;
   }
+}
 
-  .wallet-title {
-    text-align: left;
-    font-size: 20px;
-    color: #47495a;
-  }
+.input-wrap {
+  text-align: left;
+}
 
-  .wallet-subText {
-    text-align: left;
-    font-size: 18px;
-    color: #47495a;
-    line-height: 36px;
-    margin-bottom: 0;
-  }
-
-  .wallet-group {
-    display: block;
-    text-align: left;
-
-    .row {
-      margin: 38px 0;
-    }
-  }
-
-  .input-wrap {
-    text-align: left;
-  }
-
-  .btn-wrap {
-    margin-top: 70px;
-    text-align: left;
-  }
+.btn-wrap {
+  margin-top: 70px;
+  text-align: left;
+}
 </style>

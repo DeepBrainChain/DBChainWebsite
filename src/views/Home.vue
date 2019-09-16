@@ -4,16 +4,13 @@
       <el-col class="flex" :md="12">
         <div class="content">
           <div class="text">
-            <p>
-              {{$t('home.intr_4')}}
-            </p>
-            <p>
-              {{$t('home.intr_5')}}
-            </p>
+            <p>{{get_text1}}</p>
+            <p>{{$t('home.intr_5')}}</p>
           </div>
           <div class="btn-wrap mt60">
             <el-button class="lg fs18 long" type="primary" @click="pushToWallet">
-              {{$t('home.start')}}<i class="el-icon-back r"></i>
+              {{$t('home.start')}}
+              <i class="el-icon-back r"></i>
             </el-button>
           </div>
           <div class="btn-wrap flex mt40">
@@ -39,7 +36,7 @@
         </div>
       </el-col>
       <el-col class="center" :md="12">
-        <img src="~@/assets/imgs/building@1x.png" alt="">
+        <img src="~@/assets/imgs/building@1x.png" alt />
       </el-col>
     </el-row>
     <!--<el-row class="wrap1440 pb120">
@@ -80,24 +77,18 @@
       <el-row class="wrap1440">
         <el-col class="flex" :sm="12">
           <div class="gpu-info">
-            <img src="~@/assets/imgs/gpu_img_1.jpg" alt="">
+            <img src="~@/assets/imgs/gpu_img_1.jpg" alt />
             <div class="text">
-              <p>
-                {{$t('home.intr_2')}}
-              </p>
-              <p>
-                {{$t('home.intr_3')}}
-              </p>
+              <p>{{$t('home.intr_2')}}</p>
+              <p>{{$t('home.intr_3')}}</p>
             </div>
           </div>
         </el-col>
         <el-col class="flex" :sm="12">
           <div class="gpu-info">
-            <img src="~@/assets/imgs/gpu_img_2.jpg" alt="">
+            <img src="~@/assets/imgs/gpu_img_2.jpg" alt />
             <div class="text">
-              <p>
-                {{$t('home.intr_6')}}
-              </p>
+              <p>{{$t('home.intr_6')}}</p>
             </div>
           </div>
         </el-col>
@@ -107,107 +98,116 @@
 </template>
 
 <script>
-  // @ is an alias to /src
-  export default {
-    name: 'home',
-    data() {
-      return {}
-    },
-    methods: {
-      pushToWallet() {
-        this.$router.push('/gpu/myWallet')
+// @ is an alias to /src
+export default {
+  name: "home",
+  data() {
+    return {};
+  },
+  methods: {
+    pushToWallet() {
+      this.$router.push("/gpu/myWallet");
+    }
+  },
+  computed: {
+    get_text1() {
+      if (this.$t("website_name") == "dbchain") {
+        return this.$t("home.intr_dbchain_4");
+      }
+      if (this.$t("website_name") == "yousanai") {
+        return this.$t("home.intr_yousanai_4");
       }
     }
   }
+};
 </script>
 
 <style lang="scss" scoped>
-  .home {
-    margin-top: 135px
-  }
+.home {
+  margin-top: 60px;
+}
 
-  .grid-content {
-    height: 20px;
-  }
+.grid-content {
+  height: 20px;
+}
 
-  .bg-purple {
-    background-color: crimson;
-  }
+.bg-purple {
+  background-color: crimson;
+}
 
+.text {
+  font-size: 18px;
+  line-height: 36px;
+  color: #fff;
+  font-weight: 400;
+  text-align: left;
+  p {
+    margin: 0;
+  }
+}
+
+.btn-wrap {
+  &.flex {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.vm {
+  vertical-align: middle;
+}
+
+.icon-left {
+  margin-right: 10px;
+}
+
+.w200 {
+  width: 200px;
+}
+
+.content {
+  width: 440px;
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+}
+
+.gpu-data-content {
+  h3 {
+    font-size: 18px;
+    color: #fff;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-bottom: 28px;
+  }
+  .cycle-data {
+    width: 162px;
+    height: 162px;
+    margin: 0 auto;
+    line-height: 162px;
+    border: 1px solid #fff;
+    border-radius: 50%;
+    font-size: 18px;
+    color: #fff;
+    text-align: center;
+  }
+}
+
+.gpu-info {
+  width: 440px;
+  img {
+    display: block;
+    width: 100%;
+  }
   .text {
+    padding-top: 40px;
+    width: 100%;
     font-size: 18px;
     line-height: 36px;
-    color: #fff;
-    font-weight: 400;
-    text-align: left;
-    p {
-      margin: 0;
-    }
+    color: #70737d;
   }
-
-  .btn-wrap {
-    &.flex {
-      display: flex;
-      justify-content: space-between;
-    }
-  }
-
-  .vm {
-    vertical-align: middle;
-  }
-
-  .icon-left {
-    margin-right: 10px;
-  }
-
-  .w200 {
-    width: 200px;
-  }
-
-  .content {
-    width: 440px;
-  }
-
-  .flex {
-    display: flex;
-    justify-content: center;
-  }
-
-  .gpu-data-content {
-    h3 {
-      font-size: 18px;
-      color: #fff;
-      text-align: center;
-      margin-top: 0;
-      margin-bottom: 0;
-      padding-bottom: 28px;
-    }
-    .cycle-data {
-      width: 162px;
-      height: 162px;
-      margin: 0 auto;
-      line-height: 162px;
-      border: 1px solid #fff;
-      border-radius: 50%;
-      font-size: 18px;
-      color: #fff;
-      text-align: center;
-    }
-  }
-
-  .gpu-info {
-    width: 440px;
-    img {
-      display: block;
-      width: 100%;
-    }
-    .text {
-      padding-top: 40px;
-      width: 100%;
-      font-size: 18px;
-      line-height: 36px;
-      color: #70737d;
-    }
-  }
-
+}
 </style>

@@ -28,7 +28,7 @@
         <span class="fs12 cGray ml10">$xxx/{{$t('hour')}}</span>
       </div>-->
       <div class="form mt20">
-        <label>使用时长：</label>
+        <label>{{$t('dlg_lease_time')}}：</label>
         <el-input
           style="width: 180px"
           size="small"
@@ -49,7 +49,9 @@
             :value="item.value"
           ></el-option>
         </el-select>
-        <span class="fs12 cGray ml10">{{(placeOrderData.gpu_price_dollar)}}$/小时</span>
+        <span
+          class="fs12 cGray ml10"
+        >{{(placeOrderData.gpu_price_dollar)}}$/{{$t('my_machine_hour')}}</span>
       </div>
       <div class="form-notice">{{$t('tips')}}：{{$t('msg.dlg_0',{time: outDayTime})}}</div>
       <div class="computer-dbc mt30">
@@ -57,7 +59,7 @@
         <span>{{$t('total')}}：{{ totalPrice.toFixed(4) }}{{$t('$')}}</span>
         <span class="ml20">{{$t('gpu.exchangeDBC')}}：{{total_price}}</span>
       </div>
-      <div class="form-notice">当前钱包DBC余额: {{balance}}</div>
+      <div class="form-notice">{{$t('dlg_lease_wallet_balance')}}: {{balance}}</div>
       <div class="desc-box" v-html="$t('msg.dlg_5')"></div>
     </div>
     <div class="dlg-bottom">
@@ -67,7 +69,7 @@
         size="small"
         @click="confirm"
         :disabled="!isCanCreateOrder"
-      >生成订单</el-button>
+      >{{$t('dlg_lease_create_order')}}</el-button>
       <el-button class="dlg-btn" plain size="small" @click="cancel">{{$t('cancel')}}</el-button>
     </div>
   </el-dialog>
@@ -184,7 +186,9 @@ export default {
       get_pay_dbc_count({
         rent_time_length: this.time * 60 * this.timeSelect,
         gpu_count: this.gpuCount,
-        order_id: this.placeOrderData.order_id
+        order_id: this.placeOrderData.order_id,
+        user_name_platform: this.$t("website_name"),
+        language: this.$i18n.locale
       }).then(res => {
         if (res.status === 1) {
           this.total_price = res.content;
@@ -201,7 +205,9 @@ export default {
     pocMachine(order_id) {
       // pay before
       can_rent_this_machine({
-        order_id_new: order_id
+        order_id_new: order_id,
+        user_name_platform: this.$t("website_name"),
+        language: this.$i18n.locale
       });
     },
     confirm() {
@@ -210,7 +216,9 @@ export default {
         dbc_price: this.placeOrderData.dbc_price,
         gpu_count: this.gpuCount,
         order_id: this.placeOrderData.order_id,
-        dbc_total_count: this.total_price
+        dbc_total_count: this.total_price,
+        user_name_platform: this.$t("website_name"),
+        language: this.$i18n.locale
       };
       this.$emit("confirm", params);
       pocMachine(this.placeOrderData.order_id);

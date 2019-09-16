@@ -14,7 +14,7 @@
       size="small"
       v-model="selectedVal"
       filterable
-      placeholder="请选择"
+      :placeholder="$t('drop_item_select')"
       @change="select"
     >
       <el-option v-for="item in dropList" :key="item.value" :label="item.name" :value="item.value"></el-option>
@@ -30,7 +30,7 @@ export default {
     value: [Number, String],
     dropList: {
       type: Array,
-      default: () => [{ name: "无数据", value: -1 }]
+      default: () => [{ name: this.$t("drop_item_no_data"), value: -1 }]
     }
   },
   data() {

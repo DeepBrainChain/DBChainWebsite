@@ -1,21 +1,22 @@
 <template>
   <div>
     <div class="title">
-      <span>我出租的机器信息：{{res_body.content.length}} {{$t('gpu.pcs')}}</span>
+      <span>{{$t('my_machine_miner_info')}}：{{res_body.content.length}} {{$t('gpu.pcs')}}</span>
       <div v-if="!isBinding && bindMail" class="binding">
-        <span class="bindingInfo">绑定的邮箱：{{bindMail}}</span>
+        <span class="bindingInfo">{{$t('my_machine_binding_email')}}：{{bindMail}}</span>
         <el-button
           class="ml10"
           size="mini"
           plain
           @click="openDlgMail(false)"
         >{{$t('gpu.modifyMail')}}</el-button>
-        <el-tooltip
-          class="item"
-          effect="dark"
-          content="如果机器使用过程中出现中断，则将会把合约中质押的7天机器使用量的DBC扣除。出租时间不超过7天，则全部扣除"
-        >
-          <el-button type="primary" size="mini" class="ml10" @click="pushToMc">出租机器</el-button>
+        <el-tooltip class="item" effect="dark" :content="$t('my_machine_miner_tips')">
+          <el-button
+            type="primary"
+            size="mini"
+            class="ml10"
+            @click="pushToMc"
+          >{{$t('my_machine_miner_rentout')}}</el-button>
         </el-tooltip>
       </div>
       <div v-else-if="!isBinding" class="bind">
@@ -23,7 +24,7 @@
         <span class="bindInfo ml10" v-html="$t('gpu.bindMailInfo')"></span>
       </div>
       <div v-else-if="isBinding">
-        <span v-if="isBinding" class="bindInfo">正在验证中,大概需要几分钟</span>
+        <span v-if="isBinding" class="bindInfo">{{$t('my_machine_miner_vocing')}}</span>
       </div>
     </div>
     <div
@@ -33,17 +34,22 @@
     >
       <div class="tools-head">
         <div class="l-wrap">
-          <span>机器状态：{{item.mcData.online_status ? '在线':'离线'}}</span>
+          <span>{{$t('my_machine_miner_status')}}：{{item.mcData.online_status ? $t('my_machine_miner_online'):$t('my_machine_miner_offline')}}</span>
         </div>
         <div class="r-wrap">
           <el-tooltip effect="light" placement="left">
             <div class="tooltip-content" slot="content">
-              <h3>可用时段:</h3>
-              {{Math.floor(item.mcData.can_rent_start_time_later/60)}}小时{{item.mcData.can_rent_start_time_later > 0 ? '前': '后' }}开始
+              <h3>{{$t('my_machine_miner_can_beused_time')}}:</h3>
+              {{Math.floor(item.mcData.can_rent_start_time_later>0?item.mcData.can_rent_start_time_later/60:-item.mcData.can_rent_start_time_later/60)}}{{$t('my_machine_hour')}}{{item.mcData.can_rent_start_time_later > 0 ? $t('my_machine_before'): $t('my_machine_after') }}{{$t('my_machine_start')}}
               <br />
-              {{Math.floor(item.mcData.end_rent_out_time_later/60)}}小时后结束
+              {{Math.floor(item.mcData.end_rent_out_time_later/60)}}{{$t('my_machine_end')}}
             </div>
-            <el-button plain class="tool-btn" size="mini" style="width: 86px">可用时间</el-button>
+            <el-button
+              plain
+              class="tool-btn"
+              size="mini"
+              style="width: 86px"
+            >{{$t('my_machine_can_time')}}</el-button>
           </el-tooltip>
         </div>
       </div>
@@ -62,12 +68,12 @@
             <span class="fs28">
               <span
                 class="cPrimaryColor"
-              >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$ {{item.mcData.gpu_price_dollar }}/小时</span>
+              >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$ {{item.mcData.gpu_price_dollar }}/{{$t('my_machine_hour')}}</span>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              DBC版本：
+              {{$t('my_machine_dbc_version')}}：
               <a class="cPrimaryColor">{{item.mcData.dbc_version}}</a>
             </span>
           </div>
@@ -81,20 +87,31 @@
           </div>
           <div class="td2">
             <span class="fs28">
-              <a class="cPrimaryColor">{{item.mcData.county}}中国</a>
+              <a class="cPrimaryColor">{{item.mcData.county}}{{$t('list_china')}}</a>
             </span>
+          </div>
+          <div class="td" v-if="item.mcData.can_rent_start_time_later<=0">
+            <span class="fs16">
+              <a class="cPrimaryColor">{{-item.mcData.can_rent_start_time_later}}</a>
+              {{$t('list_start_rentout')}}
+            </span>
+          </div>
+          <div class="td" v-else-if="item.mcData.can_rent_start_time_later>0">
+            <span class="fs16">{{$t('list_can_rentout')}}</span>
           </div>
         </div>
         <div class="flex">
           <div class="td">
             <span class="fs16">
-              闲置GPU数:
-              <a class="cPrimaryColor">{{item.mcData.gpu_count - item.mcData.gpu_be_used}}</a>
+              {{$t('list_idle_gpus')}}:
+              <a
+                class="cPrimaryColor"
+              >{{item.mcData.gpu_count - item.mcData.gpu_be_used}}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              最长可租用时间：
+              {{$t('list_length_of_available_time')}}：
               <a
                 class="cPrimaryColor"
               >{{Math.floor(item.mcData.length_of_available_time)}}{{$t('my_machine_hour')}}</a>
@@ -102,20 +119,26 @@
           </div>
           <div class="td">
             <span class="fs16">
-              累计出租时长：
-              <a class="cPrimaryColor">{{$minsToHourMins(item.mcData.total_time_be_used)}}</a>
+              {{$t('list_total_time_be_used')}}：
+              <a
+                class="cPrimaryColor"
+              >{{$minsToHourMins(item.mcData.total_time_be_used)}}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              出租总次数：
-              <a class="cPrimaryColor">{{item.mcData.total_rent_count}}</a>
+              {{$t('list_total_rent_count')}}：
+              <a
+                class="cPrimaryColor"
+              >{{item.mcData.total_rent_count}}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              中断次数：
-              <a class="cPrimaryColor">{{item.mcData.error_rent_count}}</a>
+              {{$t('list_error_rent_count')}}：
+              <a
+                class="cPrimaryColor"
+              >{{item.mcData.error_rent_count}}</a>
             </span>
           </div>
         </div>
@@ -128,20 +151,22 @@
           </div>
           <div class="td">
             <span class="fs16">
-              CUDA版本号：
+              {{$t('list_cuda_version')}}：
               <a class="cPrimaryColor">{{item.mcData.cuda_version}}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              硬盘：
-              <a class="cPrimaryColor">{{parseInt(item.mcData.disk_space/(1024*1024))}}GB</a>
+              {{$t('list_disk_space')}}：
+              <a
+                class="cPrimaryColor"
+              >{{parseInt(item.mcData.disk_space/(1024*1024))}}GB</a>
               <a class="cPrimaryColor">&nbsp;&nbsp;{{item.mcData.disk_type}}</a>
             </span>
           </div>
           <div class="td3">
             <span class="fs16">
-              CPU型号：
+              {{$t('list_cpu_type')}}：
               <a class="cPrimaryColor">{{item.mcData.cpu_type}}</a>
             </span>
           </div>
@@ -149,25 +174,31 @@
         <div class="flex">
           <div v-if="item.mcData.half_precision_tflops" class="td">
             <span class="fs16">
-              半精度浮点运算数：
-              <a class="cPrimaryColor">{{item.mcData.half_precision_tflops}}TFLOPS</a>
+              {{$t('list_half_precision_tflops')}}：
+              <a
+                class="cPrimaryColor"
+              >{{item.mcData.half_precision_tflops}}TFLOPS</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              GPU显存：
-              <a class="cPrimaryColor">{{parseInt(item.mcData.gpu_ram_size/(1024*1024))}}GB</a>
+              {{$t('list_gpu_ram_size')}}：
+              <a
+                class="cPrimaryColor"
+              >{{parseInt(item.mcData.gpu_ram_size/(1024*1024))}}GB</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              硬盘带宽：
-              <a class="cPrimaryColor">{{parseInt(item.mcData.disk_bandwidth/1024)}}MB/s</a>
+              {{$t('list_disk_bandwidth')}}：
+              <a
+                class="cPrimaryColor"
+              >{{parseInt(item.mcData.disk_bandwidth/1024)}}MB/s</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              CPU内核数：
+              {{$t('list_cpu_numbers')}}：
               <a class="cPrimaryColor">{{item.mcData.cpu_numbers}}</a>
             </span>
           </div>
@@ -175,13 +206,15 @@
         <div class="flex">
           <div v-if="item.mcData.single_precision_tflops" class="td">
             <span class="fs16">
-              单精度浮点运算数：
-              <a class="cPrimaryColor">{{item.mcData.single_precision_tflops}}TFLOPS</a>
+              {{$t('list_single_precision_tflops')}}：
+              <a
+                class="cPrimaryColor"
+              >{{item.mcData.single_precision_tflops}}TFLOPS</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              GPU显存带宽：
+              {{$t('list_gpu_ram_bandwidth')}}：
               <a
                 class="cPrimaryColor"
               >{{parseInt(item.mcData.gpu_ram_bandwidth/(1024*1024))}}GB/s</a>
@@ -189,27 +222,33 @@
           </div>
           <div class="td">
             <span class="fs16">
-              上行带宽：
-              <a class="cPrimaryColor">{{parseInt(item.mcData.inet_up/1024)}}Mbps</a>
+              {{$t('list_inet_up')}}：
+              <a
+                class="cPrimaryColor"
+              >{{parseInt(item.mcData.inet_up/1024)}}Mbps</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              内存数：
-              <a class="cPrimaryColor">{{parseInt(item.mcData.ram_size/(1024*1024))}}GB</a>
+              {{$t('list_ram_size')}}：
+              <a
+                class="cPrimaryColor"
+              >{{parseInt(item.mcData.ram_size/(1024*1024))}}GB</a>
             </span>
           </div>
         </div>
         <div class="flex">
           <div v-if="item.mcData.duoble_precision_tflops" class="td">
             <span class="fs16">
-              双精度浮点运算数：
-              <a class="cPrimaryColor">{{item.mcData.duoble_precision_tflops}}TFLOPS</a>
+              {{$t('list_double_precision_tflops')}}：
+              <a
+                class="cPrimaryColor"
+              >{{item.mcData.duoble_precision_tflops}}TFLOPS</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              总线传输速度：
+              {{$t('list_pcie_bandwidth')}}：
               <a
                 class="cPrimaryColor"
               >{{parseInt(item.mcData.pcie_bandwidth/(1024*1024))}}GB/s</a>
@@ -217,13 +256,15 @@
           </div>
           <div class="td">
             <span class="fs16">
-              下行带宽：
-              <a class="cPrimaryColor">{{parseInt(item.mcData.inet_down/1024)}}Mbps</a>
+              {{$t('list_inet_down')}}：
+              <a
+                class="cPrimaryColor"
+              >{{parseInt(item.mcData.inet_down/1024)}}Mbps</a>
             </span>
           </div>
           <div class="td3">
             <span class="fs16">
-              操作系统：
+              {{$t('list_os')}}：
               <a class="cPrimaryColor">{{item.mcData.os}}</a>
             </span>
           </div>
@@ -247,7 +288,7 @@
             size="mini"
             style="width: 86px"
             @click="pushToEditMc(item.mcData)"
-          >重新编辑</el-button>
+          >{{$t('my_machine_edit')}}</el-button>
           <!--<el-button
             v-if="item.orderData.order_is_over"
             plain
@@ -408,7 +449,9 @@ export default {
     },
     queryMcList() {
       rentout_get_machines_list({
-        wallet_address: getAccount().address
+        wallet_address: getAccount().address,
+        user_name_platform: this.$t("website_name"),
+        language: this.$i18n.locale
       }).then(res => {
         if (res.status === 1) {
           this.res_body.content = res.content.map(item => {
@@ -436,20 +479,26 @@ export default {
       this.bindMail = cookie.get("mail");
       const address = getAccount().address;
       queryBindMail_rent({
-        wallet_address: address
+        wallet_address: address,
+        user_name_platform: this.$t("website_name"),
+        language: this.$i18n.locale
       }).then(res => {
         if (res.status === 1) {
           this.bindMail = res.content;
         } else {
           binding_is_ok({
-            wallet_address: address
+            wallet_address: address,
+            user_name_platform: this.$t("website_name"),
+            language: this.$i18n.locale
           }).then(ren => {
             if (ren.status === 2) {
               this.isBinding = true;
             }
           });
           binding_is_ok_modify({
-            wallet_address: address
+            wallet_address: address,
+            user_name_platform: this.$t("website_name"),
+            language: this.$i18n.locale
           }).then(ren => {
             if (ren.status === 2) {
               this.isBinding = true;
@@ -466,7 +515,9 @@ export default {
           if (isNewMail) {
             binding = false;
             const res = await binding_is_ok({
-              wallet_address: getAccount().address
+              wallet_address: getAccount().address,
+              user_name_platform: this.$t("website_name"),
+              language: this.$i18n.locale
             });
             if (res.status === 1) {
               clearInterval(si);
@@ -475,7 +526,9 @@ export default {
           } else {
             binding = false;
             const res = await binding_is_ok_modify({
-              wallet_address: getAccount().address
+              wallet_address: getAccount().address,
+              user_name_platform: this.$t("website_name"),
+              language: this.$i18n.locale
             });
             if (res.status === 1) {
               clearInterval(si);
