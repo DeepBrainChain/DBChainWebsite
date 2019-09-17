@@ -90,6 +90,8 @@ export default {
     binding() {
       // const self = this
       const ac = getAccount();
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       if (!ac) {
         return;
       }
@@ -105,8 +107,8 @@ export default {
                 // email: this.form.email,
                 wallet_address: ac.address,
                 code: this.form.dbcNum,
-                user_name_platform: this.$t("website_name"),
-                language: this.$i18n.locale
+                user_name_platform,
+                language
               })
                 .then(res => {
                   if (res.status === 2) {
@@ -146,8 +148,8 @@ export default {
                 // email: this.form.email,
                 wallet_address: ac.address,
                 code: this.form.dbcNum,
-                user_name_platform: this.$t("website_name"),
-                language: this.$i18n.locale
+                user_name_platform,
+                language
               })
                 .then(res => {
                   if (res.status === 2) {
@@ -208,12 +210,14 @@ export default {
     // send mail
     sendVerifyMail() {
       this.isSending = true;
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       if (this.isNewMail) {
         sendMail_rent({
           email: this.form.email,
           wallet_address: getAccount().address,
-          user_name_platform: this.$t("website_name"),
-          language: this.$i18n.locale
+          user_name_platform,
+          language
         })
           .then(res => {
             if (res.status === 1) {
@@ -242,8 +246,8 @@ export default {
         modifySendMail_rent({
           email: this.form.email,
           wallet_address: getAccount().address,
-          user_name_platform: this.$t("website_name"),
-          language: this.$i18n.locale
+          user_name_platform,
+          language
         })
           .then(res => {
             if (res.status === 1) {

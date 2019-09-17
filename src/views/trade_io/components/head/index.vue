@@ -62,10 +62,12 @@ export default {
     set_dbctalk() {
       if (this.$t("website_name") == "dbchain") {
         return this.$t("heads.talk");
-      }
-      if (this.$t("website_name") == "yousanai") {
+      } else if (this.$t("website_name") == "yousanai") {
+        return "";
+      } else if (this.$t("website_name") == "aionego") {
         return "";
       }
+      return this.$t("heads.talk");
     }
   },
   methods: {

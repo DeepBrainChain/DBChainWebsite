@@ -31,9 +31,10 @@ export default {
     footer_service() {
       if (this.$t("website_name") == "dbchain") {
         return this.$t("footer_service_dbchain");
-      }
-      if (this.$t("website_name") == "yousanai") {
+      } else if (this.$t("website_name") == "yousanai") {
         return this.$t("footer_service_yousanai");
+      } else if (this.$t("website_name") == "aionego") {
+        return this.$t("footer_service_aionego");
       }
 
       return this.$t("footer_service_dbchain");

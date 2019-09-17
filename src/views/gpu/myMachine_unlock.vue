@@ -80,7 +80,9 @@
           <span
             class="td"
           >{{$t('my_machine_beused_time')}}：{{parseInt(item.orderData.real_rent_time/60)}}{{$t('my_machine_hour')}}{{item.orderData.real_rent_time%60}}{{$t('my_machine_min')}}</span>
+          <span class="td">{{$t('my_gpu_count')}}：{{item.orderData.gpu_count}}</span>
         </div>
+
         <div>
           <span class="td">{{$t('gpu.actualPrice')}}：{{item.orderData.dbc_real_need_count}} DBC</span>
           <span
@@ -581,10 +583,12 @@ export default {
         //   if (item.orderData.isPocing) {
         //     return;
         //   }
+        const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
         return can_rent_this_machine({
           order_id: item.orderData.order_id,
-          user_name_platform: this.$t("website_name"),
-          language: this.$i18n.locale
+          user_name_platform,
+          language
         }).then(res => {
           if (res.status === 1 && res.content) {
             console.log(res.msg);
@@ -628,10 +632,12 @@ export default {
         //   if (item.orderData.isPocing) {
         //     return;
         //   }
+        const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
         return can_rent_this_machine({
           order_id: item.orderData.order_id,
-          user_name_platform: this.$t("website_name"),
-          language: this.$i18n.locale
+          user_name_platform,
+          language
         }).then(res => {
           if (res.status === 1 && res.content) {
             console.log(res.msg);
@@ -684,10 +690,12 @@ export default {
       //      return;
       //    }
       //   }, 5000);
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       get_dbchain_address({
         order_id: item.orderData.order_id,
-        user_name_platform: this.$t("website_name"),
-        language: this.$i18n.locale
+        user_name_platform,
+        language
       }).then(res => {
         if (res.status === 1 && res.content) {
           const amount =
@@ -716,13 +724,15 @@ export default {
                 // pay after
                 this.isPaying = false;
                 item.orderData.vocing_pay = true;
+                const user_name_platform = this.$t("website_name");
+                const language = this.$i18n.locale;
                 // 支付后确认
                 this.si = setInterval(() => {
                   return pay({
                     order_id: item.orderData.order_id,
                     dbc_hash: txid,
-                    user_name_platform: this.$t("website_name"),
-                    language: this.$i18n.locale
+                    user_name_platform,
+                    language
                   })
                     .then(res => {
                       this.queryOrderList();
@@ -843,16 +853,18 @@ export default {
         return;
       }
       const wallet_address_user = getAccount().address;
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       const promiseList = [
         query_machine_by_wallet({
           wallet_address_user,
-          user_name_platform: this.$t("website_name"),
-          language: this.$i18n.locale
+          user_name_platform,
+          language
         }),
         get_all_order({
           wallet_address_user,
-          user_name_platform: this.$t("website_name"),
-          language: this.$i18n.locale
+          user_name_platform,
+          language
         })
       ];
       return Promise.all(promiseList)
@@ -894,10 +906,12 @@ export default {
     queryMail() {
       this.bindMail = cookie.get("mail");
       const address = getAccount().address;
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       queryBindMail_rent({
         wallet_address: address,
-        user_name_platform: this.$t("website_name"),
-        language: this.$i18n.locale
+        user_name_platform,
+        language
       }).then(res => {
         if (res.status === 1) {
           this.bindMail = res.content;
@@ -905,8 +919,8 @@ export default {
         } else {
           binding_is_ok({
             wallet_address: address,
-            user_name_platform: this.$t("website_name"),
-            language: this.$i18n.locale
+            user_name_platform,
+            language
           }).then(ren => {
             if (ren.status === 2) {
               this.isBinding = true;
@@ -914,8 +928,8 @@ export default {
           });
           binding_is_ok_modify({
             wallet_address: address,
-            user_name_platform: this.$t("website_name"),
-            language: this.$i18n.locale
+            user_name_platform,
+            language
           }).then(ren => {
             if (ren.status === 2) {
               this.isBinding = true;
@@ -927,14 +941,16 @@ export default {
     binding(isNewMail) {
       this.isBinding = true;
       let binding = true;
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       const si = setInterval(async () => {
         if (binding) {
           if (isNewMail) {
             binding = false;
             const res = await binding_is_ok({
               wallet_address: getAccount().address,
-              user_name_platform: this.$t("website_name"),
-              language: this.$i18n.locale
+              user_name_platform,
+              language
             });
             if (res.status === 1) {
               clearInterval(si);
@@ -944,8 +960,8 @@ export default {
             binding = false;
             const res = await binding_is_ok_modify({
               wallet_address: getAccount().address,
-              user_name_platform: this.$t("website_name"),
-              language: this.$i18n.locale
+              user_name_platform,
+              language
             });
             if (res.status === 1) {
               clearInterval(si);

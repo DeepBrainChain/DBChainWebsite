@@ -64,10 +64,12 @@ export default {
     },
     getCode() {
       this.isCoding = true;
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       get_return_dbc_code({
         order_id: this.item.orderData.order_id,
-        user_name_platform: this.$t("website_name"),
-        language: this.$i18n.locale
+        user_name_platform,
+        language
       })
         .then(res => {
           if (res.status === 1) {
@@ -90,11 +92,13 @@ export default {
     },
     confirm() {
       this.isLoading = true;
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       request_return_dbc({
         order_id: this.item.orderData.order_id,
         return_code: this.code,
-        user_name_platform: this.$t("website_name"),
-        language: this.$i18n.locale
+        user_name_platform,
+        language
       })
         .then(res => {
           if (res.status === 1) {

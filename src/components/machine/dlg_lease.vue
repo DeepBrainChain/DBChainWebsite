@@ -183,12 +183,14 @@ export default {
       }
     },
     getPayDbcCount() {
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       get_pay_dbc_count({
         rent_time_length: this.time * 60 * this.timeSelect,
         gpu_count: this.gpuCount,
         order_id: this.placeOrderData.order_id,
-        user_name_platform: this.$t("website_name"),
-        language: this.$i18n.locale
+        user_name_platform,
+        language
       }).then(res => {
         if (res.status === 1) {
           this.total_price = res.content;
@@ -204,10 +206,12 @@ export default {
     // poc machine
     pocMachine(order_id) {
       // pay before
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       can_rent_this_machine({
         order_id_new: order_id,
-        user_name_platform: this.$t("website_name"),
-        language: this.$i18n.locale
+        user_name_platform,
+        language
       });
     },
     confirm() {

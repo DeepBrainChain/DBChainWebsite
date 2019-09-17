@@ -113,10 +113,12 @@ export default {
     get_text1() {
       if (this.$t("website_name") == "dbchain") {
         return this.$t("home.intr_dbchain_4");
-      }
-      if (this.$t("website_name") == "yousanai") {
+      } else if (this.$t("website_name") == "yousanai") {
         return this.$t("home.intr_yousanai_4");
+      } else if (this.$t("website_name") == "aionego") {
+        return this.$t("home.intr_aionego_4");
       }
+      return this.$t("home.intr_dbchain_4");
     }
   }
 };

@@ -448,10 +448,12 @@ export default {
       });
     },
     queryMcList() {
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       rentout_get_machines_list({
         wallet_address: getAccount().address,
-        user_name_platform: this.$t("website_name"),
-        language: this.$i18n.locale
+        user_name_platform,
+        language
       }).then(res => {
         if (res.status === 1) {
           this.res_body.content = res.content.map(item => {
@@ -478,18 +480,20 @@ export default {
     queryMail() {
       this.bindMail = cookie.get("mail");
       const address = getAccount().address;
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       queryBindMail_rent({
         wallet_address: address,
-        user_name_platform: this.$t("website_name"),
-        language: this.$i18n.locale
+        user_name_platform,
+        language
       }).then(res => {
         if (res.status === 1) {
           this.bindMail = res.content;
         } else {
           binding_is_ok({
             wallet_address: address,
-            user_name_platform: this.$t("website_name"),
-            language: this.$i18n.locale
+            user_name_platform,
+            language
           }).then(ren => {
             if (ren.status === 2) {
               this.isBinding = true;
@@ -497,8 +501,8 @@ export default {
           });
           binding_is_ok_modify({
             wallet_address: address,
-            user_name_platform: this.$t("website_name"),
-            language: this.$i18n.locale
+            user_name_platform,
+            language
           }).then(ren => {
             if (ren.status === 2) {
               this.isBinding = true;
@@ -510,14 +514,16 @@ export default {
     binding(isNewMail) {
       this.isBinding = true;
       let binding = true;
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       const si = setInterval(async () => {
         if (binding) {
           if (isNewMail) {
             binding = false;
             const res = await binding_is_ok({
               wallet_address: getAccount().address,
-              user_name_platform: this.$t("website_name"),
-              language: this.$i18n.locale
+              user_name_platform,
+              language
             });
             if (res.status === 1) {
               clearInterval(si);
@@ -527,8 +533,8 @@ export default {
             binding = false;
             const res = await binding_is_ok_modify({
               wallet_address: getAccount().address,
-              user_name_platform: this.$t("website_name"),
-              language: this.$i18n.locale
+              user_name_platform,
+              language
             });
             if (res.status === 1) {
               clearInterval(si);

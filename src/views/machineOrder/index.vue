@@ -149,10 +149,12 @@ export default {
   },
   methods: {
     queryOrderList() {
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       rentout_get_orders_list_by_machine_id({
         machine_id: this.$route.query.machine_id,
-        user_name_platform: this.$t("website_name"),
-        language: this.$i18n.locale
+        user_name_platform,
+        language
       }).then(res => {
         if (res.status === 1) {
           this.content = res.content.map(item => {

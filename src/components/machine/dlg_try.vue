@@ -105,13 +105,15 @@ export default {
     computeTotalDBC() {
       console.log("改变");
       clearTimeout(this.reqSt);
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       this.reqSt = setTimeout(() => {
         get_pay_dbc_count({
           rent_time_length: this.time * 60 * this.timeSelect,
           gpu_count: this.gpuCount,
           order_id: this.placeOrderData.order_id,
-          user_name_platform: this.$t("website_name"),
-          language: this.$i18n.locale
+          user_name_platform,
+          language
         }).then(res => {
           if (res.status === 1) {
             this.total_price = res.content;

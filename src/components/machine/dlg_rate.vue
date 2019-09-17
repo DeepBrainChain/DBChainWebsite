@@ -86,10 +86,12 @@ export default {
     },
     getEvaluationCode() {
       this.isCoding = true;
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       get_evaluation_code({
         order_id: this.item.orderData.order_id,
-        user_name_platform: this.$t("website_name"),
-        language: this.$i18n.locale
+        user_name_platform,
+        language
       })
         .then(res => {
           if (res.status === 1) {
@@ -115,6 +117,8 @@ export default {
       this.$emit("update:open", false);
     },
     confirm() {
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       this.$refs["ruleForm"].validate(valid => {
         if (valid) {
           if (this.isEdit) {
@@ -123,8 +127,8 @@ export default {
               evaluation_score: this.rateVal * 2,
               order_id: this.item.orderData.order_id,
               evalution_code: this.evalution_code,
-              user_name_platform: this.$t("website_name"),
-              language: this.$i18n.locale
+              user_name_platform,
+              language
             }).then(res => {
               if (res.status === 1) {
                 this.$message({
@@ -148,8 +152,8 @@ export default {
               evaluation_score: this.rateVal * 2,
               order_id: this.item.orderData.order_id,
               evalution_code: this.evalution_code,
-              user_name_platform: this.$t("website_name"),
-              language: this.$i18n.locale
+              user_name_platform,
+              language
             }).then(res => {
               if (res.status === 1) {
                 this.$message({

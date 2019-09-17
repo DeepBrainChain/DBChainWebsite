@@ -602,11 +602,13 @@ export default {
         return;
       }
       item.rentLoading = true;
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       place_order({
         machine_id: item.machine_id,
         wallet_address_user: getAccount().address,
-        user_name_platform: this.$t("website_name"),
-        language: this.$i18n.locale
+        user_name_platform,
+        language
       })
         .then(res_1 => {
           if (res_1.status === 1) {
@@ -614,8 +616,8 @@ export default {
             this.placeOrderData.dbc_price = 0.0026;
             return get_dbc_price({
               order_id: this.placeOrderData.order_id,
-              user_name_platform: this.$t("website_name"),
-              language: this.$i18n.locale
+              user_name_platform,
+              language
             });
           } else {
             this.$message({
@@ -649,11 +651,13 @@ export default {
     // open try
     openTry(item) {
       item.try_rentLoading = true;
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       try_place_order({
         machine_id: item.machine_id,
         wallet_address_user: getAccount().address,
-        user_name_platform: this.$t("website_name"),
-        language: this.$i18n.locale
+        user_name_platform,
+        language
       })
         .then(res => {
           if (res.status === 1) {
@@ -661,8 +665,8 @@ export default {
             this.placeOrderData.dbc_price = 0.0026;
             return get_dbc_price({
               order_id: this.placeOrderData.order_id,
-              user_name_platform: this.$t("website_name"),
-              language: this.$i18n.locale
+              user_name_platform,
+              language
             });
           } else {
             this.$message({
@@ -713,14 +717,16 @@ export default {
     // try order
     createTry() {
       const loading = this.$loading();
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       create_order({
         rent_time_length: 10,
         dbc_price: this.placeOrderData.dbc_price,
         gpu_count: 1,
         order_id: this.placeOrderData.order_id,
         dbc_total_count: 0,
-        user_name_platform: this.$t("website_name"),
-        language: this.$i18n.locale
+        user_name_platform,
+        language
       })
         .then(res => {
           if (res.status === 1) {

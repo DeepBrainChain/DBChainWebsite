@@ -32,7 +32,7 @@
       <a class="item" href="http://www.dbctalk.ai" target="_blank">{{set_dbctalk}}</a>
       <!--      <router-link class="item" to="/home">{{$t('heads.api')}}</router-link>-->
       <!--  <router-link class="item" to="/home">{{$t('heads.help')}}</router-link>-->
-      <el-dropdown class="drop-lang" trigger="click" v-on:command="drop_command">
+      <!--  <el-dropdown class="drop-lang" trigger="click" v-on:command="drop_command">
         <span class="el-dropdown-link">
           <i class="icon-language"></i>
           <span>{{language_name}}</span>
@@ -48,7 +48,7 @@
           <el-dropdown-item command="TR">Türk Dili</el-dropdown-item>
           <el-dropdown-item command="JA">日本語</el-dropdown-item>
         </el-dropdown-menu>
-      </el-dropdown>
+      </el-dropdown>-->
     </div>
   </div>
 </template>
@@ -77,8 +77,9 @@ export default {
     set_dbctalk() {
       if (this.$t("website_name") == "dbchain") {
         return this.$t("heads.talk");
-      }
-      if (this.$t("website_name") == "yousanai") {
+      } else if (this.$t("website_name") == "yousanai") {
+        return "";
+      } else if (this.$t("website_name") == "aionego") {
         return "";
       }
 
@@ -92,9 +93,10 @@ export default {
         document.createElement("link");
       if (this.$t("website_name") == "dbchain") {
         this.link.href = "./dbchain.ico";
-      }
-      if (this.$t("website_name") == "yousanai") {
+      } else if (this.$t("website_name") == "yousanai") {
         this.link.href = "./yousanai.ico";
+      } else if (this.$t("website_name") == "aionego") {
+        this.link.href = "./aionego.ico";
       }
 
       document.getElementsByTagName("head")[0].appendChild(this.link);
@@ -103,17 +105,19 @@ export default {
     set_title() {
       if (this.$t("website_name") == "dbchain") {
         document.title = "DBChain";
-      }
-      if (this.$t("website_name") == "yousanai") {
+      } else if (this.$t("website_name") == "yousanai") {
         document.title = "YouSanAI";
+      } else if (this.$t("website_name") == "aionego") {
+        document.title = "AIOnego";
       }
     },
     set_logo() {
       if (this.$t("website_name") == "dbchain") {
         this.logo = require("../../assets/imgs/dbchain@1x.png");
-      }
-      if (this.$t("website_name") == "yousanai") {
+      } else if (this.$t("website_name") == "yousanai") {
         this.logo = require("../../assets/imgs/yousanai@1x.png");
+      } else if (this.$t("website_name") == "aionego") {
+        this.logo = require("../../assets/imgs/aionego@1x.png");
       }
     },
     pushMenu(name) {

@@ -47,17 +47,9 @@ export default {
       border-color: $textColor_gray;
       &.active,
       &:hover {
-        background-color: rgb(
-          243,
-          186,
-          0
-        ); ////dbchain:#008BF3, yousanai:rgb(243, 186, 0);
+        background-color: #c5c32c; ////dbchain:#008BF3, yousanai:rgb(243, 186, 0);
         color: #fff;
-        border-color: rgb(
-          243,
-          186,
-          0
-        ); ////dbchain:#008BF3, yousanai:rgb(243, 186, 0);
+        border-color: #b4b645; ////dbchain:#008BF3, yousanai:rgb(243, 186, 0);
       }
       i {
         margin-right: 20px;

@@ -109,10 +109,12 @@ export default {
     get_text1() {
       if (this.$t("website_name") == "dbchain") {
         return this.$t("home.intr_dbchain_1");
-      }
-      if (this.$t("website_name") == "yousanai") {
+      } else if (this.$t("website_name") == "yousanai") {
         return this.$t("home.intr_yousanai_1");
+      } else if (this.$t("website_name") == "aionego") {
+        return this.$t("home.intr_aionego_1");
       }
+      return this.$t("home.intr_dbchain_1");
     }
   }
 };

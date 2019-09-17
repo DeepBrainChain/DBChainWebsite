@@ -216,11 +216,13 @@ export default {
       }
       const address = getAccount().address;
       this.isCoding = true;
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       get_rentout_code({
         wallet_address: address,
         machine_id: this.machine_id,
-        user_name_platform: this.$t("website_name"),
-        language: this.$i18n.locale
+        user_name_platform,
+        language
       })
         .then(res => {
           if (res.status === 1) {
@@ -243,6 +245,8 @@ export default {
     },
     confirm() {
       this.isLoading = true;
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       add_or_modify({
         wallet_address: getAccount().address,
         machine_id: this.machine_id,
@@ -250,8 +254,8 @@ export default {
         can_rent_start_time_later: this.can_rent_start_time_later,
         end_rent_out_time_later: this.end_rent_out_time_later,
         code: this.code,
-        user_name_platform: this.$t("website_name"),
-        language: this.$i18n.locale
+        user_name_platform,
+        language
       })
         .then(res => {
           if (res.status === 1) {

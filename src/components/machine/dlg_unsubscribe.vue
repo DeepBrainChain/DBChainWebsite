@@ -64,10 +64,12 @@ export default {
     },
     getStopCode() {
       this.isCoding = true;
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       get_stop_code({
         order_id: this.item.orderData.order_id,
-        user_name_platform: this.$t("website_name"),
-        language: this.$i18n.locale
+        user_name_platform,
+        language
       })
         .then(res => {
           if (res.status === 1) {
@@ -90,11 +92,13 @@ export default {
     },
     confirm() {
       this.isLoading = true;
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
       stop({
         order_id: this.item.orderData.order_id,
         stop_code: this.stop_code,
-        user_name_platform: this.$t("website_name"),
-        language: this.$i18n.locale
+        user_name_platform,
+        language
       })
         .then(res => {
           if (res.status === 1) {
