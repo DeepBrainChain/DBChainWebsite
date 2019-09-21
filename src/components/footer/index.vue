@@ -35,6 +35,8 @@ export default {
         return this.$t("footer_service_yousanai");
       } else if (this.$t("website_name") == "aionego") {
         return this.$t("footer_service_aionego");
+      } else if (this.$t("website_name") == "deepshare") {
+        return this.$t("footer_service_deepshare");
       }
 
       return this.$t("footer_service_dbchain");

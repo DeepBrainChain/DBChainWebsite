@@ -144,7 +144,7 @@ export default {
       const hours = parseInt(this.placeOrderData.time_max / 60);
       const day = Math.floor(hours / 24);
       const h = hours - day * 24;
-      return `${day}天${h}小时`;
+      return `${day}D${h}H`;
     },
     gpuCountOptions() {
       let opts = [];

@@ -3,7 +3,7 @@ import enLocale from 'element-ui/lib/locale/lang/en'
 export default {
   message: "hello i18n !!",
 
-  website_name: 'aionego', //yousanai  dbchain aionego
+  website_name: 'dbchain', //yousanai , dbchain ,aionego,deepshare
 
 
   $: '$',
@@ -87,7 +87,7 @@ export default {
     showDeitailDBC: '查看dbc详细信息:',
     clickCoinmarktcap: '进入了解',
     transfer: '转账',
-    myMachineTitle: '我租用的机器',
+    myMachineTitle: '我的订单数',
     pcs: '台 机器',
     machineOnLine: '机器在线',
     machineOffLine: '机器离线',
@@ -234,11 +234,17 @@ export default {
       '            只要你的GPU有空闲，就可以加入我们赚取DBC Token，同时可以享受Token升值带来的更多收益。\n' +
       '\n' +
       '            只要GPU闲置1小时以上就可以加入我们获取收益',
+    intr_deepshare_1: '深度之眼GPU平台提供GPU出租服务，加入我们，可以帮助您的机器非常方便的接入到深脑链网络中，获取收益。\n' +
+      '\n' +
+      '            只要你的GPU有空闲，就可以加入我们赚取DBC Token，同时可以享受Token升值带来的更多收益。\n' +
+      '\n' +
+      '            只要GPU闲置1小时以上就可以加入我们获取收益',
     intr_2: '这里的GPU来自于全球各地，通过DBC分布式网络连接在一起，这里面没有中心化服务器，你的数据不会被窃取。',
     intr_3: '在这个DBC网络购买机器需要使用DBC Token进行支付。GPU是按照美元定价，DBC价格越高需要的数量越少。',
     intr_dbchain_4: 'DBC是区块链技术驱动的人工智能算力网络，它将分布在全球的GPU通过区块链技术连接在一起。',
     intr_yousanai_4: '有三AI服务平台，致力于为用户提供高性价比的人工智能算力服务，采用DBC TOKEN进行结算。深脑链是一个分布在全球的去中心化人工智能算力网络，通过我们您可以方便地使用网络中的机器，我们提供丰富的服务满足您的需求',
     intr_aionego_4: '一起AI服务平台，致力于为用户提供高性价比的人工智能算力服务，采用DBC TOKEN进行结算。深脑链是一个分布在全球的去中心化人工智能算力网络，通过我们您可以方便地使用网络中的机器，我们提供丰富的服务满足您的需求',
+    intr_deepshare_4: '深度之眼GPU服务平台，致力于为用户提供高性价比的人工智能算力服务，采用DBC TOKEN进行结算。深脑链是一个分布在全球的去中心化人工智能算力网络，通过我们您可以方便地使用网络中的机器，我们提供丰富的服务满足您的需求',
     intr_5: '在我们平台中你可以找到便宜且类型多样的GPU。当你使用的时候，所有的数据都是加密传输的',
     intr_6: 'GPU租用按照分钟计费，GPU使用过程中如果出现中断，将会最多补偿144小时的费用',
     intr_7: '深脑链从2020年开始每年挖矿产出5亿，3年后，每年产出2.5亿，并且以后每5年产出减半，总计有40亿',
@@ -451,6 +457,7 @@ export default {
   footer_service_dbchain: '客服支持:support@dbchain.ai，客服会在24小时内回复', //9.17 19:33
   footer_service_yousanai: '客服支持:longpeng@yousanai.cn，客服会在24小时内回复', //9.17 19:33
   footer_service_aionego: '客服支持:aionego66@hotmail.com，客服会在24小时内回复', //9.17 19:33
+  footer_service_deepshare: '', //9.17 19:33
 
   list_start_rentout: '分钟后可租用', //9.17 19:33
   list_can_rentout: '用户现在可租用', //9.17 19:33

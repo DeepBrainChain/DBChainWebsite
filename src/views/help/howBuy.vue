@@ -40,7 +40,7 @@ export default {
   methods: {
     tradedbcHref() {
       location.href =
-        "https://www.dbctrade.com/trade/buy_1?address_user=" +
+        "https://www.dbctrade.io/trade/buy_1?address_user=" +
         this.$route.query.address_user;
       window.open(location.href, "_blank");
     }

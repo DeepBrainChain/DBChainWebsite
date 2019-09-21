@@ -185,7 +185,7 @@ export default {
     };
   },
   created() {
-    this.gpu_price_dollar = this.$route.query.gpu_price_dollar / 11*10;
+    this.gpu_price_dollar = (this.$route.query.gpu_price_dollar / 11) * 10;
     this.can_rent_start_time_later =
       this.$route.query.can_rent_start_time_later > 0
         ? 0
@@ -203,7 +203,7 @@ export default {
   methods: {
     getCode() {
       if (!getAccount()) {
-        this.$router.push("/openWallet");
+        this.$router.push(`/openWallet/${type}`);
         return;
       }
       if (this.machine_id.trim().length === 0) {

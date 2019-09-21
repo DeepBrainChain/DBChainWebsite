@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="title">
-      <span>{{$t('gpu.myMachineTitle')}}：{{rentNumber}} {{$t('gpu.pcs')}}</span>
+      <span>{{$t('gpu.myMachineTitle')}}：{{rentNumber}}</span>
       <div v-if="!isBinding && bindMail" class="binding">
         <span class="bindingInfo">{{$t('my_machine_binding_email')}}:{{bindMail}}</span>
         <el-button
@@ -69,10 +69,10 @@
         </div>
       </div>
       <div class="pay-wrap">
-        <div class="rate-head">
+        <div class="rate-head" v-if="item.mcData.evaluation_score_average>0">
           <div class="flex right vCenter">
             <el-rate :value="item.mcData.evaluation_score_average/2"></el-rate>
-            <span>{{item.mcData.evaluation_score_average}}{{$t('scores')}}</span>
+            <!--     <span>{{item.mcData.evaluation_score_average}}{{$t('scores')}}</span> -->
           </div>
         </div>
         <div>
@@ -183,7 +183,7 @@
         <div class="flex">
           <div v-if="item.mcData.tensor_cores" class="td">
             <span class="fs16">
-              Tensor Core：
+              Tensor Cores：
               <a class="cPrimaryColor">{{item.mcData.tensor_cores}}</a>
             </span>
           </div>
@@ -354,14 +354,7 @@
             style="width: 86px"
             @click="openRateDlg(item)"
           >{{$t('gpu.rate')}}</el-button>
-          <el-button
-            v-else-if="item.orderData.return_dbc === false && item.orderData.pay_error"
-            class="tool-btn"
-            style="width: 86px"
-            plain
-            size="mini"
-            @click="openReturnDbc(item)"
-          >{{$t('myMachine_return_dbc')}}</el-button>
+
           <template v-else-if="item.orderData.rent_success">
             <!--<el-button plain style="width: 86px" class="tool-btn" size="mini"
                        @click="dlgReload_open = true">
@@ -370,11 +363,19 @@
             <el-button
               plain
               class="tool-btn"
-              style="width: 86px"
+              style="width: 110px"
               size="mini"
               @click="stopRent(item)"
             >{{$t('unsubscribe')}}</el-button>
           </template>
+          <el-button
+            v-else-if="item.orderData.return_dbc === false && item.orderData.pay_error"
+            class="tool-btn"
+            style="width: 86px"
+            plain
+            size="mini"
+            @click="openReturnDbc(item)"
+          >{{$t('myMachine_return_dbc')}}</el-button>
           <template v-else-if="item.orderData.rent_success === false ">
             <el-button
               v-if="item.orderData.container_is_exist===true && item.orderData.pay_error===false"
@@ -584,7 +585,7 @@ export default {
         //     return;
         //   }
         const user_name_platform = this.$t("website_name");
-      const language = this.$i18n.locale;
+        const language = this.$i18n.locale;
         return can_rent_this_machine({
           order_id: item.orderData.order_id,
           user_name_platform,
@@ -633,7 +634,7 @@ export default {
         //     return;
         //   }
         const user_name_platform = this.$t("website_name");
-      const language = this.$i18n.locale;
+        const language = this.$i18n.locale;
         return can_rent_this_machine({
           order_id: item.orderData.order_id,
           user_name_platform,
@@ -849,7 +850,7 @@ export default {
     // get Order List
     queryOrderList() {
       if (!getAccount()) {
-        this.$router.push("/openWallet");
+        this.$router.push(`/openWallet/${type}`);
         return;
       }
       const wallet_address_user = getAccount().address;

@@ -47,9 +47,9 @@ export default {
       border-color: $textColor_gray;
       &.active,
       &:hover {
-        background-color: #c5c32c; ////dbchain:#008BF3, yousanai:rgb(243, 186, 0);
+        background-color: #008bf3; ////dbchain:#008BF3, yousanai:rgb(243, 186, 0),aionego:#c5c325,deepshare:rgb(25, 93,145)
         color: #fff;
-        border-color: #b4b645; ////dbchain:#008BF3, yousanai:rgb(243, 186, 0);
+        border-color: #008bf3; ////dbchain:#008BF3, yousanai:rgb(243, 186, 0);aionego:#b4b645,deepshare:rgb(25, 93,145)
       }
       i {
         margin-right: 20px;

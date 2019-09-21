@@ -66,6 +66,8 @@ export default {
         return "";
       } else if (this.$t("website_name") == "aionego") {
         return "";
+      } else if (this.$t("website_name") == "deepshare") {
+        return "";
       }
       return this.$t("heads.talk");
     }

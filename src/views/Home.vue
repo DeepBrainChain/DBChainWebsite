@@ -36,7 +36,7 @@
         </div>
       </el-col>
       <el-col class="center" :md="12">
-        <img src="~@/assets/imgs/building@1x.png" alt />
+        <img :src="image1" />
       </el-col>
     </el-row>
     <!--<el-row class="wrap1440 pb120">
@@ -102,11 +102,27 @@
 export default {
   name: "home",
   data() {
-    return {};
+    return {
+      image1: undefined
+    };
+  },
+  created() {
+    this.set_image1();
   },
   methods: {
     pushToWallet() {
       this.$router.push("/gpu/myWallet");
+    },
+    set_image1() {
+      if (this.$t("website_name") == "dbchain") {
+        this.image1 = require("../assets/imgs/building@1x.png");
+      } else if (this.$t("website_name") == "yousanai") {
+        this.image1 = require("../assets/imgs/building@1x.png");
+      } else if (this.$t("website_name") == "aionego") {
+        this.image1 = require("../assets/imgs/building@1x.png");
+      } else if (this.$t("website_name") == "deepshare") {
+        this.image1 = require("../assets/imgs/building_deepshare@1x.png");
+      }
     }
   },
   computed: {
@@ -117,6 +133,8 @@ export default {
         return this.$t("home.intr_yousanai_4");
       } else if (this.$t("website_name") == "aionego") {
         return this.$t("home.intr_aionego_4");
+      } else if (this.$t("website_name") == "deepshare") {
+        return this.$t("home.intr_deepshare_4");
       }
       return this.$t("home.intr_dbchain_4");
     }

@@ -113,6 +113,8 @@ export default {
         return this.$t("home.intr_yousanai_1");
       } else if (this.$t("website_name") == "aionego") {
         return this.$t("home.intr_aionego_1");
+      } else if (this.$t("website_name") == "deepshare") {
+        return this.$t("home.intr_deepshare_1");
       }
       return this.$t("home.intr_dbchain_1");
     }

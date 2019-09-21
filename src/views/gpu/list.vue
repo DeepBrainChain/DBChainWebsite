@@ -306,7 +306,7 @@
         <div class="flex">
           <div v-if="item.tensor_cores>0" class="td">
             <span class="fs16">
-              Tensor Core：
+              Tensor Cores：
               <a class="cPrimaryColor">{{item.tensor_cores}}</a>
             </span>
           </div>
@@ -598,7 +598,7 @@ export default {
     // 打开弹窗
     openDlg(item, isTry) {
       if (!getAccount()) {
-        this.$router.push("/openWallet");
+        this.$router.push(`/openWallet/${type}`);
         return;
       }
       item.rentLoading = true;

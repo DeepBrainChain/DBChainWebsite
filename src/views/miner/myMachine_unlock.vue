@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="title">
-      <span>{{$t('my_machine_miner_info')}}：{{res_body.content.length}} {{$t('gpu.pcs')}}</span>
+      <span>{{$t('my_machine_miner_info')}}：{{res_body.content.length}}</span>
       <div v-if="!isBinding && bindMail" class="binding">
         <span class="bindingInfo">{{$t('my_machine_binding_email')}}：{{bindMail}}</span>
         <el-button
@@ -145,7 +145,7 @@
         <div class="flex">
           <div v-if="item.mcData.tensor_core" class="td">
             <span class="fs16">
-              Tensor Core：
+              Tensor Cores：
               <a class="cPrimaryColor">{{item.mcData.tensor_core}}</a>
             </span>
           </div>

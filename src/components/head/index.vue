@@ -32,7 +32,7 @@
       <a class="item" href="http://www.dbctalk.ai" target="_blank">{{set_dbctalk}}</a>
       <!--      <router-link class="item" to="/home">{{$t('heads.api')}}</router-link>-->
       <!--  <router-link class="item" to="/home">{{$t('heads.help')}}</router-link>-->
-      <!--  <el-dropdown class="drop-lang" trigger="click" v-on:command="drop_command">
+      <!--   <el-dropdown class="drop-lang" trigger="click" v-on:command="drop_command">
         <span class="el-dropdown-link">
           <i class="icon-language"></i>
           <span>{{language_name}}</span>
@@ -81,6 +81,8 @@ export default {
         return "";
       } else if (this.$t("website_name") == "aionego") {
         return "";
+      } else if (this.$t("website_name") == "deepshare") {
+        return "";
       }
 
       return this.$t("heads.talk");
@@ -97,6 +99,8 @@ export default {
         this.link.href = "./yousanai.ico";
       } else if (this.$t("website_name") == "aionego") {
         this.link.href = "./aionego.ico";
+      } else if (this.$t("website_name") == "deepshare") {
+        this.link.href = "./deepshare.ico";
       }
 
       document.getElementsByTagName("head")[0].appendChild(this.link);
@@ -109,6 +113,8 @@ export default {
         document.title = "YouSanAI";
       } else if (this.$t("website_name") == "aionego") {
         document.title = "AIOnego";
+      } else if (this.$t("website_name") == "deepshare") {
+        document.title = "Deepshare";
       }
     },
     set_logo() {
@@ -118,6 +124,8 @@ export default {
         this.logo = require("../../assets/imgs/yousanai@1x.png");
       } else if (this.$t("website_name") == "aionego") {
         this.logo = require("../../assets/imgs/aionego@1x.png");
+      } else if (this.$t("website_name") == "deepshare") {
+        this.logo = require("../../assets/imgs/deepshare@1x.png");
       }
     },
     pushMenu(name) {
@@ -169,8 +177,8 @@ export default {
   align-items: flex-start;
 
   .logo {
-    margin-top: 5px;
-    margin-right: 169px;
+    margin-top: 10px; //dbchain:10px ,aionego:-30px,yousanai:-30px,deepshare-30px
+    margin-right: 119px; //dbchain: 119px  ,aionego:119px,yousanai:119px,deepshare:119px
   }
 
   .item {
