@@ -2,7 +2,7 @@
   <div class="wrap1200 bg-box mb100">
     <div class="border-box">
       <h2>{{$t('help.title')}}</h2>
-      <h3>
+      <h3 v-if="this.$i18n.locale==='cn' || this.$i18n.locale==='CN'">
         {{$t('help.1')}}
         <a href="javascript:" @click="tradedbcHref">dbctrade</a>
       </h3>
@@ -10,9 +10,16 @@
       <h3>
         {{$t('help.2')}}，
         <a
+          v-if="this.$i18n.locale==='cn' || this.$i18n.locale==='CN'"
           href="https://www.huobi.br.com/zh-cn/"
           target="_blank"
         >https://www.huobi.br.com/zh-cn/</a>
+
+        <a
+          v-else
+          href="https://www.huobi.br.com/en-us/"
+          target="_blank"
+        >https://www.huobi.br.com/en-us/</a>
         .{{$t('help.reloadWallet')}}
       </h3>
 
@@ -24,7 +31,7 @@
 
       <h3>
         {{$t('help.4')}}，
-        <a href="https://www.gateio.co">https://www.gateio.co</a>
+        <a href="https://www.gateio.co" target="_blank">https://www.gateio.co</a>
         .{{$t('help.reloadWallet')}}
       </h3>
 

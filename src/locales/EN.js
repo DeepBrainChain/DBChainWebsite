@@ -78,7 +78,7 @@ export default {
     machineList: 'Machine List',
     walletAddress: 'Wallet Address',
     notice_1: 'Please keep your private key safe, once a private key is lost, no one can retrieve your DBC asset for you!',
-    amount: 'Amount',
+    amount: ' Amount',
     howBuyDBC: 'How to buy DBC',
     exchangeCash: 'USD value',
     showDeitailDBC: 'See DBC information:',
@@ -148,7 +148,7 @@ export default {
     mcDetails: {
       th_1: 'User wallet address',
       th_2: 'Actual traded DBC amount',
-      th_3: 'Was there abnormality/malfunction during usage',
+      th_3: 'Disruption',
       th_4: 'Amount of GPU rented',
       th_5: 'DBC refund amount',
       th_6: 'Total bought time by user',
@@ -163,9 +163,9 @@ export default {
 
   county: 'Country',
   idle_status: 'Machine Usage Status',
-  total_time: 'Accumulative Rental Time',
-  total_rent_count: 'Total Rental Numbers',
-  error_rent_count: 'Disruption Numbers',
+  total_time: 'Total Rental Time',
+  total_rent_count: 'Times Rented',
+  error_rent_count: 'Times Disrupted',
   disk_GB_perhour_dollar: '',
   length_of_available_time: 'Available Time',
   gpu_price_dollar: ' Each GPU Price/h',
@@ -175,8 +175,8 @@ export default {
   single_precision_tflops: 'Single-Precision',
   double_precision_tflops: 'Double-Precision',
   gpu_ram_size: 'GPU RAM',
-  gpu_ram_bandwidth: 'GPU RAM bandwidth',
-  pcie_bandwidth: 'Bandwidth Speed',
+  gpu_ram_bandwidth: 'GPU RAM Speed',
+  pcie_bandwidth: 'PCIE Speed',
   cpu_numbers: 'CPU Sores',
   ram_size: 'RAM Size',
   disk_bandwidth: 'HD Speed',
@@ -216,14 +216,23 @@ export default {
       'you need this password and your private key to unlock your wallet'
   },
   home: {
-    intr_dbchain_1: 'DBC is an AI computing power network powered by blockchain, it connect the GPU scattered across the globe using blockchain technology.\n' +
+    intr_dbchain_1: "DBChain",
+    intr_yousanai_1: "YouSanAI",
+    intr_aionego_1: "AIOneGo",
+    intr_deepshare_1: "Deepshare",
+    intr_sharegpu_1: "ShareGPU",
+    intr_panchuangai_1: "PanChuangAI",
+    intr_yalecloud_1: "YaleCloud",
+    intr_1: ' provides GPU rental service.join us! can help your machine very convenient access to the DBC network, gain revenue.\n' +
       '\n' +
       'If your GPU is ever idle, you can connect it to the DBC network to earn DBC tokens and enjoy the benefit of the tokens appreciation.\n ' +
       '\n' +
       'If your GPU is ever idle for more than one hour, you can connect it to the DBC network to earn DBC tokens.',
     intr_2: 'Our GPUs come from all over the world, connected through DBC distributed network,there is not centralized server in here,your data will not be stolen.',
     intr_3: 'In the DBC network to buy and use GPU you need to pay with DBC token. GPUs are priced in USD, the higher the price of DBC the less DBC you need in order to pay.',
-    intr_dbchain_4: 'DBC is an AI computing power network powered by blockchain, it connect the GPU scattered across the globe using blockchain technology.',
+    intr_4: ' is committed to providing users with cost-effective AI computing services, using DBC TOKEN for settlement. \n' +
+      '\n' +
+      'DBC is a decentralized AI computing network distributed around the world. Through us, you can easily use the machines in the network. We provide rich services to meet your needs',
     intr_5: 'In the DBC network you can find cheap and varied GPUs. Throughout the usage of the GPU(s) your data are encrypted during transmission.',
     intr_6: 'GPU rental is charged by the minute, if a GPU machine stops abruptly during usage you can be compensated up to 144 hour\'s rental fee.',
     intr_7: 'DBC will start mining from 2020 and each year 500 million DBCs are mined, starting from the 4th year, 250 millions are mined each year and the amount is halved every 5 years from then on. A total of 4 billion DBCs will be mined.',
@@ -295,8 +304,8 @@ export default {
   my_machine_china: 'China',
   my_machine_idle_gpus: 'Number of idle GPU',
   my_machine_length_of_available_time: 'Longest available rental time',
-  my_machine_total_time_be_used: 'Accumulative rental time',
-  my_machine_total_rent_count: 'Total rental time',
+  my_machine_total_time_be_used: 'Total rental time',
+  my_machine_total_rent_count: 'Times Rented',
 
   list_country: 'Country',
   list_dbc_version: 'DBC Version',
@@ -305,9 +314,9 @@ export default {
   list_china: 'China',
   list_idle_gpus: 'Idle GPUs',
   list_length_of_available_time: 'Available Time',
-  list_total_time_be_used: 'Accumulative Rental Time',
-  list_total_rent_count: 'Total Rental Time',
-  list_error_rent_count: 'Disruption Numbers',
+  list_total_time_be_used: 'Total Rental Time',
+  list_total_rent_count: 'Times Rented',
+  list_error_rent_count: 'Times Disrupted',
   list_cuda_version: 'CUDA',
   list_disk_space: 'HD Space',
   list_cpu_type: 'CPU Model',
@@ -317,10 +326,10 @@ export default {
   list_cpu_numbers: 'CPU Cores',
   list_ram_size: 'RAM Size',
   list_single_precision_tflops: 'Single-Precision',
-  list_gpu_ram_bandwidth: 'GPU RAM Bandwidth',
+  list_gpu_ram_bandwidth: 'GPU RAM Speed',
   list_inet_up: 'Upload Speed',
   list_double_precision_tflops: 'Double-Precision',
-  list_pcie_bandwidth: 'Bandwidth Speed',
+  list_pcie_bandwidth: 'PCIE Speed',
   list_inet_down: 'Download Speed',
   list_os: 'OS',
   list_all: 'All',
@@ -388,7 +397,7 @@ export default {
   mywallet_transfer_record: 'Transaction record',
   mywallet_display: 'Open or create wallet to view transaction record',
 
-  machine_detail_many: 'participate in rating, rating',
+  machine_detail_many: ' participate in rating, rating',
   machine_detail_no: 'No',
   machine_detail_yes: 'Yes',
   machine_order_rentout: 'Machine rental order information',
@@ -431,8 +440,16 @@ export default {
   my_machine_edit: 'Edit again',
 
   open_wallet_cannot_read: 'Your browser does not support reading of local document',
-  footer_service_dbchain: 'Customer support :support@dbchain.ai, customer service will reply within 24 hours',
-  footer_service_yousanai: 'Customer support :longpeng@yousanai.cn, customer service will reply within 24 hours',
+
+  footer_service: "Customer support",
+  footr_reply: "customer service will reply within 24 hours",
+  footer_service_dbchain: "support@dbchain.ai", //9.17 19:33
+  footer_service_yousanai: "longpeng@yousanai.cn", //9.17 19:33
+  footer_service_aionego: "aionego66@hotmail.com", //9.17 19:33
+  footer_service_deepshare: "", //9.17 19:33
+  footer_service_panchuangai: "zhouas@panchuangai.cn", //9.17 19:33
+  footer_service_sharegpu: "758655995@qq.com", //9.17 19:33
+  footer_service_yalecloud: "yalesoft@163.com", //9.17 19:33
 
   list_start_rentout: 'minutes later, it can be rented',
   list_can_rentout: 'Users can rent it now',

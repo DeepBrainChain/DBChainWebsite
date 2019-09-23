@@ -6,7 +6,7 @@
         <div v-if="mcData" class="flex right vCenter">
           <p>{{mcData.evaluation_count}}{{$t('machine_detail_many')}}：</p>
           <el-rate :value="mcData.evaluation_score_average/2" disabled></el-rate>
-          <span>{{mcData.evaluation_score_average}}</span>
+          <!--         <span>{{mcData.evaluation_score_average}}</span>-->
         </div>
       </div>
       <table class="tb-theme hAuto">
@@ -73,7 +73,6 @@ export default {
   },
   methods: {
     queryMcDetail() {
-
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       query_machine_by_id({

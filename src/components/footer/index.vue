@@ -3,15 +3,19 @@
     <div class="wrap1440">
       <p class="title">{{$t('footer_friend')}}</p>
       <div class="link-list clearfix" margin:0 auto>
-        <a href="http://www.deepbrainchain.org" target="_blank">{{$t('footer.DBChain')}}</a>
-
+        <a
+          v-if="$t('website_name')==='panchuangai'"
+          href="http://docs.panchuang.net"
+          target="_blank"
+        >PanChuang Docs</a>
+        <a href="https://www.deepbrainchain.org" target="_blank">{{$t('footer.DBChain')}}</a>
         <a href="https://www.kcs.top/" target="_blank">{{$t('footer.KuCoin')}}</a>
 
         <a href="https://www.huobi.br.com/zh-cn/" target="_blank">{{$t('footer.HuobiPro')}}</a>
         <a href="https://www.gateio.co/" target="_blank">{{$t('footer.GateIo')}}</a>
       </div>
       <div class="line" tyle=" text-align:center"></div>
-      <p class="contact">{{footer_service}}</p>
+      <p class="contact">{{$t('footer_service')}}:{{footer_service}},{{$t('footr_reply')}}</p>
     </div>
   </div>
 </template>
@@ -37,6 +41,12 @@ export default {
         return this.$t("footer_service_aionego");
       } else if (this.$t("website_name") == "deepshare") {
         return this.$t("footer_service_deepshare");
+      } else if (this.$t("website_name") == "panchuangai") {
+        return this.$t("footer_service_panchuangai");
+      } else if (this.$t("website_name") == "sharegpu") {
+        return this.$t("footer_service_sharegpu");
+      } else if (this.$t("website_name") == "yalecloud") {
+        return this.$t("footer_service_yalecloud");
       }
 
       return this.$t("footer_service_dbchain");

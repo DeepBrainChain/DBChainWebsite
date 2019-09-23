@@ -68,6 +68,12 @@ export default {
         return "";
       } else if (this.$t("website_name") == "deepshare") {
         return "";
+      } else if (this.$t("website_name") == "panchuangai") {
+        return "";
+      } else if (this.$t("website_name") == "sharegpu") {
+        return "";
+      } else if (this.$t("website_name") == "yalecloud") {
+        return "";
       }
       return this.$t("heads.talk");
     }

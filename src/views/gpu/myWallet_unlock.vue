@@ -204,7 +204,7 @@ export default {
       }
     },
     toCoinWeb() {
-      if (this.$i18n.locale === "简体中文") {
+      if (this.$i18n.locale === "cn" || this.$i18n.locale === "CN") {
         location.href =
           "https://www.feixiaohao.com/currencies/deepbrain-chain/";
       } else {

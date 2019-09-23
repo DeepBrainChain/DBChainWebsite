@@ -56,7 +56,7 @@
       <div class="status-wrap">
         <div class="flex vCenter right">
           <el-rate :value="item.mcData.evaluation_score_average/2"></el-rate>
-          <span>{{item.mcData.evaluation_score_average}}{{$t('scores')}}</span>
+          <!--   <span>{{item.mcData.evaluation_score_average}}{{$t('scores')}}</span> -->
         </div>
         <div class="flex status-title">
           <div>

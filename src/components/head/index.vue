@@ -29,10 +29,16 @@
         :class="{active: menuName === 'miner'}"
         @click="pushMenu('miner')"
       >{{$t('heads.miner')}}</a>
-      <a class="item" href="http://www.dbctalk.ai" target="_blank">{{set_dbctalk}}</a>
+      <a
+        class="item"
+        v-if="this.curLang==='cn' ||this.curLang==='CN' "
+        href="http://www.dbctalk.ai"
+        target="_blank"
+      >{{set_dbctalk}}</a>
+      <a class="item" v-else href="https://t.me/deepbrainchain" target="_blank">Join Telegram</a>
       <!--      <router-link class="item" to="/home">{{$t('heads.api')}}</router-link>-->
       <!--  <router-link class="item" to="/home">{{$t('heads.help')}}</router-link>-->
-      <!--   <el-dropdown class="drop-lang" trigger="click" v-on:command="drop_command">
+      <el-dropdown class="drop-lang" trigger="click" v-on:command="drop_command">
         <span class="el-dropdown-link">
           <i class="icon-language"></i>
           <span>{{language_name}}</span>
@@ -41,14 +47,14 @@
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="CN">简体中文</el-dropdown-item>
           <el-dropdown-item command="EN">ENGLISH</el-dropdown-item>
-          <el-dropdown-item command="VI">Việt nam</el-dropdown-item>
+          <!--    <el-dropdown-item command="VI">Việt nam</el-dropdown-item>
           <el-dropdown-item command="KO">한국어</el-dropdown-item>
           <el-dropdown-item command="TH">ภาษาไทย</el-dropdown-item>
           <el-dropdown-item command="RU">Ру́сский язы́к</el-dropdown-item>
           <el-dropdown-item command="TR">Türk Dili</el-dropdown-item>
-          <el-dropdown-item command="JA">日本語</el-dropdown-item>
+          <el-dropdown-item command="JA">日本語</el-dropdown-item>-->
         </el-dropdown-menu>
-      </el-dropdown>-->
+      </el-dropdown>
     </div>
   </div>
 </template>
@@ -60,7 +66,7 @@ export default {
   name: "Head",
   data() {
     return {
-      curLang: this.$i18n.locale,
+      curLang: undefined, //this.$i18n.locale,
       menuName: "",
       link: undefined,
       title: undefined,
@@ -72,6 +78,7 @@ export default {
     this.set_ico();
     this.set_title();
     this.set_logo();
+    this.setLanguageCode();
   },
   computed: {
     set_dbctalk() {
@@ -83,12 +90,72 @@ export default {
         return "";
       } else if (this.$t("website_name") == "deepshare") {
         return "";
+      } else if (this.$t("website_name") == "sharegpu") {
+        return "";
+      } else if (this.$t("website_name") == "panchuangai") {
+        return "";
+      } else if (this.$t("website_name") == "yalecloud") {
+        return "";
       }
 
       return this.$t("heads.talk");
     }
   },
   methods: {
+    setLanguageCode() {
+      let type = navigator.appName;
+      let lang = "";
+      if (type == "Netscape") {
+        lang = navigator.language;
+      } else {
+        lang = navigator.userLanguage;
+      }
+      lang = lang.substr(0, 2);
+      if (lang === "cn") {
+        lang = "CN";
+      } else if (lang === "en") {
+        lang = "EN";
+      } else {
+        lang = "EN";
+      }
+      // else if (lang === "vi") {
+      //  lang = "VI";
+      // } else if (lang === "ko") {
+      //   lang = "KO";
+      // } else if (lang === "th") {
+      //   lang = "TH";
+      // } else if (lang === "ru") {
+      //   lang = "RU";
+      //} else if (lang === "tr") {
+      //  lang = "TR";
+      // } else if (lang === "ja") {
+      //  lang = "JA";
+      //}
+      // console.log(this.$i18n.getLocaleMessage("en"));
+      // this.curLang = lang;
+      this.$loadLanguageAsync(lang).then(() => {
+        if (lang === "CN") {
+          this.curLang = "CN";
+          this.language_name = "简体中文";
+        } else if (lang === "EN") {
+          this.curLang = "EN";
+          this.language_name = "ENGLISH";
+        }
+        //else if (lang === "VI") {
+        //   this.language_name = "Việt nam";
+        // } else if (lang === "KO") {
+        //   this.language_name = "한국어";
+        //} else if (lang === "TH") {
+        //   this.language_name = "ภาษาไทย";
+        // } else if (lang === "RU") {
+        //  this.language_name = "Ру́сский язы́к";
+        //} else if (lang === "TR") {
+        //  this.language_name = "Türk Dili";
+        // } else if (lang === "JA") {
+        //   this.language_name = "日本語";
+        // }
+      });
+    },
     set_ico() {
       this.link =
         document.querySelector("link[rel*='icon']") ||
@@ -101,6 +168,12 @@ export default {
         this.link.href = "./aionego.ico";
       } else if (this.$t("website_name") == "deepshare") {
         this.link.href = "./deepshare.ico";
+      } else if (this.$t("website_name") == "panchuangai") {
+        this.link.href = "./panchuangai.ico";
+      } else if (this.$t("website_name") == "sharegpu") {
+        this.link.href = "./sharegpu.ico";
+      } else if (this.$t("website_name") == "yalecloud") {
+        this.link.href = "./yalecloud.ico";
       }
 
       document.getElementsByTagName("head")[0].appendChild(this.link);
@@ -115,6 +188,12 @@ export default {
         document.title = "AIOnego";
       } else if (this.$t("website_name") == "deepshare") {
         document.title = "Deepshare";
+      } else if (this.$t("website_name") == "panchuangai") {
+        document.title = "PanChuangAI";
+      } else if (this.$t("website_name") == "sharegpu") {
+        document.title = "ShareGpu";
+      } else if (this.$t("website_name") == "yalecloud") {
+        document.title = "YaleCloud";
       }
     },
     set_logo() {
@@ -126,6 +205,12 @@ export default {
         this.logo = require("../../assets/imgs/aionego@1x.png");
       } else if (this.$t("website_name") == "deepshare") {
         this.logo = require("../../assets/imgs/deepshare@1x.png");
+      } else if (this.$t("website_name") == "sharegpu") {
+        this.logo = require("../../assets/imgs/sharegpu@1x.png");
+      } else if (this.$t("website_name") == "panchuangai") {
+        this.logo = require("../../assets/imgs/panchuangai@1x.png");
+      } else if (this.$t("website_name") == "yalecloud") {
+        this.logo = require("../../assets/imgs/yalecloud@1x.png");
       }
     },
     pushMenu(name) {
@@ -177,7 +262,7 @@ export default {
   align-items: flex-start;
 
   .logo {
-    margin-top: 10px; //dbchain:10px ,aionego:-30px,yousanai:-30px,deepshare-30px
+    margin-top: 10px; //dbchain:10px ,aionego:-30px,yousanai:-30px,deepshare-30px,yalecloud-30px,panchuanga:-30px
     margin-right: 119px; //dbchain: 119px  ,aionego:119px,yousanai:119px,deepshare:119px
   }
 

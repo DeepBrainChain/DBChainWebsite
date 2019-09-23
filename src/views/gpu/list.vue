@@ -206,7 +206,7 @@
       <li v-for="(item, index) in res_body.content" v-if="item.online_status" class="info-wrap">
         <div v-if="item.evaluation_score_average > 0" class="flex vCenter">
           <el-rate :value="item.evaluation_score_average/2"></el-rate>
-          <span>{{item.evaluation_score_average}}{{$t('scores')}}</span>
+          <span>{{item.evaluation_score_average}}</span>
         </div>
         <div class="flex status-title">
           <div>
@@ -233,7 +233,7 @@
               plain
               size="mini"
               @click="openTry(item)"
-              :disabled="!item.idle_status||item.can_rent_start_time_later<=0"
+              :disabled="!item.idle_status||item.can_rent_start_time_later<0"
               :loading="item.try_rentLoading"
             >{{$t('list_try')}}</el-button>
             <el-button
@@ -241,7 +241,7 @@
               type="primary"
               size="mini"
               @click="openDlg(item)"
-              :disabled="!item.idle_status||item.can_rent_start_time_later<=0"
+              :disabled="!item.idle_status||item.can_rent_start_time_later<0"
               :loading="item.rentLoading"
             >{{$t('list_rentout')}}</el-button>
           </div>
@@ -258,7 +258,7 @@
               <a class="cPrimaryColor">{{item.county}}{{$t('list_china')}}</a>
             </span>
           </div>
-          <div class="td" v-if="item.can_rent_start_time_later<=0">
+          <div class="td" v-if="item.can_rent_start_time_later<0">
             <span class="fs16">
               <a class="cPrimaryColor">{{-item.can_rent_start_time_later}}</a>
               {{$t('list_start_rentout')}}

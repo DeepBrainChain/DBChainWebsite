@@ -3,7 +3,7 @@
     <el-row class="wrap1440 mb100">
       <el-col class="flex" :md="12">
         <div class="content">
-          <div class="text">{{get_text1}}</div>
+          <div class="text">{{get_text1}}{{$t('home.intr_1')}}</div>
           <div class="btn-wrap mt60">
             <el-button class="lg fs18 long" type="primary" @click="pushToWallet">
               {{$t('home.startMiner')}}
@@ -115,6 +115,12 @@ export default {
         return this.$t("home.intr_aionego_1");
       } else if (this.$t("website_name") == "deepshare") {
         return this.$t("home.intr_deepshare_1");
+      } else if (this.$t("website_name") == "sharegpu") {
+        return this.$t("home.intr_sharegpu_1");
+      } else if (this.$t("website_name") == "panchuangai") {
+        return this.$t("home.intr_panchuangai_1");
+      } else if (this.$t("website_name") == "yalecloud") {
+        return this.$t("home.intr_yalecloud_1");
       }
       return this.$t("home.intr_dbchain_1");
     }

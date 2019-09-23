@@ -4,7 +4,7 @@
       <el-col class="flex" :md="12">
         <div class="content">
           <div class="text">
-            <p>{{get_text1}}</p>
+            <p>{{get_text1}}{{$t('home.intr_4')}}</p>
             <p>{{$t('home.intr_5')}}</p>
           </div>
           <div class="btn-wrap mt60">
@@ -122,21 +122,33 @@ export default {
         this.image1 = require("../assets/imgs/building@1x.png");
       } else if (this.$t("website_name") == "deepshare") {
         this.image1 = require("../assets/imgs/building_deepshare@1x.png");
+      } else if (this.$t("website_name") == "sharegpu") {
+        this.image1 = require("../assets/imgs/building@1x.png");
+      } else if (this.$t("website_name") == "panchuangai") {
+        this.image1 = require("../assets/imgs/building@1x.png");
+      } else if (this.$t("website_name") == "yalecloud") {
+        this.image1 = require("../assets/imgs/building@1x.png");
       }
     }
   },
   computed: {
     get_text1() {
       if (this.$t("website_name") == "dbchain") {
-        return this.$t("home.intr_dbchain_4");
+        return this.$t("home.intr_dbchain_1");
       } else if (this.$t("website_name") == "yousanai") {
-        return this.$t("home.intr_yousanai_4");
+        return this.$t("home.intr_yousanai_1");
       } else if (this.$t("website_name") == "aionego") {
-        return this.$t("home.intr_aionego_4");
+        return this.$t("home.intr_aionego_1");
       } else if (this.$t("website_name") == "deepshare") {
-        return this.$t("home.intr_deepshare_4");
+        return this.$t("home.intr_deepshare_1");
+      } else if (this.$t("website_name") == "sharegpu") {
+        return this.$t("home.intr_sharegpu_1");
+      } else if (this.$t("website_name") == "panchuangai") {
+        return this.$t("home.intr_panchuangai_1");
+      } else if (this.$t("website_name") == "yalecloud") {
+        return this.$t("home.intr_yalecloud_1");
       }
-      return this.$t("home.intr_dbchain_4");
+      return this.$t("home.intr_dbchain_1");
     }
   }
 };

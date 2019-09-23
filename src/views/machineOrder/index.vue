@@ -54,7 +54,7 @@
           <div class="rate-head">
             <div class="flex right vCenter" v-if="item.orderData.evaluation_time">
               <el-rate :value="item.orderData.evaluation_score/2"></el-rate>
-              <span>{{item.orderData.evaluation_score}}{{$t('scores')}}</span>
+              <!--  <span>{{item.orderData.evaluation_score}}{{$t('scores')}}</span> -->
             </div>
           </div>
           <div>
