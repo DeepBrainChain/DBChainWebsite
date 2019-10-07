@@ -465,10 +465,11 @@ export default {
       dlg_open: false,
       dlg_open_try: false,
       curVal: 0,
+      si: undefined,
       // countries
       countries: [
         {
-          name: this.$t("list_all"),
+          name: undefined, //this.$t("list_all"),
           value: "all"
         }
       ],
@@ -487,15 +488,15 @@ export default {
       // 是否有ip
       have_ip: [
         {
-          name: this.$t("gpu.have_ip[0]"),
+          name: undefined, //this.$t("gpu.have_ip[0]"),
           value: 0
         },
         {
-          name: this.$t("gpu.have_ip[1]"),
+          name: undefined, //this.$t("gpu.have_ip[1]"),
           value: 1
         },
         {
-          name: this.$t("gpu.have_ip[2]"),
+          name: undefined, //this.$t("gpu.have_ip[2]"),
           value: 2
         }
       ],
@@ -503,15 +504,15 @@ export default {
       // 机器状态下拉
       idle_status: [
         {
-          name: this.$t("gpu.idle_status[0]"),
+          name: undefined, //this.$t("gpu.idle_status[0]"),
           value: 0
         },
         {
-          name: this.$t("gpu.idle_status[1]"),
+          name: undefined, // this.$t("gpu.idle_status[1]"),
           value: 1
         },
         {
-          name: this.$t("gpu.idle_status[2]"),
+          name: undefined, //this.$t("gpu.idle_status[2]"),
           value: 2
         }
       ],
@@ -585,13 +586,33 @@ export default {
     };
   },
   watch: {
+    "$i18n.locale"() {
+      this.init_data();
+    },
     curVal(newVal) {}
   },
+  created() {
+    this.init_data();
+  },
+  computed: {},
   activated() {
     this.queryMc();
   },
-  deactivated() {},
+  deactivated() {
+    if (this.si) {
+      clearInterval(this.si);
+    }
+  },
   methods: {
+    init_data() {
+      this.countries[0].name = this.$t("list_all");
+      this.have_ip[0].name = this.$t("gpu.have_ip[0]");
+      this.have_ip[1].name = this.$t("gpu.have_ip[1]");
+      this.have_ip[2].name = this.$t("gpu.have_ip[2]");
+      this.idle_status[0].name = this.$t("gpu.idle_status[0]");
+      this.idle_status[1].name = this.$t("gpu.idle_status[1]");
+      this.idle_status[2].name = this.$t("gpu.idle_status[2]");
+    },
     pushDetail(machine_id) {
       this.$router.push("/machineDetail?machine_id=" + machine_id);
     },
@@ -770,14 +791,22 @@ export default {
         user_name_platform: this.$t("website_name"),
         language: this.$i18n.locale
       };
-      if (this.st) {
-        clearTimeout(this.st);
-      }
-      this.st = setTimeout(() => {
+      getMcList(params).then(res => {
+        this.res_body = res;
+      });
+      this.si = setInterval(() => {
         getMcList(params).then(res => {
           this.res_body = res;
         });
-      }, 1000);
+      }, 10000);
+      // if (this.st) {
+      //  clearTimeout(this.st);
+      //  }
+      // this.st = setTimeout(() => {
+      //  getMcList(params).then(res => {
+      //    this.res_body = res;
+      // });
+      //}, 5000);
     }
   },
   computed: {

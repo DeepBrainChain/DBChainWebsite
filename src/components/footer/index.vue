@@ -47,6 +47,26 @@ export default {
         return this.$t("footer_service_sharegpu");
       } else if (this.$t("website_name") == "yalecloud") {
         return this.$t("footer_service_yalecloud");
+      } else if (this.$t("website_name") == "52lm") {
+        return this.$t("footer_service_52lm");
+      } else if (this.$t("website_name") == "dimi") {
+        return this.$t("footer_service_dimi");
+      } else if (this.$t("website_name") == "mayi") {
+        return this.$t("footer_service_mayi");
+      } else if (this.$t("website_name") == "windywinter") {
+        return this.$t("footer_service_windywinter");
+      } else if (this.$t("website_name") == "1024lab") {
+        return this.$t("footer_service_1024lab");
+      } else if (this.$t("website_name") == "litaai") {
+        return this.$t("footer_service_litaai");
+      } else if (this.$t("website_name") == "ainlp") {
+        return this.$t("footer_service_ainlp");
+      } else if (this.$t("website_name") == "52cv") {
+        return this.$t("footer_service_52cv");
+      } else if (this.$t("website_name") == "52cv") {
+        return this.$t("footer_service_52cv");
+      } else if (this.$t("website_name") == "redstonewill") {
+        return this.$t("footer_service_redstonewill");
       }
 
       return this.$t("footer_service_dbchain");

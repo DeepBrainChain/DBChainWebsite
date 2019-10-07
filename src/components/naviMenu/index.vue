@@ -48,9 +48,10 @@ export default {
       &.active,
       &:hover {
         background-color: #008bf3; ////dbchain:#008BF3, yousanai:rgb(243, 186, 0),aionego:#c5c325,deepshare:rgb(25, 93,145),yalecloud:#008bf3,panchuangai:#008bf3
+        //sharegpu:rgb( 25, 93, 145),52lm:rgb(25,93,145);mayi:rgb(25,93,145);windywinter\dimi\52cv\ainlp\1024lab\litaai:rgb(25,93,145);
         color: #fff;
         border-color: #008bf3; ////dbchain:#008BF3, yousanai:rgb(243, 186, 0);aionego:#b4b645,deepshare:rgb(25, 93,145),yalecloud:#008bf3,panchuangai:#008bf3
-      }
+      } // //sharegpu:rgb( 25, 93, 145),52lm:rgb(25,93,145);,mayi:rgb(25,93,145);windywinter\dimi\52cv\ainlp\1024lab\litaai:rgb(25,93,145);
       i {
         margin-right: 20px;
         vertical-align: middle;

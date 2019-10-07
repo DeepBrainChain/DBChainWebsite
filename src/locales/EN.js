@@ -90,7 +90,7 @@ export default {
     machineOffLine: 'Machine(s) offline',
     remainingTime: 'Time left',
     reload: 'Continue renting',
-    payDBCs: 'Total DBC to pay',
+    payDBCs: 'Total DBCs',
     payPrice: 'DBC price when paying',
     actualPrice: 'Total fee incurred',
     currentRemaining: 'Remaining',
@@ -116,8 +116,8 @@ export default {
     mcStatusTitle: 'Machine Status', // new
     idle_status: [
       'All Machines',
-      'Available Machine(s)',
-      'Rented Machine(s)'
+      'Idle Machines',
+      'Rented Machines'
     ], // new
 
     dbc_version: [
@@ -126,8 +126,8 @@ export default {
     ],
     have_ip: [
       'All',
-      'None',
-      'There are'
+      'NO',
+      'YES'
     ],
     cumulativeDuration: 'Cumulative rental time', // new
 
@@ -223,16 +223,28 @@ export default {
     intr_sharegpu_1: "ShareGPU",
     intr_panchuangai_1: "PanChuangAI",
     intr_yalecloud_1: "YaleCloud",
-    intr_1: ' provides GPU rental service.join us! can help your machine very convenient access to the DBC network, gain revenue.\n' +
+    intr_52lm_1: "52LM",
+    intr_dimi_1: "DiMiAI",
+    intr_mayi_1: "MaYiPool",
+    intr_windywinter_1: "WindyWinter AI",
+    intr_1024lab_1: "1024LAB",
+    intr_litaai_1: "LITA AI",
+    intr_ainlp_1: "AINLP-DBC GPU service platform,",
+    intr_52cv_1: "52CV",
+    intr_redstonewill_1: "RedStoneAI",
+    intr_1: ' provides GPU rental service.join us! can help your machine very convenient access to the DBC network, gain revenue. \n' +
       '\n' +
-      'If your GPU is ever idle, you can connect it to the DBC network to earn DBC tokens and enjoy the benefit of the tokens appreciation.\n ' +
+      ' If your GPU is ever idle, you can connect it to the DBC network to earn DBC tokens and enjoy the benefit of the tokens appreciation. \n ' +
       '\n' +
-      'If your GPU is ever idle for more than one hour, you can connect it to the DBC network to earn DBC tokens.',
-    intr_2: 'Our GPUs come from all over the world, connected through DBC distributed network,there is not centralized server in here,your data will not be stolen.',
-    intr_3: 'In the DBC network to buy and use GPU you need to pay with DBC token. GPUs are priced in USD, the higher the price of DBC the less DBC you need in order to pay.',
-    intr_4: ' is committed to providing users with cost-effective AI computing services, using DBC TOKEN for settlement. \n' +
-      '\n' +
-      'DBC is a decentralized AI computing network distributed around the world. Through us, you can easily use the machines in the network. We provide rich services to meet your needs',
+      ' If your GPU is ever idle for more than one hour, you can connect it to the DBC network to earn DBC tokens.',
+    intr_2: 'Our GPUs come from all over the world, connected through the DBC distributed network, there is no centralized server in here, your data will not be stolen. \n',
+    intr_3: ' In the DBC network You need the DBC token to rent and use GPU(s).GPU(s) are priced in USD, the higher the price of DBC the less DBC you need in order to pay.',
+
+    intr_4: ' is committed to\n ' +
+      'providing users with cost-effective AI computing service, using DBC token for payment.\n ' +
+      '  DBC is a decentralized AI computing network distributed around the world. Through us, you can easily use the machines in the network.\n ' +
+      '  We provide various services to meet your needs.\n ' +
+      '  In the DBC network you can find cheap and varied GPUs. Throughout the usage of the GPU(s) your data are encrypted during transmission.',
     intr_5: 'In the DBC network you can find cheap and varied GPUs. Throughout the usage of the GPU(s) your data are encrypted during transmission.',
     intr_6: 'GPU rental is charged by the minute, if a GPU machine stops abruptly during usage you can be compensated up to 144 hour\'s rental fee.',
     intr_7: 'DBC will start mining from 2020 and each year 500 million DBCs are mined, starting from the 4th year, 250 millions are mined each year and the amount is halved every 5 years from then on. A total of 4 billion DBCs will be mined.',
@@ -293,7 +305,7 @@ export default {
   my_machine_order_cancer: 'Order cancelled',
   my_machine_order_rent_success: 'Order in use',
   my_machine_order_vocing_pay: 'Verifying payment, this will take a few minutes.',
-  my_machine_order_pay_error: 'verification for payment failed',
+  my_machine_order_pay_error: 'verification for payment failed,over time',
   my_machine_order_return_dbc: 'Refund successful',
   my_machine_order_vocing_machine_success: 'Verification for machine environment successful',
 
@@ -351,8 +363,8 @@ export default {
   myMachine_code_send: 'Verification code has been sent to your email, please enter the verification code',
   myMachine_cancer_order: 'Cancel order',
 
-  footer_friend: 'Invitation link',
-  footer_service: 'Customer service: :support@dbchain.ai, the customer service will get back to you in 24 hours',
+  footer_friend: 'Useful links',
+  //footer_service: 'Customer service: :support@dbchain.ai, the customer service will get back to you in 24 hours',
 
   dlg_bindMail_input_email: 'Please enter correct email address',
   dlg_bindMail_binding_error: 'Binding failed',
@@ -407,7 +419,7 @@ export default {
   machine_order_cancer: 'Order cancelled',
   machine_order_using: 'Order in use',
   machine_order_vocing_pay: 'Verifying payment',
-  machine_order_vocing_failure: 'verification for payment failed',
+  machine_order_vocing_failure: 'verification for payment failed，over time',
   machine_order_return_dbc_success: 'Refund successful',
   machine_order_is_used_time: 'Time used',
   machine_order_hour: 'Hour(s)',
@@ -450,9 +462,22 @@ export default {
   footer_service_panchuangai: "zhouas@panchuangai.cn", //9.17 19:33
   footer_service_sharegpu: "758655995@qq.com", //9.17 19:33
   footer_service_yalecloud: "yalesoft@163.com", //9.17 19:33
+  footer_service_52lm: "2483098379@qq.com", //9.17 19:33
+  footer_service_dimi: "18019983388@163.com", //9.17 19:33
+  footer_service_mayi: "mayipool@163.com", //9.17 19:33
 
+  footer_service_windywinter: "591498086@qq.com", //9.17 19:33
+  footer_service_1024lab: "2413810931@qq.com", //9.17 19:33
+  footer_service_litaai: "ranran@litaai.xyz", //9.17 19:33
+  footer_service_ainlp: "textminer@foxmail.com", //9.17 19:33
+  footer_service_52cv: "amos@52cv.net", //9.17 19:33
+  footer_service_redstonewill: "redstonewill@hotmail.com", //9.17 19:33
   list_start_rentout: 'minutes later, it can be rented',
   list_can_rentout: 'Users can rent it now',
   my_gpu_count: 'The number of gpus I rent ', //9.17 19:33
+
+  pay_over_time: "Unable to pay. It has expired for 10 minutes. The order will be cancelled within 1 minute", //9.29 00:26
+  click_to_view: 'click to view',
+  continue_pay: "Relet",
   ...enLocale
 }

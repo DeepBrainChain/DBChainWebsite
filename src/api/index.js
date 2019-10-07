@@ -3,6 +3,7 @@ import axios from "@/utlis/axios";
 //const host = "https://otherinfo.dbchain.ai";
 const host = "https://info.dbchain.ai";
 //const host = 'http://116.85.24.172:8031'
+//const host = "http://192.168.1.186:8080";
 //const host = "http://192.168.31.241:8080";
 const juheKey = "";
 //user_name_platform: this.$t("website_name")
@@ -123,11 +124,20 @@ export const pay = params => {
   });
 };
 
-//获取DBC价格
+//获取租用订单DBC价格
 export const get_dbc_price = params => {
   return axios({
     method: "post",
     url: host + "/rent/get_dbc_price",
+    params
+  });
+};
+
+//获取续租订单DBC价格
+export const continue_pay_get_dbc_price = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent_continue/continue_pay_get_dbc_price",
     params
   });
 };
@@ -141,11 +151,29 @@ export const get_dbchain_address = params => {
   });
 };
 
-// 获取计算后DBC的数量
+// 获取租用订单计算后DBC的数量
 export const get_pay_dbc_count = params => {
   return axios({
     method: "post",
     url: host + "/rent/get_pay_dbc_count",
+    params
+  });
+};
+
+// 获取续租订单计算后DBC的数量
+export const continue_pay_get_pay_dbc_count = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent_continue/continue_pay_get_pay_dbc_count",
+    params
+  });
+};
+
+// 计算容器创建时间
+export const get_create_container_time = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/get_create_container_time",
     params
   });
 };
@@ -218,6 +246,74 @@ export const request_return_dbc = params => {
   return axios({
     method: "post",
     url: host + "/rent/request_return_dbc",
+    params
+  });
+};
+//获取续租订单前信息
+export const continue_pay_place_order = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent_continue/continue_pay_place_order",
+    params
+  });
+};
+//创建续租订单
+export const continue_pay_create_order = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent_continue/continue_pay_create_order",
+    params
+  });
+};
+//续租订单验证
+export const continue_pay_voc_pay = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent_continue/continue_pay_voc_pay",
+    params
+  });
+};
+
+//续租订单获取退币验证码
+export const continue_pay_return_dbc_code = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent_continue/continue_pay_return_dbc_code",
+    params
+  });
+};
+
+//续租退币接口
+export const continue_pay_return_dbc = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent_continue/continue_pay_return_dbc",
+    params
+  });
+};
+//续租订单获取退币验证码
+export const get_continue_pay_order_list = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent_continue/get_continue_pay_order_list",
+    params
+  });
+};
+
+// 续租取消订单获取验证码
+export const continue_pay_cancer_order_code = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent_continue/continue_pay_cancer_order_code",
+    params
+  });
+};
+
+// 续租取消订单接口
+export const continue_pay_cancer_order = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent_continue/continue_pay_cancer_order",
     params
   });
 };
@@ -311,6 +407,9 @@ export const rentout_get_orders_list_by_machine_id = params => {
     params
   });
 };
+
+
+
 
 // 获取当前人的订单列表
 export const get_address_abstracts = ({

@@ -3,7 +3,7 @@ import enLocale from "element-ui/lib/locale/lang/en";
 export default {
   message: "hello i18n !!",
 
-  website_name: "dbchain", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud
+  website_name: "dbchain", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
 
   $: "$",
   send: "发送",
@@ -212,6 +212,15 @@ export default {
     intr_sharegpu_1: "ShareGPU",
     intr_panchuangai_1: "磐创AI",
     intr_yalecloud_1: "YaleCloud",
+    intr_52lm_1: "52LM",
+    intr_dimi_1: "籴米AI",
+    intr_mayi_1: "蚂蚁矿业",
+    intr_windywinter_1: "东风AI云计算",
+    intr_1024lab_1: "1024LAB",
+    intr_litaai_1: "利他AI",
+    intr_ainlp_1: "AINLP-DBC GPU服务平台，",
+    intr_52cv_1: "52CV",
+    intr_redstonewill_1: "AI有道",
     intr_1: "提供GPU出租服务，加入我们，可以帮助您的机器非常方便的接入到深脑链网络中，获取收益。\n" +
       "\n" +
       "       只要你的GPU有空闲，就可以加入我们赚取DBC Token，同时可以享受Token升值带来的更多收益。\n" +
@@ -275,7 +284,7 @@ export default {
   my_machine_order_cancer: "订单已取消",
   my_machine_order_rent_success: "正在使用中",
   my_machine_order_vocing_pay: "正在进行支付验证中，大概需要几分钟",
-  my_machine_order_pay_error: "支付验证失败",
+  my_machine_order_pay_error: "验证失败，已经超过支付有效期",
   my_machine_order_return_dbc: "退币成功",
   my_machine_order_vocing_machine_success: "机器环境验证成功",
 
@@ -302,15 +311,15 @@ export default {
   list_cuda_version: "CUDA版本号",
   list_disk_space: "硬盘",
   list_cpu_type: "CPU型号",
-  list_half_precision_tflops: "半精度浮点运算数",
+  list_half_precision_tflops: "半精度浮点数",
   list_gpu_ram_size: "GPU显存",
   list_disk_bandwidth: "硬盘带宽",
   list_cpu_numbers: "CPU内核数",
   list_ram_size: "内存数",
-  list_single_precision_tflops: "单精度浮点运算数",
+  list_single_precision_tflops: "单精度浮点数",
   list_gpu_ram_bandwidth: "GPU显存带宽",
   list_inet_up: "上行带宽",
-  list_double_precision_tflops: "双精度浮点运算数",
+  list_double_precision_tflops: "双精度浮点数",
   list_pcie_bandwidth: "总线传输速度",
   list_inet_down: "下行带宽",
   list_os: "操作系统",
@@ -389,7 +398,7 @@ export default {
   machine_order_cancer: "订单已取消",
   machine_order_using: "正在使用中",
   machine_order_vocing_pay: "支付验证中",
-  machine_order_vocing_failure: "支付验证失败",
+  machine_order_vocing_failure: "验证失败，已经超过支付有效期",
   machine_order_return_dbc_success: "退币成功",
   machine_order_is_used_time: "已使用时间",
   machine_order_hour: "小时",
@@ -431,10 +440,28 @@ export default {
   footer_service_panchuangai: "zhouas@panchuangai.cn", //9.17 19:33
   footer_service_sharegpu: "758655995@qq.com", //9.17 19:33
   footer_service_yalecloud: "yalesoft@163.com", //9.17 19:33
+  footer_service_52lm: "2483098379@qq.com", //9.17 19:33
+  footer_service_dimi: "18019983388@163.com", //9.17 19:33
+  footer_service_mayi: "mayipool@163.com", //9.17 19:33
 
+  footer_service_windywinter: "591498086@qq.com", //9.17 19:33
+  footer_service_1024lab: "2413810931@qq.com", //9.17 19:33
+  footer_service_litaai: "ranran@litaai.xyz", //9.17 19:33
+  footer_service_ainlp: "textminer@foxmail.com", //9.17 19:33
+  footer_service_52cv: "amos@52cv.net", //9.17 19:33
+  footer_service_redstonewill: "redstonewill@hotmail.com", //9.17 19:33
   list_start_rentout: "分钟后可租用", //9.17 19:33
   list_can_rentout: "用户现在可租用", //9.17 19:33
   my_gpu_count: "我租用的GPU数量", //9.17 19:33
 
+  pay_over_time: "无法支付，已经超过10分钟有效期，订单将会在1分钟内自动取消", //9.29 00:26
+  click_to_view: '点击查看',
+  continue_pay: "续租",
+  continue_pay_time: "续租时长",
+  continue_pay_details: "订单详情",
+  click_to_view_continue_pay: "查看续租订单详情",
+  continue_pay_pay_success: "支付成功",
+  continue_pay_success: "续租成功",
+  continue_pay_order_is_over: '订单结束',
   ...enLocale
 };

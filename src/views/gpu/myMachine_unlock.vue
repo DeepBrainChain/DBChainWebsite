@@ -27,6 +27,16 @@
       <div class="tools-head">
         <div class="l-wrap">
           <!--          <span class="tools-title">{{$t('gpu.mcStatusTitle')}}：<b>{{$t('gpu.machineOnLine')}}</b></span>-->
+          <el-button
+            v-if="item.orderData.have_continue_pay"
+            plain
+            class="is-link"
+            @click="pushContinuePayDetail(item.orderData.order_id,item.orderData.order_is_over)"
+          >{{$t('click_to_view_continue_pay')}}</el-button>
+          <span
+            v-if="item.orderData.have_continue_pay"
+            class="tools-title"
+          >&nbsp; &nbsp; &nbsp; &nbsp;</span>
           <span
             v-if="item.orderData.order_is_cancer ||item.orderData.order_is_over"
             class="tools-title"
@@ -86,6 +96,7 @@
         <div>
           <span class="td">{{$t('gpu.actualPrice')}}：{{item.orderData.dbc_real_need_count}} DBC</span>
           <span
+            v-if="item.orderData.have_continue_pay===false"
             class="td"
           >{{$t('gpu.gpuBilling')}}：$ {{item.orderData.gpu_price_dollar}}/{{$t('my_machine_hour')}}</span>
         </div>
@@ -93,25 +104,16 @@
           <span
             class="td"
           >{{$t('gpu.currentRemaining')}}：{{item.orderData.dbc_total_count - item.orderData.dbc_real_need_count}} DBC</span>
-          <span class="td">{{$t('gpu.payPrice')}}：$ {{item.orderData.dbc_price.toFixed(4)}}</span>
+          <span
+            v-if="item.orderData.have_continue_pay===false"
+            class="td"
+          >{{$t('gpu.payPrice')}}：$ {{item.orderData.dbc_price.toFixed(4)}}</span>
         </div>
-        <!--        <div>-->
-        <!--          <span class="td">{{$t('gpu.gpuRemainTime')}}（DBC）：422</span>-->
-        <!--          <span class="td">{{$t('gpu.storeBilling')}}：45 DBC/hr</span>-->
-        <!--          <span class="td">{{$t('gpu.gpuCost')}}：{{item.orderData.dbc_price/item.orderData.gpu_price_dollar}} DBC</span>-->
-        <!--          <span class="td">{{$t('gpu.storeCost')}}：{{item.orderData.rent_time_length}}</span>-->
-        <!--          <span class="td">{{$t('gpu.storeBilling')}}（DBC）：45/hr</span>-->
-        <!--          <span class="td">{{$t('gpu.storeRemainTime')}}（DBC）：422</span>-->
-        <!--        </div>-->
       </div>
       <div class="status-wrap">
         <div class="flex status-title">
           <div>
-            <el-button
-              plain
-              class="is-link"
-              @click="pushDetail(item.mcData.machine_id)"
-            >{{item.mcData.machine_id}}</el-button>
+            <span>{{item.mcData.machine_id}}</span>
             <span class="fs28">
               <span
                 class="cPrimaryColor"
@@ -354,12 +356,20 @@
             style="width: 86px"
             @click="openRateDlg(item)"
           >{{$t('gpu.rate')}}</el-button>
-
           <template v-else-if="item.orderData.rent_success">
             <!--<el-button plain style="width: 86px" class="tool-btn" size="mini"
                        @click="dlgReload_open = true">
               {{$t('gpu.reload')}}
             </el-button>-->
+            <el-button
+              plain
+              class="tool-btn"
+              style="width: 80px"
+              size="mini"
+              :loading="item.rentLoading"
+              @click="openContinuePay(item)"
+            >{{$t('continue_pay')}}</el-button>
+
             <el-button
               plain
               class="tool-btn"
@@ -415,6 +425,11 @@
     <dlg-rate :open.sync="dlgRate_open" :item="curItem" @success="successRate"></dlg-rate>
     <!--    return dbc-->
     <dlg-return-dbc :open.sync="dlgReturnDbc_open" :item="curItem" @success="returnSuccess"></dlg-return-dbc>
+    <dlg-continuepay
+      :open.sync="openContinueDlg"
+      :place-order-data="placeOrderData"
+      @confirm="createOrder"
+    ></dlg-continuepay>
   </div>
 </template>
 
@@ -426,9 +441,15 @@ import DlgMail from "@/components/machine/dlg_bindMail";
 import DlgUnsubscribe from "@/components/machine/dlg_unsubscribe";
 import DlgRate from "@/components/machine/dlg_rate";
 import DlgReturnDbc from "@/components/machine/dlg_returnDbc";
+import DlgContinuepay from "@/components/machine/dlg_continuepay";
 import {
   queryBindMail_rent,
+  continue_pay_get_dbc_price,
+  continue_pay_get_pay_dbc_count,
+  continue_pay_create_order,
+  continue_pay_place_order,
   query_machine_by_wallet,
+  get_create_container_time,
   get_dbchain_address,
   get_all_order,
   can_rent_this_machine,
@@ -452,7 +473,8 @@ export default {
     DlgMail,
     DlgUnsubscribe,
     DlgRate,
-    DlgReturnDbc
+    DlgReturnDbc,
+    DlgContinuepay
   },
   data() {
     return {
@@ -463,9 +485,11 @@ export default {
       dlgUnsubscribe_open: false,
       dlgRate_open: false,
       dlgReturnDbc_open: false,
+      openContinueDlg: false,
       isNewMail: false,
       isBinding: false,
       isBinded: false,
+      placeOrderData: undefined,
       bindMail: "",
       res_body: {
         content: []
@@ -493,7 +517,7 @@ export default {
       if (this.isPaying !== true) {
         this.queryOrderList();
       }
-    }, 60000);
+    }, 20000);
   },
   deactivated() {
     if (this.queryOrderListSi) {
@@ -511,6 +535,85 @@ export default {
     }
   },
   methods: {
+    pushContinuePayDetail(order_id, order_is_over) {
+      this.$router.push(
+        "/continuePayDetail?order_id=" +
+          order_id +
+          "&order_is_over=" +
+          order_is_over
+      );
+    },
+    createOrder(params) {
+      const loading = this.$loading();
+
+      continue_pay_create_order(params)
+        .then(res => {
+          if (res.status === 1) {
+            this.$message(this.$t("list_create_order_success"));
+            this.openContinueDlg = false;
+            this.$router.push(
+              "/continuePayDetail?order_id=" +
+                params.order_id +
+                "&order_is_over=" +
+                params.order_is_over
+            );
+          } else {
+            this.$message(res.msg);
+          }
+        })
+        .finally(() => {
+          loading.close();
+        });
+    },
+    // 打开弹窗
+    openContinuePay(item) {
+      item.rentLoading = true;
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
+      continue_pay_place_order({
+        order_id: item.orderData.order_id,
+
+        user_name_platform,
+        language
+      })
+        .then(res_1 => {
+          if (res_1.status === 1) {
+            this.placeOrderData = res_1.content;
+            // this.placeOrderData.dbc_price = -1;
+            return continue_pay_get_dbc_price({
+              continue_pay_order_id: this.placeOrderData.continue_pay_order_id,
+              user_name_platform,
+              language
+            });
+          } else {
+            this.$message({
+              showClose: true,
+              message: res_1.msg,
+              type: "error"
+            });
+            return Promise.reject(res_1.msg);
+          }
+        })
+        .then(res_2 => {
+          if (res_2.status === 1) {
+            this.placeOrderData.dbc_price = res_2.content;
+            this.openContinueDlg = true;
+          } else {
+            this.$message({
+              showClose: true,
+              message: res_2.msg,
+              type: "success"
+            });
+            return Promise.reject(res_2.msg);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        })
+        .finally(() => {
+          item.rentLoading = false;
+        });
+    },
     forceToPay() {
       // console.log('调用强制支付')
       // 判断如果有订单没有支付完成，强制支付
@@ -680,6 +783,25 @@ export default {
     // pay
     payOrder(item) {
       //
+      get_create_container_time({
+        order_id: item.orderData.order_id,
+        user_name_platform,
+        language
+      }).then(res => {
+        if (res.status === 1) {
+          var dateDiff = new Date().getTime() - res.content; //70 * 1000 * 10; //时间差的毫秒数
+          if (dateDiff > 60 * 1000 * 10) {
+            this.$message({
+              showClose: true,
+              message: this.$t("pay_over_time"),
+
+              type: "error"
+            });
+            reutrn;
+          }
+        }
+      });
+
       clearInterval(this.si);
       //    this.si = setInterval(() => {
       //     this.queryOrderList();

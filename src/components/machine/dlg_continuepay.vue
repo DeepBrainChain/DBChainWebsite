@@ -1,26 +1,11 @@
 <template>
   <el-dialog :visible.sync="isOpen" @closed="closed" width="580px">
-    <div slot="title">{{$t('lease')}}</div>
+    <div slot="title">{{$t('continue_pay')}}</div>
     <div class="dlg-content">
       <!--<h3 class="content-head">
         {{$t('gpu.needHD')}}：66GB $ 22/{{$t('hour')}}
       </h3>-->
-      <div class="form">
-        <label>{{$t('gpu.choseGpuCount')}}：</label>
-        <el-select
-          class="time-select ml10"
-          v-model="gpuCount"
-          size="small"
-          @change="computeTotalDBC"
-        >
-          <el-option
-            v-for="item in gpuCountOptions"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-      </div>
+
       <!--<div class="form mt20">
         <label>{{$t('gpu.needHD')}}：</label>
         <input class="small-input" type="number">
@@ -28,7 +13,7 @@
         <span class="fs12 cGray ml10">$xxx/{{$t('hour')}}</span>
       </div>-->
       <div class="form mt20">
-        <label>{{$t('dlg_lease_time')}}：</label>
+        <label>{{$t('continue_pay_time')}}：</label>
         <el-input
           style="width: 180px"
           size="small"
@@ -76,23 +61,23 @@
 </template>
 
 <script>
-import { get_pay_dbc_count, can_rent_this_machine } from "@/api";
+import { continue_pay_get_pay_dbc_count, can_rent_this_machine } from "@/api";
 import { getBalance } from "@/utlis";
 
 export default {
-  name: "popup_reload",
+  name: "popup_continuepay",
   props: {
     open: Boolean,
-    mcData: Object,
+
     placeOrderData: {
       type: Object,
       default: () => {
         return {
-          order_id: "5d42e162e124f45a4fa158f5",
+          continue_pay_order_id: "",
           gpu_price_dollar: 0.0001,
           code: "0.3848",
           time_max: 1500,
-          gpu_count_max: 1,
+          order_id: "",
           dbc_price: 0.0026
         };
       }
@@ -144,7 +129,7 @@ export default {
       const hours = parseInt(this.placeOrderData.time_max / 60);
       const day = Math.floor(hours / 24);
       const h = hours - day * 24;
-      return `${day}D${h}H`;
+      return `${day}d${h}h`;
     },
     gpuCountOptions() {
       let opts = [];
@@ -185,10 +170,10 @@ export default {
     getPayDbcCount() {
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
-      get_pay_dbc_count({
+      continue_pay_get_pay_dbc_count({
         rent_time_length: this.time * 60 * this.timeSelect,
-        gpu_count: this.gpuCount,
-        order_id: this.placeOrderData.order_id,
+
+        continue_pay_order_id: this.placeOrderData.continue_pay_order_id,
         user_name_platform,
         language
       }).then(res => {
@@ -217,16 +202,14 @@ export default {
     confirm() {
       const params = {
         rent_time_length: this.time * this.timeSelect * 60,
-        order_is_over: this.placeOrderData.order_is_over,
-        dbc_price: this.placeOrderData.dbc_price,
-        gpu_count: this.gpuCount,
         order_id: this.placeOrderData.order_id,
-        dbc_total_count: this.total_price,
+        continue_pay_order_id: this.placeOrderData.continue_pay_order_id,
+
         user_name_platform: this.$t("website_name"),
         language: this.$i18n.locale
       };
       this.$emit("confirm", params);
-      pocMachine(this.placeOrderData.order_id);
+      //pocMachine(this.placeOrderData.order_id);
     },
     cancel() {
       this.closed();

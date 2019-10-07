@@ -2,7 +2,7 @@
   <div class="bg-box wrap1440 mb100">
     <div class="border-box">
       <div class="title">
-        <h3>{{$t('gpu.mcTradeInfo')}}</h3>
+        <h3>{{$t('gpu.mcTradeInfo')}}：{{mcData.machine_id}}</h3>
         <div v-if="mcData" class="flex right vCenter">
           <p>{{mcData.evaluation_count}}{{$t('machine_detail_many')}}：</p>
           <el-rate :value="mcData.evaluation_score_average/2" disabled></el-rate>

@@ -121,7 +121,26 @@ export default {
         return this.$t("home.intr_panchuangai_1");
       } else if (this.$t("website_name") == "yalecloud") {
         return this.$t("home.intr_yalecloud_1");
+      } else if (this.$t("website_name") == "52lm") {
+        return this.$t("home.intr_52lm_1");
+      } else if (this.$t("website_name") == "dimi") {
+        return this.$t("home.intr_dimi_1");
+      } else if (this.$t("website_name") == "mayi") {
+        return this.$t("home.intr_mayi_1");
+      } else if (this.$t("website_name") == "windywinter") {
+        return this.$t("home.intr_windywinter_1");
+      } else if (this.$t("website_name") == "1024lab") {
+        return this.$t("home.intr_1024lab_1");
+      } else if (this.$t("website_name") == "litaai") {
+        return this.$t("home.intr_litaai_1");
+      } else if (this.$t("website_name") == "ainlp") {
+        return this.$t("home.intr_ainlp_1");
+      } else if (this.$t("website_name") == "52cv") {
+        return this.$t("home.intr_52cv_1");
+      } else if (this.$t("website_name") == "redstonewill") {
+        return this.$t("home.intr_redstonewill_1");
       }
+
       return this.$t("home.intr_dbchain_1");
     }
   }
@@ -130,7 +149,7 @@ export default {
 
 <style lang="scss" scoped>
 .home {
-  margin-top: 135px;
+  margin-top: 75px;
 }
 
 .grid-content {

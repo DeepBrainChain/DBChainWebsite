@@ -96,6 +96,24 @@ export default {
         return "";
       } else if (this.$t("website_name") == "yalecloud") {
         return "";
+      } else if (this.$t("website_name") == "52lm") {
+        return "";
+      } else if (this.$t("website_name") == "dimi") {
+        return "";
+      } else if (this.$t("website_name") == "mayi") {
+        return "";
+      } else if (this.$t("website_name") == "windywinter") {
+        return "";
+      } else if (this.$t("website_name") == "1024lab") {
+        return "";
+      } else if (this.$t("website_name") == "litaai") {
+        return "";
+      } else if (this.$t("website_name") == "ainlp") {
+        return "";
+      } else if (this.$t("website_name") == "52cv") {
+        return "";
+      } else if (this.$t("website_name") == "redstonewill") {
+        return "";
       }
 
       return this.$t("heads.talk");
@@ -111,7 +129,7 @@ export default {
         lang = navigator.userLanguage;
       }
       lang = lang.substr(0, 2);
-      if (lang === "cn") {
+      if (lang === "zh") {
         lang = "CN";
       } else if (lang === "en") {
         lang = "EN";
@@ -174,6 +192,26 @@ export default {
         this.link.href = "./sharegpu.ico";
       } else if (this.$t("website_name") == "yalecloud") {
         this.link.href = "./yalecloud.ico";
+      } else if (this.$t("website_name") == "52lm") {
+        // this.link.href = "./panchuangai.ico";
+      } else if (this.$t("website_name") == "dimi") {
+        this.link.href = "./dimi.ico";
+      } else if (this.$t("website_name") == "mayi") {
+        this.link.href = "./mayi.ico";
+      } else if (this.$t("website_name") == "windywinter") {
+        this.link.href = "./windywinter.ico";
+      } else if (this.$t("website_name") == "1024lab") {
+        this.link.href = "./1024lab.ico";
+      } else if (this.$t("website_name") == "litaai") {
+        this.link.href = "./litaai.ico";
+      } else if (this.$t("website_name") == "ainlp") {
+        this.link.href = "./ainlp.ico";
+      } else if (this.$t("website_name") == "52cv") {
+        this.link.href = "./52cv.ico";
+      } else if (this.$t("website_name") == "52cv") {
+        this.link.href = "./52cv.ico";
+      } else if (this.$t("website_name") == "redstonewill") {
+        this.link.href = "./redstonewill.ico";
       }
 
       document.getElementsByTagName("head")[0].appendChild(this.link);
@@ -194,6 +232,24 @@ export default {
         document.title = "ShareGpu";
       } else if (this.$t("website_name") == "yalecloud") {
         document.title = "YaleCloud";
+      } else if (this.$t("website_name") == "52lm") {
+        document.title = "52LM";
+      } else if (this.$t("website_name") == "dimi") {
+        document.title = "DIMI";
+      } else if (this.$t("website_name") == "mayi") {
+        document.title = "MAYI";
+      } else if (this.$t("website_name") == "windywinter") {
+        document.title = "WindyWinter";
+      } else if (this.$t("website_name") == "1024lab") {
+        document.title = "1024LAB";
+      } else if (this.$t("website_name") == "litaai") {
+        document.title = "LITAAI";
+      } else if (this.$t("website_name") == "ainlp") {
+        document.title = "AINLP";
+      } else if (this.$t("website_name") == "52cv") {
+        document.title = "52CV";
+      } else if (this.$t("website_name") == "redstonewill") {
+        document.title = "redstonewill";
       }
     },
     set_logo() {
@@ -211,6 +267,24 @@ export default {
         this.logo = require("../../assets/imgs/panchuangai@1x.png");
       } else if (this.$t("website_name") == "yalecloud") {
         this.logo = require("../../assets/imgs/yalecloud@1x.png");
+      } else if (this.$t("website_name") == "52lm") {
+        // this.logo = require("../../assets/imgs/sharegpu@1x.png");
+      } else if (this.$t("website_name") == "dimi") {
+        this.logo = require("../../assets/imgs/dimi@1x.png");
+      } else if (this.$t("website_name") == "mayi") {
+        this.logo = require("../../assets/imgs/mayi@1x.png");
+      } else if (this.$t("website_name") == "windywinter") {
+        this.logo = require("../../assets/imgs/windywinter@1x.png");
+      } else if (this.$t("website_name") == "1024lab") {
+        this.logo = require("../../assets/imgs/1024lab@1x.png");
+      } else if (this.$t("website_name") == "litaai") {
+        this.logo = require("../../assets/imgs/litaai@1x.png");
+      } else if (this.$t("website_name") == "ainlp") {
+        this.logo = require("../../assets/imgs/ainlp@1x.png");
+      } else if (this.$t("website_name") == "52cv") {
+        this.logo = require("../../assets/imgs/52cv@1x.png");
+      } else if (this.$t("website_name") == "redstonewill") {
+        this.logo = require("../../assets/imgs/redstonewill@1x.png");
       }
     },
     pushMenu(name) {
@@ -262,7 +336,7 @@ export default {
   align-items: flex-start;
 
   .logo {
-    margin-top: 10px; //dbchain:10px ,aionego:-30px,yousanai:-30px,deepshare-30px,yalecloud-30px,panchuanga:-30px
+    margin-top: 10px; //dbchain:10px ,aionego:-30px,yousanai:-30px,deepshare-30px,yalecloud-30px,panchuanga:-30px,,sharegpu:-30px
     margin-right: 119px; //dbchain: 119px  ,aionego:119px,yousanai:119px,deepshare:119px
   }
 

@@ -74,6 +74,24 @@ export default {
         return "";
       } else if (this.$t("website_name") == "yalecloud") {
         return "";
+      } else if (this.$t("website_name") == "52lm") {
+        return "";
+      } else if (this.$t("website_name") == "dimi") {
+        return "";
+      } else if (this.$t("website_name") == "mayi") {
+        return "";
+      } else if (this.$t("website_name") == "windywinter") {
+        return "";
+      } else if (this.$t("website_name") == "1024lab") {
+        return "";
+      } else if (this.$t("website_name") == "litaai") {
+        return "";
+      } else if (this.$t("website_name") == "ainlp") {
+        return "";
+      } else if (this.$t("website_name") == "52cv") {
+        return "";
+      } else if (this.$t("website_name") == "redstonewill") {
+        return "";
       }
       return this.$t("heads.talk");
     }

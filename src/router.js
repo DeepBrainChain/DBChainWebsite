@@ -11,8 +11,7 @@ const router = new Router({
   base: process.env.NODE_ENV === 'production' ? '/' : '/',
 
   mode: 'history',
-  routes: [
-    {
+  routes: [{
       path: '/preview',
       name: ' preview',
       component: Preview
@@ -27,7 +26,7 @@ const router = new Router({
       component: Home
     },
     {
-      path:'/network',
+      path: '/network',
       name: 'network',
       component: () => import('./views/network')
     },
@@ -39,8 +38,7 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       component: () => import('./views/gpu'),
       redirect: '/gpu/myWallet',
-      children: [
-        {
+      children: [{
           meta: {
             menuIndex: 0
           },
@@ -82,8 +80,7 @@ const router = new Router({
       name: 'miner',
       component: () => import('./views/gpu'),
       redirect: '/miner/myWallet',
-      children: [
-        {
+      children: [{
           meta: {
             menuIndex: 0
           },
@@ -119,6 +116,12 @@ const router = new Router({
           component: () => import('./views/miner/myMachine_unlock')
         }
       ]
+    },
+    {
+      path: '/continuePayDetail',
+      name: 'continuePayDetail',
+
+      component: () => import('./views/continuePayDetail')
     },
     {
       path: '/machineDetail',
@@ -165,8 +168,7 @@ const router = new Router({
       path: '/trade',
       component: () => import('./views/trade_io'),
       redirect: '/trade/home',
-      children: [
-        {
+      children: [{
           path: 'home',
           component: () => import('./views/trade_io/trade')
         },
