@@ -44,7 +44,7 @@ export default {
   back: '返回',
   reEdit: '重新编辑',
   heads: {
-    logo: "DBChain",
+    logo: "DBCTrade",
     home: "HOME",
     gpu: "租用GPU",
     network: "DBC NETWORK",

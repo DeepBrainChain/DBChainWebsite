@@ -4,7 +4,7 @@
       <h2>{{$t('help.title')}}</h2>
       <h3>
         {{$t('help.1')}}
-        <a href="http://https://www.dbctrade.com">dbctrade.io</a>
+        <a href="http://https://www.dbctrade.io">dbctrade.io</a>
       </h3>
 
       <h3>

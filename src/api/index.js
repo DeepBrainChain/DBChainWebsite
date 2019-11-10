@@ -1,8 +1,7 @@
 import axios from '@/utlis/axios'
-// const host = 'http://13.124.237.200:8031'
+//const host = 'http://116.85.24.172:8031'
 const host = 'https://info.dbchain.ai'
-const juheKey = 'b947db0498fa776b09c48d548fbdda07'
-const juheHost = process.env.NODE_ENV === 'production' ? host : ''
+//const host = "http://192.168.1.186:8080"
 // 发送邮箱验证码
 export const sendMail_rent = params => {
   return axios({
@@ -300,25 +299,38 @@ export const rentout_get_orders_list_by_machine_id = params => {
   })
 }
 
-// 获取当前人的订单列表
-export const get_address_abstracts = ({address, page}) => {
+// 获取dbctrade订单前信息
+export const place_order_dbctrade = params => {
   return axios({
-    method: 'get',
-    url: `https://api.neoscan.io/api/main_net/v1/get_address_abstracts/${address}/${page}`,
-  })
-}
+    method: "post",
+    url: host + "/pay/place_order",
+    params
+  });
+};
 
-// 获取汇率接口
-export const exchangeUSDToCNY = () => {
+// 创建支付订单
+export const create_order_dbctrade = params => {
   return axios({
-    method: 'get',
-    url: juheHost + `/onebox/exchange/currency?key=${juheKey}&from=USD&to=CNY`,
-  })
-}
+    method: "post",
+    url: host + "/pay/create_order",
+    params
+  });
+};
 
-export const exchangeDBCToUSD = () => {
+// 获取购买的dbc数量
+export const get_pay_dbc_count_dbctrade = params => {
   return axios({
-    method: 'get',
-    url: `https://api.coinmarketcap.com/v1/ticker/deepbrain-chain/`,
-  })
-}
+    method: "post",
+    url: host + "/pay/get_pay_dbc_count",
+    params
+  });
+};
+
+// 支付进度
+export const dbc_is_ok_dbctrade = params => {
+  return axios({
+    method: "post",
+    url: host + "/pay/dbc_is_ok",
+    params
+  });
+};

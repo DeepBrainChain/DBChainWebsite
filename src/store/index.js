@@ -10,7 +10,7 @@ import {
   getTransfer,
   getTransactions
 } from '../utlis'
-import {exchangeUSDToCNY} from '@/api'
+
 
 import {
   get_dbc_price
@@ -30,7 +30,7 @@ export default new Vuex.Store({
     publicKey: '',
     address: '',
     transferList: [],
-    dbcToUS: 0 ,// DBC对美金汇率
+    dbcToUS: 0, // DBC对美金汇率
     USDToCNY: 0
   },
   mutations: {
@@ -46,7 +46,11 @@ export default new Vuex.Store({
     setAccountState(state, data) {
       state.accountState = data
     },
-    setData(state, {privateKey, address, publicKey}) {
+    setData(state, {
+      privateKey,
+      address,
+      publicKey
+    }) {
       state.privateKey = privateKey || ''
       state.address = address || ''
       state.publicKey = publicKey || ''
@@ -62,16 +66,11 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    getExchangeRate({commit, state}) {
-      axios.get('https://api.coinmarketcap.com/v1/ticker/deepbrain-chain/').then(res => {
-        // console.log(res.data[0])
-        commit('setdbcToUS', res.data[0].price_usd)
-      })
-      exchangeUSDToCNY().then(res =>{
-        commit('setUSDToCNY', res.result[0].exchange)
-      })
-    },
-    getTransferList({commit, state}) {
+
+    getTransferList({
+      commit,
+      state
+    }) {
       getTransactions(state.address, 1).then(res => {
         const array = res.entries.map(item => {
           return {
@@ -109,7 +108,10 @@ export default new Vuex.Store({
         commit('setTransferList', array)
       })*/
     },
-    getAccountState({commit, state}) {
+    getAccountState({
+      commit,
+      state
+    }) {
       return new Promise((resolve, reject) => {
         const ac = getAccount()
         if (ac) {
@@ -130,7 +132,10 @@ export default new Vuex.Store({
       })
     },
     // create account from privateKey
-    createAccountFromPrivateKey({commit, state}, privateKey) {
+    createAccountFromPrivateKey({
+      commit,
+      state
+    }, privateKey) {
       return new Promise((resolve, reject) => {
         const account = initAccount(privateKey)
         if (account) {
@@ -147,7 +152,13 @@ export default new Vuex.Store({
       })
     },
     // create account from encryptedKey
-    createAccountFromEncryptedKey({commit, state}, {encryptedKey, password}) {
+    createAccountFromEncryptedKey({
+      commit,
+      state
+    }, {
+      encryptedKey,
+      password
+    }) {
       return initAccountFromEncryptedKey(encryptedKey, password).then(account => {
         saveCookie(account)
         commit('setData', {

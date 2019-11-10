@@ -53,7 +53,7 @@ export default {
   unlock: '解锁',
 
   heads: {
-    logo: "DBChain",
+    logo: "DBCTrade",
     home: "首页",
     gpu: "租用GPU",
     // network: "DBC NETWORK",

@@ -1,146 +1,205 @@
 <template>
-  <div class="buy border-box">
-    <step :step-index="2"></step>
+  <div class="border-box">
+    <step :stepIndex="2"></step>
     <div class="main">
-      <div>
-        <label>
-          请输入收取DBC的钱包地址：
-          <input class="dbc-input" type="text" v-model.trim="address">
-        </label>
-      </div>
-      <p class="info">如果没有DBC钱包，可以到下面任一支持dbc的钱包创建地址</p>
-      <div class="other-wallet">
-        <a class="wallet" href="/createWallet" target="_blank">DBCHAIN</a>
-        <a class="wallet" href="https://neotracker.io" target="_blank">NEOTRACKER.IO</a>
-        <a class="wallet" href="https://otcgo.cn/download/" target="_blank">SEA钱包</a>
-        <a class="wallet" href="http://www.mathwallet.org/cn/" target="_blank">麦子钱包</a>
+      <div class="flex">
+        <div class="l-wrap">
+          <h3 class="trade-title">
+            购买金额:
+            <span>RMB</span>
+          </h3>
+          <div>
+            <input
+              class="money-input"
+              type="number"
+              v-model.number.trim="rmb"
+              @input="computeTotalDBC"
+            />
+          </div>
+          <p class="notice">
+            温馨提示：DBCTrade平台收取5%的手续费,单次购买金额最多99元，
+            <br />DBC价格随时随刻都在波动，请注意风险！
+          </p>
+        </div>
+        <div class="r-wrap">
+          <h3 class="trade-title">
+            对应的等值数量：
+            <span>DBC</span>
+          </h3>
+          <div class="dbc-num">{{dbc}}</div>
+          <p class="trade-info">
+            DBC价格参考gate DBC/USDT交易对价格，
+            <br />点击查看价格：
+            <a
+              href="https://www.gateio.co/trade/DBC_USDT"
+              target="_blank"
+            >https://www.gateio.co/trade/DBC_USDT</a>
+          </p>
+        </div>
       </div>
       <div class="trade-bottom-wrap">
-        <el-button class="confirm-btn" type="primary" size="medium" @click="showDlg">继续</el-button>
-        <span class="service">客服支持： <a href="mailto:support@dbctra.io">support@dbctra.io</a> ,客服会在24小时内回复</span>
+        <el-button class="confirm-btn" type="primary" size="medium" @click="next">继续</el-button>
+        <span class="service">
+          客服支持：
+          <a href="mailto:support@dbctrade.io">support@dbctrade.io</a> ,客服会在24小时内回复
+        </span>
       </div>
     </div>
-    <el-dialog
-      :visible.sync="isOpen"
-      title="重要提示："
-      width="560px">
-      <p class="dlg-content">DBCTrade平台是通过智能合约进行dbc转账，支付完成后， 智能合约会自动将购买的dbc打入到你指定的DBC地址.</p>
-      <p class="dlg-content">您可以查询合约转账地址：<a href="javascript:">https://www.gateio.co/trade/DBC</a></p>
-      <div class="center">
-        <el-button class="dlg-btn" type="primary" size="medium" @click="next">继续</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-  import Step from '@/components/trade_io/stepNavi'
-  import {isAddress} from '@/utlis'
-
-
-  export default {
-    name: "buy_1",
-    data() {
-      return {
-        isOpen: false,
-        address: ''
+import Step from "@/components/trade_io/stepNavi";
+import { mapActions, mapState } from "vuex";
+import { get_pay_dbc_count_dbctrade } from "@/api";
+export default {
+  name: "buy_2",
+  data() {
+    return {
+      rmb: 0,
+      dbc: 0,
+      order_id: this.$route.query.order_id
+    };
+  },
+  components: {
+    Step
+  },
+  created() {
+    // this.getExchangeRate();
+  },
+  computed: {
+    // ...mapState(["dbcToUS", "USDToCNY"]),
+    // computedDBC() {}
+  },
+  methods: {
+    //  ...mapActions(["getExchangeRate"]),
+    // get_pay_dbc_count() {},
+    computeTotalDBC() {
+      if (this.rmb !== "" && this.rmb !== 0) {
+        clearTimeout(this.reqSt);
+        this.reqSt = setTimeout(() => {
+          get_pay_dbc_count_dbctrade({
+            order_id: this.$route.query.order_id,
+            count: this.rmb
+          }).then(res_1 => {
+            if (res_1.status === 1) {
+              this.dbc = res_1.content;
+            }
+          });
+        }, 1000);
       }
     },
-    components: {
-      Step
-    },
-    methods: {
-      showDlg() {
-        if (isAddress(this.address)) {
-          this.isOpen = true
-        } else {
+
+    next() {
+      if (this.rmb.length === 0) {
+        this.$message({
+          showClose: true,
+          message: "请输入金额",
+          type: "error"
+        });
+        return;
+      }
+      if (
+        this.rmb
+          .toString()
+          .match(
+            /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
+          )
+      ) {
+        if (this.rmb > 99) {
           this.$message({
             showClose: true,
-            message: '请输入正确的地址',
-            type: 'error'
-          })
+            message: "金额不能超过99",
+            type: "error"
+          });
+          return;
+        } else if (this.rmb <= 0) {
+          this.$message({
+            showClose: true,
+            message: "金额不能小于等于0",
+            type: "error"
+          });
+          return;
+        } else {
+          this.$router.push({
+            path: "/trade/buy_3",
+            query: {
+              rmb: this.rmb,
+              order_id: this.order_id
+            }
+          });
         }
-      },
-      next() {
-        this.$router.push({
-          path: '/trade/buy_3',
-          query: {
-            address: this.address,
-            ...this.$route.query
-          }
-        })
+      } else {
+        this.$message({
+          showClose: true,
+          message: "输入金额不正确",
+          type: "error"
+        });
       }
+    },
+    rmbInput() {
+      this.rmb = parseFloat(this.rmb).toFixed(2);
     }
   }
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "~@/assets/css/variables.scss";
+@import "~@/assets/css/variables.scss";
 
-  .border-box {
-    padding: 30px 0;
+.border-box {
+  padding: 30px 0;
+}
+
+.main {
+  padding: 30px;
+}
+
+.flex {
+  display: flex;
+}
+
+.l-wrap,
+.r-wrap {
+  width: 50%;
+}
+
+.trade-title {
+  margin-top: 0;
+  margin-bottom: 40px;
+  font-size: 20px;
+  color: #47495a;
+
+  span {
+    color: rgba(110, 130, 153, 0.8);
+  }
+}
+
+.l-wrap {
+  .notice {
+    font-size: 14px;
+    color: rgba(153, 153, 153, 0.8);
+  }
+}
+
+.r-wrap {
+  .dbc-num {
+    font-size: 40px;
+    color: #6e8299;
   }
 
-  .main {
-    padding: 30px 30px;
-  }
-
-  label {
-    font-size: 20px;
-    color: #47495A;
-
-    .dbc-input {
-      width: 780px;
-      border-bottom-width: 2px;
-      border-bottom-color: rgba(71, 73, 90, 0.6);
-
-      &:focus {
-        border-color: $primaryColor;
-      }
-    }
-  }
-
-  .info {
-    margin: 40px 0 20px;
-    font-size: 16px;
-    color: rgba(71, 73, 90, 0.8)
-  }
-
-  .other-wallet {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-
-    .wallet {
-      display: block;
-      box-sizing: border-box;
-      width: 260px;
-      height: 110px;
-      line-height: 110px;
-      border-radius: 2px;
-      border: 1px solid rgba(122, 140, 161, 0.3);
-      background-color: rgba(240, 245, 250, 1);
-      color: #7A8CA1;
-      font-size: 30px;
-      text-align: center;
-
-      &:hover {
-        color: $primaryColor;
-        border-color: $primaryColor;
-      }
-    }
-  }
-
-  .trade-bottom-wrap {
-    margin-top: 124px;
-  }
-
-  .dlg-content {
+  .trade-info {
     line-height: 28px;
+    font-size: 16px;
     color: rgba(71, 73, 90, 0.8);
-  }
 
-  .dlg-btn {
-    width: 150px;
+    a {
+      color: $primaryColor;
+    }
   }
+}
+
+.trade-bottom-wrap {
+  margin-top: 124px;
+}
 </style>
