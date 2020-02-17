@@ -99,7 +99,22 @@
       $/{{$t('hour')}}-->
     </div>
     <div class="subText">{{$t('add_machine_msg_tips')}}</div>
-    <div class="label mt30">{{isEditor ? 4:5}}.{{$t('miner.addMc_dbc')}}</div>
+
+    <div class="label mt20">{{isEditor ? 4:5}}.{{$t('your_country')}}</div>
+    <div class="subText">&nbsp;&nbsp;</div>
+    <div class="form">
+      <el-select class="time-select ml10" v-model="country_code" style="width: 240px" size="small">
+        <el-option
+          v-for="item in countrysOptions"
+          :key="item.value"
+          :label="item.name"
+          :value="item.value"
+        ></el-option>
+      </el-select>
+    </div>
+
+    <div class="label mt30">{{isEditor ? 5:6}}.{{$t('miner.addMc_dbc')}}</div>
+
     <div>
       <mu-text-field class="verityMail-input" v-model="code" type="number"></mu-text-field>
       <el-button
@@ -150,7 +165,7 @@
 </template>
 
 <script>
-import { add_or_modify, get_rentout_code } from "@/api";
+import { add_or_modify, get_rentout_code, get_country_list } from "@/api";
 
 import { getAccount } from "@/utlis";
 
@@ -181,7 +196,9 @@ export default {
       code: "",
       can_rent_start_time_later: "",
       end_rent_out_time_later: "",
-      machine_id: ""
+      machine_id: "",
+      country_code: "CN",
+      country: "中国"
     };
   },
   created() {
@@ -194,16 +211,54 @@ export default {
       this.$route.query.end_rent_out_time_later / 60
     );
     this.machine_id = this.$route.query.machine_id;
+    this.country_code = this.$route.query.country_code;
   },
   computed: {
     isEditor() {
       return this.$route.query.machine_id ? true : false;
+    },
+    countrysOptions() {
+      let opts = [];
+      let countrys = new Array();
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
+      get_country_list({
+        user_name_platform,
+        language
+      }).then(res => {
+        if (res.status === 1) {
+          countrys = res.content;
+          this.$forceUpdate();
+          for (let i = 0; i <= countrys.length; i++) {
+            if (language === "CN") {
+              opts.push({
+                name: countrys[i].chineseName,
+                value: countrys[i].simpleNameString
+              });
+
+              if (this.country_code === countrys[i].simpleNameString) {
+                this.country = countrys[i].chineseName;
+              }
+            } else {
+              opts.push({
+                name: countrys[i].englishName,
+                value: countrys[i].simpleNameString
+              });
+              if (this.country_code === countrys[i].simpleNameString) {
+                this.country = countrys[i].englishName;
+              }
+            }
+          }
+        }
+      });
+
+      return opts;
     }
   },
   methods: {
     getCode() {
       if (!getAccount()) {
-        this.$router.push(`/openWallet/${type}`);
+        //  this.$router.push(`/openWallet/${type}`);
         return;
       }
       if (this.machine_id.trim().length === 0) {
@@ -247,6 +302,9 @@ export default {
       this.isLoading = true;
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
+      if (this.country_code === "") {
+        this.country_code = "CN";
+      }
       add_or_modify({
         wallet_address: getAccount().address,
         machine_id: this.machine_id,
@@ -255,7 +313,8 @@ export default {
         end_rent_out_time_later: this.end_rent_out_time_later,
         code: this.code,
         user_name_platform,
-        language
+        language,
+        country_code: this.country_code
       })
         .then(res => {
           if (res.status === 1) {

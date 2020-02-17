@@ -34,7 +34,18 @@
     >
       <div class="tools-head">
         <div class="l-wrap">
-          <span>{{$t('my_machine_miner_status')}}：{{item.mcData.online_status ? $t('my_machine_miner_online'):$t('my_machine_miner_offline')}}</span>
+          <span
+            v-if="item.mcData.online_status && item.mcData.dbc_open_status"
+          >{{$t('my_machine_miner_status')}}：{{$t('my_machine_miner_online')}}</span>
+          <span
+            v-if="item.mcData.online_status && !item.mcData.dbc_open_status &&!item.mcData.vocing_error "
+          >{{$t('my_machine_miner_status')}}：{{$t('my_machine_miner_vocing_rentout')}}</span>
+          <span
+            v-if="!item.mcData.online_status "
+          >{{$t('my_machine_miner_status')}}：{{$t('my_machine_miner_offline')}}</span>
+          <span
+            v-if="item.mcData.vocing_error "
+          >{{$t('my_machine_miner_status')}}：{{$t('my_machine_miner_vocing_error')}}</span>
         </div>
         <div class="r-wrap">
           <el-tooltip effect="light" placement="left">
@@ -87,7 +98,7 @@
           </div>
           <div class="td2">
             <span class="fs28">
-              <a class="cPrimaryColor">{{item.mcData.county}}{{$t('list_china')}}</a>
+              <a class="cPrimaryColor">{{item.mcData.country}}</a>
             </span>
           </div>
           <div class="td" v-if="item.mcData.can_rent_start_time_later<=0">
@@ -277,9 +288,16 @@
       </div>-->
       <div class="tools-head">
         <div class="l-wrap">
-          <!--<span
-            v-if="isShowRendSuccessMsg(item.orderData.milli_rent_success_time)"
-          >机器租用成功，登陆信息已发送至您的邮箱，请查收并妥善保管</span>-->
+          <span
+            v-if="isShowRendSuccessMsg(item.mcData.milli_can_rent_start_time)&&item.mcData.dbc_open_status"
+          >{{$t('myMachine_rentout_success_msg')}}</span>
+
+          <!--   <span class="cRed" v-else-if="item.mcData.vocing_error">{{$t('myMachine_rentout_error')}}</span>-->
+          <span class="cRed" v-else-if="item.mcData.vocing_error">{{tip}}</span>
+          <span
+            class="cRed"
+            v-else-if="item.mcData.vocing"
+          >{{$t('myMachine_is_vocing_machine_rentout')}}</span>
         </div>
         <div class="r-wrap">
           <el-button
@@ -289,57 +307,6 @@
             style="width: 86px"
             @click="pushToEditMc(item.mcData)"
           >{{$t('my_machine_edit')}}</el-button>
-          <!--<el-button
-            v-if="item.orderData.order_is_over"
-            plain
-            class="tool-btn"
-            size="mini"
-            style="width: 86px"
-            @click="openRateDlg(item)"
-          >{{$t('gpu.rate')}}
-          </el-button>
-          <el-button v-else-if="item.orderData.return_dbc === false && item.orderData.pay_error"
-                     class="tool-btn"
-                     style="width: 86px"
-                     plain
-                     size="mini"
-                     @click="openReturnDbc(item)"
-          >退币
-          </el-button>
-          <template v-else-if="item.orderData.rent_success">
-            &lt;!&ndash;<el-button plain style="width: 86px" class="tool-btn" size="mini"
-                       @click="dlgReload_open = true">
-              {{$t('gpu.reload')}}
-            </el-button>&ndash;&gt;
-            <el-button
-              plain
-              class="tool-btn"
-              style="width: 86px"
-              size="mini"
-              @click="stopRent(item)"
-            >{{$t('unsubscribe')}}
-            </el-button>
-          </template>
-          <template v-else-if="item.orderData.rent_success === false">
-            <el-button
-              :disabled="item.orderData.container_is_exist && item.orderData.rent_success === false"
-              plain
-              :loading="isPaying"
-              class="tool-btn"
-              size="mini"
-              @click="payOrder(item)"
-            >确认支付
-            </el-button>
-            <el-button
-              v-if="!(item.orderData.container_is_exist && item.orderData.rent_success === false)"
-              :loading="isPaying"
-              class="tool-btn"
-              size="mini"
-              plain
-              @click="cancelOrder(item)"
-            >取消订单
-            </el-button>
-          </template>-->
         </div>
       </div>
     </div>
@@ -385,7 +352,8 @@ import {
   stop,
   get_return_dbc_code,
   request_return_dbc,
-  rentout_get_machines_list
+  rentout_get_machines_list,
+  voc_machine
 } from "@/api";
 import { getAccount, transfer } from "@/utlis";
 
@@ -418,22 +386,86 @@ export default {
       isPaying: false,
       curItem: undefined,
       isRateEdit: false,
-      si: undefined
+      si: undefined,
+      tip: ""
     };
   },
   activated() {
     // this.binding(isNewMail);
     this.queryMail();
+    // this.queryMcList();
+
     this.queryMcList();
+    this.forceToPocMachine();
+    if (this.queryOrderListSi) {
+      clearInterval(this.queryOrderListSi);
+    }
+    this.queryOrderListSi = setInterval(() => {
+      this.queryMcList();
+      this.forceToPocMachine();
+    }, 5000);
   },
+
   deactivated() {
     if (this.si) {
       clearInterval(this.si);
     }
   },
   methods: {
+    forceToPocMachine() {
+      // pay before
+      let item = this.res_body.content.find((item, index) => {
+        // console.log(index)
+        // console.log(item.orderData.creating_container)
+        // console.log(item.orderData.container_is_exist)
+        return item.mcData.vocing || item.mcData.vocing_error;
+      });
+      if (item) {
+        this.pocMachine(item.mcData);
+      }
+    },
+
+    pocMachine(item) {
+      clearInterval(this.si);
+
+      //   if (item.orderData.isPocing) {
+      //     return;
+      //   }
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
+      return voc_machine({
+        machine_id: item.machine_id,
+        user_name_platform,
+        language
+      }).then(res => {
+        if (res.status === 1 && res.content) {
+          console.log(res.msg);
+
+          //  this.queryMcList();
+
+          clearInterval(this.si);
+        } else if (res.status === 2) {
+          // item.orderData.creating_container = true;
+          //   this.queryMcList();
+        } else if (res.status == -1) {
+          //   this.queryMcList();
+          this.tip = res.msg;
+        }
+      });
+    },
+
     pushToMc() {
-      this.$router.push("/addMc");
+      // this.$router.push("/addMc");
+      this.$router.push({
+        path: "/addMc",
+        query: {
+          machine_id: "",
+          can_rent_start_time_later: 0,
+          end_rent_out_time_later: 600000,
+          gpu_price_dollar: 0,
+          country_code: "CN"
+        }
+      });
     },
     pushToEditMc(item) {
       console.log(item);
@@ -443,7 +475,8 @@ export default {
           machine_id: item.machine_id,
           can_rent_start_time_later: item.can_rent_start_time_later,
           end_rent_out_time_later: item.end_rent_out_time_later,
-          gpu_price_dollar: item.gpu_price_dollar
+          gpu_price_dollar: item.gpu_price_dollar,
+          country_code: item.country_code
         }
       });
     },
@@ -576,6 +609,11 @@ export default {
     },
     returnSuccess() {
       this.queryOrderList();
+    },
+    isShowRendSuccessMsg(milli_rent_success_time) {
+      const minutes =
+        (new Date().getTime() - milli_rent_success_time) / 1000 / 60;
+      return minutes < 20;
     }
   }
 };

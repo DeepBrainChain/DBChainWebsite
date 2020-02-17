@@ -1,28 +1,39 @@
-
-.f16{
-  font-size: 16px!important;
+.f16 {
+  font-size: 16px !important;
 }
+
 .fs14 {
   font-size: 14px;
 }
+
 .fs12 {
-  font-size: 12px!important;
+  font-size: 12px !important;
 }
+
 .cPrimaryColor {
   color: $primaryColor;
 }
+
 .cDefColor {
   color: $textColor_def;
 }
+
 .cRed {
   color: $textColor_red;
 }
+
+.cGren {
+  color: $primaryColor;
+}
+
 .cGray {
   color: #666;
 }
+
 .c333 {
   color: #333;
 }
+
 .center {
   text-align: center;
 }
@@ -32,52 +43,64 @@
   border-color: $textColor_gray;
   border-radius: 2px;
   height: 50px;
+
   &.el-button--text {
     border: 0 none;
     color: $primaryColor;
   }
-  &:hover {
 
-  }
+  &:hover {}
+
   &.white {
     color: #fff;
     border-color: #fff;
   }
+
   &.el-button--small {
     height: 36px;
     font-size: 16px;
   }
+
   &.el-button--medium {
     height: 44px;
     font-size: 16px;
   }
+
   &.el-button--mini {
     height: 32px;
   }
+
   &.lg {
     height: 60px;
   }
+
   &.fs18 {
     font-size: 18px;
   }
+
   &.long {
     width: 100%;
   }
+
   &.transparent {
     background-color: transparent;
   }
+
   &.is-plain {
     border-color: $primaryColor;
     color: $primaryColor;
+
     &:hover {
       background-color: $primaryColor;
       color: #fff;
     }
   }
 }
+
 .el-button--primary {
   color: #fff;
   background-color: $primaryColor;
+
   &:hover {
     background-color: $primaryColor;
     opacity: 0.8;
@@ -117,21 +140,24 @@
   background-color: #FFF;
   border: 1px solid #A4B0BF;
 }
-.border-box {
 
-}
+.border-box {}
 
 .mini-slide {
   height: 32px;
+
   .el-slider__runway {
     height: 2px;
     margin: 15px 0;
+
     .el-slider__bar {
       height: 2px;
       background-color: $primaryColor;
     }
+
     .el-slider__button-wrapper {
       top: -17px;
+
       .el-slider__button {
         width: 8px;
         height: 8px;
@@ -153,12 +179,14 @@
     &.is-checked .el-radio__inner {
       background-color: transparent;
       border-color: $primaryColor;
+
       &:after {
         width: 8px;
         height: 8px;
         background-color: $primaryColor;
       }
     }
+
     .el-radio__inner {
       width: 20px;
       height: 20px;
@@ -166,6 +194,7 @@
       border-color: #6E8299;
     }
   }
+
   .el-radio__label {
     font-size: 18px;
     color: #47495A;
@@ -181,19 +210,21 @@
   outline: none;
   border-color: #47495A;
   font-size: 18px;
+
   &:focus {
     border-color: $primaryColor;
   }
 }
 
-.money-input{
+.money-input {
   padding-bottom: 16px;
   border-width: 0 0 1px 0;
   outline: none;
-  border-color: rgba(71,73,90,0.6);
+  border-color: rgba(71, 73, 90, 0.6);
   font-size: 40px;
   line-height: 40px;
   color: #6E8299;
+
   &:focus {
     border-color: $primaryColor;
   }
@@ -204,6 +235,7 @@
   table-layout: fixed;
   border-spacing: 0;
   border: 1px solid #979797;
+
   thead {
     th {
       padding: 0;
@@ -211,16 +243,20 @@
       background-color: #F6F9FC;
       text-align: center;
       color: #666;
+
       &.tl {
         text-align: left;
       }
+
       &.tr {
         text-align: right;
       }
     }
   }
+
   tbody {
     color: #666;
+
     td {
       padding: 0 10px;
       height: 44px;
@@ -229,23 +265,28 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+
       &.tl {
         text-align: left;
       }
+
       &.tr {
         text-align: right;
       }
+
       &.nobd {
         border: 0 none;
       }
     }
   }
+
   &.small {
     tbody {
       font-size: 14px;
     }
   }
-  &.hAuto{
+
+  &.hAuto {
     tbody {
       td {
         padding: 10px;
@@ -260,12 +301,15 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+
   .confirm-btn {
     width: 150px;
   }
+
   .service {
     line-height: 28px;
-    color: rgba(71,73,90,0.65);
+    color: rgba(71, 73, 90, 0.65);
+
     a {
       color: $primaryColor
     }
@@ -281,16 +325,19 @@
 
 .dlg-content {
   color: #333;
+
   .form-notice {
     padding-top: 8px;
     font-size: 12px;
     color: #999;
   }
+
   .computer-dbc {
     display: flex;
     justify-content: space-between;
   }
 }
+
 .dlg-bottom {
   text-align: center;
   padding-top: 20px;
@@ -309,15 +356,19 @@
 
 .flex {
   display: flex;
+
   &.center {
     justify-content: center;
   }
+
   &.between {
     justify-content: space-between;
   }
+
   &.right {
     justify-content: flex-end;
   }
+
   &.vCenter {
     align-items: center;
   }
@@ -325,6 +376,7 @@
 
 .is-link {
   color: $primaryColor;
+
   &:hover {
     opacity: 0.7;
   }

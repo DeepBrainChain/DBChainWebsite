@@ -139,6 +139,28 @@ export default {
         return this.$t("home.intr_52cv_1");
       } else if (this.$t("website_name") == "redstonewill") {
         return this.$t("home.intr_redstonewill_1");
+      } else if (this.$t("website_name") == "alpha-dbchain") {
+        return this.$t("home.intr_alpha_dbchain_1");
+      } else if (this.$t("website_name") == "xyzlab") {
+        return this.$t("home.intr_xyzlab_1");
+      } else if (this.$t("website_name") == "gpgpu") {
+        return this.$t("home.intr_gpgpu_1");
+      } else if (this.$t("website_name") == "rocketai") {
+        return this.$t("home.intr_rocketai_1");
+      } else if (this.$t("website_name") == "deepbit") {
+        return this.$t("home.intr_deepbit_1");
+      } else if (this.$t("website_name") == "aichriscloud") {
+        return this.$t("home.intr_aichriscloud_1");
+      } else if (this.$t("website_name") == "vnxmart") {
+        return this.$t("home.intr_vnxmart_1");
+      } else if (this.$t("website_name") == "aiaicloud") {
+        return this.$t("home.intr_aiaicloud_1");
+      } else if (this.$t("website_name") == "snbt") {
+        return this.$t("home.intr_snbt_1");
+      } else if (this.$t("website_name") == "heekmind") {
+        return this.$t("home.intr_heekmind_1");
+      } else if (this.$t("website_name") == "aicv") {
+        return this.$t("home.intr_aicv_1");
       }
 
       return this.$t("home.intr_dbchain_1");

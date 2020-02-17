@@ -161,7 +161,7 @@ export default {
     rateMsg: 'How many stars would you rate the machine',
   },
 
-  county: 'Country',
+  country: 'Country',
   idle_status: 'Machine Usage Status',
   total_time: 'Total Rental Time',
   total_rent_count: 'Times Rented',
@@ -232,6 +232,17 @@ export default {
     intr_ainlp_1: "AINLP-DBC GPU service platform,",
     intr_52cv_1: "52CV",
     intr_redstonewill_1: "RedStoneAI",
+    intr_alpha_dbchain_1: "Alpha-dbchain",
+    intr_xyzlab_1: "XYZ Lab",
+    intr_gpgpu_1: "GPGPU",
+    intr_rocketai_1: "RocketAI",
+    intr_deepbit_1: "DeepBit",
+    intr_aichriscloud_1: "AIChrisCloud",
+    intr_vnxmart_1: "VNX AI Marketplace",
+    intr_aiaicloud_1: "AIAICloud",
+    intr_snbt_1: "SNBT AI",
+    intr_heekmind_1: "HeekMind",
+    intr_aicv_1: "AICV",
     intr_1: ' provides GPU rental service.join us! can help your machine very convenient access to the DBC network, gain revenue. \n' +
       '\n' +
       ' If your GPU is ever idle, you can connect it to the DBC network to earn DBC tokens and enjoy the benefit of the tokens appreciation. \n ' +
@@ -249,6 +260,7 @@ export default {
     intr_6: 'GPU rental is charged by the minute, if a GPU machine stops abruptly during usage you can be compensated up to 144 hour\'s rental fee.',
     intr_7: 'DBC will start mining from 2020 and each year 500 million DBCs are mined, starting from the 4th year, 250 millions are mined each year and the amount is halved every 5 years from then on. A total of 4 billion DBCs will be mined.',
     intr_8: 'Join DBC income combo: supernodes reward + mining reward + rental reward',
+    intr_snbt_4: ' is committed to providing users with cost-effective artificial intelligence computing services, Hong Kong strategic international investment co., ltd. and the ordos government reached a strategic cooperation in 2017, the establishment of ordos sanolbert technology co., ltd. is committed to the block chain + artificial intelligence field. Build "three research, two production and one platform" industrial closed loop ecological system, take big data industry as an opportunity, based on ordos high-tech industry planning cloud computing industrial park, build super computing industry platform, with wisdom and data to boost the value. Outline the possibilities of the future.',
     start: 'Start renting GPU',
     github: 'GitHub',
     video: 'Video',
@@ -322,7 +334,8 @@ export default {
   list_country: 'Country',
   list_dbc_version: 'DBC Version',
   list_try: 'Trial',
-  list_rentout: 'Rent',
+  list_rentout_gpu: "租用GPU容器", //2020 1 9
+  list_rentout_cpu: "租用CPU容器", //2020 1 9
   list_china: 'China',
   list_idle_gpus: 'Idle GPUs',
   list_length_of_available_time: 'Available Time',
@@ -356,10 +369,11 @@ export default {
   myMachine_return_dbc: 'Refund tokens',
   myMachine_confirm_pay: 'Confirm and pay',
   myMachine_concer_order: 'Cancel order',
-  myMachine_no_double_pay: 'Pay attention to not pay twice',
+  myMachine_no_double_pay: 'Pay attention to not pay twice, you can check My Wallet, transfer record. If you have paid, please click  Paid',
   myMachine_please_confirm_pay: 'Please confirm payment',
   myMachine_confirm: 'Confirm',
   myMachine_cancer: 'Cancel',
+  myMachine_paid: 'Paid',
   myMachine_code_send: 'Verification code has been sent to your email, please enter the verification code',
   myMachine_cancer_order: 'Cancel order',
 
@@ -458,7 +472,7 @@ export default {
   footer_service_dbchain: "support@dbchain.ai", //9.17 19:33
   footer_service_yousanai: "longpeng@yousanai.cn", //9.17 19:33
   footer_service_aionego: "aionego66@hotmail.com", //9.17 19:33
-  footer_service_deepshare: "", //9.17 19:33
+  footer_service_deepshare: "yuanj@deepshare.net", //9.17 19:33
   footer_service_panchuangai: "zhouas@panchuangai.cn", //9.17 19:33
   footer_service_sharegpu: "758655995@qq.com", //9.17 19:33
   footer_service_yalecloud: "yalesoft@163.com", //9.17 19:33
@@ -472,12 +486,33 @@ export default {
   footer_service_ainlp: "textminer@foxmail.com", //9.17 19:33
   footer_service_52cv: "amos@52cv.net", //9.17 19:33
   footer_service_redstonewill: "redstonewill@hotmail.com", //9.17 19:33
+  footer_service_alpha_dbchain: "1123622944@qq.com", //9.17 19:33
+  footer_service_xyzlab: "gpu@xyzlab.ai", //9.17 19:33
+  footer_service_gpgpu: "sharegpu@protonmail.com", //9.17 19:33
+  footer_service_rocketai: "xing_hua_zhang@126.com", //9.17 19:33
+
+  footer_service_deepbit: "a18159851988@163.com", //9.17 19:33
+  footer_service_aichriscloud: "zhangmw_play@163.com", //9.17 19:33
+  footer_service_vnxmart: "customerservice@visionx.org", //9.17 19:33
+  footer_service_aiaicloud: "kf@aiaicloud.cn", //9.17 19:33
+  footer_service_snbt: "368496964@qq.com", //9.17 19:33
+  footer_service_heekmind: "amdin@heekmind.com", //9.17 19:33
+  footer_service_aicv: "944830401@qq.com", //9.17 19:33
   list_start_rentout: 'minutes later, it can be rented',
   list_can_rentout: 'Users can rent it now',
   my_gpu_count: 'The number of gpus I rent ', //9.17 19:33
 
   pay_over_time: "Unable to pay. It has expired for 10 minutes. The order will be cancelled within 1 minute", //9.29 00:26
   click_to_view: 'click to view',
-  continue_pay: "Relet",
+  continue_pay: "Rerent",
+
+  continue_pay_time: "Rerent time",
+  continue_pay_details: "Order details",
+  click_to_view_continue_pay: "View rerent order details",
+  continue_pay_pay_success: "Paid successfully",
+  continue_pay_success: "Rerent successfully",
+  continue_pay_order_is_over: 'Order end',
+  restart_machine: 'Restart', //12.22,
+  your_country: 'Please add the geographical location of the machine',
   ...enLocale
 }

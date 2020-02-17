@@ -52,14 +52,17 @@
           <div class="l-wrap">
             <span v-if="item.vocing === true">{{$t('myMachine_is_pay_vocing')}}</span>
 
-            <span class="cRed" v-else-if="isPaying">{{$t('myMachine_is_dbc_transfering')}}</span>
+            <span
+              class="cRed"
+              v-else-if="isPaying&& !item.order_is_cancer&& !item.pay_success&& !item.pay_error"
+            >{{$t('myMachine_is_dbc_transfering')}}</span>
             <span
               class="cRed"
               v-else-if="local_pay_error && !isPaying"
             >{{$t('myMachine_is_transfer_error')}}</span>
             <span
               class="cRed"
-              v-else-if="item.vocing_pay && !item.order_is_cancer&& !item.pay_success"
+              v-else-if="item.vocing_pay && !item.order_is_cancer&& !item.pay_success&& !item.pay_error"
             >{{$t('my_machine_order_vocing_pay')}}</span>
           </div>
           <div v-if="item.pay_success===false&& item.order_is_cancer===false " class="r-wrap">
@@ -83,7 +86,7 @@
               >{{$t('myMachine_concer_order')}}</el-button>
             </template>
             <el-button
-              v-if="item.return_dbc === false &&item.pay_error===true"
+              v-if="item.return_dbc === false &&item.pay_error===true&&!item.main_order_is_over"
               class="tool-btn"
               style="width: 86px"
               plain
@@ -139,7 +142,7 @@ export default {
     this.queryContinuePayDetail();
     // this.order_is_over = this.$route.query.order_is_over;
     this.queryOrderListSi = setInterval(() => {
-      if (this.isPaying !== true) {
+      if (this.isPaying === false) {
         this.queryContinuePayDetail();
       }
     }, 5000);

@@ -1,10 +1,13 @@
 import axios from "@/utlis/axios";
 //const host = 'http://13.124.237.200:8031'
 //const host = "https://otherinfo.dbchain.ai";
-const host = "https://info.dbchain.ai";
+//const host = "https://info.dbchain.ai";
+//const host = "https://infotest.dbchain.ai";
 //const host = 'http://116.85.24.172:8031'
-//const host = "http://192.168.1.186:8080";
+const host = "http://192.168.1.186:8080";
 //const host = "http://192.168.31.241:8080";
+//const host = "http://192.168.43.178:8080";
+//const host = "http://192.168.225.22:8080";
 const juheKey = "";
 //user_name_platform: this.$t("website_name")
 // 发送邮箱验证码
@@ -96,6 +99,90 @@ export const place_order = params => {
     params
   });
 };
+export const get_max_disk_can_use = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/get_max_disk_can_use",
+    params
+  });
+};
+
+export const get_max_memory_can_use = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/get_max_memory_can_use",
+    params
+  });
+};
+
+// 获取硬盘质押数据
+export const get_disk_deposit_list = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/get_disk_deposit_list",
+    params
+  });
+};
+
+
+// 获取内存质押数据
+export const get_memory_deposit_list = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/get_memory_deposit_list",
+    params
+  });
+};
+
+// 获取订单前信息
+export const place_order_cpu_to_gpu = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/place_order_cpu_to_gpu",
+    params
+  });
+};
+
+// 获取订单前信息
+export const place_order_gpu_to_cpu = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/place_order_gpu_to_cpu",
+    params
+  });
+};
+
+
+// 获取订单前信息
+export const place_order_cpu = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/place_order_cpu",
+    params
+  });
+};
+
+// 获取订单前信息
+export const place_order_stop_to_cpu = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/place_order_stop_to_cpu",
+    params
+  });
+};
+
+
+
+// 获取订单前信息
+export const place_order_stop_to_gpu = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/place_order_stop_to_gpu",
+    params
+  });
+};
+
+
 
 // 创建订单
 export const create_order = params => {
@@ -114,7 +201,14 @@ export const can_rent_this_machine = params => {
     params
   });
 };
-
+//升级容器是否成功
+export const update_container_is_ok = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/update_container_is_ok",
+    params
+  });
+};
 // 支付后信息
 export const pay = params => {
   return axios({
@@ -123,6 +217,16 @@ export const pay = params => {
     params
   });
 };
+
+// 开启或者关闭gpu 升级容器
+export const pay_update = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/pay_update",
+    params
+  });
+};
+
 
 //获取租用订单DBC价格
 export const get_dbc_price = params => {
@@ -160,6 +264,16 @@ export const get_pay_dbc_count = params => {
   });
 };
 
+// 获取质押的DBC数量
+export const get_deposit_dbc_count = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/get_deposit_dbc_count",
+    params
+  });
+};
+
+
 // 获取续租订单计算后DBC的数量
 export const continue_pay_get_pay_dbc_count = params => {
   return axios({
@@ -196,6 +310,26 @@ export const get_all_order = params => {
   });
 };
 
+// 获取订单信息
+export const get_all_order_cpu = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/get_all_order_cpu",
+    params
+  });
+};
+
+// 获取订单信息
+export const get_all_order_be_stopped = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/get_all_order_be_stopped",
+    params
+  });
+};
+
+
+
 // 获得取消订单的验证码
 export const get_cancer_code = params => {
   return axios({
@@ -231,6 +365,25 @@ export const stop = params => {
     params
   });
 };
+
+// 获得重启机器验证码
+export const get_restart_code = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/get_restart_code",
+    params
+  });
+};
+
+// 重启机器
+export const restart = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/restart",
+    params
+  });
+};
+
 
 // 退币验证码
 export const get_return_dbc_code = params => {
@@ -372,6 +525,24 @@ export const add_or_modify = params => {
   });
 };
 
+// 获取国家列表
+export const get_country_list = params => {
+  return axios({
+    method: "post",
+    url: host + "/rentout/get_country_list",
+    params
+  });
+};
+
+// 验证矿工添加的机器是否可用
+export const voc_machine = params => {
+  return axios({
+    method: "post",
+    url: host + "/voc_machine",
+    params
+  });
+};
+
 // 从id查询机器信息
 export const query_machine_by_id = params => {
   return axios({
@@ -408,8 +579,25 @@ export const rentout_get_orders_list_by_machine_id = params => {
   });
 };
 
+// 获得cpu容器付费模式情况下的内存
+export const get_memory_cpu_payment = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/get_memory_cpu_payment",
+    params
+  });
+};
 
+// 机器id获取订单列表
+export const get_gate_dbc_price = (
+  dbc
+) => {
+  return axios({
+    method: "get",
+    url: `https://gateio.life/api2/1/ticker/${dbc}`
 
+  });
+};
 
 // 获取当前人的订单列表
 export const get_address_abstracts = ({

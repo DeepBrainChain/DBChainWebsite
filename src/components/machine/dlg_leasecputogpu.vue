@@ -1,11 +1,14 @@
 <template>
   <el-dialog :visible.sync="isOpen" @closed="closed" width="580px">
-    <div slot="title">{{$t('lease')}}</div>
+    <div slot="title">{{$t('open_gpu_cpu_to_gpu')}}</div>
     <div class="dlg-content">
       <!--<h3 class="content-head">
         {{$t('gpu.needHD')}}：66GB $ 22/{{$t('hour')}}
       </h3>-->
-      <div class="form">
+      <div class="cRed">
+        <label>{{$t('container_is_closed_update')}}</label>
+      </div>
+      <div class="form mt20">
         <label>{{$t('gpu.choseGpuCount')}}：</label>
         <el-select
           class="time-select ml10"
@@ -21,12 +24,7 @@
           ></el-option>
         </el-select>
       </div>
-      <!--<div class="form mt20">
-        <label>{{$t('gpu.needHD')}}：</label>
-        <input class="small-input" type="number">
-        <span class="fs12 cGray ml10">GB</span>
-        <span class="fs12 cGray ml10">$xxx/{{$t('hour')}}</span>
-      </div>-->
+
       <div class="form mt20">
         <label>{{$t('dlg_lease_time')}}：</label>
         <el-input
@@ -53,6 +51,42 @@
           class="fs12 cGray ml10"
         >{{(placeOrderData.gpu_price_dollar)}}$/{{$t('my_machine_hour')}}</span>
       </div>
+
+      <div class="form mt20">
+        <label>{{$t('diskspace_dlg')}}：</label>
+        <label>{{$t('diskspace_giving')}}{{disk_giving}}G</label>
+
+        <label>({{$t('diskspace_giving_gpu')}}{{disk_giving_every_gpu}}G)</label>
+        <label>,{{$t('diskspace_every_cpu_can_buy')}}{{diskspace_every_cpu_can_buy}}G</label>
+      </div>
+      <div class="form mt20">
+        <label>{{$t('diskspace_cpu_data')}}:{{disk_cpu_data}}G</label>
+      </div>
+      <div class="form mt20">
+        <label>{{$t('buy_diskspace')}}:</label>
+        <el-input
+          style="width: 120px"
+          size="small"
+          type="number"
+          v-model.number.trim="disk_buy"
+          @input="computeTotalDBC"
+        />
+        <span class="fs12 cGray ml10">G</span>
+        <span
+          class="fs12 cGray ml10"
+        >{{(placeOrderData.disk_GB_perhour_dollar)}}$/{{$t('disk_hour')}}</span>
+
+        <span class="fs12 cGray ml10">{{$t('disk_max')}}{{(disk_max)}}G</span>
+      </div>
+      <div class="form mt20">
+        <label>({{$t('diskspace_new_gpu')}}{{disk_buy+disk_giving-disk_cpu_data}}G)</label>
+      </div>
+      <div class="form mt20">
+        <label>{{$t('memory_dlg')}}：</label>
+        <label>{{memory}}G</label>
+        <label>({{$t('memory_every_gpu')}}{{memory_every_gpu}}G)</label>
+      </div>
+
       <div class="form-notice">{{$t('tips')}}：{{$t('msg.dlg_0',{time: outDayTime})}}</div>
       <div class="computer-dbc mt30">
         <!--          <span>{{$t('gpu.DBCRemaining')}}：349</span>-->
@@ -89,11 +123,19 @@ export default {
       default: () => {
         return {
           order_id: "5d42e162e124f45a4fa158f5",
+          dbc_price: 0.0026,
           gpu_price_dollar: 0.0001,
           code: "0.3848",
           time_max: 1500,
           gpu_count_max: 1,
-          dbc_price: 0.0026
+          images_tag: "pytorch 1.1+tensorflow 1.14@pytorch 1.2",
+          diskspace_giving: 31457280,
+          diskSpace_per_gpu_max: 210736353,
+          memory_per_gpu_max: 23741925,
+          diskspace_max_cpu: 0,
+          memory_max_cpu: 0,
+          disk_GB_perhour_dollar: 3.3333334e-5,
+          diskspace_image_data: 0
         };
       }
     }
@@ -113,12 +155,21 @@ export default {
         }
       ],
       gpuCount: 1,
+      images: "pytorch 1.1+tensorflow 1.14",
       time: 1,
       total_price: "",
       isGetTotalPrice: false,
       reqSt: undefined,
       isCanCreateOrder: true,
-      balance: ""
+      disk_giving: 0,
+      disk_buy: 60,
+      disk_giving_every_gpu: 0,
+      disk_max: 100,
+      balance: "",
+      memory: 0,
+      memory_every_gpu: 0,
+      disk_cpu_data: 0,
+      diskspace_every_cpu_can_buy: 0
     };
   },
   watch: {
@@ -148,7 +199,7 @@ export default {
     },
     gpuCountOptions() {
       let opts = [];
-      for (let i = 1; i <= this.placeOrderData.gpu_count_max; i *= 2) {
+      for (let i = 1; i <= this.placeOrderData.gpu_count_max; i++) {
         opts.push({
           name: i,
           value: i
@@ -156,12 +207,30 @@ export default {
       }
       return opts;
     },
+
+    imagesOptions() {
+      let opts = [];
+      var tags = new Array();
+      tags = this.placeOrderData.images_tag.split("@");
+      for (let i = 0; i <= tags.length; i++) {
+        opts.push({
+          name: tags[i],
+          value: tags[i]
+        });
+      }
+      return opts;
+    },
+
     totalPrice() {
       return (
         this.placeOrderData.gpu_price_dollar *
-        this.gpuCount *
-        this.time *
-        this.timeSelect
+          this.gpuCount *
+          this.time *
+          this.timeSelect +
+        this.placeOrderData.disk_GB_perhour_dollar *
+          this.disk_buy *
+          this.time *
+          this.timeSelect
       );
     },
     dbcNum() {
@@ -178,6 +247,46 @@ export default {
       if (this.time) {
         clearTimeout(this.reqSt);
         this.reqSt = setTimeout(() => {
+          // this.totalPrice();
+
+          this.disk_giving = parseInt(
+            (this.placeOrderData.diskspace_giving * this.gpuCount) /
+              (1024 * 1024)
+          );
+          this.disk_giving_every_gpu = parseInt(
+            this.placeOrderData.diskspace_giving / (1024 * 1024)
+          );
+          this.disk_max = parseInt(
+            (this.placeOrderData.diskSpace_per_gpu_max * this.gpuCount) /
+              (1024 * 1024) -
+              this.disk_giving
+          );
+          this.memory = parseInt(
+            (this.placeOrderData.memory_per_gpu_max / (1024 * 1024)) *
+              this.gpuCount
+          );
+
+          this.memory_every_gpu = parseInt(
+            this.placeOrderData.memory_per_gpu_max / (1024 * 1024)
+          );
+
+          this.disk_cpu_data = parseInt(
+            this.placeOrderData.diskspace_image_data / (1024 * 1024)
+          );
+
+          this.diskspace_every_cpu_can_buy = parseInt(
+            (this.placeOrderData.diskSpace_per_gpu_max -
+              this.placeOrderData.diskspace_giving) /
+              (1024 * 1024)
+          );
+          if (this.disk_buy > this.disk_max) {
+            this.$message({
+              showClose: true,
+              message: this.$t("over_max_disk"),
+              type: "error"
+            });
+            this.disk_buy = this.disk_max;
+          }
           this.getPayDbcCount();
         }, 1000);
       }
@@ -185,9 +294,37 @@ export default {
     getPayDbcCount() {
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
+      this.disk_giving = parseInt(
+        (this.placeOrderData.diskspace_giving * this.gpuCount) / (1024 * 1024)
+      );
+      this.disk_giving_every_gpu = parseInt(
+        this.placeOrderData.diskspace_giving / (1024 * 1024)
+      );
+      this.disk_max = parseInt(
+        (this.placeOrderData.diskSpace_per_gpu_max * this.gpuCount) /
+          (1024 * 1024) -
+          this.disk_giving
+      );
+      this.memory = parseInt(
+        (this.placeOrderData.memory_per_gpu_max / (1024 * 1024)) * this.gpuCount
+      );
+
+      this.memory_every_gpu = parseInt(
+        this.placeOrderData.memory_per_gpu_max / (1024 * 1024)
+      );
+
+      this.disk_cpu_data = parseInt(
+        this.placeOrderData.diskspace_image_data / (1024 * 1024)
+      );
+      this.diskspace_every_cpu_can_buy = parseInt(
+        (this.placeOrderData.diskSpace_per_gpu_max -
+          this.placeOrderData.diskspace_giving) /
+          (1024 * 1024)
+      );
       get_pay_dbc_count({
         rent_time_length: this.time * 60 * this.timeSelect,
         gpu_count: this.gpuCount,
+        diskspace: this.disk_buy * 1024 * 1024,
         order_id: this.placeOrderData.order_id,
         user_name_platform,
         language
@@ -203,30 +340,22 @@ export default {
         }
       });
     },
-    // poc machine
-    pocMachine(order_id) {
-      // pay before
-      const user_name_platform = this.$t("website_name");
-      const language = this.$i18n.locale;
-      can_rent_this_machine({
-        order_id_new: order_id,
-        user_name_platform,
-        language
-      });
-    },
+
     confirm() {
       const params = {
         rent_time_length: this.time * this.timeSelect * 60,
-        order_is_over: this.placeOrderData.order_is_over,
-        dbc_price: this.placeOrderData.dbc_price,
+
         gpu_count: this.gpuCount,
+        image_tag: this.images,
+        diskspace: this.disk_buy * 1024 * 1024,
+        order_type: "training",
         order_id: this.placeOrderData.order_id,
-        dbc_total_count: this.total_price,
+
         user_name_platform: this.$t("website_name"),
         language: this.$i18n.locale
       };
       this.$emit("confirm", params);
-      pocMachine(this.placeOrderData.order_id);
+      // pocMachine(this.placeOrderData.order_id);
     },
     cancel() {
       this.closed();

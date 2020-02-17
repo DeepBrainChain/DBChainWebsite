@@ -95,6 +95,22 @@ export default {
       if (!ac) {
         return;
       }
+      if (this.form.dbcNum === "") {
+        this.$message({
+          showClose: true,
+          message: this.$t("dbcnum_error"),
+          type: "error"
+        });
+        return;
+      }
+      if (parseInt(this.form.dbcNum) >= 1) {
+        this.$message({
+          showClose: true,
+          message: this.$t("dbcnum_error"),
+          type: "error"
+        });
+        return;
+      }
       this.isLoading = true;
       transfer({
         toAddress: this.$tAddress,

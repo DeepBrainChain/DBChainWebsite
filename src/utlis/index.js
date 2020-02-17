@@ -73,7 +73,8 @@ export function getBalance() {
   return new Promise((resolve, reject) => {
     if (account) {
       const scriptHash = DBCHash
-      const apiProvider = new api.neoscan.instance('MainNet')
+      //const apiProvider = new api.neoscan.instance('MainNet')
+      const apiProvider = new api.neoscan.instance('https://api.neoscan.io/api/main_net') //
       apiProvider.getBalance(account.address).then(res => {
         // console.log(res)
         const nep5AssetsArray = []
@@ -200,6 +201,7 @@ export function transfer({
           api: apiProvider, // The API Provider that we rely on for balance and rpc information
           // url: 'https://seed2.cityofzion.io/',
           url: 'https://neocli.dbchain.ai',
+
           account: account, // The sending Account
           // intents: undefined, // Additional intents to move assets
           script: script, // The Smart Contract invocation script
@@ -208,16 +210,76 @@ export function transfer({
         // console.log(res.balance)
         return Neon.doInvoke(config)
       } else {
+
+        this.$message({
+          showClose: true,
+          message: this.$t("dbc_lack_of_balance"),
+          type: "error"
+        });
         return Promise.reject({
           status: -1,
           msg: 'DBC余额不足'
         })
 
-        // this.$message({
-        //  showClose: true,
-        //  message: "DBC余额不足",
-        //  type: "error"
-        //});
+
+      }
+    })
+    .then(res => {
+      if (res.response && res.response.result) {
+        console.log(res);
+
+        return Promise.resolve({
+          status: 1,
+          msg: `you paied ${amount}DBC to ${toAddress}, txid is ${res.response.txid}`,
+          ...res
+        })
+      } else {
+
+        return Promise.reject({
+          status: -2,
+          msg: 'dbc transfer fail~!'
+        })
+      }
+    })
+}
+
+export function transfer_other({
+  toAddress = testAddress,
+  amount,
+  gas = 0
+}) {
+  return getBalance()
+    .then(res => {
+      if (res.balance > amount) {
+        const apiProvider = new api.neoscan.instance('https://api.neoscan.io/api/main_net')
+        // console.log(apiProvider)
+        const generator = nep5.abi.transfer(DBCHash, account.address, toAddress ? toAddress : testAddress, amount)
+        // console.log(generator)
+        const script = generator().str
+        // console.log(script)
+        const config = {
+          api: apiProvider, // The API Provider that we rely on for balance and rpc information
+          url: 'https://seed2.cityofzion.io/',
+          //  url: 'https://neocli.dbchain.ai',
+          account: account, // The sending Account
+          // intents: undefined, // Additional intents to move assets
+          script: script, // The Smart Contract invocation script
+          gas // Additional GAS for invocation.
+        }
+        // console.log(res.balance)
+        return Neon.doInvoke(config)
+      } else {
+
+        this.$message({
+          showClose: true,
+          message: this.$t("dbc_lack_of_balance"),
+          type: "error"
+        });
+        return Promise.reject({
+          status: -1,
+          msg: 'DBC余额不足'
+        })
+
       }
     })
     .then(res => {
@@ -236,5 +298,4 @@ export function transfer({
       }
     })
 }
-
 // initAccount()

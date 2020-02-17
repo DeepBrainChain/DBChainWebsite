@@ -9,7 +9,20 @@
           <span></span>
         </div>-->
         <el-form>
-          <el-form-item :label="$t('dlg_input_code')">
+          <el-form-item :label="$t('dlg_input_code')" v-if="item.mcData.dbc_version==='0.3.7.2'">
+            <el-input v-model="stop_code" size="small" style="width: 200px"></el-input>
+            <el-button
+              :loading="isCoding"
+              class="ml10"
+              plain
+              size="mini"
+              @click="getStopCode"
+            >{{$t('dlg_get_code')}}</el-button>
+          </el-form-item>
+          <el-form-item
+            :label="$t('dlg_input_code_stop')"
+            v-if="item.mcData.dbc_version!=='0.3.7.2'"
+          >
             <el-input v-model="stop_code" size="small" style="width: 200px"></el-input>
             <el-button
               :loading="isCoding"

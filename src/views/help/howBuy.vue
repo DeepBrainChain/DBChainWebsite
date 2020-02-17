@@ -11,15 +11,15 @@
         {{$t('help.2')}}，
         <a
           v-if="this.$i18n.locale==='cn' || this.$i18n.locale==='CN'"
-          href="https://www.huobi.br.com/zh-cn/"
+          href="https://www.huobi.io/zh-cn/exchange/dbc_btc/"
           target="_blank"
-        >https://www.huobi.br.com/zh-cn/</a>
+        >https://www.huobi.io/zh-cn/</a>
 
         <a
           v-else
-          href="https://www.huobi.br.com/en-us/"
+          href="https://www.huobi.io/en-us/exchange/dbc_btc/"
           target="_blank"
-        >https://www.huobi.br.com/en-us/</a>
+        >https://www.huobi.io/en-us/</a>
         .{{$t('help.reloadWallet')}}
       </h3>
 
@@ -31,7 +31,7 @@
 
       <h3>
         {{$t('help.4')}}，
-        <a href="https://www.gateio.co" target="_blank">https://www.gateio.co</a>
+        <a href="https://www.gateio.life" target="_blank">https://www.gateio.life</a>
         .{{$t('help.reloadWallet')}}
       </h3>
 
@@ -46,10 +46,10 @@ export default {
 
   methods: {
     tradedbcHref() {
-      location.href =
+      window.open(
         "https://www.dbctrade.io/trade/buy_1?address_user=" +
-        this.$route.query.address_user;
-      window.open(location.href, "_blank");
+          this.$route.query.address_user
+      );
     }
   }
 };

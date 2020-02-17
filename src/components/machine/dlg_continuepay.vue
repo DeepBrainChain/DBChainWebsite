@@ -36,7 +36,7 @@
         </el-select>
         <span
           class="fs12 cGray ml10"
-        >{{(placeOrderData.gpu_price_dollar)}}$/{{$t('my_machine_hour')}}</span>
+        >{{(placeOrderData.gpu_price_dollar*placeOrderData.gpu_count +placeOrderData.disk_dollar)}}$/{{$t('my_machine_hour')}}</span>
       </div>
       <div class="form-notice">{{$t('tips')}}：{{$t('msg.dlg_0',{time: outDayTime})}}</div>
       <div class="computer-dbc mt30">
@@ -78,6 +78,7 @@ export default {
           code: "0.3848",
           time_max: 1500,
           order_id: "",
+          gpu_count: 1,
           dbc_price: 0.0026
         };
       }
@@ -142,16 +143,24 @@ export default {
       return opts;
     },
     totalPrice() {
-      return (
-        this.placeOrderData.gpu_price_dollar *
-        this.gpuCount *
-        this.time *
-        this.timeSelect
-      );
-    },
-    dbcNum() {
-      return Math.floor(this.totalPrice / this.placeOrderData.dbc_price);
+      if (this.placeOrderData.gpu_count === 0) {
+        return (
+          this.placeOrderData.gpu_price_dollar * this.time * this.timeSelect +
+          this.placeOrderData.disk_dollar * this.time * this.timeSelect
+        );
+      } else {
+        return (
+          this.placeOrderData.gpu_price_dollar *
+            this.placeOrderData.gpu_count *
+            this.time *
+            this.timeSelect +
+          this.placeOrderData.disk_dollar * this.time * this.timeSelect
+        );
+      }
     }
+    //dbcNum() {
+    // return Math.floor(this.totalPrice / this.placeOrderData.dbc_price);
+    //}
   },
   methods: {
     getBalance() {

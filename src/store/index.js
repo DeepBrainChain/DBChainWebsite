@@ -23,6 +23,8 @@ export default new Vuex.Store({
   state: {
     account: undefined,
     balance: 0,
+    dbcChange: 0,
+    dbcPrice: 0,
     rpcClient: undefined,
     accountState: undefined,
     privateKey: '',
@@ -44,7 +46,11 @@ export default new Vuex.Store({
     setAccountState(state, data) {
       state.accountState = data
     },
-    setData(state, {privateKey, address, publicKey}) {
+    setData(state, {
+      privateKey,
+      address,
+      publicKey
+    }) {
       state.privateKey = privateKey || ''
       state.address = address || ''
       state.publicKey = publicKey || ''
@@ -54,19 +60,49 @@ export default new Vuex.Store({
     },
     setdbcToUS(state, data) {
       state.dbcToUS = data
+    },
+    setDbcPrice(state, data) {
+      state.dbcPrice = data
+    },
+    setDbcChange(state, data) {
+      state.dbcChange = data
     }
   },
   actions: {
-    getExchangeRate({commit, state}) {
+    getExchangeRate({
+      commit,
+      state
+    }) {
       axios.get('https://api.coinmarketcap.com/v1/ticker/deepbrain-chain/').then(res => {
+        // axios.get('https://data.gateio.co/api2/1/ticker/dbc_usdt/').then(res => {
         // console.log(res.data[0])
-        commit('setdbcToUS', res.data[0].price_usd)
+        //   commit('setdbcToUS', res.data[0].price_usd)
+        commit('setDbcPrice', res.data[0].price_usd)
+        //     commit('setDbc_change', res.data[0].percent_change_24h)
+        //commit('setdbcToUS', res.last)
       }).catch(err => {
-
+        // commit('setdbcToUS', res.last)
       })
     },
-    getTransferList({commit, state}) {
-      getTransactions(state.address,1).then(res => {
+
+    getGate({
+      commit,
+      state
+    }) {
+      //  axios.get('https://gateio.life/api2/1/ticker/dbc_usdt/').then(res => {
+      axios.get('https://api.coinmarketcap.com/v1/ticker/deepbrain-chain/').then(res => {
+        // commit('setDbc_price', res.last)
+        commit('setDbcChange', res.data[0].percent_change_24h)
+      }).catch(err => {
+        // commit('setdbcToUS', res.last)
+      })
+    },
+
+    getTransferList({
+      commit,
+      state
+    }) {
+      getTransactions(state.address, 1).then(res => {
         const array = res.entries.map(item => {
           return {
             txHash: item.txid,
@@ -103,7 +139,10 @@ export default new Vuex.Store({
         commit('setTransferList', array)
       })*/
     },
-    getAccountState({commit, state}) {
+    getAccountState({
+      commit,
+      state
+    }) {
       return new Promise((resolve, reject) => {
         const ac = getAccount()
         if (ac) {
@@ -124,7 +163,10 @@ export default new Vuex.Store({
       })
     },
     // create account from privateKey
-    createAccountFromPrivateKey({commit, state}, privateKey) {
+    createAccountFromPrivateKey({
+      commit,
+      state
+    }, privateKey) {
       return new Promise((resolve, reject) => {
         const account = initAccount(privateKey)
         if (account) {
@@ -141,7 +183,13 @@ export default new Vuex.Store({
       })
     },
     // create account from encryptedKey
-    createAccountFromEncryptedKey({commit, state}, {encryptedKey, password}) {
+    createAccountFromEncryptedKey({
+      commit,
+      state
+    }, {
+      encryptedKey,
+      password
+    }) {
       return initAccountFromEncryptedKey(encryptedKey, password).then(account => {
         saveCookie(account, encryptedKey)
         commit('setData', {

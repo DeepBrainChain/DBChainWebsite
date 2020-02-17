@@ -61,7 +61,7 @@ export default {
   computed: {
     set_dbctalk() {
       if (this.$t("website_name") == "dbchain") {
-        return this.$t("heads.talk");
+        return "";
       } else if (this.$t("website_name") == "yousanai") {
         return "";
       } else if (this.$t("website_name") == "aionego") {
@@ -92,8 +92,31 @@ export default {
         return "";
       } else if (this.$t("website_name") == "redstonewill") {
         return "";
+      } else if (this.$t("website_name") == "alpha-dbchain") {
+        return "";
+      } else if (this.$t("website_name") == "xyzlab") {
+        return "";
+      } else if (this.$t("website_name") == "gpgpu") {
+        return "";
+      } else if (this.$t("website_name") == "rocketai") {
+        return "";
+      } else if (this.$t("website_name") == "deepbit") {
+        return "";
+      } else if (this.$t("website_name") == "aichriscloud") {
+        return "";
+      } else if (this.$t("website_name") == "vnxmart") {
+        return "";
+      } else if (this.$t("website_name") == "aiaicloud") {
+        return "";
+      } else if (this.$t("website_name") == "snbt") {
+        return "";
+      } else if (this.$t("website_name") == "heekmind") {
+        return "";
+      } else if (this.$t("website_name") == "aicv") {
+        return "";
       }
-      return this.$t("heads.talk");
+
+      return "";
     }
   },
   methods: {

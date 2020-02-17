@@ -9,10 +9,20 @@
           target="_blank"
         >PanChuang Docs</a>
         <a href="https://www.deepbrainchain.org" target="_blank">{{$t('footer.DBChain')}}</a>
-        <a href="https://www.kcs.top/" target="_blank">{{$t('footer.KuCoin')}}</a>
+        <a href="http://zero.sjeng.org/home" target="_blank">{{$t('footer.zero')}}</a>
 
-        <a href="https://www.huobi.br.com/zh-cn/" target="_blank">{{$t('footer.HuobiPro')}}</a>
-        <a href="https://www.gateio.co/" target="_blank">{{$t('footer.GateIo')}}</a>
+        <a href="https://www.flyai.com" target="_blank">{{$t('footer.flyai')}}</a>
+        <a href="https://www.paddlepaddle.org.cn/" target="_blank">{{$t('footer.paddle')}}</a>
+        <a href="https://home.yikeweiqi.com/#/game" target="_blank">{{$t('footer.yikeweiqi')}}</a>
+        <a
+          href="https://www.paddlepaddle.org.cn/modelbase"
+          target="_blank"
+        >{{$t('footer.modelbase')}}</a>
+        <a
+          href="https://github.com/PaddlePaddle/models/blob/96c57e63bd6012cef3793096f0d374495a642c7b/PaddleCV/PaddleVideo/models/tsm/README.md"
+          target="_blank"
+        >{{$t('footer.PaddleVideo')}}</a>
+        <a href="https://github.com/paddlepaddle/models" target="_blank">{{$t('footer.models')}}</a>
       </div>
       <div class="line" tyle=" text-align:center"></div>
       <p class="contact">{{$t('footer_service')}}:{{footer_service}},{{$t('footr_reply')}}</p>
@@ -63,10 +73,30 @@ export default {
         return this.$t("footer_service_ainlp");
       } else if (this.$t("website_name") == "52cv") {
         return this.$t("footer_service_52cv");
-      } else if (this.$t("website_name") == "52cv") {
-        return this.$t("footer_service_52cv");
       } else if (this.$t("website_name") == "redstonewill") {
         return this.$t("footer_service_redstonewill");
+      } else if (this.$t("website_name") == "alpha-dbchain") {
+        return this.$t("footer_service_alpha_dbchain");
+      } else if (this.$t("website_name") == "xyzlab") {
+        return this.$t("footer_service_xyzlab");
+      } else if (this.$t("website_name") == "gpgpu") {
+        return this.$t("footer_service_gpgpu");
+      } else if (this.$t("website_name") == "rocketai") {
+        return this.$t("footer_service_rocketai");
+      } else if (this.$t("website_name") == "deepbit") {
+        return this.$t("footer_service_deepbit");
+      } else if (this.$t("website_name") == "aichriscloud") {
+        return this.$t("footer_service_aichriscloud");
+      } else if (this.$t("website_name") == "vnxmart") {
+        return this.$t("footer_service_vnxmart");
+      } else if (this.$t("website_name") == "aiaicloud") {
+        return this.$t("footer_service_aiaicloud");
+      } else if (this.$t("website_name") == "snbt") {
+        return this.$t("footer_service_snbt");
+      } else if (this.$t("website_name") == "heekmind") {
+        return this.$t("footer_service_heekmind");
+      } else if (this.$t("website_name") == "aicv") {
+        return this.$t("footer_service_aicv");
       }
 
       return this.$t("footer_service_dbchain");

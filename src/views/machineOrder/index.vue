@@ -2,7 +2,7 @@
   <div class="bg-box wrap1440 mb100">
     <div class="border-box">
       <div class="title">
-        <h3>{{$t('machine_order_rentout')}}</h3>
+        <h3>{{$t('machine_order_rentout')}}:{{machineid}}</h3>
       </div>
       <div v-for="item in content" class="border-content">
         <div class="tools-head">
@@ -62,6 +62,8 @@
             <span
               class="td"
             >{{$t('machine_order_is_used_time')}}：{{parseInt(item.orderData.real_rent_time/60)}}{{$t('machine_order_hour')}}{{item.orderData.real_rent_time%60}}{{$t('machine_order_min')}}</span>
+
+            <span class="td">{{$t('gpu_count')}}：{{item.orderData.gpu_count}}</span>
           </div>
           <div>
             <span class="td">{{$t('gpu.actualPrice')}}：{{item.orderData.dbc_real_need_count}}DBC</span>
@@ -133,6 +135,7 @@ export default {
   data() {
     return {
       rateValue: 0,
+      machineid: this.$route.query.machine_id,
       mcData: undefined,
       content: []
     };

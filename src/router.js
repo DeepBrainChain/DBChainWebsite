@@ -52,19 +52,34 @@ const router = new Router({
           path: 'myWalletUnlock',
           component: () => import('./views/gpu/myWallet_unlock')
         },
-        {
-          meta: {
-            menuIndex: 2
-          },
-          path: 'list',
-          component: () => import('./views/gpu/list')
-        },
+
         {
           meta: {
             menuIndex: 1
           },
           path: 'myMachine',
           component: () => import('./views/gpu/myMachine')
+        },
+        {
+          meta: {
+            menuIndex: 2
+          },
+          path: 'myMachine_cpu',
+          component: () => import('./views/gpu/myMachine_cpu')
+        },
+        {
+          meta: {
+            menuIndex: 3
+          },
+          path: 'myMachine_stopped',
+          component: () => import('./views/gpu/myMachine_stopped')
+        },
+        {
+          meta: {
+            menuIndex: 4
+          },
+          path: 'list',
+          component: () => import('./views/gpu/list')
         },
         {
           meta: {
@@ -72,41 +87,49 @@ const router = new Router({
           },
           path: 'myMachineUnlock',
           component: () => import('./views/gpu/myMachine_unlock')
+        },
+        {
+          meta: {
+            menuIndex: 2
+          },
+          path: 'myMachineUnlockCPU',
+          component: () => import('./views/gpu/myMachine_unlock_cpu')
+        },
+        {
+          meta: {
+            menuIndex: 3
+          },
+          path: 'myMachineUnlockStopped',
+          component: () => import('./views/gpu/myMachine_unlock_stopped')
         }
+
       ]
     },
     {
       path: '/miner',
       name: 'miner',
-      component: () => import('./views/gpu'),
-      redirect: '/miner/myWallet',
+      component: () => import('./views/miner'),
+      redirect: '/miner/myMachine',
       children: [{
           meta: {
             menuIndex: 0
           },
           path: 'myWallet',
           component: () => import('./views/gpu/myWallet')
-        },
-        {
+        }, {
           meta: {
             menuIndex: 0
           },
           path: 'myWalletUnlock',
           component: () => import('./views/gpu/myWallet_unlock')
         },
-        {
-          meta: {
-            menuIndex: 2
-          },
-          path: 'list',
-          component: () => import('./views/gpu/list')
-        },
+
         {
           meta: {
             menuIndex: 1
           },
           path: 'myMachine',
-          component: () => import('./views/gpu/myMachine')
+          component: () => import('./views/miner/myMachine')
         },
         {
           meta: {
@@ -142,6 +165,11 @@ const router = new Router({
       path: '/howBuy',
       name: 'howBuy',
       component: () => import('./views/help/howBuy'),
+    },
+    {
+      path: '/howSell',
+      name: 'howSell',
+      component: () => import('./views/help/howSell'),
     },
     {
       path: '/minerHome',

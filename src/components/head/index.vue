@@ -83,7 +83,7 @@ export default {
   computed: {
     set_dbctalk() {
       if (this.$t("website_name") == "dbchain") {
-        return this.$t("heads.talk");
+        return "";
       } else if (this.$t("website_name") == "yousanai") {
         return "";
       } else if (this.$t("website_name") == "aionego") {
@@ -114,9 +114,30 @@ export default {
         return "";
       } else if (this.$t("website_name") == "redstonewill") {
         return "";
+      } else if (this.$t("website_name") == "alpha-dbchain") {
+        return "";
+      } else if (this.$t("website_name") == "xyzlab") {
+        return "";
+      } else if (this.$t("website_name") == "gpgpu") {
+        return "";
+      } else if (this.$t("website_name") == "rocketai") {
+        return "";
+      } else if (this.$t("website_name") == "aichriscloud") {
+        return "";
+      } else if (this.$t("website_name") == "deepbit") {
+        return "";
+      } else if (this.$t("website_name") == "vnxmart") {
+        return "";
+      } else if (this.$t("website_name") == "aiaicloud") {
+        return "";
+      } else if (this.$t("website_name") == "snbt") {
+        return "";
+      } else if (this.$t("website_name") == "heekmind") {
+        return "";
+      } else if (this.$t("website_name") == "aicv") {
+        return "";
       }
-
-      return this.$t("heads.talk");
+      return "";
     }
   },
   methods: {
@@ -208,10 +229,30 @@ export default {
         this.link.href = "./ainlp.ico";
       } else if (this.$t("website_name") == "52cv") {
         this.link.href = "./52cv.ico";
-      } else if (this.$t("website_name") == "52cv") {
-        this.link.href = "./52cv.ico";
       } else if (this.$t("website_name") == "redstonewill") {
         this.link.href = "./redstonewill.ico";
+      } else if (this.$t("website_name") == "alpha-dbchain") {
+        this.link.href = "./alpha-dbchain.ico";
+      } else if (this.$t("website_name") == "xyzlab") {
+        this.link.href = "./xyzlab.ico";
+      } else if (this.$t("website_name") == "gpgpu") {
+        this.link.href = "./gpgpu.ico";
+      } else if (this.$t("website_name") == "rocketai") {
+        this.link.href = "./rocketai.ico";
+      } else if (this.$t("website_name") == "deepbit") {
+        this.link.href = "./deepbit.ico";
+      } else if (this.$t("website_name") == "aichriscloud") {
+        this.link.href = "./aichriscloud.ico";
+      } else if (this.$t("website_name") == "vnxmart") {
+        this.link.href = "./vnxmart.ico";
+      } else if (this.$t("website_name") == "aiaicloud") {
+        this.link.href = "./aiaicloud.ico";
+      } else if (this.$t("website_name") == "snbt") {
+        this.link.href = "./snbt.ico";
+      } else if (this.$t("website_name") == "heekmind") {
+        this.link.href = "./heekmind.ico";
+      } else if (this.$t("website_name") == "aicv") {
+        this.link.href = "./aicv.ico";
       }
 
       document.getElementsByTagName("head")[0].appendChild(this.link);
@@ -250,6 +291,28 @@ export default {
         document.title = "52CV";
       } else if (this.$t("website_name") == "redstonewill") {
         document.title = "redstonewill";
+      } else if (this.$t("website_name") == "alpha-dbchain") {
+        document.title = "alpha-dbchain";
+      } else if (this.$t("website_name") == "xyzlab") {
+        document.title = "xyzlab";
+      } else if (this.$t("website_name") == "gpgpu") {
+        document.title = "gpgpu";
+      } else if (this.$t("website_name") == "rocketai") {
+        document.title = "rocketai";
+      } else if (this.$t("website_name") == "deepbit") {
+        document.title = "deepbit";
+      } else if (this.$t("website_name") == "aichriscloud") {
+        document.title = "aichriscloud";
+      } else if (this.$t("website_name") == "vnxmart") {
+        document.title = "vnxmart";
+      } else if (this.$t("website_name") == "aiaicloud") {
+        document.title = "aiaicloud";
+      } else if (this.$t("website_name") == "snbt") {
+        document.title = "snbt";
+      } else if (this.$t("website_name") == "heekmind") {
+        document.title = "heekmind";
+      } else if (this.$t("website_name") == "aicv") {
+        document.title = "aicv";
       }
     },
     set_logo() {
@@ -285,6 +348,28 @@ export default {
         this.logo = require("../../assets/imgs/52cv@1x.png");
       } else if (this.$t("website_name") == "redstonewill") {
         this.logo = require("../../assets/imgs/redstonewill@1x.png");
+      } else if (this.$t("website_name") == "alpha-dbchain") {
+        this.logo = require("../../assets/imgs/alpha-dbchain@1x.png");
+      } else if (this.$t("website_name") == "xyzlab") {
+        this.logo = require("../../assets/imgs/xyzlab@1x.png");
+      } else if (this.$t("website_name") == "gpgpu") {
+        this.logo = require("../../assets/imgs/gpgpu@1x.png");
+      } else if (this.$t("website_name") == "rocketai") {
+        this.logo = require("../../assets/imgs/rocketai@1x.png");
+      } else if (this.$t("website_name") == "deepbit") {
+        this.logo = require("../../assets/imgs/deepbit@1x.png");
+      } else if (this.$t("website_name") == "aichriscloud") {
+        this.logo = require("../../assets/imgs/aichriscloud@1x.png");
+      } else if (this.$t("website_name") == "vnxmart") {
+        this.logo = require("../../assets/imgs/vnxmart@1x.png");
+      } else if (this.$t("website_name") == "aiaicloud") {
+        this.logo = require("../../assets/imgs/aiaicloud@1x.png");
+      } else if (this.$t("website_name") == "snbt") {
+        this.logo = require("../../assets/imgs/snbt@1x.png");
+      } else if (this.$t("website_name") == "heekmind") {
+        this.logo = require("../../assets/imgs/heekmind@1x.png");
+      } else if (this.$t("website_name") == "aicv") {
+        this.logo = require("../../assets/imgs/aicv@1x.png");
       }
     },
     pushMenu(name) {
@@ -337,6 +422,7 @@ export default {
 
   .logo {
     margin-top: 10px; //dbchain:10px ,aionego:-30px,yousanai:-30px,deepshare-30px,yalecloud-30px,panchuanga:-30px,,sharegpu:-30px
+    //alpha-dbchain:-50px,xyzlab:-20px
     margin-right: 119px; //dbchain: 119px  ,aionego:119px,yousanai:119px,deepshare:119px
   }
 

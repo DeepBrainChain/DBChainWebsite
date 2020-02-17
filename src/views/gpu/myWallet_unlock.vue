@@ -15,25 +15,37 @@
     <div class="form-input pt40">
       <label>
         <span>DBC{{$t('gpu.amount')}}：</span>
-        <span class="money-input">{{balance}}</span>
+        <span class="money-input">{{(balance).toFixed(4)}}</span>
       </label>
       <router-link
         class="ml20 f16 cPrimaryColor"
         :to="{path:'/howBuy',query:{address_user:address}}"
         target="_blank"
       >{{$t('gpu.howBuyDBC')}}</router-link>
-    </div>
-    <div class="mt30 form-input">
-      <label>
-        <span>{{$t('gpu.exchangeCash')}}：</span>
-        <span class="cash-view">{{(balance * dbcToUS).toFixed(3)}}</span>
-      </label>
-      <span class="f16">{{$t('gpu.showDeitailDBC')}}</span>
+
+      <router-link
+        class="cRed"
+        :to="{path:'/howSell',query:{address_user:address}}"
+        target="_blank"
+      >&nbsp;&nbsp;{{$t('howsellDBC')}}</router-link>
+      <span class="f16">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{$t('gpu.showDeitailDBC')}}</span>
       <a
         href="javascript:"
         class="f16 cPrimaryColor"
         @click="toCoinWeb"
       >{{$t('gpu.clickCoinmarktcap')}}</a>
+    </div>
+    <div class="pt40 form-input">
+      <label>
+        <span>{{$t('gpu.exchangeCash')}}：</span>
+        <span class="cash-view">{{(dbcPrice * balance).toFixed(4)}}</span>
+      </label>
+      <label>
+        <span>{{$t('dbc_price_wallet')}}：</span>
+        <span class="cash-view">{{Math.round(dbcPrice* 1000000) / 1000000}}{{$t('dbc_price_usd')}}</span>
+        <span class="cGren" v-if="dbcChange>=0">+{{dbcChange}}%</span>
+        <span class="cRed" v-if="dbcChange<0">{{dbcChange}}%</span>
+      </label>
     </div>
     <div class="pt40 pb20">
       <table class="tb-theme small">
@@ -96,7 +108,6 @@ import { closeAc, transfer, isAddress } from "@/utlis";
 import tradeList from "@/components/wallet/tradeList";
 import walletDetail from "@/components/wallet/walletBox";
 import { MessageBox } from "element-ui";
-
 export default {
   name: "myWallet-unlock",
   components: {
@@ -110,13 +121,17 @@ export default {
       page: 1,
       transferAddress: "",
       transferAmount: undefined,
-      si: undefined
+      si: undefined,
+      dbc_info: undefined,
+      exchangeCash: 0,
+      dbc_change: 0
     };
   },
   created() {
     this.initData();
     this.si = setInterval(() => {
-      this.initData();
+      //  this.initData();
+      //this.exchangeCash = ;
     }, 3000);
   },
   beforeDestroy() {
@@ -125,17 +140,24 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["getAccountState", "getTransferList", "getExchangeRate"]),
+    ...mapActions([
+      "getAccountState",
+      "getTransferList",
+      "getExchangeRate",
+      "getGate"
+    ]),
     initData() {
       this.getExchangeRate();
+      this.getGate();
+
       this.getAccountState()
         .then(data => {
           this.symbol = data.symbol;
           this.getTransferList();
         })
         .catch(err => {
-          console.log(err);
-          this.$router.push("/openWallet");
+          const type = this.$route.path.search("gpu") !== -1 ? "gpu" : "miner";
+          this.$router.push(`/openWallet/${type}`);
         });
     },
     // click to send assets to input address
@@ -221,7 +243,14 @@ export default {
     }
   },
   computed: {
-    ...mapState(["address", "balance", "transferList", "dbcToUS"])
+    ...mapState([
+      "address",
+      "balance",
+      "transferList",
+      "dbcToUS",
+      "dbcPrice",
+      "dbcChange"
+    ])
   }
 };
 </script>
@@ -267,7 +296,7 @@ export default {
 
   .cash-view {
     display: inline-block;
-    width: 240px;
+    width: 360px;
     padding: 0 10px;
     font-size: 36px;
     line-height: 36px;

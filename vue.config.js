@@ -59,6 +59,11 @@ module.exports = {
         ws: true,
         changeOrigin: true
       },
+      get_all_order_cpu: {
+        target: "https://info.dbchain.ai",
+        ws: true,
+        changeOrigin: true
+      },
       "/rentout": {
         target: "https://info.dbchain.ai",
         ws: true,

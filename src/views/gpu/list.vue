@@ -2,7 +2,7 @@
   <div class="machine">
     <div class="machineData-wrap">
       <drop-item
-        v-model="req_body.county"
+        v-model="req_body.country"
         class="machine-item"
         :title="$t('list_country')"
         :drop-list="countries"
@@ -217,11 +217,11 @@
             >{{item.machine_id}}</el-button>
             <span class="fs28">
               <span
-                class="cRed"
-              >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$ {{item.gpu_price_dollar }}/{{$t('my_machine_hour')}}</span>
+                class="cRedbig"
+              >&nbsp;&nbsp;$ {{item.gpu_price_dollar }}/{{$t('my_machine_hour')}}</span>
             </span>
           </div>
-          <div class="td">
+          <div class="td4">
             <span class="fs16">
               {{$t('list_dbc_version')}}：
               <a class="cPrimaryColor">{{item.dbc_version}}</a>
@@ -229,7 +229,7 @@
           </div>
           <div>
             <el-button
-              style="width: 100px"
+              style="width: 70px"
               plain
               size="mini"
               @click="openTry(item)"
@@ -237,25 +237,34 @@
               :loading="item.try_rentLoading"
             >{{$t('list_try')}}</el-button>
             <el-button
-              style="width: 100px"
+              style="width: 105px"
               type="primary"
               size="mini"
-              @click="openDlg(item)"
+              @click="openDlg_gpu(item)"
               :disabled="!item.idle_status||item.can_rent_start_time_later<0"
-              :loading="item.rentLoading"
-            >{{$t('list_rentout')}}</el-button>
+              :loading="item.rentLoading_gpu"
+            >{{$t('list_rentout_gpu')}}</el-button>
+            <el-button
+              style="width: 105px"
+              type="primary"
+              size="mini"
+              v-if="item.dbc_version!=='0.3.7.2'"
+              @click="openDlg_cpu_switch(item)"
+              :disabled="!item.can_create_cpu_container||item.can_rent_start_time_later<0"
+              :loading="item.rentLoading_cpu"
+            >{{$t('list_rentout_cpu')}}</el-button>
           </div>
         </div>
         <div class="flex">
           <div class="td2">
             <span class="fs28">
               <a class="cPrimaryColor">{{item.gpu_type}}</a>
-              <a class="cPrimaryColor">x{{item.gpu_count}}</a>
+              <a class="cRedbig">x{{item.gpu_count}} GPU</a>
             </span>
           </div>
           <div class="td2">
             <span class="fs28">
-              <a class="cPrimaryColor">{{item.county}}{{$t('list_china')}}</a>
+              <a class="cPrimaryColor">{{item.country}}</a>
             </span>
           </div>
           <div class="td" v-if="item.can_rent_start_time_later<0">
@@ -303,6 +312,48 @@
             </span>
           </div>
         </div>
+
+        <div class="flex" v-if="item.dbc_version!=='0.3.7.2'">
+          <div class="td">
+            <span class="fs16">
+              {{$t('cpu_containers_list')}}:
+              <a class="cPrimaryColor">{{item.cpu_containers}}</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{$t('cpu_containers_can_use_memory_list')}}：
+              <a
+                class="cPrimaryColor"
+              >{{parseInt(item.cpu_containers_can_use_memory/(1024*1024))}}G</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{$t('cpu_containers_can_use_disk_list')}}：
+              <a
+                class="cPrimaryColor"
+              >{{parseInt(item.cpu_containers_can_use_disk/(1024*1024))}}G</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{$t('gpu_containers_can_use_memory_list')}}：
+              <a
+                class="cPrimaryColor"
+              >{{parseInt(item.gpu_containers_can_use_memory/(1024*1024))}}G</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{$t('gpu_containers_can_use_disk_list')}}：
+              <a
+                class="cPrimaryColor"
+              >{{parseInt(item.gpu_containers_can_use_disk/(1024*1024))}}G</a>
+            </span>
+          </div>
+        </div>
+
         <div class="flex">
           <div v-if="item.tensor_cores>0" class="td">
             <span class="fs16">
@@ -430,7 +481,26 @@
         </div>
       </li>
     </ul>
-    <dlg-lease :open.sync="dlg_open" :place-order-data="placeOrderData" @confirm="createOrder"></dlg-lease>
+    <dlg-leasegpu
+      :open.sync="dlg_opengpu"
+      :place-order-data="placeOrderData"
+      @confirm="createOrder"
+    ></dlg-leasegpu>
+    <dlg-leaseswitchcpu
+      :open.sync="dlg_openswitchcpu"
+      :place-order-data="placeOrderData"
+      @confirm="switch_cpu_mode"
+    ></dlg-leaseswitchcpu>
+    <dlg-leasecpupayment
+      :open.sync="dlg_opencpupayment"
+      :place-order-data="placeOrderData"
+      @confirm="createOrder"
+    ></dlg-leasecpupayment>
+    <dlg-leasecpudeposit
+      :open.sync="dlg_opencpudeposit"
+      :place-order-data="placeOrderData"
+      @confirm="createOrder"
+    ></dlg-leasecpudeposit>
     <!--    try-dlg-->
     <dlg-try :open.sync="dlg_open_try" @confirm="createTry"></dlg-try>
   </div>
@@ -439,12 +509,16 @@
 <script>
 import DropItem from "@/components/machine/dropItem";
 import SlideItem from "@/components/machine/slideItem";
-import DlgLease from "@/components/machine/dlg_lease";
+import DlgLeasecpudeposit from "@/components/machine/dlg_leasecpudeposit";
+import DlgLeasecpupayment from "@/components/machine/dlg_leasecpupayment";
+import DlgLeasegpu from "@/components/machine/dlg_leasegpu";
+import DlgLeaseswitchcpu from "@/components/machine/dlg_leaseswitchcpu";
 import DlgTry from "@/components/machine/dlg_try";
 import {
   getMcList,
   try_place_order,
   place_order,
+  place_order_cpu,
   create_order,
   get_dbc_price
 } from "@/api";
@@ -455,14 +529,21 @@ export default {
   components: {
     DropItem,
     SlideItem,
-    DlgLease,
+    DlgLeasecpudeposit,
+    DlgLeasecpupayment,
+    DlgLeaseswitchcpu,
+    DlgLeasegpu,
     DlgTry
   },
   data() {
     return {
-      rentLoading: false,
+      rentLoading_cpu: false,
+      rentLoading_gpu: false,
       try_rentLoading: false,
-      dlg_open: false,
+      dlg_openswitchcpu: false,
+      dlg_opengpu: false,
+      dlg_opencpupayment: false,
+      dlg_opencpudeposit: false,
       dlg_open_try: false,
       curVal: 0,
       si: undefined,
@@ -477,11 +558,15 @@ export default {
       dbc_version: [
         {
           name: this.$t("gpu.dbc_version[0]"),
-          value: 0
+          value: "0"
         },
         {
           name: this.$t("gpu.dbc_version[1]"),
           value: this.$t("gpu.dbc_version[1]")
+        },
+        {
+          name: this.$t("gpu.dbc_version[2]"),
+          value: this.$t("gpu.dbc_version[2]")
         }
       ],
 
@@ -538,7 +623,7 @@ export default {
       diskBandwidthVal: 0,
       inetUpVal: 0,
       inetDownVal: 0,
-
+      language: undefined,
       images: [
         {
           name: "TesorFlow",
@@ -550,8 +635,8 @@ export default {
         }
       ],
       req_body: {
-        county: "all",
-        dbcVersion: "V0.3.7.2",
+        country: "all",
+        dbcVersion: "0",
         have_ip: 0,
         idle_status: 1,
         totalTime: 0,
@@ -588,13 +673,14 @@ export default {
   watch: {
     "$i18n.locale"() {
       this.init_data();
+      this.queryMc();
     },
     curVal(newVal) {}
   },
   created() {
     this.init_data();
   },
-  computed: {},
+
   activated() {
     this.queryMc();
   },
@@ -603,6 +689,7 @@ export default {
       clearInterval(this.si);
     }
   },
+
   methods: {
     init_data() {
       this.countries[0].name = this.$t("list_all");
@@ -612,17 +699,22 @@ export default {
       this.idle_status[0].name = this.$t("gpu.idle_status[0]");
       this.idle_status[1].name = this.$t("gpu.idle_status[1]");
       this.idle_status[2].name = this.$t("gpu.idle_status[2]");
+      this.language = this.$i18n.locale;
     },
     pushDetail(machine_id) {
       this.$router.push("/machineDetail?machine_id=" + machine_id);
     },
-    // 打开弹窗
-    openDlg(item, isTry) {
+    // 打开gpu弹窗
+    openDlg_gpu(item) {
       if (!getAccount()) {
-        this.$router.push(`/openWallet/${type}`);
+        this.$message({
+          showClose: true,
+          message: this.$t("pleae_create_wallet"),
+          type: "error"
+        });
         return;
       }
-      item.rentLoading = true;
+      item.rentLoading_gpu = true;
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       place_order({
@@ -652,7 +744,7 @@ export default {
         .then(res_2 => {
           if (res_2.status === 1) {
             this.placeOrderData.dbc_price = res_2.content;
-            this.dlg_open = true;
+            this.dlg_opengpu = true;
           } else {
             this.$message({
               showClose: true,
@@ -666,11 +758,155 @@ export default {
           console.log(err);
         })
         .finally(() => {
-          item.rentLoading = false;
+          item.rentLoading_gpu = false;
         });
     },
+
+    openDlg_cpu_switch(item) {
+      if (!getAccount()) {
+        // this.$router.push(`/openWallet/${type}`);
+        this.$message({
+          showClose: true,
+          message: this.$t("pleae_create_wallet"),
+          type: "error"
+        });
+        return;
+      }
+      //  item.rentLoading_cpu = true;
+      this.dlg_openswitchcpu = true;
+      this.placeOrderData = item;
+      //   confirm_new("", this.$t("cpu_mode_switch"));
+      //    this.confirm_new("xxx", this.$t("cpu_mode_switch"), item);
+    },
+
+    switch_cpu_mode(item) {
+      this.dlg_openswitchcpu = false;
+      if (item.switch_cpu_mode === "payment") {
+        this.to_payment(item);
+      } else if (item.switch_cpu_mode === "deposit") {
+        this.to_deposit(item);
+      }
+    },
+
+    to_payment(item) {
+      if (!getAccount()) {
+        // this.$router.push(`/openWallet/${type}`);
+        this.$message({
+          showClose: true,
+          message: this.$t("pleae_create_wallet"),
+          type: "error"
+        });
+        return;
+      }
+      item.rentLoading_cpu = true;
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
+      place_order_cpu({
+        machine_id: item.machine_id,
+        wallet_address_user: getAccount().address,
+        mode: "payment",
+        user_name_platform,
+        language
+      })
+        .then(res_1 => {
+          if (res_1.status === 1) {
+            this.placeOrderData = res_1.content;
+            this.placeOrderData.dbc_price = 0.0026;
+            return get_dbc_price({
+              order_id: this.placeOrderData.order_id,
+              user_name_platform,
+              language
+            });
+          } else {
+            this.$message({
+              showClose: true,
+              message: res_1.msg,
+              type: "error"
+            });
+            return Promise.reject(res_1.msg);
+          }
+        })
+        .then(res_2 => {
+          if (res_2.status === 1) {
+            this.placeOrderData.dbc_price = res_2.content;
+            this.dlg_opencpupayment = true;
+          } else {
+            this.$message({
+              showClose: true,
+              message: res_2.msg,
+              type: "success"
+            });
+            return Promise.reject(res_2.msg);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        })
+        .finally(() => {
+          item.rentLoading_cpu = false;
+        });
+    },
+
+    to_deposit(item) {
+      item.rentLoading_cpu = true;
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
+      place_order_cpu({
+        machine_id: item.machine_id,
+        wallet_address_user: getAccount().address,
+        user_name_platform,
+        mode: "deposit",
+        language
+      })
+        .then(res_1 => {
+          if (res_1.status === 1) {
+            this.placeOrderData = res_1.content;
+            this.placeOrderData.dbc_price = 0.0026;
+            return get_dbc_price({
+              order_id: this.placeOrderData.order_id,
+              user_name_platform,
+              language
+            });
+          } else {
+            this.$message({
+              showClose: true,
+              message: res_1.msg,
+              type: "error"
+            });
+            return Promise.reject(res_1.msg);
+          }
+        })
+        .then(res_2 => {
+          if (res_2.status === 1) {
+            this.placeOrderData.dbc_price = res_2.content;
+            this.dlg_opencpudeposit = true;
+          } else {
+            this.$message({
+              showClose: true,
+              message: res_2.msg,
+              type: "success"
+            });
+            return Promise.reject(res_2.msg);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        })
+        .finally(() => {
+          item.rentLoading_cpu = false;
+        });
+    },
+
     // open try
     openTry(item) {
+      if (!getAccount()) {
+        this.$message({
+          showClose: true,
+          message: this.$t("pleae_create_wallet"),
+          type: "error"
+        });
+        return;
+      }
       item.try_rentLoading = true;
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
@@ -724,11 +960,26 @@ export default {
       create_order(params)
         .then(res => {
           if (res.status === 1) {
-            this.$message(this.$t("list_create_order_success"));
-            this.dlg_open = false;
-            this.$router.push("/gpu/myMachine");
+            this.$message({
+              showClose: true,
+              message: this.$t("list_create_order_success"),
+              type: "success"
+            });
+            this.dlg_openswitchcpu = false;
+            this.dlg_opengpu = false;
+            this.dlg_opencpupayment = false;
+            this.dlg_opencpudeposit = false;
+            if (params.gpu_count === 0) {
+              this.$router.push("/gpu/myMachine_cpu");
+            } else {
+              this.$router.push("/gpu/myMachine");
+            }
           } else {
-            this.$message(res.msg);
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "error"
+            });
           }
         })
         .finally(() => {
@@ -762,8 +1013,8 @@ export default {
         });
     },
     queryMc() {
-      const params = {
-        county: this.req_body.county,
+      let params = {
+        country: this.req_body.country,
         idle_status: this.req_body.idle_status,
         total_time: this.req_body.totalTime,
         total_rent_count: this.req_body.total_rent_count,
@@ -787,18 +1038,21 @@ export default {
         half_precision_tflops: this.req_body.half_precision_tflops,
         single_precision_tflops: this.req_body.single_precision_tflops,
         double_precision_tflops: this.req_body.double_precision_tflops,
-        dbc_version: "0.3.7.2",
+        dbc_version: this.req_body.dbcVersion,
         user_name_platform: this.$t("website_name"),
-        language: this.$i18n.locale
+        language: this.language
       };
       getMcList(params).then(res => {
         this.res_body = res;
       });
+      if (this.si) {
+        clearInterval(this.si);
+      }
       this.si = setInterval(() => {
         getMcList(params).then(res => {
           this.res_body = res;
         });
-      }, 10000);
+      }, 30000);
       // if (this.st) {
       //  clearTimeout(this.st);
       //  }
@@ -1485,6 +1739,12 @@ export default {
         }
       }
     }
+    .fs28 {
+      font-size: 18px;
+      .cRedbig {
+        color: #f56c6c;
+      }
+    }
 
     .td2 {
       width: 50%;
@@ -1497,6 +1757,11 @@ export default {
         &.fs28 {
           font-size: 32px;
         }
+      }
+
+      .cRedbig {
+        font-size: 32px;
+        color: #f56c6c;
       }
     }
 
@@ -1524,6 +1789,19 @@ export default {
 
       .downSpeed {
         transform: rotateZ(180deg);
+      }
+    }
+
+    .td4 {
+      width: 12%;
+      line-height: 24px;
+
+      .cPrimaryColor {
+        font-size: 12px;
+
+        &.fs16 {
+          font-size: 16px;
+        }
       }
     }
   }

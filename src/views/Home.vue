@@ -4,7 +4,7 @@
       <el-col class="flex" :md="12">
         <div class="content">
           <div class="text">
-            <p>{{get_text1}}{{$t('home.intr_4')}}</p>
+            <p>{{get_text1}}{{get_intr_4}}</p>
             <p>{{$t('home.intr_5')}}</p>
           </div>
           <div class="btn-wrap mt60">
@@ -146,6 +146,28 @@ export default {
         this.image1 = require("../assets/imgs/building@1x.png");
       } else if (this.$t("website_name") == "redstonewill") {
         this.image1 = require("../assets/imgs/building@1x.png");
+      } else if (this.$t("website_name") == "alpha-dbchain") {
+        this.image1 = require("../assets/imgs/building@1x.png");
+      } else if (this.$t("website_name") == "xyzlab") {
+        this.image1 = require("../assets/imgs/building@1x.png");
+      } else if (this.$t("website_name") == "gpgpu") {
+        this.image1 = require("../assets/imgs/building@1x.png");
+      } else if (this.$t("website_name") == "rocketai") {
+        this.image1 = require("../assets/imgs/building@1x.png");
+      } else if (this.$t("website_name") == "deepbit") {
+        this.image1 = require("../assets/imgs/building@1x.png");
+      } else if (this.$t("website_name") == "aichriscloud") {
+        this.image1 = require("../assets/imgs/building@1x.png");
+      } else if (this.$t("website_name") == "vnxmart") {
+        this.image1 = require("../assets/imgs/building@1x.png");
+      } else if (this.$t("website_name") == "aiaicloud") {
+        this.image1 = require("../assets/imgs/building@1x.png");
+      } else if (this.$t("website_name") == "snbt") {
+        this.image1 = require("../assets/imgs/building@1x.png");
+      } else if (this.$t("website_name") == "heekmind") {
+        this.image1 = require("../assets/imgs/building@1x.png");
+      } else if (this.$t("website_name") == "aicv") {
+        this.image1 = require("../assets/imgs/building@1x.png");
       }
     }
   },
@@ -183,8 +205,39 @@ export default {
         return this.$t("home.intr_52cv_1");
       } else if (this.$t("website_name") == "redstonewill") {
         return this.$t("home.intr_redstonewill_1");
+      } else if (this.$t("website_name") == "alpha-dbchain") {
+        return this.$t("home.intr_alpha_dbchain_1");
+      } else if (this.$t("website_name") == "xyzlab") {
+        return this.$t("home.intr_xyzlab_1");
+      } else if (this.$t("website_name") == "gpgpu") {
+        return this.$t("home.intr_gpgpu_1");
+      } else if (this.$t("website_name") == "rocketai") {
+        return this.$t("home.intr_rocketai_1");
+      } else if (this.$t("website_name") == "deepbit") {
+        return this.$t("home.intr_deepbit_1");
+      } else if (this.$t("website_name") == "aichriscloud") {
+        return this.$t("home.intr_aichriscloud_1");
+      } else if (this.$t("website_name") == "vnxmart") {
+        return this.$t("home.intr_vnxmart_1");
+      } else if (this.$t("website_name") == "aiaicloud") {
+        return this.$t("home.intr_aiaicloud_1");
+      } else if (this.$t("website_name") == "snbt") {
+        return this.$t("home.intr_snbt_1");
+      } else if (this.$t("website_name") == "heekmind") {
+        return this.$t("home.intr_heekmind_1");
+      } else if (this.$t("website_name") == "aicv") {
+        return this.$t("home.intr_aicv_1");
       }
+
       return this.$t("home.intr_dbchain_1");
+    },
+
+    get_intr_4() {
+      if (this.$t("website_name") == "snbt") {
+        return this.$t("home.intr_snbt_4");
+      } else {
+        return this.$t("home.intr_4");
+      }
     }
   }
 };

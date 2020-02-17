@@ -23,7 +23,12 @@ export default {
   data() {
     return {
       // 缓存组件列表
-      cacheList: ["myMachine_unlock", "list"],
+      cacheList: [
+        "myMachine_unlock",
+        "myMachine_unlock_cpu",
+        "myMachine_unlock_stopped",
+        "list"
+      ],
       curNavIndex: 0,
       menus: [
         {
@@ -40,8 +45,20 @@ export default {
         },
         {
           title: undefined, //this.$t("gpu.machineList"),
-          to: "list",
+          to: "myMachine_cpu",
           index: 2,
+          iconClass: "iconmachine"
+        },
+        {
+          title: undefined, //this.$t("gpu.machineList"),
+          to: "myMachine_stopped",
+          index: 3,
+          iconClass: "iconmachine"
+        },
+        {
+          title: undefined, //this.$t("gpu.machineList"),
+          to: "list",
+          index: 4,
           iconClass: "iconlist"
         }
       ]
@@ -66,9 +83,11 @@ export default {
     inti_menus() {
       this.menus[0].title = this.$t("gpu.myWallet");
 
-      this.menus[1].title = this.$t("gpu.myMachine");
+      this.menus[1].title = this.$t("gpu.myMachine_gpu");
 
-      this.menus[2].title = this.$t("gpu.machineList");
+      this.menus[2].title = this.$t("gpu.myMachine_cpu");
+      this.menus[3].title = this.$t("gpu.myMachine_stopped");
+      this.menus[4].title = this.$t("gpu.machineList");
     }
   },
   components: {
