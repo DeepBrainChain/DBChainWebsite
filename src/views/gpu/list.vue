@@ -232,35 +232,37 @@
               style="width: 70px"
               plain
               size="mini"
-              @click="openTry(item)"
+              @click="openTry(item,index)"
               :disabled="!item.idle_status||item.can_rent_start_time_later<0"
-              :loading="item.try_rentLoading"
+              :loading="try_rentLoading && try_rent_index===index "
             >{{$t('list_try')}}</el-button>
             <el-button
               style="width: 105px"
               type="primary"
               size="mini"
-              @click="openDlg_gpu(item)"
+              @click="openDlg_gpu(item,index)"
               :disabled="!item.idle_status||item.can_rent_start_time_later<0"
-              :loading="item.rentLoading_gpu"
+              :loading="rentLoading_gpu && rent_index===index"
             >{{$t('list_rentout_gpu')}}</el-button>
             <el-button
               style="width: 105px"
               type="primary"
               size="mini"
               v-if="item.dbc_version!=='0.3.7.2'"
-              @click="openDlg_cpu_switch(item)"
+              @click="openDlg_cpu_switch(item,index)"
               :disabled="!item.can_create_cpu_container||item.can_rent_start_time_later<0"
-              :loading="item.rentLoading_cpu"
+              :loading="rentLoading_cpu&& rent_index===index"
             >{{$t('list_rentout_cpu')}}</el-button>
           </div>
         </div>
         <div class="flex">
           <div class="td2">
-            <span class="fs28">
-              <a class="cPrimaryColor">{{item.gpu_type}}</a>
-              <a class="cRedbig">x{{item.gpu_count}} GPU</a>
-            </span>
+            <el-tooltip class="item" effect="dark" :content="$t('list_gpu_count_tip')">
+              <span class="fs28">
+                <a class="cPrimaryColor">{{item.gpu_type}}</a>
+                <a class="cRedbig">x{{item.gpu_count}} GPU</a>
+              </span>
+            </el-tooltip>
           </div>
           <div class="td2">
             <span class="fs28">
@@ -537,9 +539,11 @@ export default {
   },
   data() {
     return {
+      rent_index: -1,
       rentLoading_cpu: false,
       rentLoading_gpu: false,
       try_rentLoading: false,
+      try_rent_index: -1,
       dlg_openswitchcpu: false,
       dlg_opengpu: false,
       dlg_opencpupayment: false,
@@ -705,7 +709,7 @@ export default {
       this.$router.push("/machineDetail?machine_id=" + machine_id);
     },
     // 打开gpu弹窗
-    openDlg_gpu(item) {
+    openDlg_gpu(item, index) {
       if (!getAccount()) {
         this.$message({
           showClose: true,
@@ -714,7 +718,9 @@ export default {
         });
         return;
       }
-      item.rentLoading_gpu = true;
+      this.rent_index = index;
+      this.rentLoading_gpu = true;
+      this.$forceUpdate();
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       place_order({
@@ -758,11 +764,12 @@ export default {
           console.log(err);
         })
         .finally(() => {
-          item.rentLoading_gpu = false;
+          this.rentLoading_gpu = false;
+          this.rent_index = -1;
         });
     },
 
-    openDlg_cpu_switch(item) {
+    openDlg_cpu_switch(item, index) {
       if (!getAccount()) {
         // this.$router.push(`/openWallet/${type}`);
         this.$message({
@@ -772,23 +779,25 @@ export default {
         });
         return;
       }
-      //  item.rentLoading_cpu = true;
+
       this.dlg_openswitchcpu = true;
       this.placeOrderData = item;
+      this.placeOrderData.index = index;
       //   confirm_new("", this.$t("cpu_mode_switch"));
       //    this.confirm_new("xxx", this.$t("cpu_mode_switch"), item);
     },
 
     switch_cpu_mode(item) {
       this.dlg_openswitchcpu = false;
+      this.$forceUpdate();
       if (item.switch_cpu_mode === "payment") {
-        this.to_payment(item);
+        this.to_payment(item, item.index);
       } else if (item.switch_cpu_mode === "deposit") {
-        this.to_deposit(item);
+        this.to_deposit(item, item.index);
       }
     },
 
-    to_payment(item) {
+    to_payment(item, index) {
       if (!getAccount()) {
         // this.$router.push(`/openWallet/${type}`);
         this.$message({
@@ -798,7 +807,9 @@ export default {
         });
         return;
       }
-      item.rentLoading_cpu = true;
+      this.rent_index = index;
+      this.rentLoading_cpu = true;
+      this.$forceUpdate();
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       place_order_cpu({
@@ -843,12 +854,15 @@ export default {
           console.log(err);
         })
         .finally(() => {
-          item.rentLoading_cpu = false;
+          this.rentLoading_cpu = false;
+          this.rent_index = -1;
         });
     },
 
-    to_deposit(item) {
-      item.rentLoading_cpu = true;
+    to_deposit(item, index) {
+      this.rentLoading_cpu = true;
+      this.rent_index = index;
+      this.$forceUpdate();
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       place_order_cpu({
@@ -888,17 +902,17 @@ export default {
             });
             return Promise.reject(res_2.msg);
           }
+          this.rentLoading_cpu = false;
+          this.rent_index = -1;
         })
         .catch(err => {
           console.log(err);
         })
-        .finally(() => {
-          item.rentLoading_cpu = false;
-        });
+        .finally(() => {});
     },
 
     // open try
-    openTry(item) {
+    openTry(item, index) {
       if (!getAccount()) {
         this.$message({
           showClose: true,
@@ -907,7 +921,9 @@ export default {
         });
         return;
       }
-      item.try_rentLoading = true;
+      this.try_rentLoading = true;
+      this.try_rent_index = index;
+      this.$forceUpdate();
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       try_place_order({
@@ -951,7 +967,8 @@ export default {
           console.log(err);
         })
         .finally(() => {
-          item.try_rentLoading = false;
+          this.try_rentLoading = false;
+          this.try_rent_index = -1;
         });
     },
     // create order
@@ -974,7 +991,7 @@ export default {
             } else {
               this.$router.push("/gpu/myMachine");
             }
-          } else {
+          } else if (res.status === -1) {
             this.$message({
               showClose: true,
               message: res.msg,
@@ -1048,11 +1065,16 @@ export default {
       if (this.si) {
         clearInterval(this.si);
       }
+      let timesRun = 0;
       this.si = setInterval(() => {
+        timesRun += 1;
+        if (timesRun === 10) {
+          clearInterval(this.si);
+        }
         getMcList(params).then(res => {
           this.res_body = res;
         });
-      }, 30000);
+      }, 15000);
       // if (this.st) {
       //  clearTimeout(this.st);
       //  }

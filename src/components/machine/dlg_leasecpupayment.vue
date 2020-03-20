@@ -190,7 +190,7 @@ export default {
       balance: "0",
       memory: 0,
       memory_every_gpu: 0,
-      diskspace_max_cpu: 100 * 1024 * 1024,
+      diskspace_max_cpu: 300 * 1024 * 1024,
       disk_cpu_data: 0
     };
   },
@@ -269,6 +269,27 @@ export default {
             this.disk_cpu_data = parseInt(
               this.placeOrderData.diskspace_image_data / (1024 * 1024)
             );
+
+            if (
+              this.placeOrderData.diskspace_image_data != 0 &&
+              this.disk_buy === 60
+            ) {
+              this.disk_buy =
+                parseInt(
+                  this.placeOrderData.diskspace_image_data / (1024 * 1024)
+                ) + this.disk_buy;
+              if (
+                this.disk_buy * (1024 * 1014) +
+                  this.placeOrderData.diskspace_giving >
+                this.diskspace_max_cpu
+              ) {
+                this.disk_buy = parseInt(
+                  (this.diskspace_max_cpu -
+                    this.placeOrderData.diskspace_giving) /
+                    (1024 * 1014)
+                );
+              }
+            }
             if (
               this.disk_buy * (1024 * 1014) +
                 this.placeOrderData.diskspace_giving <
@@ -282,8 +303,8 @@ export default {
             }
 
             if (
-              this.placeOrderData.diskspace_image_data + 10 * 1024 * 1024 >
-              this.diskspace_max_cpu
+              this.placeOrderData.diskspace_image_data >
+              this.diskspace_max_cpu + 10 * 1024 * 1024
             ) {
               this.$message({
                 showClose: true,

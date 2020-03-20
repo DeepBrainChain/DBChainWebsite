@@ -36,7 +36,12 @@
         </el-select>
         <span
           class="fs12 cGray ml10"
-        >{{(placeOrderData.gpu_price_dollar*placeOrderData.gpu_count +placeOrderData.disk_dollar)}}$/{{$t('my_machine_hour')}}</span>
+          v-if="placeOrderData.gpu_count!==0"
+        >{{(placeOrderData.gpu_price_dollar*placeOrderData.gpu_count +placeOrderData.disk_dollar).toFixed(4) }}$/{{$t('my_machine_hour')}}</span>
+        <span
+          class="fs12 cGray ml10"
+          v-if="placeOrderData.gpu_count===0"
+        >{{(placeOrderData.gpu_price_dollar +placeOrderData.disk_dollar).toFixed(4) }}$/{{$t('my_machine_hour')}}</span>
       </div>
       <div class="form-notice">{{$t('tips')}}：{{$t('msg.dlg_0',{time: outDayTime})}}</div>
       <div class="computer-dbc mt30">

@@ -161,6 +161,14 @@ export default {
         return this.$t("home.intr_heekmind_1");
       } else if (this.$t("website_name") == "aicv") {
         return this.$t("home.intr_aicv_1");
+      } else if (this.$t("website_name") == "freegpu") {
+        return this.$t("home.intr_freegpu_1");
+      } else if (this.$t("website_name") == "boincplanet") {
+        return this.$t("home.intr_boincplanet_1");
+      } else if (this.$t("website_name") == "shareaiot") {
+        return this.$t("home.intr_shareaiot_1");
+      }else if (this.$t("website_name") == "topgpu") {
+        return this.$t("home.intr_topgpu_1");
       }
 
       return this.$t("home.intr_dbchain_1");

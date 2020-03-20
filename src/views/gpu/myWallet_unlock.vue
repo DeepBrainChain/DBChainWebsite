@@ -41,17 +41,23 @@
         <span class="cash-view">{{(dbcPrice * balance).toFixed(4)}}</span>
       </label>
       <label>
-        <span>{{$t('dbc_price_wallet')}}：</span>
+        <el-tooltip class="item" effect="dark" :content="$t('dbc_price_wallet_tips')">
+          <span>{{$t('dbc_price_wallet')}}：</span>
+        </el-tooltip>
         <span class="cash-view">{{Math.round(dbcPrice* 1000000) / 1000000}}{{$t('dbc_price_usd')}}</span>
-        <span class="cGren" v-if="dbcChange>=0">+{{dbcChange}}%</span>
-        <span class="cRed" v-if="dbcChange<0">{{dbcChange}}%</span>
+        <el-tooltip class="item" effect="dark" :content="$t('dbcChange_tips')">
+          <span class="cGren" v-if="dbcChange>=0">+{{dbcChange}}%</span>
+          <span class="cRed" v-if="dbcChange<0">{{dbcChange}}%</span>
+        </el-tooltip>
       </label>
     </div>
     <div class="pt40 pb20">
       <table class="tb-theme small">
         <thead>
           <tr>
-            <th width="130" class="tl pl30">{{$t('gpu.transfer')}}</th>
+            <el-tooltip class="item" effect="dark" :content="$t('transfer_tips')">
+              <th width="130" class="tl pl30">{{$t('gpu.transfer')}}?</th>
+            </el-tooltip>
             <th class="tr pr15">
               <span class="symbol-text">DBC</span>
               <el-button

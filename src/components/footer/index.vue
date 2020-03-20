@@ -9,20 +9,8 @@
           target="_blank"
         >PanChuang Docs</a>
         <a href="https://www.deepbrainchain.org" target="_blank">{{$t('footer.DBChain')}}</a>
-        <a href="http://zero.sjeng.org/home" target="_blank">{{$t('footer.zero')}}</a>
 
         <a href="https://www.flyai.com" target="_blank">{{$t('footer.flyai')}}</a>
-        <a href="https://www.paddlepaddle.org.cn/" target="_blank">{{$t('footer.paddle')}}</a>
-        <a href="https://home.yikeweiqi.com/#/game" target="_blank">{{$t('footer.yikeweiqi')}}</a>
-        <a
-          href="https://www.paddlepaddle.org.cn/modelbase"
-          target="_blank"
-        >{{$t('footer.modelbase')}}</a>
-        <a
-          href="https://github.com/PaddlePaddle/models/blob/96c57e63bd6012cef3793096f0d374495a642c7b/PaddleCV/PaddleVideo/models/tsm/README.md"
-          target="_blank"
-        >{{$t('footer.PaddleVideo')}}</a>
-        <a href="https://github.com/paddlepaddle/models" target="_blank">{{$t('footer.models')}}</a>
       </div>
       <div class="line" tyle=" text-align:center"></div>
       <p class="contact">{{$t('footer_service')}}:{{footer_service}},{{$t('footr_reply')}}</p>
@@ -97,6 +85,14 @@ export default {
         return this.$t("footer_service_heekmind");
       } else if (this.$t("website_name") == "aicv") {
         return this.$t("footer_service_aicv");
+      } else if (this.$t("website_name") == "freegpu") {
+        return this.$t("footer_service_freegpu");
+      } else if (this.$t("website_name") == "boincplanet") {
+        return this.$t("footer_service_boincplanet");
+      } else if (this.$t("website_name") == "shareaiot") {
+        return this.$t("footer_service_shareaiot");
+      } else if (this.$t("website_name") == "topgpu") {
+        return this.$t("footer_service_topgpu");
       }
 
       return this.$t("footer_service_dbchain");

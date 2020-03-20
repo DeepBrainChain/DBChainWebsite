@@ -352,8 +352,8 @@
             style="width: 140px"
             type="primary"
             size="mini"
-            @click="openDlg_stop_to_gpu(item)"
-            :loading="item.rentLoading_gpu"
+            @click="openDlg_stop_to_gpu(item,index)"
+            :loading="rentLoading_gpu&&rentLoading_index===index"
             :disabled="item.mcData.dbc_version==='0.3.7.2'||!item.mcData.idle_status"
           >{{$t('open_gpu_stopped')}}</el-button>
           <el-button
@@ -361,8 +361,8 @@
             type="primary"
             size="mini"
             :disabled="item.mcData.dbc_version==='0.3.7.2'||!item.mcData.can_create_cpu_container"
-            @click="openDlg_stop_to_cpu_switch(item)"
-            :loading="item.rentLoading_cpu"
+            @click="openDlg_stop_to_cpu_switch(item,index)"
+            :loading="rentLoading_cpu&&rentLoading_index===index"
           >{{$t('open_cpu_stopped')}}</el-button>
         </div>
       </div>
@@ -455,6 +455,7 @@ export default {
   },
   data() {
     return {
+      rentLoading_index: -1,
       rateValue: undefined,
       dlgReload_open: false,
       dlgHD_open: false,
@@ -486,7 +487,9 @@ export default {
       dlg_openswitchcpu: false,
       dlg_opengpu: false,
       dlg_opencpupayment: false,
-      dlg_opencpudeposit: false
+      dlg_opencpudeposit: false,
+      rentLoading_cpu: false,
+      rentLoading_gpu: false
     };
   },
   watch: {
@@ -500,12 +503,17 @@ export default {
       if (this.queryOrderListSi) {
         clearInterval(this.queryOrderListSi);
       }
+      let timesRun = 0;
       this.queryOrderListSi = setInterval(() => {
+        timesRun += 1;
+        if (timesRun === 10) {
+          clearInterval(this.queryOrderListSi);
+        }
         if (this.isPaying !== true) {
           this.queryOrderList();
           this.forceToPocMachineUpdate();
         }
-      }, 30000);
+      }, 15000);
     }
   },
   activated() {
@@ -521,12 +529,17 @@ export default {
     if (this.queryOrderListSi) {
       clearInterval(this.queryOrderListSi);
     }
+    let timesRun = 0;
     this.queryOrderListSi = setInterval(() => {
+      timesRun += 1;
+      if (timesRun === 10) {
+        clearInterval(this.queryOrderListSi);
+      }
       if (this.isPaying !== true) {
         this.queryOrderList();
         this.forceToPocMachineUpdate();
       }
-    }, 30000);
+    }, 15000);
   },
   deactivated() {
     if (this.queryOrderListSi) {
@@ -545,7 +558,7 @@ export default {
   },
   methods: {
     // 打开gpu弹窗
-    openDlg_stop_to_gpu(item) {
+    openDlg_stop_to_gpu(item, index) {
       if (!getAccount()) {
         this.$message({
           showClose: true,
@@ -554,7 +567,10 @@ export default {
         });
         return;
       }
-      item.rentLoading_gpu = true;
+
+      this.rentLoading_gpu = true;
+      this.$forceUpdate();
+      this.rentLoading_index = index;
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       place_order_stop_to_gpu({
@@ -599,11 +615,12 @@ export default {
           console.log(err);
         })
         .finally(() => {
-          item.rentLoading_gpu = false;
+          this.rentLoading_gpu = false;
+          this.rentLoading_index = -1;
         });
     },
 
-    openDlg_stop_to_cpu_switch(item) {
+    openDlg_stop_to_cpu_switch(item, index) {
       if (!getAccount()) {
         // this.$router.push(`/openWallet/${type}`);
         this.$message({
@@ -613,9 +630,11 @@ export default {
         });
         return;
       }
-      //  item.rentLoading_cpu = true;
+
       this.dlg_openswitchcpu = true;
+      this.$forceUpdate();
       this.placeOrderData = item.orderData;
+      this.placeOrderData.index = index;
       //   confirm_new("", this.$t("cpu_mode_switch"));
       //    this.confirm_new("xxx", this.$t("cpu_mode_switch"), item);
     },
@@ -623,13 +642,13 @@ export default {
     switch_cpu_mode(item) {
       this.dlg_openswitchcpu = false;
       if (item.switch_cpu_mode === "payment") {
-        this.to_payment(item);
+        this.to_payment(item, item.index);
       } else if (item.switch_cpu_mode === "deposit") {
-        this.to_deposit(item);
+        this.to_deposit(item, item.index);
       }
     },
 
-    to_payment(item) {
+    to_payment(item, index) {
       if (!getAccount()) {
         // this.$router.push(`/openWallet/${type}`);
         this.$message({
@@ -639,7 +658,8 @@ export default {
         });
         return;
       }
-      item.rentLoading_cpu = true;
+      this.rentLoading_cpu = true;
+      this.rentLoading_index = index;
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       place_order_stop_to_cpu({
@@ -685,12 +705,14 @@ export default {
           console.log(err);
         })
         .finally(() => {
-          item.rentLoading_cpu = false;
+          this.rentLoading_cpu = false;
+          this.rentLoading_index = -1;
         });
     },
 
-    to_deposit(item) {
-      item.rentLoading_cpu = true;
+    to_deposit(item, index) {
+      this.rentLoading_cpu = true;
+      this.rentLoading_index = index;
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       place_order_stop_to_cpu({
@@ -736,7 +758,8 @@ export default {
           console.log(err);
         })
         .finally(() => {
-          item.rentLoading_cpu = false;
+          this.rentLoading_cpu = false;
+          this.rentLoading_index = -1;
         });
     },
 

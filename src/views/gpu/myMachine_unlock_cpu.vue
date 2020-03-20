@@ -406,11 +406,11 @@
           <span
             class="cRed"
             v-else-if="item.orderData.order_id_pre!==null&&(item.orderData.creating_container|| creating_container  )&& !item.orderData.order_is_cancer&&!item.orderData.order_is_over&&!item.orderData.rent_success&&!item.orderData.pay_error&&!item.orderData.from_stop_to_open"
-          >{{$t('myMachine_is_vocing_machine_update_stop_gpu')}}</span>
+          >{{$t('myMachine_is_vocing_machine_update_stop_gpu')}}{{parseInt(item.orderData.diskspace_image_data/(1024*1024*16))+1}}-{{parseInt(item.orderData.diskspace_image_data/(1024*1024*2))+9}}{{$t('my_machine_min')}}</span>
           <span
             class="cRed"
             v-else-if="item.orderData.order_id_pre!==null&&(item.orderData.creating_container|| creating_container  ) && !item.orderData.order_is_cancer&&!item.orderData.order_is_over&&!item.orderData.rent_success&&!item.orderData.pay_error&&item.orderData.from_stop_to_open"
-          >{{$t('myMachine_is_vocing_machine_update_stop_to_open')}}</span>
+          >{{$t('myMachine_is_vocing_machine_update_stop_to_open')}}{{parseInt(item.orderData.diskspace_image_data/(1024*1024*16))+1}}-{{parseInt(item.orderData.diskspace_image_data/(1024*1024*2))+9}}{{$t('my_machine_min')}}</span>
 
           <span
             class="cRed"
@@ -425,6 +425,10 @@
             v-else-if="((item.orderData.vocing_pay||ispayPocing) &&(!item.orderData.order_is_cancer&& !item.orderData.rent_success &&!item.orderData.order_is_over&&item.orderData.container_is_exist&&item.orderData.order_id_pre===null))
             ||((item.orderData.vocing_pay||ispayPocing) &&(!item.orderData.order_is_cancer&& !item.orderData.pay_success &&!item.orderData.order_is_over&&item.orderData.order_id_pre!=null))"
           >{{$t('my_machine_order_vocing_pay')}}</span>
+          <span
+            class="cRed"
+            v-else-if="!isShowRendSuccessMsg(item.orderData.milli_rent_success_time)&&item.orderData.rent_success&&!item.mcData.idle_status&&!item.orderData.order_is_over"
+          >{{$t('no_idle_gpus')}}</span>
         </div>
         <div
           v-if="item.orderData.order_is_cancer === false && !(item.orderData.return_dbc === true && item.orderData.pay_error === true)"
@@ -443,6 +447,15 @@
                        @click="dlgReload_open = true">
               {{$t('gpu.reload')}}
             </el-button>-->
+            <el-button
+              plain
+              v-if="isShowRendSuccessMsg(item.orderData.milli_rent_success_time)"
+              class="tool-btn"
+              style="width: 100px"
+              size="mini"
+              :loading="send_email_repeatLoading && send_email_repeat_index===index"
+              @click="send_email_repeat(item,index)"
+            >{{$t('send_email_repeat')}}</el-button>
 
             <el-button
               plain
@@ -450,8 +463,8 @@
               class="tool-btn"
               style="width: 80px"
               size="mini"
-              :loading="item.rentLoading"
-              @click="openContinuePay(item)"
+              :loading="continue_rentLoading && continuepay_index===index"
+              @click="openContinuePay(item,index)"
             >{{$t('continue_pay')}}</el-button>
 
             <el-button
@@ -462,6 +475,7 @@
               size="mini"
               @click="stopRent(item)"
             >{{$t('unsubscribe')}}</el-button>
+
             <el-button
               plain
               v-if="item.orderData.try_rent === false"
@@ -469,17 +483,23 @@
               style="width: 110px"
               size="mini"
               :disabled="item.mcData.dbc_version==='0.3.7.2'||!item.mcData.idle_status"
-              @click="openDlg_cpu_to_gpu(item)"
-              :loading="item.opengpuloading"
+              :loading="opengpuloading && opengpu_index ===index"
+              @click="openDlg_cpu_to_gpu(item,index)"
             >{{$t('open_cpu_to_gpu')}}</el-button>
-            <el-button
-              plain
+            <el-tooltip
+              class="item"
               v-if="item.orderData.try_rent === false"
-              class="tool-btn"
-              style="width: 110px"
-              size="mini"
-              @click="restartMachine(item)"
-            >{{$t('restart_machine')}}</el-button>
+              effect="dark"
+              :content="$t('restart_tip_mymachine')"
+            >
+              <el-button
+                plain
+                class="tool-btn"
+                style="width: 110px"
+                size="mini"
+                @click="restartMachine(item)"
+              >{{$t('restart_machine')}}</el-button>
+            </el-tooltip>
           </template>
           <el-button
             v-else-if="item.orderData.return_dbc === false && item.orderData.pay_error"
@@ -500,21 +520,13 @@
               size="mini"
               @click="openPay(item)"
             >{{$t('myMachine_confirm_pay')}}</el-button>
-            <!--     <el-button
-              v-if="item.orderData.container_is_exist===true && item.orderData.pay_error===false"
-              :disabled="isPaying||item.verifing === true || item.orderData.vocing_pay||ispayPocing"
-              plain
-              class="tool-btn"
-              size="mini"
-              @click="paid(item)"
-            >{{$t('myMachine_paid')}}</el-button>-->
+
             <el-button
               plain
-              v-if="item.orderData.vocing_pay===false && item.orderData.try_rent === false"
-              :disabled="isPaying||ispayPocing"
+              :disabled="isPaying"
               class="tool-btn"
               size="mini"
-              :loading="item.cancelLoading"
+              :loading="cancelLoading"
               @click="cancelOrder(item)"
             >{{$t('myMachine_concer_order')}}</el-button>
           </template>
@@ -598,7 +610,8 @@ import {
   get_dbc_price,
   create_order,
   pay_update,
-  update_container_is_ok
+  update_container_is_ok,
+  send_email_repeat
 } from "@/api";
 
 import { getAccount, transfer, getBalance } from "@/utlis";
@@ -648,7 +661,14 @@ export default {
       si: undefined,
       creating_container: false,
       queryOrderListSi: undefined,
-      container_tips: ""
+      container_tips: "",
+      cancelLoading: false,
+      continue_rentLoading: false,
+      opengpu_index: -1,
+      send_email_repeatLoading: false,
+      send_email_repeat_index: -1,
+      continuepay_index: -1,
+      times: 20
     };
   },
   watch: {
@@ -663,12 +683,17 @@ export default {
       if (this.queryOrderListSi) {
         clearInterval(this.queryOrderListSi);
       }
+      let timesRun = 0;
       this.queryOrderListSi = setInterval(() => {
+        timesRun += 1;
+        if (timesRun === this.times) {
+          clearInterval(this.queryOrderListSi);
+        }
         if (this.isPaying !== true) {
           this.queryOrderList();
           this.forceToPocMachineUpdate();
         }
-      }, 30000);
+      }, 15000);
     }
   },
   activated() {
@@ -685,12 +710,17 @@ export default {
     if (this.queryOrderListSi) {
       clearInterval(this.queryOrderListSi);
     }
+    let timesRun = 0;
     this.queryOrderListSi = setInterval(() => {
+      timesRun += 1;
+      if (timesRun === this.times) {
+        clearInterval(this.queryOrderListSi);
+      }
       if (this.isPaying !== true) {
         this.queryOrderList();
         this.forceToPocMachineUpdate();
       }
-    }, 30000);
+    }, 15000);
   },
   deactivated() {
     if (this.queryOrderListSi) {
@@ -746,25 +776,22 @@ export default {
                 this.ispayPocing = false;
                 item.orderData.vocing_pay = false;
                 this.queryOrderList();
+              } else if (res.status === 2) {
+                this.queryOrderList();
+              } else if (res.status === -1) {
+                this.queryOrderList();
+                this.ispayPocing = false;
+                item.orderData.vocing_pay = false;
+                clearInterval(this.si);
+                this.$message({
+                  showClose: true,
+                  message: res.msg,
+                  type: "error"
+                });
               }
             })
             .catch(err => {
-              if (err && err.status === -1) {
-                console.log(err.msg);
-                this.$message({
-                  showClose: true,
-                  message: err.msg,
-                  type: "error"
-                });
-                clearInterval(this.si);
-              } else if (err && err.status === -2) {
-                console.log(err.msg);
-                clearInterval(this.si);
-              } else if (err) {
-                console.log("其他报错");
-                console.log(err);
-                clearInterval(this.si);
-              }
+              //  clearInterval(this.si);
             });
         }, 5000);
       } else {
@@ -799,29 +826,15 @@ export default {
                 this.queryOrderList();
               }
             })
-            .catch(err => {
-              if (err && err.status === -1) {
-                console.log(err.msg);
-                this.$message({
-                  showClose: true,
-                  message: err.msg,
-                  type: "error"
-                });
-                clearInterval(this.si);
-              } else if (err && err.status === -2) {
-                console.log(err.msg);
-                // clearInterval(this.si)
-              } else if (err) {
-                console.log("其他报错");
-                console.log(err);
-                clearInterval(this.si);
-              }
-            });
+            .catch(err => {});
         }, 5000);
       }
     },
-    openDlg_cpu_to_gpu(item) {
-      item.opengpuloading = true;
+    openDlg_cpu_to_gpu(item, index) {
+      this.opengpuloading = true;
+      this.opengpu_index = index;
+      //this.queryOrderList();
+      this.$forceUpdate();
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       place_order_cpu_to_gpu({
@@ -848,6 +861,8 @@ export default {
             });
             return Promise.reject(res_1.msg);
           }
+          //  this.opengpuloading = false;
+          //  this.opengpu_index = -1;
         })
         .then(res_2 => {
           if (res_2.status === 1) {
@@ -861,12 +876,17 @@ export default {
             });
             return Promise.reject(res_2.msg);
           }
+          // this.opengpuloading = false;
+          // this.opengpu_index = -1;
         })
         .catch(err => {
+          // this.opengpuloading = false;
+          // this.opengpu_index = -1;
           console.log(err);
         })
         .finally(() => {
-          item.opengpuloading = false;
+          this.opengpuloading = false;
+          this.opengpu_index = -1;
         });
     },
 
@@ -939,8 +959,9 @@ export default {
     },
 
     // 打开弹窗
-    openContinuePay(item) {
-      item.rentLoading = true;
+    openContinuePay(item, index) {
+      this.continue_rentLoading = true;
+      this.continuepay_index = index;
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       continue_pay_place_order({
@@ -984,7 +1005,8 @@ export default {
           console.log(err);
         })
         .finally(() => {
-          item.rentLoading = false;
+          this.continue_rentLoading = false;
+          this.continuepay_index = -1;
         });
     },
     forceToPay() {
@@ -1081,10 +1103,15 @@ export default {
           } else if (res.status === 2) {
             // item.orderData.creating_container = true;
             this.queryOrderList();
-          } else if (res.status == -1 && res.code == 10303) {
+          } else if (res.status == -1) {
             this.container_tips = res.msg;
             this.creating_container = false;
             clearInterval(this.si);
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "error"
+            });
           } else if (!res.content) {
             this.queryOrderList();
             this.creating_container = false;
@@ -1194,6 +1221,7 @@ export default {
             item.notice = "";
             this.queryOrderList();
             clearInterval(this.si);
+            times = 150;
           } else if (res.status === 2) {
             // item.orderData.creating_container = true;
             this.queryOrderList();
@@ -1201,9 +1229,14 @@ export default {
               status: 2,
               msg: "正在验证机器环境是否可用，请耐心等待，大概需要3分钟"
             });
-          } else if (res.status == -1 && res.code == 10303) {
+          } else if (res.status == -1) {
             this.container_tips = res.msg;
             clearInterval(this.si);
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "error"
+            });
           } else if (!res.content) {
             this.queryOrderList();
             clearInterval(this.si);
@@ -1225,13 +1258,13 @@ export default {
             clearInterval(this.si);
           }
         });
-      }, 5000);
+      }, 8000);
     },
 
     // pay
     payOrder(item) {
       clearInterval(this.si);
-
+      this.ispayPocing = false;
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       get_dbchain_address({
@@ -1263,6 +1296,7 @@ export default {
               const user_name_platform = this.$t("website_name");
               const language = this.$i18n.locale;
               this.ispayPocing = true;
+              this.times = 10; //此时重新设置为10
               // 支付后确认
               if (item.orderData.order_id_pre === null) {
                 this.si = setInterval(() => {
@@ -1279,25 +1313,23 @@ export default {
                         this.ispayPocing = false;
                         item.orderData.vocing_pay = false;
                         this.queryOrderList();
+                      } else if (res.status === 2) {
+                        this.queryOrderList();
+                      } else if (res.status === -1) {
+                        this.queryOrderList();
+                        this.ispayPocing = false;
+                        item.orderData.vocing_pay = false;
+                        clearInterval(this.si);
+                        this.$message({
+                          showClose: true,
+                          message: res.msg,
+                          type: "error"
+                        });
                       }
                     })
                     .catch(err => {
-                      if (err && err.status === -1) {
-                        console.log(err.msg);
-                        this.$message({
-                          showClose: true,
-                          message: err.msg,
-                          type: "error"
-                        });
-                        clearInterval(this.si);
-                      } else if (err && err.status === -2) {
-                        console.log(err.msg);
-                        clearInterval(this.si);
-                      } else if (err) {
-                        console.log("其他报错");
-                        console.log(err);
-                        clearInterval(this.si);
-                      }
+                      //   this.ispayPocing = false;
+                      //   clearInterval(this.si);
                     });
                 }, 5000);
               } else {
@@ -1313,44 +1345,30 @@ export default {
                       if (res.status === 1) {
                         clearInterval(this.si);
                         this.creating_container = true;
-                        if (this.queryOrderListSi) {
-                          clearInterval(this.queryOrderListSi);
-                        }
-                        this.queryOrderListSi = setInterval(() => {
-                          if (this.isPaying !== true) {
-                            this.queryOrderList();
-                            this.forceToPocMachineUpdate();
-                          }
-                        }, 10000);
+                        item.orderData.vocing_pay = false;
+                        this.ispayPocing = false;
+                        this.queryOrderList();
+                        this.forceToPocMachineUpdate();
+                      } else if (res.status === -1) {
+                        clearInterval(this.si);
+                        this.ispayPocing = false;
+                        item.orderData.vocing_pay = false;
+                        this.queryOrderList();
+                        this.$message({
+                          showClose: true,
+                          message: res.msg,
+                          type: "error"
+                        });
+                      } else if (res.status === 2) {
+                        // item.orderData.creating_container = true;
+                        this.queryOrderList();
                       }
                     })
                     .catch(err => {
-                      if (err && err.status === -1) {
-                        console.log(err.msg);
-                        this.$message({
-                          showClose: true,
-                          message: err.msg,
-                          type: "error"
-                        });
-                        clearInterval(this.si);
-                      } else if (err && err.status === -2) {
-                        console.log(err.msg);
-                        // clearInterval(this.si)
-                      } else if (err) {
-                        console.log("其他报错");
-                        console.log(err);
-                        clearInterval(this.si);
-                      }
-                      if (this.queryOrderListSi) {
-                        clearInterval(this.queryOrderListSi);
-                      }
-                      this.queryOrderListSi = setInterval(() => {
-                        if (this.isPaying !== true) {
-                          this.queryOrderList();
-                          this.forceToPocMachineUpdate();
-                        }
-                      }, 10000);
-                    });
+                      //   this.ispayPocing = false;
+                      //   clearInterval(this.si);
+                    })
+                    .finally(() => {});
                 }, 5000);
               }
             } else {
@@ -1378,7 +1396,7 @@ export default {
     },
     // cancel
     cancelOrder(item) {
-      item.cancelLoading = true;
+      this.cancelLoading = true;
       get_cancer_code({
         order_id: item.orderData.order_id,
         user_name_platform: this.$t("website_name"),
@@ -1386,7 +1404,7 @@ export default {
       })
         .then(res => {
           if (res.status === 1) {
-            item.cancelLoading = false;
+            //  item.cancelLoading = false;
             this.$prompt(
               this.$t("myMachine_code_send"),
               this.$t("myMachine_cancer_order"),
@@ -1423,28 +1441,24 @@ export default {
                 if (err) {
                   console.log(err);
                 }
+              })
+              .finally(() => {
+                this.cancelLoading = false;
               });
           } else {
+            this.cancelLoading = false;
             this.$message({
               showClose: true,
               message: res.msg,
               type: "error"
             });
-            item.cancelLoading = false;
+            //    item.cancelLoading = false;
             return Promise.reject();
           }
         })
-        .then(res => {
-          if (res.status === 1) {
-            this.$message({
-              showClose: true,
-              message: res.msg,
-              type: "success"
-            });
-            item.cancelLoading = false;
-          }
-        })
-        .finally(() => {});
+        .catch(err => {
+          this.cancelLoading = false;
+        });
     },
     // get Order List
     queryOrderList() {
@@ -1482,6 +1496,21 @@ export default {
                   orderData: item,
                   mcData: mcItem
                 });
+                if (
+                  item.order_id_pre === null &&
+                  item.container_is_exist === true &&
+                  item.pay_error === false
+                ) {
+                  this.times = 30;
+                } else if (
+                  item.order_id_pre !== null &&
+                  item.order_is_over === false &&
+                  item.order_is_cancer === false &&
+                  item.pay_success === false &&
+                  item.pay_error === false
+                ) {
+                  this.times = 150;
+                }
               }
             });
           }
@@ -1583,6 +1612,46 @@ export default {
         binding = true;
       }, 15000);
     },
+
+    send_email_repeat(item, index) {
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
+      this.send_email_repeatLoading = true;
+      this.send_email_repeat_index = index;
+      send_email_repeat({
+        order_id: item.orderData.order_id,
+
+        user_name_platform,
+        language
+      })
+        .then(res => {
+          if (res.status === 1) {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "success"
+            });
+          } else if (res.status === -1) {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "error"
+            });
+          }
+        })
+        .catch(err => {
+          this.$message({
+            showClose: true,
+            message: this.$t("send_email_error"),
+            type: "error"
+          });
+        })
+        .finally(() => {
+          this.send_email_repeatLoading = false;
+          this.send_email_repeat_index = -1;
+        });
+    },
+
     // bind fail
     bindFail() {
       this.isBinding = false;

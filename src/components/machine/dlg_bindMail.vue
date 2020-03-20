@@ -27,6 +27,9 @@
           <span class="ml10">{{$t('gpu.attentionDecimal')}}</span>
         </el-form-item>
       </div>
+      <div class="cRed">
+        <span>{{$t('dlg_bindMail_dbc_tip')}}</span>
+      </div>
     </el-form>
     <div class="dlg-bottom">
       <el-button
@@ -201,23 +204,33 @@ export default {
                   this.isLoading = false;
                 });
             }
-          }
-        })
-        .catch(err => {
-          // console.log(err)
-          if (err.status === -1) {
+          } else if (res.status === -1) {
             this.$message({
               showClose: true,
               message: this.$t("dlg_bindMail_no_dbc"),
               type: "error"
             });
+
+            this.isLoading = false;
           } else {
             this.$message({
               showClose: true,
-              message: err.msg,
+              message: this.$t("dlg_bindMail_voc_failure"),
               type: "error"
             });
+
+            this.isLoading = false;
           }
+        })
+        .catch(err => {
+          // console.log(err)
+
+          this.$message({
+            showClose: true,
+            message: this.$t("dlg_bindMail_no_dbc"),
+            type: "error"
+          });
+
           this.isLoading = false;
         });
     },

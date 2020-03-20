@@ -243,6 +243,10 @@ export default {
     intr_snbt_1: "SNBT AI",
     intr_heekmind_1: "HeekMind",
     intr_aicv_1: "AICV",
+    intr_freegpu_1: "FreeGpu",
+    intr_boincplanet_1: "BoincPlanet",
+    intr_shareaiot_1: "ShareAIOT",
+    intr_topgpu_1: "TopGpu",
     intr_1: ' provides GPU rental service.join us! can help your machine very convenient access to the DBC network, gain revenue. \n' +
       '\n' +
       ' If your GPU is ever idle, you can connect it to the DBC network to earn DBC tokens and enjoy the benefit of the tokens appreciation. \n ' +
@@ -498,6 +502,10 @@ export default {
   footer_service_snbt: "368496964@qq.com", //9.17 19:33
   footer_service_heekmind: "amdin@heekmind.com", //9.17 19:33
   footer_service_aicv: "944830401@qq.com", //9.17 19:33
+  footer_service_freegpu: "1760398969@qq.com", //9.17 19:33
+  footer_service_boincplanet: "info@boinc.io", //9.17 19:33
+  footer_service_shareaiot: "3123029727@qq.com", //9.17 19:33
+  footer_service_topgpu: "treenewbeetogether@163.com", //9.17 19:33
   list_start_rentout: 'minutes later, it can be rented',
   list_can_rentout: 'Users can rent it now',
   my_gpu_count: 'The number of gpus I rent ', //9.17 19:33

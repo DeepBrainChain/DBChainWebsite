@@ -134,7 +134,13 @@ export default {
         return "";
       } else if (this.$t("website_name") == "heekmind") {
         return "";
-      } else if (this.$t("website_name") == "aicv") {
+      } else if (this.$t("website_name") == "freegpu") {
+        return "";
+      } else if (this.$t("website_name") == "boincplanet") {
+        return "";
+      } else if (this.$t("website_name") == "shareaiot") {
+        return "";
+      } else if (this.$t("website_name") == "topgpu") {
         return "";
       }
       return "";
@@ -253,6 +259,14 @@ export default {
         this.link.href = "./heekmind.ico";
       } else if (this.$t("website_name") == "aicv") {
         this.link.href = "./aicv.ico";
+      } else if (this.$t("website_name") == "freegpu") {
+        this.link.href = "./freegpu.ico";
+      } else if (this.$t("website_name") == "boincplanet") {
+        this.link.href = "./boincplanet.ico";
+      } else if (this.$t("website_name") == "shareaiot") {
+        this.link.href = "./shareaiot.ico";
+      } else if (this.$t("website_name") == "topgpu") {
+        this.link.href = "./topgpu.ico";
       }
 
       document.getElementsByTagName("head")[0].appendChild(this.link);
@@ -313,6 +327,14 @@ export default {
         document.title = "heekmind";
       } else if (this.$t("website_name") == "aicv") {
         document.title = "aicv";
+      } else if (this.$t("website_name") == "freegpu") {
+        document.title = "freegpu";
+      } else if (this.$t("website_name") == "boincplanet") {
+        document.title = "boincplanet";
+      } else if (this.$t("website_name") == "shareaiot") {
+        document.title = "shareaiot";
+      } else if (this.$t("website_name") == "topgpu") {
+        document.title = "topgpu";
       }
     },
     set_logo() {
@@ -370,6 +392,14 @@ export default {
         this.logo = require("../../assets/imgs/heekmind@1x.png");
       } else if (this.$t("website_name") == "aicv") {
         this.logo = require("../../assets/imgs/aicv@1x.png");
+      } else if (this.$t("website_name") == "freegpu") {
+        this.logo = require("../../assets/imgs/freegpu@1x.png");
+      } else if (this.$t("website_name") == "boincplanet") {
+        this.logo = require("../../assets/imgs/boincplanet@1x.png");
+      } else if (this.$t("website_name") == "shareaiot") {
+        this.logo = require("../../assets/imgs/shareaiot@1x.png");
+      } else if (this.$t("website_name") == "topgpu") {
+        this.logo = require("../../assets/imgs/topgpu@1x.png");
       }
     },
     pushMenu(name) {
@@ -421,7 +451,7 @@ export default {
   align-items: flex-start;
 
   .logo {
-    margin-top: 10px; //dbchain:10px ,aionego:-30px,yousanai:-30px,deepshare-30px,yalecloud-30px,panchuanga:-30px,,sharegpu:-30px
+    margin-top: -30px; //dbchain:10px ,aionego:-30px,yousanai:-30px,deepshare-30px,yalecloud-30px,panchuanga:-30px,,sharegpu:-30px
     //alpha-dbchain:-50px,xyzlab:-20px
     margin-right: 119px; //dbchain: 119px  ,aionego:119px,yousanai:119px,deepshare:119px
   }

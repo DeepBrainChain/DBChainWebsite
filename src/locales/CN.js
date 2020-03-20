@@ -4,7 +4,7 @@ export default {
   message: "hello i18n !!",
 
   website_name: "dbchain", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
-  //alpha-dbchain/aichriscloud/deepbit/vnxmart/aiaicloud/snbt/heekmind/redstonewill/rocketai/aicv
+  //alpha-dbchain/aichriscloud/deepbit/vnxmart/aiaicloud/snbt/heekmind/redstonewill/rocketai/aicv/\shareaiot\freegpu\boincplanet\topgpu
   $: "$",
   send: "发送",
   closeWallet: "关闭钱包",
@@ -132,7 +132,7 @@ export default {
     cumulativeDuration: "累计出租时长", // new
 
     lengthOfAvailableTime: "最长可用时间", // new
-    choseGpuCount: "选择GPU数量", // new
+    choseGpuCount: "请选择你想要租用的GPU数量", // new
     bindMail: "绑定邮箱", // new
     bindMailInfo: "绑定的邮箱用来收取机器的SSH账户登陆信息，<br>" +
       "租用GPU之前必须先到我的机器界面绑定邮箱",
@@ -245,6 +245,10 @@ export default {
     intr_snbt_1: "赛诺AI",
     intr_heekmind_1: "HeekMind",
     intr_aicv_1: "AICV",
+    intr_freegpu_1: "FreeGpu",
+    intr_boincplanet_1: "算力地球",
+    intr_shareaiot_1: "携而智物",
+    intr_topgpu_1: "深极智算",
     intr_1: "提供GPU出租服务，加入我们，可以帮助您的机器非常方便的接入到深脑链网络中，获取收益。\n" +
       "\n" +
       "       只要你的GPU有空闲，就可以加入我们赚取DBC Token，同时可以享受Token升值带来的更多收益。\n" +
@@ -266,7 +270,7 @@ export default {
   },
   help: {
     title: "如何购买DBC",
-    "1": "1.直接用支付宝购买DBC，进入",
+    "1": "1.直接用支付宝购买DBC(此平台可以开发票)，进入",
 
     "2": "2.从火币购买DBC",
     "3": "3.从库币购买DBC",
@@ -303,12 +307,12 @@ export default {
   },
   mcList: {},
   my_machine_binding_email: "绑定的邮箱",
-  my_machine_vocing: "正在验证中, 大概需要几分钟",
+  my_machine_vocing: "正在验证中, 大概需要几分钟(若等待时间超过5分钟,请刷新页面或者关闭VPN)",
   my_machine_isnormal_over: "订单已结束",
   my_machine_nonormal_over: "订单被中断",
   my_machine_order_cancer: "订单已取消",
   my_machine_order_rent_success: "正在使用中",
-  my_machine_order_vocing_pay: "正在进行支付验证中，大概需要几分钟",
+  my_machine_order_vocing_pay: "正在进行支付验证中，大概需要几分钟(若等待时间超过5分钟,请刷新页面或者关闭VPN)",
   my_machine_order_pay_error: "验证失败，已经超过支付有效期",
   my_machine_order_return_dbc: "退币成功",
   my_machine_order_vocing_machine_success: "机器环境验证成功，请点击支付",
@@ -316,7 +320,7 @@ export default {
   my_machine_beused_time: "已使用时间",
   my_machine_hour: "h",
   my_machine_min: "分钟",
-  my_machine_dbc_version: "版本",
+  my_machine_dbc_version: "DBC版本",
   my_machine_china: "中国",
   my_machine_idle_gpus: "空闲GPU数",
   my_machine_length_of_available_time: "最长可租用时间",
@@ -334,7 +338,7 @@ export default {
   list_total_time_be_used: "累计出租时长",
   list_total_rent_count: "出租总次数",
   list_error_rent_count: "中断次数",
-  list_cuda_version: "CUDA版本号",
+  list_cuda_version: "支持最高CUDA版本",
   list_disk_space: "硬盘",
   list_cpu_type: "CPU型号",
   list_half_precision_tflops: "半精度浮点数",
@@ -355,7 +359,7 @@ export default {
   myMachine_rent_success_msg: "机器租用成功，登陆信息已发送至您的邮箱，请查收并妥善保管",
   myMachine_is_pay_vocing: "支付确认中",
   myMachine_maybe_is_used: "机器可能已经被租用，请取消订单，重新租用其他机器",
-  myMachine_is_vocing_machine: "正在验证机器环境是否可用，请耐心等待，大概需要1-3分钟",
+  myMachine_is_vocing_machine: "正在验证机器环境是否可用，请耐心等待，大概需要1-3分钟(若等待时间超过5分钟,请刷新页面或者关闭VPN)",
   myMachine_is_dbc_transfering: "正在DBC转账中(若无法转账，请查看是否已关闭VPN,若关闭VPN并刷新当前页后仍无法转账，请断网重新连网后刷新页面)",
   myMachine_is_transfer_error: "DBC转账失败，请重新支付",
   myMachine_return_dbc: "退币",
@@ -490,6 +494,10 @@ export default {
   footer_service_snbt: "368496964@qq.com、3426409648@qq.com", //9.17 19:33
   footer_service_heekmind: "amdin@heekmind.com", //9.17 19:33
   footer_service_aicv: "944830401@qq.com", //9.17 19:33
+  footer_service_freegpu: "1760398969@qq.com", //9.17 19:33
+  footer_service_boincplanet: "info@boinc.io", //9.17 19:33
+  footer_service_shareaiot: "3123029727@qq.com", //9.17 19:33
+  footer_service_topgpu: "treenewbeetogether@163.com", //9.17 19:33
   list_start_rentout: "分钟后可租用", //9.17 19:33
   list_can_rentout: "用户现在可租用", //9.17 19:33
   my_gpu_count: "我租用的GPU数量", //9.17 19:33
@@ -528,14 +536,14 @@ export default {
   diskspace_gpu_data: '当前GPU容器已经使用的硬盘空间为：',
   diskspace_new_gpu: '启动GPU后容器剩余空间为',
   diskspace_every_cpu_can_buy: '每个GPU最多可以购买',
-  myMachine_is_vocing_machine_update: '正在启动GPU，请耐心等待，大概需要1-3分钟',
+  myMachine_is_vocing_machine_update: '正在启动GPU，根据您容器已存储的数据大小，大概需要',
   container_is_closed_update: '在启动GPU的过程中,当前CPU容器会处于关闭状态,无法使用,启动完成后,可以重新登陆',
   rent_cpu_cotainer: '租用CPU容器',
   open_gpu_cpu_to_gpu: '启动GPU',
   deposit_tips1: '1.免费容器功能可以帮助在准备环境、传输数据的时候节省费用.当所有条件准备好过后,可以再付费启用gpu,进行训练或者推理',
   deposit_tips2: '2.质押功能不收取任何费用,但需要抵押DBC作为押金,当容器停止使用或者开启使用GPU后押金会自动退回',
   deposit_tips3: '3.押金会打到区块链智能合约中,可以通过钱包地址随时查看押金的状态,任何人无法动用押金',
-  myMachine_rent_success_msg_update: 'GPU启动成功，稍等1分钟，可以登陆使用',
+  myMachine_rent_success_msg_update: 'GPU启动成功，稍等3分钟，可以登陆使用',
   please_switch_cpu_mode: '请选择CPU容器使用方式',
   switch_diskspace: '选择硬盘空间',
   switch_memory: '选择内存空间',
@@ -547,10 +555,10 @@ export default {
     "机器使用完成后,可以提前退租,质押的DBC将会退还到钱包中.",
   deposit_dbcs_cpu: '质押的DBC总数',
   cpu_containers_list: '已创建CPU容器数',
-  cpu_containers_can_use_memory_list: 'CPU容器可用内存',
-  cpu_containers_can_use_disk_list: 'CPU容器可用硬盘',
-  gpu_containers_can_use_memory_list: 'GPU容器可用内存',
-  gpu_containers_can_use_disk_list: 'GPU容器可用硬盘',
+  cpu_containers_can_use_memory_list: 'CPU容器可分配内存',
+  cpu_containers_can_use_disk_list: 'CPU容器可分配硬盘',
+  gpu_containers_can_use_memory_list: 'GPU容器可分配内存',
+  gpu_containers_can_use_disk_list: 'GPU容器可分配硬盘',
   memory_space: '内存空间',
   howsellDBC: '如何出售DBC',
   helpsell: {
@@ -566,13 +574,13 @@ export default {
   dbc_price_wallet: 'DBC价格',
   dbc_price_usd: '美金',
   stopGpu_mymachine: '停止GPU',
-  stopgpu_please_switch_cpu_mode: 'GPU停止后，GPU容器将会变成CPU容器。CPU容器有两种使用方式，付费方式需要支付DBC才可以使用CPU容器，质押方式不需要实际花费DBC，只需要将DBC质押到智能合约中，就可以免费使用CPU容器，使用结束后，质押的DBC会全部退回',
+  stopgpu_please_switch_cpu_mode: 'GPU停止后，GPU容器将会变成CPU容器。CPU容器有两种使用方式，付费方式需要支付DBC才可以使用CPU容器，质押方式不需要实际花费DBC，只需要将DBC质押到智能合约中，就可以免费使用CPU容器，使用结束后，质押的DBC会全部退回.两种使用方式，功能完全一样。',
   stopgpu_to_cpu_payment: '停止GPU，切换到CPU容器',
   less_data_disk: '可用硬盘空间不能小于10G',
   less_data_disk_over_max: 'GPU容器数据过大，无法停止GPU',
   diskspace_new_cpu: '关闭GPU后，容器剩余空间为',
-  myMachine_rent_success_msg_update_stop_gpu: '停止GPU成功，稍等1分钟，可以登陆使用',
-  myMachine_is_vocing_machine_update_stop_gpu: '正在停止GPU，请耐心等待，大概需要1-3分钟',
+  myMachine_rent_success_msg_update_stop_gpu: '停止GPU成功，稍等3分钟，可以登陆使用',
+  myMachine_is_vocing_machine_update_stop_gpu: '正在停止GPU，根据您容器已存储的数据大小，大概需要',
   container_is_closed_update_stop_gpu: '在停止GPU的过程中,当前GPU容器会处于关闭状态,无法使用,启动完成后,可以重新登陆',
   open_gpu_stopped: '启动为GPU容器',
   open_cpu_stopped: '启动为CPU容器',
@@ -586,8 +594,9 @@ export default {
   no_idle_gpus: '当前机器无空闲GPU',
   no_container: '当前机器CPU容器已满',
   stop_to_cpu_container: '启动为CPU容器',
-  myMachine_is_vocing_machine_update_stop_to_open: "正在启动容器，请耐心等待，大概需要1-3分钟",
-  myMachine_rent_success_msg_update_stop_to_open: '容器启动成功，稍等1分钟，可以登陆使用',
+  myMachine_is_vocing_machine_update_stop_to_open: "正在启动容器，根据您容器已存储的数据大小，大概需要",
+
+  myMachine_rent_success_msg_update_stop_to_open: '容器启动成功，稍等3分钟，可以登陆使用',
   stop_to_gpu_container: '启动为GPU容器',
   user_defined: '自定义安装',
   cpu_container_instruaction: '温馨提示：先租用CPU容器，准备好环境和数据后，再切换成GPU容器，可以节省费用',
@@ -599,15 +608,25 @@ export default {
   transfer_success: '转账成功',
   dbc_lack_of_balance: 'DBC余额不足',
   please_confirm_pay: '请确认支付',
-  stop_instruaction: '温馨提示：您的钱包余额大于20000DBC，可以启用已经停止的容器，避免再次上传数据',
+  stop_instruaction: '温馨提示：您钱包余额大于20000DBC，可以启用已经停止的容器，历史数据保存在里面',
   dbcnum_error: '输入数字不正确',
   your_country: '添加机器所处地理位置',
-  stopgpu_tip_mymachine: '停止GPU后，会切换成CPU容器，所有数据都会被保存',
+  stopgpu_tip_mymachine: '停止GPU后，会切换成CPU容器，所有数据都会被保存,并且可以继续使用',
   myMachine_rentout_success_msg: '验证成功，3分钟后机器可以对外出租',
   myMachine_rentout_error: '验证失败，机器无法上线，技术支持联系support@dbchain.ai',
   myMachine_is_vocing_machine_rentout: '正在验证机器是否可用，请耐心等待，大概需要5-10分钟',
   my_machine_miner_vocing_rentout: '验证中',
   my_machine_miner_vocing_error: '验证失败',
+  stoprent_tip_mymachine: '退租后,如果当前钱包余额大于20000DBC,数据会被继续保存，可以在我的停止容器中启动后继续使用',
+  list_gpu_count_tip: '当前机器的GPU型号和GPU总数',
+  transfer_tips: '在目标地址中输入对方的DBC钱包地址，然后输入转账的DBC数量，点击发送，就可以把DBC转账到对方的DBC钱包中,大概10-30秒对方就可以收到DBC',
+  dbc_price_wallet_tips: 'DBC价格是随时波动的，购买DBC的时候请注意波动风险',
+  dbcChange_tips: 'DBC 24小时价格变化',
+  dlg_bindMail_dbc_tip: "温馨提示:钱包中需要至少1个DBC才能绑定成功",
+  dlg_bindMail_voc_failure: "验证失败，请重新获取验证吗，进行验证",
+  restart_tip_mymachine: '如果容器无法连接，可以重启容器，进程会被杀死，数据不会丢失、环境不会被重置',
+  send_email_error: '邮件发送失败，请再次点击发送',
+  send_email_repeat: '重发邮件',
 
 
   ...enLocale

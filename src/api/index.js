@@ -4,8 +4,8 @@ import axios from "@/utlis/axios";
 //const host = "https://info.dbchain.ai";
 //const host = "https://infotest.dbchain.ai";
 //const host = 'http://116.85.24.172:8031'
-const host = "http://192.168.1.186:8080";
-//const host = "http://192.168.31.241:8080";
+//const host = "http://192.168.1.186:8080";
+const host = "http://192.168.31.241:8080";
 //const host = "http://192.168.43.178:8080";
 //const host = "http://192.168.225.22:8080";
 const juheKey = "";
@@ -584,6 +584,24 @@ export const get_memory_cpu_payment = params => {
   return axios({
     method: "post",
     url: host + "/rent/get_memory_cpu_payment",
+    params
+  });
+};
+
+// 获得dbc的价格等信息
+export const dbc_info = params => {
+  return axios({
+    method: "get",
+    url: host + "/query/dbc_info",
+    params
+  });
+};
+
+// 重发邮件
+export const send_email_repeat = params => {
+  return axios({
+    method: "get",
+    url: host + "/rent/send_email_repeat",
     params
   });
 };

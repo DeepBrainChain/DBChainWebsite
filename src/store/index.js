@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+
 import {
   getAccount,
   saveCookie,
@@ -12,7 +13,8 @@ import {
 } from '../utlis'
 
 import {
-  get_dbc_price
+  get_dbc_price,
+  dbc_info
 } from '@/api'
 import cookie from 'js-cookie'
 
@@ -69,19 +71,37 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    getExchangeRate({
+    /*getExchangeRate({
       commit,
       state
     }) {
-      axios.get('https://api.coinmarketcap.com/v1/ticker/deepbrain-chain/').then(res => {
-        // axios.get('https://data.gateio.co/api2/1/ticker/dbc_usdt/').then(res => {
+      // axios.get('https://api.coinmarketcap.com/v1/ticker/deepbrain-chain/').then(res => {
+      axios.get('http://gateio.life/api2/1/ticker/dbc_usdt/').then(res => {
         // console.log(res.data[0])
         //   commit('setdbcToUS', res.data[0].price_usd)
         commit('setDbcPrice', res.data[0].price_usd)
         //     commit('setDbc_change', res.data[0].percent_change_24h)
-        //commit('setdbcToUS', res.last)
+       // commit('setDbcPrice', res.last)
       }).catch(err => {
-        // commit('setdbcToUS', res.last)
+       // commit('setdbcToUS', res.last)
+      })
+    },*/
+
+    getExchangeRate({
+      commit,
+      state
+    }) {
+      const language = "CN";
+      dbc_info({
+
+        language
+      }).then(res => {
+
+        commit('setDbcPrice', res.content.dbc_price)
+        commit('setDbcChange', res.content.percent_change_24h)
+
+      }).catch(err => {
+
       })
     },
 
@@ -92,7 +112,7 @@ export default new Vuex.Store({
       //  axios.get('https://gateio.life/api2/1/ticker/dbc_usdt/').then(res => {
       axios.get('https://api.coinmarketcap.com/v1/ticker/deepbrain-chain/').then(res => {
         // commit('setDbc_price', res.last)
-        commit('setDbcChange', res.data[0].percent_change_24h)
+        // commit('setDbcChange', res.data[0].percent_change_24h)
       }).catch(err => {
         // commit('setdbcToUS', res.last)
       })

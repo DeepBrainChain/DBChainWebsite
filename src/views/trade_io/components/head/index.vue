@@ -114,6 +114,14 @@ export default {
         return "";
       } else if (this.$t("website_name") == "aicv") {
         return "";
+      } else if (this.$t("website_name") == "freegpu") {
+        return "";
+      } else if (this.$t("website_name") == "boincplanet") {
+        return "";
+      } else if (this.$t("website_name") == "shareaiot") {
+        return "";
+      }else if (this.$t("website_name") == "topgpu") {
+        return "";
       }
 
       return "";
