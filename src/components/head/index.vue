@@ -142,6 +142,8 @@ export default {
         return "";
       } else if (this.$t("website_name") == "topgpu") {
         return "";
+      } else if (this.$t("website_name") == "thinkotech") {
+        return "";
       }
       return "";
     }
@@ -267,6 +269,8 @@ export default {
         this.link.href = "./shareaiot.ico";
       } else if (this.$t("website_name") == "topgpu") {
         this.link.href = "./topgpu.ico";
+      } else if (this.$t("website_name") == "thinkotech") {
+        this.link.href = "./thinkotech.ico";
       }
 
       document.getElementsByTagName("head")[0].appendChild(this.link);
@@ -335,6 +339,8 @@ export default {
         document.title = "shareaiot";
       } else if (this.$t("website_name") == "topgpu") {
         document.title = "topgpu";
+      } else if (this.$t("website_name") == "thinkotech") {
+        document.title = "thinkotech";
       }
     },
     set_logo() {
@@ -400,6 +406,8 @@ export default {
         this.logo = require("../../assets/imgs/shareaiot@1x.png");
       } else if (this.$t("website_name") == "topgpu") {
         this.logo = require("../../assets/imgs/topgpu@1x.png");
+      } else if (this.$t("website_name") == "thinkotech") {
+        this.logo = require("../../assets/imgs/thinkotech@1x.png");
       }
     },
     pushMenu(name) {

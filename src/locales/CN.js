@@ -3,8 +3,8 @@ import enLocale from "element-ui/lib/locale/lang/en";
 export default {
   message: "hello i18n !!",
 
-  website_name: "dbchain", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
-  //alpha-dbchain/aichriscloud/deepbit/vnxmart/aiaicloud/snbt/heekmind/redstonewill/rocketai/aicv/\shareaiot\freegpu\boincplanet\topgpu
+  website_name: "thinkotech", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
+  //alpha-dbchain/aichriscloud/deepbit/vnxmart/aiaicloud/snbt/heekmind/redstonewill/rocketai/aicv/\shareaiot\freegpu\boincplanet\topgpu\thinkotech
   $: "$",
   send: "发送",
   closeWallet: "关闭钱包",
@@ -249,6 +249,7 @@ export default {
     intr_boincplanet_1: "算力地球",
     intr_shareaiot_1: "携而智物",
     intr_topgpu_1: "深极智算",
+    intr_thinkotech_1: "鑫思考AI技术平台",
     intr_1: "提供GPU出租服务，加入我们，可以帮助您的机器非常方便的接入到深脑链网络中，获取收益。\n" +
       "\n" +
       "       只要你的GPU有空闲，就可以加入我们赚取DBC Token，同时可以享受Token升值带来的更多收益。\n" +
@@ -498,6 +499,7 @@ export default {
   footer_service_boincplanet: "info@boinc.io", //9.17 19:33
   footer_service_shareaiot: "3123029727@qq.com", //9.17 19:33
   footer_service_topgpu: "treenewbeetogether@163.com", //9.17 19:33
+  footer_service_thinkotech: "284522212@qq.com", //9.17 19:33
   list_start_rentout: "分钟后可租用", //9.17 19:33
   list_can_rentout: "用户现在可租用", //9.17 19:33
   my_gpu_count: "我租用的GPU数量", //9.17 19:33

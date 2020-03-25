@@ -120,7 +120,9 @@ export default {
         return "";
       } else if (this.$t("website_name") == "shareaiot") {
         return "";
-      }else if (this.$t("website_name") == "topgpu") {
+      } else if (this.$t("website_name") == "topgpu") {
+        return "";
+      } else if (this.$t("website_name") == "thinkotech") {
         return "";
       }
 

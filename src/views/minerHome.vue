@@ -167,8 +167,10 @@ export default {
         return this.$t("home.intr_boincplanet_1");
       } else if (this.$t("website_name") == "shareaiot") {
         return this.$t("home.intr_shareaiot_1");
-      }else if (this.$t("website_name") == "topgpu") {
+      } else if (this.$t("website_name") == "topgpu") {
         return this.$t("home.intr_topgpu_1");
+      } else if (this.$t("website_name") == "thinkotech") {
+        return this.$t("home.intr_thinkotech_1");
       }
 
       return this.$t("home.intr_dbchain_1");

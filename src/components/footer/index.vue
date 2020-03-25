@@ -93,6 +93,8 @@ export default {
         return this.$t("footer_service_shareaiot");
       } else if (this.$t("website_name") == "topgpu") {
         return this.$t("footer_service_topgpu");
+      } else if (this.$t("website_name") == "thinkotech") {
+        return this.$t("footer_service_thinkotech");
       }
 
       return this.$t("footer_service_dbchain");

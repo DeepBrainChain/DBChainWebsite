@@ -176,6 +176,8 @@ export default {
         this.image1 = require("../assets/imgs/building@1x.png");
       } else if (this.$t("website_name") == "topgpu") {
         this.image1 = require("../assets/imgs/building@1x.png");
+      } else if (this.$t("website_name") == "thinkotech") {
+        this.image1 = require("../assets/imgs/building@1x.png");
       }
     }
   },
@@ -243,6 +245,8 @@ export default {
         return this.$t("home.intr_shareaiot_1");
       } else if (this.$t("website_name") == "topgpu") {
         return this.$t("home.intr_topgpu_1");
+      } else if (this.$t("website_name") == "thinkotech") {
+        return this.$t("home.intr_thinkotech_1");
       }
 
       return this.$t("home.intr_dbchain_1");
