@@ -36,7 +36,7 @@ export default {
           gpu_price_dollar: 0.0001,
           code: "0.3848",
           time_max: 1500,
-          gpu_count_max: 1,
+          gpu_count_max: 0,
           dbc_price: 0.0026
         };
       }
@@ -56,7 +56,7 @@ export default {
           value: 24
         }
       ],
-      gpuCount: 1,
+      gpuCount: 0,
       time: 1,
       total_price: "",
       isGetTotalPrice: false,

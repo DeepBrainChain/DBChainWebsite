@@ -3,8 +3,9 @@ import enLocale from "element-ui/lib/locale/lang/en";
 export default {
   message: "hello i18n !!",
 
-  website_name: "thinkotech", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
+  website_name: "dbchain", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
   //alpha-dbchain/aichriscloud/deepbit/vnxmart/aiaicloud/snbt/heekmind/redstonewill/rocketai/aicv/\shareaiot\freegpu\boincplanet\topgpu\thinkotech
+  //coolgpu\ssclouds\nvidiaai\deligpu\longway\sharedgpu\aipower
   $: "$",
   send: "发送",
   closeWallet: "关闭钱包",
@@ -249,7 +250,14 @@ export default {
     intr_boincplanet_1: "算力地球",
     intr_shareaiot_1: "携而智物",
     intr_topgpu_1: "深极智算",
+    intr_coolgpu_1: "酷卡",
+    intr_scclouds_1: "星创云",
+    intr_nvidiaai_1: "英智",
+    intr_deligpu_1: "DeliGPU",
+    intr_longway_1: "Longway",
+    intr_sharedgpu_1: "共享算力",
     intr_thinkotech_1: "鑫思考AI技术平台",
+    intr_aipower_1: "AI动力",
     intr_1: "提供GPU出租服务，加入我们，可以帮助您的机器非常方便的接入到深脑链网络中，获取收益。\n" +
       "\n" +
       "       只要你的GPU有空闲，就可以加入我们赚取DBC Token，同时可以享受Token升值带来的更多收益。\n" +
@@ -402,7 +410,7 @@ export default {
   dlg_try_condition: "试用条件：当前钱包持有大于等于5000个DBC（新用户前3次试用没有此要求）", // 2020.1.12
   dlg_try_fee: "试用费用：低于1个DBC",
   dlg_try_time: "试用时间：15分钟，每个机器只能试用一次", // 2020.1.12
-  dlg_try_gpu_count: "GPU 数量：1",
+  dlg_try_gpu_count: "GPU 数量：0",
   dlg_try_confirm: "确认支付",
   dlg_try_msg: "支付成功后，机器登陆信息将会发送到您的邮箱中",
 
@@ -500,6 +508,13 @@ export default {
   footer_service_shareaiot: "3123029727@qq.com", //9.17 19:33
   footer_service_topgpu: "treenewbeetogether@163.com", //9.17 19:33
   footer_service_thinkotech: "284522212@qq.com", //9.17 19:33
+  footer_service_coolgpu: "coolgpu@163.com", //9.17 19:33
+  footer_service_scclouds: "ser@scclouds.cn", //9.17 19:33
+  footer_service_nvidiaai: "167442878@qq.com", //9.17 19:33
+  footer_service_deligpu: "arrky@mail.ru", //9.17 19:33
+  footer_service_longway: "2546954766@qq.com", //9.17 19:33
+  footer_service_thinkotech: "wyking@163..com", //9.17 19:33
+  footer_service_aipower: "1272068154@qq.com", //9.17 19:33
   list_start_rentout: "分钟后可租用", //9.17 19:33
   list_can_rentout: "用户现在可租用", //9.17 19:33
   my_gpu_count: "我租用的GPU数量", //9.17 19:33
@@ -530,7 +545,7 @@ export default {
   memory_dlg: '分配的内存空间',
   memory_every_gpu: '每个GPU分配内存数为',
   lease_gpu: '租用GPU容器',
-  over_max_disk: '购买硬盘空间超限',
+  over_max_disk: '购买硬盘空间超限,增加GPU数量，可以增加最大硬盘空间',
   diskspace_remaining: '最大可用硬盘空间',
   memory_more: '购买的硬盘空间越大，分配的内存空间越多',
   open_cpu_to_gpu: '启用GPU',
@@ -578,7 +593,8 @@ export default {
   stopGpu_mymachine: '停止GPU',
   stopgpu_please_switch_cpu_mode: 'GPU停止后，GPU容器将会变成CPU容器。CPU容器有两种使用方式，付费方式需要支付DBC才可以使用CPU容器，质押方式不需要实际花费DBC，只需要将DBC质押到智能合约中，就可以免费使用CPU容器，使用结束后，质押的DBC会全部退回.两种使用方式，功能完全一样。',
   stopgpu_to_cpu_payment: '停止GPU，切换到CPU容器',
-  less_data_disk: '可用硬盘空间不能小于10G',
+  less_data_disk_10g: '可用硬盘空间不能小于10G',
+  less_data_disk_1g: '可用硬盘空间不能小于1G',
   less_data_disk_over_max: 'GPU容器数据过大，无法停止GPU',
   diskspace_new_cpu: '关闭GPU后，容器剩余空间为',
   myMachine_rent_success_msg_update_stop_gpu: '停止GPU成功，稍等3分钟，可以登陆使用',
@@ -629,7 +645,7 @@ export default {
   restart_tip_mymachine: '如果容器无法连接，可以重启容器，进程会被杀死，数据不会丢失、环境不会被重置',
   send_email_error: '邮件发送失败，请再次点击发送',
   send_email_repeat: '重发邮件',
-
+  diskspace_less_zero: '容器剩余可用空间不能小于1G',
 
   ...enLocale
 };

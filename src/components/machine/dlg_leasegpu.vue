@@ -331,6 +331,18 @@ export default {
       this.memory_every_gpu = parseInt(
         this.placeOrderData.memory_per_gpu_max / (1024 * 1024)
       );
+      if (
+        this.disk_buy +
+          this.disk_giving -
+          this.placeOrderData.diskspace_image_data <=
+        0
+      ) {
+        this.$message({
+          showClose: true,
+          message: this.$t("diskspace_less_zero"),
+          type: "error"
+        });
+      }
       get_pay_dbc_count({
         rent_time_length: this.time * 60 * this.timeSelect,
         gpu_count: this.gpuCount,
@@ -341,7 +353,7 @@ export default {
       }).then(res => {
         if (res.status === 1) {
           this.total_price = res.content;
-          if (parsenInt(this.total_price) > parsenInt(this.balance)) {
+          if (parseInt(this.total_price) > parseInt(this.balance)) {
             this.$message({
               showClose: true,
               message: this.$t("lessdbc"),
@@ -369,6 +381,14 @@ export default {
       });
     },
     confirm() {
+      if (parseInt(this.dbc_count) > parseInt(this.balance)) {
+        this.$message({
+          showClose: true,
+          message: this.$t("lessdbc"),
+          type: "error"
+        });
+        return;
+      }
       const params = {
         rent_time_length: this.time * this.timeSelect * 60,
         order_is_over: this.placeOrderData.order_is_over,

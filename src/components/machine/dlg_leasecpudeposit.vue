@@ -333,7 +333,7 @@ export default {
       }).then(res => {
         if (res.status === 1) {
           this.dbc_count = res.content;
-          if (parsenInt(this.dbc_count) > parsenInt(this.balance)) {
+          if (parseInt(this.dbc_count) > parseInt(this.balance)) {
             this.$message({
               showClose: true,
               message: this.$t("lessdbc"),
@@ -363,6 +363,15 @@ export default {
     },
     confirm() {
       let params;
+
+      if (parseInt(this.dbc_count) > parseInt(this.balance)) {
+        this.$message({
+          showClose: true,
+          message: this.$t("lessdbc"),
+          type: "error"
+        });
+        return;
+      }
       if (this.placeOrderData.order_id_pre !== null) {
         params = {
           rent_time_length: this.time * this.timeSelect * 60,

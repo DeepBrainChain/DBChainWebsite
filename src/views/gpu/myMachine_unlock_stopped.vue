@@ -124,6 +124,12 @@
               <a class="cPrimaryColor">{{item.mcData.country}}</a>
             </span>
           </div>
+          <div class="td" v-if="item.mcData.can_rent_start_time_later<0">
+            <span class="fs16">
+              <a class="cPrimaryColor">{{-item.mcData.can_rent_start_time_later}}</a>
+              {{$t('list_start_rentout')}}
+            </span>
+          </div>
         </div>
         <div class="flex">
           <div class="td">
@@ -140,7 +146,7 @@
               {{$t('list_length_of_available_time')}}：
               <a
                 class="cPrimaryColor"
-              >{{Math.floor(item.mcData.length_of_available_time)}}{{$t('my_machine_hour')}}</a>
+              >{{Math.floor(item.mcData.length_of_available_time+8*24)}}{{$t('my_machine_hour')}}</a>
             </span>
           </div>
           <div class="td">

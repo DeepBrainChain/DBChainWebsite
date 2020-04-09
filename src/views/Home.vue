@@ -114,71 +114,7 @@ export default {
       this.$router.push("/gpu/myWallet");
     },
     set_image1() {
-      if (this.$t("website_name") == "dbchain") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "yousanai") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "aionego") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "deepshare") {
-        this.image1 = require("../assets/imgs/building_deepshare@1x.png");
-      } else if (this.$t("website_name") == "sharegpu") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "panchuangai") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "yalecloud") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "52lm") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "dimi") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "mayi") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "windywinter") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "1024lab") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "litaai") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "ainlp") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "52cv") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "redstonewill") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "alpha-dbchain") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "xyzlab") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "gpgpu") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "rocketai") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "deepbit") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "aichriscloud") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "vnxmart") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "aiaicloud") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "snbt") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "heekmind") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "aicv") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "freegpu") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "boincplanet") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "shareaiot") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "topgpu") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      } else if (this.$t("website_name") == "thinkotech") {
-        this.image1 = require("../assets/imgs/building@1x.png");
-      }
+      this.image1 = require("../assets/imgs/building@1x.png");
     }
   },
   computed: {
@@ -247,6 +183,20 @@ export default {
         return this.$t("home.intr_topgpu_1");
       } else if (this.$t("website_name") == "thinkotech") {
         return this.$t("home.intr_thinkotech_1");
+      } else if (this.$t("website_name") == "coolgpu") {
+        return this.$t("home.intr_coolgpu_1");
+      } else if (this.$t("website_name") == "scclouds") {
+        return this.$t("home.intr_scclouds_1");
+      } else if (this.$t("website_name") == "nvidiaai") {
+        return this.$t("home.intr_nvidiaai_1");
+      } else if (this.$t("website_name") == "deligpu") {
+        return this.$t("home.intr_deligpu_1");
+      } else if (this.$t("website_name") == "longway") {
+        return this.$t("home.intr_longway_1");
+      } else if (this.$t("website_name") == "sharedgpu") {
+        return this.$t("home.intr_sharedgpu_1");
+      } else if (this.$t("website_name") == "aipower") {
+        return this.$t("home.intr_aipower_1");
       }
 
       return this.$t("home.intr_dbchain_1");

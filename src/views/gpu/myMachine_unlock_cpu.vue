@@ -522,6 +522,7 @@
             >{{$t('myMachine_confirm_pay')}}</el-button>
 
             <el-button
+              v-if="item.orderData.order_id_pre===null|| item.orderData.pay_success===false"
               plain
               :disabled="isPaying"
               class="tool-btn"

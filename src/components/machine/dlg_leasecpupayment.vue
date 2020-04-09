@@ -293,11 +293,25 @@ export default {
             if (
               this.disk_buy * (1024 * 1014) +
                 this.placeOrderData.diskspace_giving <
-              this.placeOrderData.diskspace_image_data + 10 * 1024 * 1024
+                this.placeOrderData.diskspace_image_data + 10 * 1024 * 1024 &&
+              this.placeOrderData.order_id_pre === null
             ) {
               this.$message({
                 showClose: true,
-                message: this.$t("less_data_disk"),
+                message: this.$t("less_data_disk_10g"),
+                type: "error"
+              });
+            }
+
+            if (
+              this.disk_buy * (1024 * 1014) +
+                this.placeOrderData.diskspace_giving <
+                this.placeOrderData.diskspace_image_data + 1 * 1024 * 1024 &&
+              this.placeOrderData.order_id_pre !== null
+            ) {
+              this.$message({
+                showClose: true,
+                message: this.$t("less_data_disk_1g"),
                 type: "error"
               });
             }
@@ -363,7 +377,7 @@ export default {
       }).then(res => {
         if (res.status === 1) {
           this.dbc_count = res.content;
-          if (parsenInt(this.dbc_count) > parsenInt(this.balance)) {
+          if (parseInt(this.dbc_count) > parseInt(this.balance)) {
             this.$message({
               showClose: true,
               message: this.$t("lessdbc"),
@@ -428,6 +442,14 @@ export default {
     },
     confirm() {
       let params;
+      if (parseInt(this.dbc_count) > parseInt(this.balance)) {
+        this.$message({
+          showClose: true,
+          message: this.$t("lessdbc"),
+          type: "error"
+        });
+        return;
+      }
       if (this.placeOrderData.order_id_pre !== null) {
         params = {
           rent_time_length: this.time * this.timeSelect * 60,

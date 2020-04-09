@@ -82,69 +82,6 @@ export default {
   },
   computed: {
     set_dbctalk() {
-      if (this.$t("website_name") == "dbchain") {
-        return "";
-      } else if (this.$t("website_name") == "yousanai") {
-        return "";
-      } else if (this.$t("website_name") == "aionego") {
-        return "";
-      } else if (this.$t("website_name") == "deepshare") {
-        return "";
-      } else if (this.$t("website_name") == "sharegpu") {
-        return "";
-      } else if (this.$t("website_name") == "panchuangai") {
-        return "";
-      } else if (this.$t("website_name") == "yalecloud") {
-        return "";
-      } else if (this.$t("website_name") == "52lm") {
-        return "";
-      } else if (this.$t("website_name") == "dimi") {
-        return "";
-      } else if (this.$t("website_name") == "mayi") {
-        return "";
-      } else if (this.$t("website_name") == "windywinter") {
-        return "";
-      } else if (this.$t("website_name") == "1024lab") {
-        return "";
-      } else if (this.$t("website_name") == "litaai") {
-        return "";
-      } else if (this.$t("website_name") == "ainlp") {
-        return "";
-      } else if (this.$t("website_name") == "52cv") {
-        return "";
-      } else if (this.$t("website_name") == "redstonewill") {
-        return "";
-      } else if (this.$t("website_name") == "alpha-dbchain") {
-        return "";
-      } else if (this.$t("website_name") == "xyzlab") {
-        return "";
-      } else if (this.$t("website_name") == "gpgpu") {
-        return "";
-      } else if (this.$t("website_name") == "rocketai") {
-        return "";
-      } else if (this.$t("website_name") == "aichriscloud") {
-        return "";
-      } else if (this.$t("website_name") == "deepbit") {
-        return "";
-      } else if (this.$t("website_name") == "vnxmart") {
-        return "";
-      } else if (this.$t("website_name") == "aiaicloud") {
-        return "";
-      } else if (this.$t("website_name") == "snbt") {
-        return "";
-      } else if (this.$t("website_name") == "heekmind") {
-        return "";
-      } else if (this.$t("website_name") == "freegpu") {
-        return "";
-      } else if (this.$t("website_name") == "boincplanet") {
-        return "";
-      } else if (this.$t("website_name") == "shareaiot") {
-        return "";
-      } else if (this.$t("website_name") == "topgpu") {
-        return "";
-      } else if (this.$t("website_name") == "thinkotech") {
-        return "";
-      }
       return "";
     }
   },
@@ -271,6 +208,20 @@ export default {
         this.link.href = "./topgpu.ico";
       } else if (this.$t("website_name") == "thinkotech") {
         this.link.href = "./thinkotech.ico";
+      } else if (this.$t("website_name") == "coolgpu") {
+        this.link.href = "./coolgpu.ico";
+      } else if (this.$t("website_name") == "scclouds") {
+        // this.link.href = "./scclouds.ico";
+      } else if (this.$t("website_name") == "nvidiaai") {
+        // this.link.href = "./nvidiaai.ico";
+      } else if (this.$t("website_name") == "deligpu") {
+        // this.link.href = "./deligpu.ico";
+      } else if (this.$t("website_name") == "longway") {
+        this.link.href = "./longway.ico";
+      } else if (this.$t("website_name") == "sharedgpu") {
+        this.link.href = "./sharedgpu.ico";
+      } else if (this.$t("website_name") == "aipower") {
+        this.link.href = "./aipower.ico";
       }
 
       document.getElementsByTagName("head")[0].appendChild(this.link);
@@ -341,6 +292,20 @@ export default {
         document.title = "topgpu";
       } else if (this.$t("website_name") == "thinkotech") {
         document.title = "thinkotech";
+      } else if (this.$t("website_name") == "coolgpu") {
+        document.title = "coolgpu";
+      } else if (this.$t("website_name") == "scclouds") {
+        document.title = "scclouds";
+      } else if (this.$t("website_name") == "nvidiaai") {
+        document.title = "nvidiaai";
+      } else if (this.$t("website_name") == "deligpu") {
+        document.title = "deligpu";
+      } else if (this.$t("website_name") == "longway") {
+        document.title = "longway";
+      } else if (this.$t("website_name") == "sharedgpu") {
+        document.title = "sharedgpu";
+      } else if (this.$t("website_name") == "aipower") {
+        document.title = "aipower";
       }
     },
     set_logo() {
@@ -408,6 +373,20 @@ export default {
         this.logo = require("../../assets/imgs/topgpu@1x.png");
       } else if (this.$t("website_name") == "thinkotech") {
         this.logo = require("../../assets/imgs/thinkotech@1x.png");
+      } else if (this.$t("website_name") == "coolgpu") {
+        this.logo = require("../../assets/imgs/coolgpu@1x.png");
+      } else if (this.$t("website_name") == "scclouds") {
+        // this.logo = require("../../assets/imgs/scclouds@1x.png");
+      } else if (this.$t("website_name") == "nvidiaai") {
+        //this.logo = require("../../assets/imgs/nvidiaai@1x.png");
+      } else if (this.$t("website_name") == "deligpu") {
+        //this.logo = require("../../assets/imgs/deligpu@1x.png");
+      } else if (this.$t("website_name") == "longway") {
+        this.logo = require("../../assets/imgs/longway@1x.png");
+      } else if (this.$t("website_name") == "sharedgpu") {
+        this.logo = require("../../assets/imgs/sharedgpu@1x.png");
+      } else if (this.$t("website_name") == "aipower") {
+        this.logo = require("../../assets/imgs/aipower@1x.png");
       }
     },
     pushMenu(name) {

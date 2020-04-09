@@ -1009,9 +1009,9 @@ export default {
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       create_order({
-        rent_time_length: 10,
+        rent_time_length: 15,
         dbc_price: this.placeOrderData.dbc_price,
-        gpu_count: 1,
+        gpu_count: 0,
         order_id: this.placeOrderData.order_id,
         dbc_total_count: 0,
         user_name_platform,
@@ -1020,7 +1020,7 @@ export default {
         .then(res => {
           if (res.status === 1) {
             this.$message(res.msg);
-            this.$router.push("/gpu/myMachine");
+            this.$router.push("/gpu/myMachine_cpu");
           } else {
             this.$message(res.msg);
           }

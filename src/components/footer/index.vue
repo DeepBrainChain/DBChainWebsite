@@ -95,6 +95,20 @@ export default {
         return this.$t("footer_service_topgpu");
       } else if (this.$t("website_name") == "thinkotech") {
         return this.$t("footer_service_thinkotech");
+      } else if (this.$t("website_name") == "coolgpu") {
+        return this.$t("footer_service_coolgpu");
+      } else if (this.$t("website_name") == "scclouds") {
+        return this.$t("footer_service_scclouds");
+      } else if (this.$t("website_name") == "nvidiaai") {
+        return this.$t("footer_service_nvidiaai");
+      } else if (this.$t("website_name") == "deligpu") {
+        return this.$t("footer_service_deligpu");
+      } else if (this.$t("website_name") == "longway") {
+        return this.$t("footer_service_longway");
+      } else if (this.$t("website_name") == "sharedgpu") {
+        return this.$t("footer_service_sharedgpu");
+      } else if (this.$t("website_name") == "aipower") {
+        return this.$t("footer_service_aipower");
       }
 
       return this.$t("footer_service_dbchain");

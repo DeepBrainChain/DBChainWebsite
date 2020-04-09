@@ -109,7 +109,7 @@
           <span
             v-if="item.mcData.dbc_version!=='0.3.7.2'"
             class="td"
-          >{{$t('diskspace_remaining')}}：{{parseInt((item.orderData.diskspace+item.orderData.diskspace_giving-item.orderData.diskspace_image_data)/(1024*1024))}}G</span>
+          >{{$t('diskspace_remaining')}}：{{parseInt((item.orderData.diskspace+item.orderData.diskspace_giving*item.orderData.gpu_count-item.orderData.diskspace_image_data)/(1024*1024))}}G</span>
         </div>
         <div>
           <span
@@ -545,6 +545,7 @@
               @click="paid(item)"
             >{{$t('myMachine_paid')}}</el-button>-->
             <el-button
+              v-if="item.orderData.order_id_pre===null || item.orderData.pay_success===false"
               :disabled="isPaying"
               class="tool-btn"
               size="mini"

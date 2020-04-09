@@ -318,6 +318,7 @@ export default {
       })
         .then(res => {
           if (res.status === 1) {
+            // var tip = res.msg + String(res.content) + "h";
             this.$message({
               showClose: true,
               message: res.msg,

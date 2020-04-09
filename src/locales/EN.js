@@ -2,7 +2,7 @@ import enLocale from 'element-ui/lib/locale/lang/en'
 
 export default {
   message: 'hello i18n !!',
-  website_name: 'thinkotech', //yousanai,  dbchain,aionego
+  website_name: 'dbchain', //yousanai,  dbchain,aionego
   $: '$',
   send: 'Send',
   closeWallet: 'Close Wallet',
@@ -248,6 +248,13 @@ export default {
     intr_shareaiot_1: "ShareAIOT",
     intr_topgpu_1: "TopGpu",
     intr_thinkotech_1: "ThinkoAITech",
+    intr_coolgpu_1: "CoolGpu",
+    intr_scclouds_1: "The Stars",
+    intr_nvidiaai_1: "NvidiaAI",
+    intr_deligpu_1: "DeliGPU",
+    intr_longway_1: "Longway",
+    intr_sharedgpu_1: "SharedGPU",
+    intr_aipower_1: "AIPower",
     intr_1: ' provides GPU rental service.join us! can help your machine very convenient access to the DBC network, gain revenue. \n' +
       '\n' +
       ' If your GPU is ever idle, you can connect it to the DBC network to earn DBC tokens and enjoy the benefit of the tokens appreciation. \n ' +
@@ -409,7 +416,7 @@ export default {
   dlg_try_condition: 'Conditions for a trial: current wallet holds more than 1,000 DBC in balance',
   dlg_try_fee: 'Trial fee: 0 DBC',
   dlg_try_time: 'Trial time: 30 minutes',
-  dlg_try_gpu_count: 'GPU amount: 1',
+  dlg_try_gpu_count: 'GPU amount: 0',
   dlg_try_confirm: 'Confirm payment',
   dlg_try_msg: 'Once payment is successful, machine log in details will be sent to your email address',
 
@@ -508,6 +515,13 @@ export default {
   footer_service_shareaiot: "3123029727@qq.com", //9.17 19:33
   footer_service_topgpu: "treenewbeetogether@163.com", //9.17 19:33
   footer_service_thinkotech: "284522212@qq.com", //9.17 19:33
+  footer_service_coolgpu: "coolgpu@163.com", //9.17 19:33
+  footer_service_scclouds: "ser@scclouds.cn", //9.17 19:33
+  footer_service_nvidiaai: "167442878@qq.com", //9.17 19:33
+  footer_service_deligpu: "arrky@mail.ru", //9.17 19:33
+  footer_service_longway: "2546954766@qq.com", //9.17 19:33
+  footer_service_sharedgpu: "wyking@163..com", //9.17 19:33
+  footer_service_aipower: "1272068154@qq.com", //9.17 19:33
   list_start_rentout: 'minutes later, it can be rented',
   list_can_rentout: 'Users can rent it now',
   my_gpu_count: 'The number of gpus I rent ', //9.17 19:33
