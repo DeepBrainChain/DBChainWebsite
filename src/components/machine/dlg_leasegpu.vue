@@ -353,13 +353,6 @@ export default {
       }).then(res => {
         if (res.status === 1) {
           this.total_price = res.content;
-          if (parseInt(this.total_price) > parseInt(this.balance)) {
-            this.$message({
-              showClose: true,
-              message: this.$t("lessdbc"),
-              type: "error"
-            });
-          }
         } else {
           this.$message({
             showClose: true,

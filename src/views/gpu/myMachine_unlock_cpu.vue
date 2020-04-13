@@ -406,11 +406,11 @@
           <span
             class="cRed"
             v-else-if="item.orderData.order_id_pre!==null&&(item.orderData.creating_container|| creating_container  )&& !item.orderData.order_is_cancer&&!item.orderData.order_is_over&&!item.orderData.rent_success&&!item.orderData.pay_error&&!item.orderData.from_stop_to_open"
-          >{{$t('myMachine_is_vocing_machine_update_stop_gpu')}}{{parseInt(item.orderData.diskspace_image_data/(1024*1024*16))+1}}-{{parseInt(item.orderData.diskspace_image_data/(1024*1024*2))+9}}{{$t('my_machine_min')}}</span>
+          >{{$t('myMachine_is_vocing_machine_update_stop_gpu')}}{{parseInt(item.orderData.diskspace_image_data/(1024*1024*16))+1}}-{{parseInt(item.orderData.diskspace_image_data/(1024*1024*1.5))+9}}{{$t('my_machine_min')}}</span>
           <span
             class="cRed"
             v-else-if="item.orderData.order_id_pre!==null&&(item.orderData.creating_container|| creating_container  ) && !item.orderData.order_is_cancer&&!item.orderData.order_is_over&&!item.orderData.rent_success&&!item.orderData.pay_error&&item.orderData.from_stop_to_open"
-          >{{$t('myMachine_is_vocing_machine_update_stop_to_open')}}{{parseInt(item.orderData.diskspace_image_data/(1024*1024*16))+1}}-{{parseInt(item.orderData.diskspace_image_data/(1024*1024*2))+9}}{{$t('my_machine_min')}}</span>
+          >{{$t('myMachine_is_vocing_machine_update_stop_to_open')}}{{parseInt(item.orderData.diskspace_image_data/(1024*1024*16))+1}}-{{parseInt(item.orderData.diskspace_image_data/(1024*1024*1.5))+9}}{{$t('my_machine_min')}}</span>
 
           <span
             class="cRed"

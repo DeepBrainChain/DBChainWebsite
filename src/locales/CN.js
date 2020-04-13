@@ -530,6 +530,8 @@ export default {
   continue_pay_order_is_over: '订单结束',
 
   restart_machine: '重启容器', //12.22
+
+
   cpu_mode_switch: '付费方式需要支付DBC才可以使用CPU容器。质押方式不需要实际花费DBC，只需要将DBC质押到智能合约中，就可以免费使用CPU容器，使用结束后，质押的DBC会全部退回。两种使用方式功能上没有任何区别。',
   payment: ' 付费方式 ',
   deposit: ' 质押方式 ',
@@ -646,6 +648,8 @@ export default {
   send_email_error: '邮件发送失败，请再次点击发送',
   send_email_repeat: '重发邮件',
   diskspace_less_zero: '容器剩余可用空间不能小于1G',
+
+  myMachine_rentout_success_msg_mining: '验证成功，当前机器为挖矿机器，3分钟后机器可以在云算力平台上线', //2020 4.9
 
   ...enLocale
 };

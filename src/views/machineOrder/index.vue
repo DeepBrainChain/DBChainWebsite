@@ -75,7 +75,7 @@
             <span
               class="td"
             >{{$t('gpu.currentRemaining')}}：{{item.orderData.dbc_total_count - item.orderData.dbc_real_need_count}} DBC</span>
-            <span class="td">{{$t('gpu.payPrice')}}：$ {{item.orderData.dbc_price.toFixed(4)}}</span>
+            <span class="td">{{$t('gpu.payPrice')}}：$ {{item.orderData.dbc_price.toFixed(5)}}</span>
           </div>
           <!--        <div>-->
           <!--          <span class="td">{{$t('gpu.gpuRemainTime')}}（DBC）：422</span>-->

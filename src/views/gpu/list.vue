@@ -248,7 +248,7 @@
               style="width: 105px"
               type="primary"
               size="mini"
-              v-if="item.dbc_version!=='0.3.7.2'"
+              v-if="item.dbc_version!=='0.3.7.2' && item.usage_type===0"
               @click="openDlg_cpu_switch(item,index)"
               :disabled="!item.can_create_cpu_container||item.can_rent_start_time_later<0"
               :loading="rentLoading_cpu&& rent_index===index"

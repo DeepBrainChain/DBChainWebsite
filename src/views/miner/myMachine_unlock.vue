@@ -289,8 +289,12 @@
       <div class="tools-head">
         <div class="l-wrap">
           <span
-            v-if="isShowRendSuccessMsg(item.mcData.milli_can_rent_start_time)&&item.mcData.dbc_open_status"
+            v-if="isShowRendSuccessMsg(item.mcData.milli_can_rent_start_time)&&item.mcData.dbc_open_status&&item.mcData.usage_type!==2"
           >{{$t('myMachine_rentout_success_msg')}}</span>
+
+          <span
+            v-if="isShowRendSuccessMsg(item.mcData.milli_can_rent_start_time)&&item.mcData.dbc_open_status&&item.mcData.usage_type===2"
+          >{{$t('myMachine_rentout_success_msg_mining')}}</span>
 
           <!--   <span class="cRed" v-else-if="item.mcData.vocing_error">{{$t('myMachine_rentout_error')}}</span>-->
           <span class="cRed" v-else-if="item.mcData.vocing_error">{{tip}}</span>

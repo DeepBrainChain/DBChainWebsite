@@ -333,13 +333,6 @@ export default {
       }).then(res => {
         if (res.status === 1) {
           this.dbc_count = res.content;
-          if (parseInt(this.dbc_count) > parseInt(this.balance)) {
-            this.$message({
-              showClose: true,
-              message: this.$t("lessdbc"),
-              type: "error"
-            });
-          }
         } else {
           this.$message({
             showClose: true,

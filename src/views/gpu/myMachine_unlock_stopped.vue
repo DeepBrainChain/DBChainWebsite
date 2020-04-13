@@ -363,6 +363,7 @@
             :disabled="item.mcData.dbc_version==='0.3.7.2'||!item.mcData.idle_status"
           >{{$t('open_gpu_stopped')}}</el-button>
           <el-button
+            v-if="item.mcData.usage_type===0"
             style="width: 140px"
             type="primary"
             size="mini"
