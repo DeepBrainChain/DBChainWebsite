@@ -26,9 +26,9 @@
       <h3>
         {{$t('helpsell.4')}}，
         <a
-          href="https://www.gateio.life/trade/DBC_USDT"
+          href="https://www.gateio.la/trade/DBC_USDT"
           target="_blank"
-        >https://www.gateio.life</a>
+        >https://www.gateio.la</a>
       </h3>
     </div>
   </div>

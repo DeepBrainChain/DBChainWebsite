@@ -15,14 +15,14 @@
           <div class="dbc-num">{{dbc}}</div>
           <p class="trade-info">
             DBC价格参考gate DBC/USDT交易对价格， <br>
-            点击查看价格：<a href="https://www.gateio.co/trade/DBC_USDT">https://www.gateio.co/trade/DBC_USDT</a>
+            点击查看价格：<a href="https://www.gateio.co/trade/DBC_USDT">https://www.gateio.la/trade/DBC_USDT</a>
           </p>
         </div>
       </div>
 
       <div class="trade-bottom-wrap">
         <el-button class="confirm-btn" type="primary" size="medium" @click="next">继续</el-button>
-        <span class="service">客服支持： <a href="mailto:support@dbctra.io">support@dbctra.io</a> ,客服会在24小时内回复</span>
+        <span class="service">客服支持： <a href="mailto:support@dbctrade.io">support@dbctrade.io</a> ,客服会在24小时内回复</span>
       </div>
     </div>
   </div>

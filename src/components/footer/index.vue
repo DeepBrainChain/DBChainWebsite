@@ -9,8 +9,7 @@
           target="_blank"
         >PanChuang Docs</a>
         <a href="https://www.deepbrainchain.org" target="_blank">{{$t('footer.DBChain')}}</a>
-
-        <a href="https://www.flyai.com" target="_blank">{{$t('footer.flyai')}}</a>
+        <a href="https://www.neotracker.io" target="_blank">{{$t('footer.neotracker')}}</a>
       </div>
       <div class="line" tyle=" text-align:center"></div>
       <p class="contact">{{$t('footer_service')}}:{{footer_service}},{{$t('footr_reply')}}</p>
@@ -109,6 +108,26 @@ export default {
         return this.$t("footer_service_sharedgpu");
       } else if (this.$t("website_name") == "aipower") {
         return this.$t("footer_service_aipower");
+      } else if (this.$t("website_name") == "cvstudy") {
+        return this.$t("footer_service_cvstudy");
+      } else if (this.$t("website_name") == "gpuhub") {
+        return this.$t("footer_service_gpuhub");
+      } else if (this.$t("website_name") == "district51") {
+        return this.$t("footer_service_district51");
+      } else if (this.$t("website_name") == "deepmind") {
+        return this.$t("footer_service_deepmind");
+      } else if (this.$t("website_name") == "transportation") {
+        return this.$t("footer_service_transportation");
+      } else if (this.$t("website_name") == "planetc") {
+        return this.$t("footer_service_planetc");
+      } else if (this.$t("website_name") == "sdnu") {
+        return this.$t("footer_service_sdnu");
+      } else if (this.$t("website_name") == "freegputop") {
+        return this.$t("footer_service_freegputop");
+      } else if (this.$t("website_name") == "tensorgpu") {
+        return this.$t("footer_service_tensorgpu");
+      } else if (this.$t("website_name") == "opengpu") {
+        return this.$t("footer_service_opengpu");
       }
 
       return this.$t("footer_service_dbchain");

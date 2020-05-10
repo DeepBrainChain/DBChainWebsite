@@ -52,17 +52,17 @@
         >{{(placeOrderData.gpu_price_dollar)}}$/{{$t('my_machine_hour')}}</span>
       </div>
 
-      <div class="form mt20">
+      <!--     <div class="form mt20">
         <label>{{$t('diskspace_dlg')}}：</label>
         <label>{{$t('diskspace_giving')}}{{disk_giving}}G</label>
 
         <label>({{$t('diskspace_giving_gpu')}}{{disk_giving_every_gpu}}G)</label>
         <label>,{{$t('diskspace_every_cpu_can_buy')}}{{diskspace_every_cpu_can_buy}}G</label>
-      </div>
+      </div>-->
       <div class="form mt20">
         <label>{{$t('diskspace_cpu_data')}}:{{disk_cpu_data}}G</label>
       </div>
-      <div class="form mt20">
+      <!--     <div class="form mt20" >
         <label>{{$t('buy_diskspace')}}:</label>
         <el-input
           style="width: 120px"
@@ -77,9 +77,12 @@
         >{{(placeOrderData.disk_GB_perhour_dollar)}}$/{{$t('disk_hour')}}</span>
 
         <span class="fs12 cGray ml10">{{$t('disk_max')}}{{(disk_max)}}G</span>
-      </div>
+      </div>-->
       <div class="form mt20">
-        <label>({{$t('diskspace_new_gpu')}}{{disk_buy+disk_giving-disk_cpu_data}}G)</label>
+        <label>({{$t('diskspace_new_gpu')}}{{disk_buy-disk_cpu_data}}G)</label>
+        <span
+          class="fs12 cGray ml10"
+        >{{(placeOrderData.disk_GB_perhour_dollar)}}$/{{$t('disk_hour')}}</span>
       </div>
       <div class="form mt20">
         <label>{{$t('memory_dlg')}}：</label>
@@ -87,7 +90,7 @@
         <label>({{$t('memory_every_gpu')}}{{memory_every_gpu}}G)</label>
       </div>
 
-      <div class="form-notice">{{$t('tips')}}：{{$t('msg.dlg_0',{time: outDayTime})}}</div>
+      <div class="cRed">{{$t('tips')}}：{{$t('msg.dlg_0',{time: outDayTime})}}</div>
       <div class="computer-dbc mt30">
         <!--          <span>{{$t('gpu.DBCRemaining')}}：349</span>-->
         <span>{{$t('total')}}：{{ totalPrice.toFixed(4) }}{{$t('$')}}</span>
@@ -128,14 +131,15 @@ export default {
           code: "0.3848",
           time_max: 1500,
           gpu_count_max: 1,
-          images_tag: "pytorch 1.1+tensorflow 1.14@pytorch 1.2",
+          images_tag: "pytorch 1.2+tensorflow 1.14@pytorch 1.4+tensorflow 2.0",
           diskspace_giving: 31457280,
           diskSpace_per_gpu_max: 210736353,
           memory_per_gpu_max: 23741925,
           diskspace_max_cpu: 0,
           memory_max_cpu: 0,
           disk_GB_perhour_dollar: 3.3333334e-5,
-          diskspace_image_data: 0
+          diskspace_image_data: 0,
+          disk_space: 60
         };
       }
     }
@@ -155,7 +159,7 @@ export default {
         }
       ],
       gpuCount: 1,
-      images: "pytorch 1.1+tensorflow 1.14",
+      images: "pytorch 1.2+tensorflow 1.14",
       time: 1,
       total_price: "",
       isGetTotalPrice: false,
@@ -279,14 +283,18 @@ export default {
               this.placeOrderData.diskspace_giving) /
               (1024 * 1024)
           );
-          if (this.disk_buy > this.disk_max) {
-            this.$message({
-              showClose: true,
-              message: this.$t("over_max_disk"),
-              type: "error"
-            });
-            this.disk_buy = this.disk_max;
-          }
+
+          this.disk_buy = this.placeOrderData.disk_space / (1024 * 1024);
+
+          /*     if (this.disk_buy > this.disk_max) {
+              this.$message({
+                showClose: true,
+                message: this.$t("over_max_disk"),
+                type: "error"
+              });
+              this.disk_buy = this.disk_max;
+            }*/
+
           this.getPayDbcCount();
         }, 1000);
       }
@@ -321,6 +329,9 @@ export default {
           this.placeOrderData.diskspace_giving) /
           (1024 * 1024)
       );
+
+      this.disk_buy = this.placeOrderData.disk_space / (1024 * 1024);
+
       get_pay_dbc_count({
         rent_time_length: this.time * 60 * this.timeSelect,
         gpu_count: this.gpuCount,

@@ -205,7 +205,7 @@
           </div>
         </div>
 
-        <div class="flex" v-if="item.mcData.dbc_version!=='0.3.7.2'">
+        <!--       <div class="flex" v-if="item.mcData.dbc_version!=='0.3.7.2'">
           <div class="td">
             <span class="fs16">
               {{$t('cpu_containers_list')}}:
@@ -244,7 +244,7 @@
               >{{parseInt(item.mcData.gpu_containers_can_use_disk/(1024*1024))}}G</a>
             </span>
           </div>
-        </div>
+        </div>-->
 
         <div class="flex">
           <div v-if="item.mcData.tensor_cores" class="td">

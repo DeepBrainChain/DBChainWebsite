@@ -197,6 +197,26 @@ export default {
         return this.$t("home.intr_sharedgpu_1");
       } else if (this.$t("website_name") == "aipower") {
         return this.$t("home.intr_aipower_1");
+      } else if (this.$t("website_name") == "cvstudy") {
+        return this.$t("home.intr_cvstudy_1");
+      } else if (this.$t("website_name") == "gpuhub") {
+        return this.$t("home.intr_gpuhub_1");
+      } else if (this.$t("website_name") == "district51") {
+        return this.$t("home.intr_district51_1");
+      } else if (this.$t("website_name") == "deepmind") {
+        return this.$t("home.intr_deepmind_1");
+      } else if (this.$t("website_name") == "transportation") {
+        return this.$t("home.intr_transportation_1");
+      } else if (this.$t("website_name") == "planetc") {
+        return this.$t("home.intr_planetc_1");
+      } else if (this.$t("website_name") == "sdnu") {
+        return this.$t("home.intr_sdnu_1");
+      } else if (this.$t("website_name") == "freegputop") {
+        return this.$t("home.intr_freegputop_1");
+      } else if (this.$t("website_name") == "tensorgpu") {
+        return this.$t("home.intr_tensorgpu_1");
+      } else if (this.$t("website_name") == "opengpu") {
+        return this.$t("home.intr_opengpu_1");
       }
 
       return this.$t("home.intr_dbchain_1");

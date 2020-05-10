@@ -57,7 +57,7 @@
         >{{(placeOrderData.gpu_price_dollar)}}$/{{$t('my_machine_hour')}}</span>
       </div>
 
-      <div class="form mt20">
+      <div class="form mt20" v-if="placeOrderData.order_id_pre===null">
         <label>{{$t('diskspace_dlg')}}：</label>
         <label>{{$t('diskspace_giving')}}{{disk_giving}}G</label>
       </div>
@@ -70,7 +70,7 @@
         >{{$t('diskspace_gpu_data')}}{{(placeOrderData.diskspace_image_data / (1024 * 1024)).toFixed(2)}}G</label>
       </div>
 
-      <div class="form mt20">
+      <div class="form mt20" v-if="placeOrderData.order_id_pre===null">
         <label>{{$t('buy_diskspace')}}：</label>
         <el-input
           style="width: 120px"
@@ -95,6 +95,9 @@
         <label
           v-if="placeOrderData.from_stop_to_open"
         >({{$t('diskspace_new_cpu_stop')}}:{{(disk_buy+disk_giving-placeOrderData.diskspace_image_data / (1024 * 1024)).toFixed(2)}}G)</label>
+        <span
+          class="fs12 cGray ml10"
+        >{{(placeOrderData.disk_GB_perhour_dollar)}}$/{{$t('disk_hour')}}</span>
       </div>
       <div class="form mt20">
         <label>{{$t('memory_dlg')}}：</label>
@@ -149,14 +152,15 @@ export default {
           //       code: "0.3848",
           //       time_max: 1500,
           //       gpu_count_max: 1,
-          images_tag: "pytorch 1.1+tensorflow 1.14@pytorch 1.2",
-          diskspace_giving: 31457280
+          images_tag: "pytorch 1.2+tensorflow 1.14@pytorch 1.4+tensorflow 2.0",
+          diskspace_giving: 31457280,
           //      diskSpace_per_gpu_max: 210736353,
           //      memory_per_gpu_max: 23741925,
           //      diskspace_max_cpu: 0,
           //      memory_max_cpu: 0,
           //      disk_GB_perhour_dollar: 3.3333334e-5,
           //      diskspace_image_data: 0
+          disk_space: 60
         };
       }
     }
@@ -176,7 +180,7 @@ export default {
         }
       ],
 
-      images: "pytorch 1.1+tensorflow 1.14",
+      images: "pytorch 1.2+tensorflow 1.14",
       time: 1,
       total_price: "",
       dbc_count: "0",
@@ -191,7 +195,8 @@ export default {
       memory: 0,
       memory_every_gpu: 0,
       diskspace_max_cpu: 300 * 1024 * 1024,
-      disk_cpu_data: 0
+      disk_cpu_data: 0,
+      disk_space: 60
     };
   },
   watch: {
@@ -233,7 +238,7 @@ export default {
       }
       opts.push({
         name: this.$t("user_defined"),
-        value: "pytorch 1.2"
+        value: "py1.2+tf1.14"
       });
       return opts;
     },
@@ -266,7 +271,8 @@ export default {
             this.placeOrderData.diskspace_giving / (1024 * 1024)
           );
           if (this.placeOrderData.order_id_pre !== null) {
-            this.disk_cpu_data = parseInt(
+            this.disk_buy = this.placeOrderData.disk_space / (1024 * 1024);
+            /* this.disk_cpu_data = parseInt(
               this.placeOrderData.diskspace_image_data / (1024 * 1024)
             );
 
@@ -325,9 +331,9 @@ export default {
                 message: this.$t("less_data_disk_over_max"),
                 type: "error"
               });
-            }
+            }*/
           }
-          if (
+          /*   if (
             this.disk_buy * (1024 * 1014) +
               this.placeOrderData.diskspace_giving >
             this.diskspace_max_cpu
@@ -349,7 +355,7 @@ export default {
                       (1024 * 1024)
                   )
                 : 0;
-          }
+          } */
 
           this.get_memory_cpu_payment(
             this.placeOrderData.machine_id,

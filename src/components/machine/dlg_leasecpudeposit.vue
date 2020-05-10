@@ -59,7 +59,7 @@
         >{{$t('diskspace_gpu_data')}}{{(placeOrderData.diskspace_image_data / (1024 * 1024)).toFixed(2)}}G</label>
       </div>
 
-      <div class="form mt20">
+      <div class="form mt20" v-if="placeOrderData.order_id_pre===null">
         <label>{{$t('switch_diskspace')}}：</label>
 
         <el-select
@@ -78,7 +78,7 @@
         <label>&nbsp;&nbsp;G</label>
       </div>
       <div class="form mt20" v-if="placeOrderData.order_id_pre!==null">
-        <label>({{$t('diskspace_new_cpu')}}:{{(diskSelect-placeOrderData.diskspace_image_data / (1024 * 1024)).toFixed(2)}}G)</label>
+        <label>({{$t('diskspace_new_cpu')}}:{{((placeOrderData.disk_space-placeOrderData.diskspace_image_data )/ (1024 * 1024)).toFixed(2)}}G)</label>
       </div>
       <div class="form mt20">
         <label>{{$t('switch_memory')}}：</label>
@@ -147,7 +147,7 @@ export default {
           //       code: "0.3848",
           //       time_max: 1500,
           //       gpu_count_max: 1,
-          images_tag: "pytorch 1.1+tensorflow 1.14@pytorch 1.2",
+          images_tag: "pytorch 1.2+tensorflow 1.14@pytorch 1.4+tensorflow 2.0",
           //  diskspace_giving: 31457280,
           //      diskSpace_per_gpu_max: 210736353,
           //      memory_per_gpu_max: 23741925,
@@ -155,7 +155,8 @@ export default {
           //      memory_max_cpu: 0,
           //      disk_GB_perhour_dollar: 3.3333334e-5,
           //      diskspace_image_data: 0
-          machine_id: ""
+          machine_id: "",
+          disk_space: 60
         };
       }
     }
@@ -179,7 +180,7 @@ export default {
         }
       ],
 
-      images: "pytorch 1.1+tensorflow 1.14",
+      images: "pytorch 1.2+tensorflow 1.14",
       time: 1,
       total_price: "",
       dbc_count: "0",
@@ -227,7 +228,7 @@ export default {
       }
       opts.push({
         name: this.$t("user_defined"),
-        value: "pytorch 1.2"
+        value: "py1.2+tf1.14"
       });
       return opts;
     },

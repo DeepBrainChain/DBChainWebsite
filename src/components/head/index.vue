@@ -222,6 +222,26 @@ export default {
         this.link.href = "./sharedgpu.ico";
       } else if (this.$t("website_name") == "aipower") {
         this.link.href = "./aipower.ico";
+      } else if (this.$t("website_name") == "cvstudy") {
+        this.link.href = "./cvstudy.ico";
+      } else if (this.$t("website_name") == "gpuhub") {
+        this.link.href = "./gpuhub.ico";
+      } else if (this.$t("website_name") == "district51") {
+        this.link.href = "./district51.ico";
+      } else if (this.$t("website_name") == "deepmind") {
+        this.link.href = "./deepmind.ico";
+      } else if (this.$t("website_name") == "transportation") {
+        this.link.href = "./transportation.ico";
+      } else if (this.$t("website_name") == "planetc") {
+        this.link.href = "./planetc.ico";
+      } else if (this.$t("website_name") == "sdnu") {
+        this.link.href = "./sdnu.ico";
+      } else if (this.$t("website_name") == "freegputop") {
+        this.link.href = "./freegputop.ico";
+      } else if (this.$t("website_name") == "tensorgpu") {
+        this.link.href = "./tensorgpu.ico";
+      } else if (this.$t("website_name") == "opengpu") {
+        this.link.href = "./opengpu.ico";
       }
 
       document.getElementsByTagName("head")[0].appendChild(this.link);
@@ -306,6 +326,26 @@ export default {
         document.title = "sharedgpu";
       } else if (this.$t("website_name") == "aipower") {
         document.title = "aipower";
+      } else if (this.$t("website_name") == "cvstudy") {
+        document.title = "cvstudy";
+      } else if (this.$t("website_name") == "gpuhub") {
+        document.title = "gpuhub";
+      } else if (this.$t("website_name") == "district51") {
+        document.title = "district51";
+      } else if (this.$t("website_name") == "deepmind") {
+        document.title = "deepmind";
+      } else if (this.$t("website_name") == "transportation") {
+        document.title = "transportation";
+      } else if (this.$t("website_name") == "planetc") {
+        document.title = "planetc";
+      } else if (this.$t("website_name") == "sdnu") {
+        document.title = "sdnu";
+      } else if (this.$t("website_name") == "freegputop") {
+        document.title = "freegputop";
+      } else if (this.$t("website_name") == "tensorgpu") {
+        document.title = "tensorgpu";
+      } else if (this.$t("website_name") == "opengpu") {
+        document.title = "opengpu";
       }
     },
     set_logo() {
@@ -387,6 +427,26 @@ export default {
         this.logo = require("../../assets/imgs/sharedgpu@1x.png");
       } else if (this.$t("website_name") == "aipower") {
         this.logo = require("../../assets/imgs/aipower@1x.png");
+      } else if (this.$t("website_name") == "cvstudy") {
+        this.logo = require("../../assets/imgs/cvstudy@1x.png");
+      } else if (this.$t("website_name") == "gpuhub") {
+        this.logo = require("../../assets/imgs/gpuhub@1x.png");
+      } else if (this.$t("website_name") == "district51") {
+        this.logo = require("../../assets/imgs/district51@1x.png");
+      } else if (this.$t("website_name") == "deepmind") {
+        this.logo = require("../../assets/imgs/deepmind@1x.png");
+      } else if (this.$t("website_name") == "transportation") {
+        this.logo = require("../../assets/imgs/transportation@1x.png");
+      } else if (this.$t("website_name") == "planetc") {
+        this.logo = require("../../assets/imgs/planetc@1x.png");
+      } else if (this.$t("website_name") == "sdnu") {
+        this.logo = require("../../assets/imgs/sdnu@1x.png");
+      } else if (this.$t("website_name") == "freegputop") {
+        this.logo = require("../../assets/imgs/freegputop@1x.png");
+      } else if (this.$t("website_name") == "tensorgpu") {
+        this.logo = require("../../assets/imgs/tensorgpu@1x.png");
+      } else if (this.$t("website_name") == "opengpu") {
+        this.logo = require("../../assets/imgs/opengpu@1x.png");
       }
     },
     pushMenu(name) {
@@ -438,7 +498,7 @@ export default {
   align-items: flex-start;
 
   .logo {
-    margin-top: 10px; //dbchain:10px ,aionego:-30px,yousanai:-30px,deepshare-30px,yalecloud-30px,panchuanga:-30px,,sharegpu:-30px
+    margin-top: -30px; //dbchain:10px ,aionego:-30px,yousanai:-30px,deepshare-30px,yalecloud-30px,panchuanga:-30px,,sharegpu:-30px
     //alpha-dbchain:-50px,xyzlab:-20px
     margin-right: 119px; //dbchain: 119px  ,aionego:119px,yousanai:119px,deepshare:119px
   }

@@ -3,9 +3,10 @@ import enLocale from "element-ui/lib/locale/lang/en";
 export default {
   message: "hello i18n !!",
 
-  website_name: "dbchain", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
+  website_name: "opengpu", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
   //alpha-dbchain/aichriscloud/deepbit/vnxmart/aiaicloud/snbt/heekmind/redstonewill/rocketai/aicv/\shareaiot\freegpu\boincplanet\topgpu\thinkotech
-  //coolgpu\ssclouds\nvidiaai\deligpu\longway\sharedgpu\aipower
+  //coolgpu\scclouds\nvidiaai\deligpu\longway\sharedgpu\aipower\cvstudy\gpuhub\district51\deepmind\transportation\planetc\sdnu\freegputop\tensorgpu
+  //opengpu
   $: "$",
   send: "发送",
   closeWallet: "关闭钱包",
@@ -74,7 +75,7 @@ export default {
     HuobiPro: "Huobi Pro",
     GateIo: "Gate.io",
     zero: "人工智能围棋",
-    flyai: "AI悬赏竞赛",
+    neotracker: "NEOTracker",
     paddle: "飞桨平台",
     yikeweiqi: "奕客围棋",
     modelbase: "飞桨github",
@@ -192,7 +193,7 @@ export default {
     dlg_0: "当前机器最长可以租用{time}，最短1个小时。 \n" +
       "容器使用完成后，可以提前退租，只会收取实际产生的费用，剩余费用将会退还到钱包中. " +
       "时间到期,容器会被停用.并且如果钱包余额不足20000DBC,容器将会被立即销毁.如果您的钱包余额超过20000DBC,机器所有数据将会" +
-      "被自动保留7天(此功能需要机器DBC版本大于等于0.3.7.3,在这期间钱包余额也必须超过20000DBC),7天内任何时间可以继续启用容器,进行使用,容器停止超过7天将会被销毁.",
+      "被自动保留7天(在这期间钱包余额也必须超过20000DBC),7天内任何时间可以继续启用容器,进行使用,容器停止超过7天将会被销毁.",
 
 
     dlg_5: "使用过程中机器出现中断，如果使用时间不超过144小时，则退回全部DBC \n" +
@@ -256,8 +257,19 @@ export default {
     intr_deligpu_1: "DeliGPU",
     intr_longway_1: "Longway",
     intr_sharedgpu_1: "共享算力",
+    intr_aipower_1: "AIPower",
     intr_thinkotech_1: "鑫思考AI技术平台",
-    intr_aipower_1: "AI动力",
+    intr_cvstudy_1: "AI算法与图像处理",
+    intr_gpuhub_1: "GPUHub",
+    intr_district51_1: "51区",
+    intr_deepmind_1: "DeepMind中文网AI训练平台",
+    intr_transportation_1: "当交通遇上机器学习",
+    intr_planetc_1: "C星球",
+    intr_sdnu_1: "山师AI",
+    intr_freegputop_1: "免费GPU租用平台",
+    intr_tensorgpu_1: "张量GPU",
+    intr_opengpu_1: "OpenGPU",
+
     intr_1: "提供GPU出租服务，加入我们，可以帮助您的机器非常方便的接入到深脑链网络中，获取收益。\n" +
       "\n" +
       "       只要你的GPU有空闲，就可以加入我们赚取DBC Token，同时可以享受Token升值带来的更多收益。\n" +
@@ -316,12 +328,12 @@ export default {
   },
   mcList: {},
   my_machine_binding_email: "绑定的邮箱",
-  my_machine_vocing: "正在验证中, 大概需要几分钟(若等待时间超过5分钟,请刷新页面或者关闭VPN)",
+  my_machine_vocing: "正在验证中, 大概需要几分钟(若等待时间超过5分钟,请切换网络后刷新页面或者关闭VPN)",
   my_machine_isnormal_over: "订单已结束",
   my_machine_nonormal_over: "订单被中断",
   my_machine_order_cancer: "订单已取消",
   my_machine_order_rent_success: "正在使用中",
-  my_machine_order_vocing_pay: "正在进行支付验证中，大概需要几分钟(若等待时间超过5分钟,请刷新页面或者关闭VPN)",
+  my_machine_order_vocing_pay: "正在进行支付验证中，大概需要几分钟(若等待时间超过5分钟,请切换网络后刷新页面或者关闭VPN)",
   my_machine_order_pay_error: "验证失败，已经超过支付有效期",
   my_machine_order_return_dbc: "退币成功",
   my_machine_order_vocing_machine_success: "机器环境验证成功，请点击支付",
@@ -347,7 +359,7 @@ export default {
   list_total_time_be_used: "累计出租时长",
   list_total_rent_count: "出租总次数",
   list_error_rent_count: "中断次数",
-  list_cuda_version: "支持最高CUDA版本",
+  list_cuda_version: "最高支持CUDA版本",
   list_disk_space: "硬盘",
   list_cpu_type: "CPU型号",
   list_half_precision_tflops: "半精度浮点数",
@@ -368,11 +380,11 @@ export default {
   myMachine_rent_success_msg: "机器租用成功，登陆信息已发送至您的邮箱，请查收并妥善保管",
   myMachine_is_pay_vocing: "支付确认中",
   myMachine_maybe_is_used: "机器可能已经被租用，请取消订单，重新租用其他机器",
-  myMachine_is_vocing_machine: "正在验证机器环境是否可用，请耐心等待，大概需要1-3分钟(若等待时间超过5分钟,请刷新页面或者关闭VPN)",
-  myMachine_is_dbc_transfering: "正在DBC转账中(若无法转账，请查看是否已关闭VPN,若关闭VPN并刷新当前页后仍无法转账，请断网重新连网后刷新页面)",
+  myMachine_is_vocing_machine: "正在验证机器环境是否可用，请耐心等待，大概需要1-3分钟(若等待时间超过5分钟,请切换网络后刷新页面或者关闭VPN)",
+  myMachine_is_dbc_transfering: "正在DBC转账中(若无法转账，请查看是否已关闭VPN,若关闭VPN并刷新当前页后仍无法转账，或者切换网络后刷新页面)",
   myMachine_is_transfer_error: "DBC转账失败，请重新支付",
   myMachine_return_dbc: "退币",
-  myMachine_confirm_pay: "支付",
+  myMachine_confirm_pay: "继续支付",
   myMachine_concer_order: "取消订单",
   myMachine_no_double_pay: "注意不要重复支付，可以到我的钱包，转账记录中查看。如果已经支付，请点击我已支付",
   myMachine_please_confirm_pay: "请确认支付",
@@ -515,6 +527,16 @@ export default {
   footer_service_longway: "2546954766@qq.com", //9.17 19:33
   footer_service_thinkotech: "wyking@163..com", //9.17 19:33
   footer_service_aipower: "1272068154@qq.com", //9.17 19:33
+  footer_service_cvstudy: "cvstudy@163.com", //9.17 19:33
+  footer_service_gpuhub: "gpuhub@foxmail.com", //9.17 19:33
+  footer_service_district51: "district51_604@126.com", //9.17 19:33
+  footer_service_deepmind: "528121344@qq.com", //9.17 19:33
+  footer_service_transportation: "jinleizhangbjtu@gmail.com", //9.17 19:33
+  footer_service_planetc: "planetc_ai@sina.com", //9.17 19:33
+  footer_service_sdnu: "sdnuai@163.com", //9.17 19:33
+  footer_service_freegputop: "hill_gpu@163.com", //9.17 19:33
+  footer_service_tensorgpu: "support@tensorgpu.com", //9.17 19:33
+  footer_service_opengpu: "1184823135@qq.com", //9.17 19:33
   list_start_rentout: "分钟后可租用", //9.17 19:33
   list_can_rentout: "用户现在可租用", //9.17 19:33
   my_gpu_count: "我租用的GPU数量", //9.17 19:33
@@ -538,7 +560,7 @@ export default {
   pleae_create_wallet: '请先在我的钱包中创建钱包账号',
   choseImages: '请选择镜像',
   diskspace_dlg: "硬盘空间",
-  diskspace_giving: '免费赠送',
+  diskspace_giving: '容器创建后，空间无法扩增，请注意硬盘空间充足，免费赠送',
 
   diskspace_giving_gpu: '每个GPU赠送',
   buy_diskspace: '额外购买硬盘空间',
@@ -555,7 +577,7 @@ export default {
   diskspace_gpu_data: '当前GPU容器已经使用的硬盘空间为：',
   diskspace_new_gpu: '启动GPU后容器剩余空间为',
   diskspace_every_cpu_can_buy: '每个GPU最多可以购买',
-  myMachine_is_vocing_machine_update: '正在启动GPU，根据您容器已存储的数据大小，大概需要',
+  myMachine_is_vocing_machine_update: '正在启动GPU(如果无法启动，可以联系support@dbchain.ai)，根据您容器已存储的数据大小，大概需要',
   container_is_closed_update: '在启动GPU的过程中,当前CPU容器会处于关闭状态,无法使用,启动完成后,可以重新登陆',
   rent_cpu_cotainer: '租用CPU容器',
   open_gpu_cpu_to_gpu: '启动GPU',
@@ -570,7 +592,7 @@ export default {
   return_deposit_dbc: '使用过程中，如果机器发生中断，将会退回所有质押的DBC',
   deposit_time_tip: "当前机器最长可以选择使用{time}，最短1个小时.",
   stop_time_tip: "如果机器时间到期,容器会被停用.并且如果钱包余额不足20000DBC,容器将会被立即销毁.如果您的钱包余额超过20000DBC,机器所有数据将会" +
-    "被自动保留7天(此功能需要机器DBC版本大于等于0.3.7.3,在这期间钱包余额也必须超过20000DBC),7天内任何时间可以继续启用容器,进行使用,容器停止超过7天将会被销毁." +
+    "被自动保留7天(在这期间钱包余额也必须超过20000DBC),7天内任何时间可以继续启用容器,进行使用,容器停止超过7天将会被销毁." +
     "机器使用完成后,可以提前退租,质押的DBC将会退还到钱包中.",
   deposit_dbcs_cpu: '质押的DBC总数',
   cpu_containers_list: '已创建CPU容器数',
@@ -600,7 +622,7 @@ export default {
   less_data_disk_over_max: 'GPU容器数据过大，无法停止GPU',
   diskspace_new_cpu: '关闭GPU后，容器剩余空间为',
   myMachine_rent_success_msg_update_stop_gpu: '停止GPU成功，稍等3分钟，可以登陆使用',
-  myMachine_is_vocing_machine_update_stop_gpu: '正在停止GPU，根据您容器已存储的数据大小，大概需要',
+  myMachine_is_vocing_machine_update_stop_gpu: '正在停止GPU(如果无法停止，可以联系support@dbchain.ai)，根据您容器已存储的数据大小，大概需要',
   container_is_closed_update_stop_gpu: '在停止GPU的过程中,当前GPU容器会处于关闭状态,无法使用,启动完成后,可以重新登陆',
   open_gpu_stopped: '启动为GPU容器',
   open_cpu_stopped: '启动为CPU容器',
@@ -614,7 +636,7 @@ export default {
   no_idle_gpus: '当前机器无空闲GPU',
   no_container: '当前机器CPU容器已满',
   stop_to_cpu_container: '启动为CPU容器',
-  myMachine_is_vocing_machine_update_stop_to_open: "正在启动容器，根据您容器已存储的数据大小，大概需要",
+  myMachine_is_vocing_machine_update_stop_to_open: "正在启动容器(如果无法启动，可以联系support@dbchain.ai)，根据您容器已存储的数据大小，大概需要",
 
   myMachine_rent_success_msg_update_stop_to_open: '容器启动成功，稍等3分钟，可以登陆使用',
   stop_to_gpu_container: '启动为GPU容器',
@@ -647,7 +669,7 @@ export default {
   restart_tip_mymachine: '如果容器无法连接，可以重启容器，进程会被杀死，数据不会丢失、环境不会被重置',
   send_email_error: '邮件发送失败，请再次点击发送',
   send_email_repeat: '重发邮件',
-  diskspace_less_zero: '容器剩余可用空间不能小于1G',
+  diskspace_less_zero: '容器剩余可用空间不能小于0',
 
   myMachine_rentout_success_msg_mining: '验证成功，当前机器为挖矿机器，3分钟后机器可以在云算力平台上线', //2020 4.9
 

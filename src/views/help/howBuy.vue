@@ -31,7 +31,7 @@
 
       <h3>
         {{$t('help.4')}}，
-        <a href="https://www.gateio.life" target="_blank">https://www.gateio.life</a>
+        <a href="https://www.gateio.la" target="_blank">https://www.gateio.la</a>
         .{{$t('help.reloadWallet')}}
       </h3>
 

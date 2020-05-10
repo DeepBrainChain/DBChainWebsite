@@ -11,7 +11,7 @@
         <a href="/trade">{{$t('footer.DBCTrade')}}</a>
         <!--        <a href="#">{{$t('footer.DBCloud')}}</a>-->
         <a href="https://www.huobi.co" target="_blank">{{$t('footer.HuobiPro')}}</a>
-        <a href="https://www.gateio.co/" target="_blank">{{$t('footer.GateIo')}}</a>
+        <a href="https://www.gateio.la/" target="_blank">{{$t('footer.GateIo')}}</a>
       </div>
       <div class="line" tyle=" text-align:center"></div>
       <p class="contact">客服支持:support@dbchain.ai，客服会在24小时内回复</p>

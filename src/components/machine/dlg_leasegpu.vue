@@ -69,7 +69,7 @@
         >{{(placeOrderData.gpu_price_dollar)}}$/{{$t('my_machine_hour')}}</span>
       </div>
 
-      <div class="form mt20">
+      <div class="form mt20" v-if="!placeOrderData.from_stop_to_open">
         <label>{{$t('diskspace_dlg')}}：</label>
         <label>{{$t('diskspace_giving')}}{{disk_giving}}G</label>
         <label>({{$t('diskspace_giving_gpu')}}{{disk_giving_every_gpu}}G)</label>
@@ -83,7 +83,7 @@
         >{{$t('diskspace_gpu_data')}}{{(placeOrderData.diskspace_image_data / (1024 * 1024)).toFixed(2)}}G</label>
       </div>
 
-      <div class="form mt20">
+      <div class="form mt20" v-if="!placeOrderData.from_stop_to_open">
         <label>{{$t('buy_diskspace')}}：</label>
         <el-input
           style="width: 120px"
@@ -105,7 +105,10 @@
         >({{$t('diskspace_new_cpu')}}:{{(disk_buy+disk_giving-placeOrderData.diskspace_image_data / (1024 * 1024)).toFixed(2)}}G)</label>
         <label
           v-if="placeOrderData.from_stop_to_open"
-        >({{$t('diskspace_new_cpu_stop')}}:{{(disk_buy+disk_giving-placeOrderData.diskspace_image_data / (1024 * 1024)).toFixed(2)}}G)</label>
+        >({{$t('diskspace_new_cpu_stop')}}:{{(disk_buy-placeOrderData.diskspace_image_data / (1024 * 1024)).toFixed(2)}}G)</label>
+        <span
+          class="fs12 cGray ml10"
+        >{{(placeOrderData.disk_GB_perhour_dollar)}}$/{{$t('disk_hour')}}</span>
       </div>
       <div class="form mt20">
         <label>{{$t('memory_dlg')}}：</label>
@@ -154,14 +157,15 @@ export default {
           code: "0.3848",
           time_max: 1500,
           gpu_count_max: 1,
-          images_tag: "pytorch 1.1+tensorflow 1.14@pytorch 1.2",
+          images_tag: "pytorch 1.2+tensorflow 1.14@pytorch 1.4+tensorflow 2.0",
           diskspace_giving: 31457280,
           diskSpace_per_gpu_max: 210736353,
           memory_per_gpu_max: 23741925,
           diskspace_max_cpu: 0,
           memory_max_cpu: 0,
           disk_GB_perhour_dollar: 3.3333334e-5,
-          diskspace_image_data: 0
+          diskspace_image_data: 0,
+          disk_space: 60
         };
       }
     }
@@ -181,7 +185,7 @@ export default {
         }
       ],
       gpuCount: 1,
-      images: "pytorch 1.1+tensorflow 1.14",
+      images: "pytorch 1.2+tensorflow 1.14",
       time: 1,
       total_price: "0",
       isGetTotalPrice: false,
@@ -244,7 +248,7 @@ export default {
       }
       opts.push({
         name: this.$t("user_defined"),
-        value: "pytorch 1.2"
+        value: "py1.2+tf1.14"
       });
       return opts;
     },
@@ -297,14 +301,18 @@ export default {
           this.memory_every_gpu = parseInt(
             this.placeOrderData.memory_per_gpu_max / (1024 * 1024)
           );
-
-          if (this.disk_buy > this.disk_max) {
-            this.$message({
-              showClose: true,
-              message: this.$t("over_max_disk"),
-              type: "error"
-            });
-            this.disk_buy = this.disk_max;
+          if (this.placeOrderData.from_stop_to_open) {
+            this.disk_buy = this.placeOrderData.disk_space / (1024 * 1024);
+          } else {
+            //如果是从停止启动容器，不限制硬盘空间
+            if (this.disk_buy > this.disk_max) {
+              this.$message({
+                showClose: true,
+                message: this.$t("over_max_disk"),
+                type: "error"
+              });
+              this.disk_buy = this.disk_max;
+            }
           }
           this.getPayDbcCount();
         }, 1000);
@@ -331,18 +339,23 @@ export default {
       this.memory_every_gpu = parseInt(
         this.placeOrderData.memory_per_gpu_max / (1024 * 1024)
       );
-      if (
-        this.disk_buy +
-          this.disk_giving -
-          this.placeOrderData.diskspace_image_data <=
-        0
-      ) {
-        this.$message({
-          showClose: true,
-          message: this.$t("diskspace_less_zero"),
-          type: "error"
-        });
+      if (this.placeOrderData.from_stop_to_open) {
+        this.disk_buy = this.placeOrderData.disk_space / (1024 * 1024);
+      } else {
+        if (
+          this.disk_buy +
+            this.disk_giving -
+            this.placeOrderData.diskspace_image_data / (1024 * 1024) <=
+          0
+        ) {
+          this.$message({
+            showClose: true,
+            message: this.$t("diskspace_less_zero"),
+            type: "error"
+          });
+        }
       }
+
       get_pay_dbc_count({
         rent_time_length: this.time * 60 * this.timeSelect,
         gpu_count: this.gpuCount,

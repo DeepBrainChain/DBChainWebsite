@@ -2,7 +2,7 @@ import enLocale from 'element-ui/lib/locale/lang/en'
 
 export default {
   message: 'hello i18n !!',
-  website_name: 'dbchain', //yousanai,  dbchain,aionego
+  website_name: 'opengpu', //yousanai,  dbchain,aionego
   $: '$',
   send: 'Send',
   closeWallet: 'Close Wallet',
@@ -255,6 +255,16 @@ export default {
     intr_longway_1: "Longway",
     intr_sharedgpu_1: "SharedGPU",
     intr_aipower_1: "AIPower",
+    intr_cvstudy_1: "CVStudy",
+    intr_gpuhub_1: "GPUHub",
+    intr_district51_1: "District51",
+    intr_deepmind_1: "DeepMind AI",
+    intr_transportation_1: "Transportation",
+    intr_planetc_1: "PlanetC",
+    intr_sdnu_1: "SDNUAI",
+    intr_freegputop_1: "FreeGPU",
+    intr_tensorgpu_1: "TensorGPU",
+    intr_opengpu_1: "OpenGPU",
     intr_1: ' provides GPU rental service.join us! can help your machine very convenient access to the DBC network, gain revenue. \n' +
       '\n' +
       ' If your GPU is ever idle, you can connect it to the DBC network to earn DBC tokens and enjoy the benefit of the tokens appreciation. \n ' +
@@ -522,6 +532,16 @@ export default {
   footer_service_longway: "2546954766@qq.com", //9.17 19:33
   footer_service_sharedgpu: "wyking@163..com", //9.17 19:33
   footer_service_aipower: "1272068154@qq.com", //9.17 19:33
+  footer_service_cvstudy: "cvstudy@163.com", //9.17 19:33
+  footer_service_gpuhub: "gpuhub@foxmail.com", //9.17 19:33
+  footer_service_district51: "district51_604@126.com", //9.17 19:33
+  footer_service_deepmind: "528121344@qq.com", //9.17 19:33
+  footer_service_transportation: "jinleizhangbjtu@gmail.com", //9.17 19:33
+  footer_service_planetc: "planetc_ai@sina.com", //9.17 19:33
+  footer_service_sdnu: "sdnuai@163.com", //9.17 19:33
+  footer_service_freegputop: "hill_gpu@163.com", //9.17 19:33
+  footer_service_tensorgpu: "support@tensorgpu.com", //9.17 19:33
+  footer_service_opengpu: "1184823135@qq.com", //9.17 19:33
   list_start_rentout: 'minutes later, it can be rented',
   list_can_rentout: 'Users can rent it now',
   my_gpu_count: 'The number of gpus I rent ', //9.17 19:33
@@ -537,6 +557,123 @@ export default {
   continue_pay_success: "Rerent successfully",
   continue_pay_order_is_over: 'Order end',
   restart_machine: 'Restart', //12.22,
-  your_country: 'Please add the geographical location of the machine',
+  cpu_mode_switch: "Payment method requires DBC token to be able to use the CPU docker. Pledging doesn't actually cost you any DBC, you just need to pledge DBC in the smart contract then you can use the CPU docker for free. Once your usage has ended all DBCs you pledged will be returned to you. The two methods of usage are not different from each other.",
+  payment: " Payment method ",
+  deposit: " Pledging method ",
+  pleae_create_wallet: "Please create wallet account in My Wallet first",
+  choseImages: "Please select mirror",
+  diskspace_dlg: "HD space",
+  diskspace_giving: "Free giveaway",
+
+  diskspace_giving_gpu: "Each GPU gives you",
+  buy_diskspace: "Buy extra HD space",
+  disk_hour: "G*h",
+  disk_max: "You can buy a maximum of",
+  memory_dlg: "RAM allocated",
+  memory_every_gpu: "Each GPU's allocated RAM is ",
+  lease_gpu: "Rent GPU docker",
+  over_max_disk: "You've exceeded the HD space you purchased,if you increase your GPU amount you can increase your HD space limit ",
+  diskspace_remaining: "Maximum HD space available",
+  memory_more: "The more HD space you buy the more RAM you are allocated",
+  open_cpu_to_gpu: "Activate GPU",
+  diskspace_cpu_data: "Current used HD space of the CPU is:",
+  diskspace_gpu_data: "Current used HD space of the GPU is:",
+  diskspace_new_gpu: "Space left on your docker after activating GPU",
+  diskspace_every_cpu_can_buy: "Each GPU can purchase a maximum of",
+  myMachine_is_vocing_machine_update: "Activating GPU, according to the amount of data already stored in your docker you need approximately",
+  container_is_closed_update: "In the process of starting the GPU, the current CPU docker will be in a paused state and cannot be used.After the activation is complete, you can log in again",
+  rent_cpu_cotainer: "Rent CPU docker",
+  open_gpu_cpu_to_gpu: "Activate GPU",
+  deposit_tips1: "1.The free docker function can help save costs when preparing the environment and transferring data. When all the conditions are ready, you can re-enable GPUs for training or inference",
+  deposit_tips2: "2.The pledge function does not cost you anything, but requires DBC as a deposit. The deposit will be automatically returned when the docker is stopped or the GPU is turned on.",
+  deposit_tips3: "3.The deposit will be on the blockchain smart contract, you can check the status of the deposit at any time through the wallet address, no one can use the deposit",
+  myMachine_rent_success_msg_update: "GPU activation successful, please wait 3 minutes then you can log in again",
+  please_switch_cpu_mode: "Please select method of using CPU docker",
+  switch_diskspace: "Select HD space",
+  switch_memory: "Select RAM space",
+  deposit_dbc_count: "DBC amount needed to be pledged",
+  return_deposit_dbc: "During the usage of the machine, if the machine is interrupted, all pledged DBC will be returned",
+  deposit_time_tip: "The current machine can be used {time} for the longest, and the shortest time is one hour.",
+  stop_time_tip: "If the machine's rental time expires, the docker will be deactivated.And if your wallet balance is less than 20, 000 DBC, the docker will be destroyed immediately.If your wallet balance exceeds 20, 000 DBC, all the data on the machine will be " +
+    "automatically retained for 7 days (this function requires the machine's DBC version to be equal to or newer than 0.3 .7 .3, and your wallet balance must also exceed 20, 000 DBC during this period).You can" +
+    " continue to enable the docker at any time within 7 days and use it.The docker will be destroyed if it is deactivated for more than 7 days." +
+    "After you finished using the machine, you can cancel the lease in advance, and the pledged DBC will be returned to your wallet.",
+  deposit_dbcs_cpu: "Total DBC pledged",
+  cpu_containers_list: "CPU docker(s) already created",
+  cpu_containers_can_use_memory_list: "CPU docker can allocate RAM",
+  cpu_containers_can_use_disk_list: "CPU docker can allocate HD",
+  gpu_containers_can_use_memory_list: "GPU docker can allocate RAM",
+  gpu_containers_can_use_disk_list: "GPU docker can allocate HD",
+  memory_space: "RAM space",
+  howsellDBC: "How to sell DBC",
+  helpsell: {
+    title: "How to sell DBC",
+
+
+    "2": "1.Sell DBC from Huobi（Sell DBC into Bitcoin first, then sell BTC for RMB to transfer into bank account or or Alipay）",
+    "3": "2.Sell DBC from Kucoin",
+    "4": "3.Sell DBC from Gate.io",
+
+
+  },
+  dbc_price_wallet: "DBC Price",
+  dbc_price_usd: "USD",
+  stopGpu_mymachine: "Stop GPU",
+  stopgpu_please_switch_cpu_mode: "After the GPU is stopped, the GPU docker will become a CPU docker. There are two ways to use the CPU docker. The payment method requires you to pay DBC to use the CPU docker. The pledging method does not actually cost you any DBC. You only need to pledge the DBC into a smart contract to be able to use the CPU docker for free. After use, all the pledged DBC will be returned to you. The two usage methods have the same function.",
+  stopgpu_to_cpu_payment: "Stop GPU, switch to CPU docker",
+  less_data_disk_10g: "Available HD space cannot be smaller than 10G",
+  less_data_disk_1g: "Available HD space cannot be smaller than 1G",
+  less_data_disk_over_max: "GPU docker data overload, cannot stop GPU",
+  diskspace_new_cpu: "After shutting down GPU, docker space available is",
+  myMachine_rent_success_msg_update_stop_gpu: "Successfully stopped GPU, please wait 3 minutes then you can log in",
+  myMachine_is_vocing_machine_update_stop_gpu: "Stopping GPU, according to the amount of data already stored in your docker you need approximately",
+  container_is_closed_update_stop_gpu: "In the process of stopping the GPU, the current GPU docker will be in a paused state and cannot be used.After the activation is complete, you can log in again",
+  open_gpu_stopped: "Activate as GPU docker",
+  open_cpu_stopped: "Activate as CPU docker",
+  container_id: "Docker ID",
+  stop_containers_number: "Docker(s) I've stopped: ",
+  remaining_time_length: "Countdown on docker destruction",
+  stopped_time_length: "Time that docker has been stopped:",
+  image_data_stopped: "Space that docker took up:",
+  container_isnormal_over: "Docker has been stopped",
+  dbc_vesion_error: "Your DBC version is older than 0.3.7.3. hence does not support docker activation function",
+  no_idle_gpus: "Current machine has no available GPU",
+  no_container: "Current machine's CPU docker is full ",
+  stop_to_cpu_container: "Activate as CPU docker",
+  myMachine_is_vocing_machine_update_stop_to_open: "Activating docker, according to data amount already stored in your docker it will take approximately: ",
+
+  myMachine_rent_success_msg_update_stop_to_open: "Successfully activate docker, please wait 3 minutes then you can log in",
+  stop_to_gpu_container: "Activate as GPU docker",
+  user_defined: "Self-defined installation",
+  cpu_container_instruaction: "Kind reminder: rent CPU docker first, prepare your environment and data, then switch to GPU docker, that way you can save on cost",
+  diskspace_data_stop: "HD space already used in current docker：",
+  diskspace_new_cpu_stop: "Space available after docker is activated",
+  myMachine_gpu_rentout: "Machine(s) I rented out",
+  lessdbc: "DBC balance not enough",
+  transfer_error: "Transfer failed, please try again",
+  transfer_success: "Transfer successful",
+  dbc_lack_of_balance: "DBC balance not enough",
+  please_confirm_pay: "Please confirm payment",
+  stop_instruaction: "Kind Reminder: Your DBC balance is more than 20,000DBC, you can activate docker already stopped, historical data are saved within",
+  dbcnum_error: "Number(s) keyed in incorrect",
+  your_country: "Add geographic location of the machine",
+  stopgpu_tip_mymachine: "After stopping the GPU, it will switch to a CPU docker, all data will be saved and can continue to used",
+  myMachine_rentout_success_msg: "The verification is successful, and the machine can be rented out after 3 minutes",
+  myMachine_rentout_error: "The verification failed, the machine cannot go online, contact technical supportsupport@dbchain.ai",
+  myMachine_is_vocing_machine_rentout: "Verifying whether the machine is available, please be patient, it will take 5-10 minutes",
+  my_machine_miner_vocing_rentout: "Verifying",
+  my_machine_miner_vocing_error: "Verification failed",
+  stoprent_tip_mymachine: "After canceling the lease, if your current wallet balance is greater than 20,000DBC, the data will continue to be saved and can be used after you activate the docker in my stopped docker",
+  list_gpu_count_tip: "GPU model and total number of GPUs of the current machine",
+  transfer_tips: "You can transfer DBC to the other party by entering the DBC wallet address of the other party in the address area, then enter the number of DBCs to be transferred then click 'Send', about 10-30 seconds the other party will receive the DBC",
+  dbc_price_wallet_tips: "DBC prices fluctuate all the time, please pay attention to the risks when buying DBC",
+  dbcChange_tips: "DBC 24hours price change",
+  dlg_bindMail_dbc_tip: "Kind reminder: At least 1 DBC is required in the wallet to be able to bind successfully",
+  dlg_bindMail_voc_failure: "Verification failed, please get verification code again to verify",
+  restart_tip_mymachine: "If the docker cannot be connected, you can restart the docker, the process will be killed, data will not be lost, and the environment will not be reset",
+  send_email_error: "E-mail failed to sent please click 'Re-sent email' ",
+  send_email_repeat: "Re-sent email",
+  diskspace_less_zero: "Available space in docker cannot be less than 1G",
+  myMachine_rentout_success_msg_mining: 'The verification is successful, the current machine is a mining machine, and the machine can be launched on the cloud computing platform in 3 minutes', //2020 4.9
   ...enLocale
 }
