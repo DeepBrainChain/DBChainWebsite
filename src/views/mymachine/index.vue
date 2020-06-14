@@ -19,48 +19,30 @@
 import Navi from "@/components/naviMenu";
 
 export default {
-  name: "gpu",
+  name: "mymachine",
   data() {
     return {
       // 缓存组件列表
-      cacheList: [
-        "list",
-        "highStabilityAITrain",
-        "aiInference",
-        "hashCompute",
-        "superNodeCompute"
-      ],
+      cacheList: ["myMachine", "myMachine_cpu", "myMachine_stopped"],
       curNavIndex: 0,
       menus: [
         {
-          title: undefined, //this.$t("gpu.myWallet"),
-          to: "list",
+          title: undefined, //this.$t("gpu.myMachine"),
+          to: "myMachine",
           index: 0,
-          iconClass: "iconwallet"
+          iconClass: "iconmachine"
         },
         {
-          title: undefined, //this.$t("gpu.myMachine"),
-          to: "highStabilityAITrain",
+          title: undefined, //this.$t("gpu.machineList"),
+          to: "myMachine_cpu",
           index: 1,
           iconClass: "iconmachine"
         },
         {
           title: undefined, //this.$t("gpu.machineList"),
-          to: "aiInference",
+          to: "myMachine_stopped",
           index: 2,
           iconClass: "iconmachine"
-        },
-        {
-          title: undefined, //this.$t("gpu.machineList"),
-          to: "hashCompute",
-          index: 3,
-          iconClass: "iconmachine"
-        },
-        {
-          title: undefined, //this.$t("gpu.machineList"),
-          to: "superNodeCompute",
-          index: 4,
-          iconClass: "iconlist"
         }
       ]
     };
@@ -82,13 +64,10 @@ export default {
   },
   computed: {
     inti_menus() {
-      this.menus[0].title = this.$t("gpu.common");
+      this.menus[0].title = this.$t("gpu.myMachine_gpu");
 
-      this.menus[1].title = this.$t("gpu.highStabilityAITrain");
-
-      this.menus[2].title = this.$t("gpu.aiInference");
-      this.menus[3].title = this.$t("gpu.hashCompute");
-      this.menus[4].title = this.$t("gpu.superNodeCompute");
+      this.menus[1].title = this.$t("gpu.myMachine_cpu");
+      this.menus[2].title = this.$t("gpu.myMachine_stopped");
     }
   },
   components: {

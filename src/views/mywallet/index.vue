@@ -19,48 +19,18 @@
 import Navi from "@/components/naviMenu";
 
 export default {
-  name: "gpu",
+  name: "mywallet",
   data() {
     return {
       // 缓存组件列表
-      cacheList: [
-        "list",
-        "highStabilityAITrain",
-        "aiInference",
-        "hashCompute",
-        "superNodeCompute"
-      ],
+      cacheList: ["myWallet_unlock"],
       curNavIndex: 0,
       menus: [
         {
-          title: undefined, //this.$t("gpu.myWallet"),
-          to: "list",
-          index: 0,
-          iconClass: "iconwallet"
-        },
-        {
           title: undefined, //this.$t("gpu.myMachine"),
-          to: "highStabilityAITrain",
-          index: 1,
+          to: "myWallet",
+          index: 0,
           iconClass: "iconmachine"
-        },
-        {
-          title: undefined, //this.$t("gpu.machineList"),
-          to: "aiInference",
-          index: 2,
-          iconClass: "iconmachine"
-        },
-        {
-          title: undefined, //this.$t("gpu.machineList"),
-          to: "hashCompute",
-          index: 3,
-          iconClass: "iconmachine"
-        },
-        {
-          title: undefined, //this.$t("gpu.machineList"),
-          to: "superNodeCompute",
-          index: 4,
-          iconClass: "iconlist"
         }
       ]
     };
@@ -82,13 +52,7 @@ export default {
   },
   computed: {
     inti_menus() {
-      this.menus[0].title = this.$t("gpu.common");
-
-      this.menus[1].title = this.$t("gpu.highStabilityAITrain");
-
-      this.menus[2].title = this.$t("gpu.aiInference");
-      this.menus[3].title = this.$t("gpu.hashCompute");
-      this.menus[4].title = this.$t("gpu.superNodeCompute");
+      this.menus[0].title = this.$t("gpu.myWallet");
     }
   },
   components: {

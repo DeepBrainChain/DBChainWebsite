@@ -203,6 +203,10 @@ export default {
         return this.$t("home.intr_tensorgpu_1");
       } else if (this.$t("website_name") == "opengpu") {
         return this.$t("home.intr_opengpu_1");
+      } else if (this.$t("website_name") == "aiyanxishe") {
+        return this.$t("home.intr_aiyanxishe_1");
+      } else if (this.$t("website_name") == "codefate") {
+        return this.$t("home.intr_codefate_1");
       }
 
       return this.$t("home.intr_dbchain_1");

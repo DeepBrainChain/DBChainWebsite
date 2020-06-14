@@ -154,7 +154,7 @@ export default {
     ]),
     initData() {
       this.getExchangeRate();
-      this.getGate();
+      // this.getGate();
 
       this.getAccountState()
         .then(data => {
@@ -162,8 +162,8 @@ export default {
           this.getTransferList();
         })
         .catch(err => {
-          const type = this.$route.path.search("gpu") !== -1 ? "gpu" : "miner";
-          this.$router.push(`/openWallet/${type}`);
+          //  const type = this.$route.path.search("gpu") !== -1 ? "gpu" : "miner";
+          //  this.$router.push(`/openWallet/${type}`);
         });
     },
     // click to send assets to input address
@@ -215,15 +215,26 @@ export default {
           })
           .then(res => {
             if (res.status === 1) {
-              MessageBox.alert(this.$t("transferSuccess"), this.$t("tips"), {
-                confirmButtonText: this.$t("confirm")
+              //    MessageBox.alert(this.$t("transferSuccess"), this.$t("tips"), {
+              //      confirmButtonText: this.$t("confirm")
+              //    });
+
+              this.$message({
+                showClose: true,
+                message: this.$t("transferSuccess"),
+                type: "success"
               });
             }
           })
           .catch(err => {
-            console.log(err);
-            MessageBox.alert(this.$t("transferFail"), this.$t("tips"), {
-              confirmButtonText: this.$t("confirm")
+            //   console.log(err);
+            //   MessageBox.alert(this.$t("transferFail"), this.$t("tips"), {
+            //     confirmButtonText: this.$t("confirm")
+            //    });
+            this.$message({
+              showClose: true,
+              message: this.$t("transferFail"),
+              type: "error"
             });
           })
           .finally(() => {

@@ -2,8 +2,8 @@
   <div>
     <div class="title">
       <span>{{$t('gpu.myMachineTitle')}}：{{rentNumber}}</span>
-
-      <div v-if="!isBinding && bindMail" class="binding">
+      <span>{{$t('cpu_container_instruaction')}}</span>
+      <!--    <div v-if="!isBinding && bindMail" class="binding">
         <span class="bindingInfo">{{$t('my_machine_binding_email')}}:{{bindMail}}</span>
         <el-button
           class="ml10"
@@ -18,7 +18,7 @@
       </div>
       <div v-else-if="isBinding">
         <span v-if="isBinding" class="bindInfo">{{$t('my_machine_vocing')}}</span>
-      </div>
+      </div>-->
     </div>
     <div
       v-if="res_body.content.length > 0"
@@ -28,10 +28,11 @@
       <div class="tools-head">
         <div class="l-wrap">
           <!--          <span class="tools-title">{{$t('gpu.mcStatusTitle')}}：<b>{{$t('gpu.machineOnLine')}}</b></span>-->
+
           <span
             class="tools-title"
             v-if="item.orderData.task_id"
-          >{{$t('container_id')}}:{{(item.orderData.task_id)}}&nbsp; &nbsp;&nbsp; &nbsp;</span>
+          >{{$t('container_id')}}:{{(item.orderData.task_id)}}&nbsp; &nbsp; &nbsp; &nbsp;</span>
           <el-button
             v-if="item.orderData.have_continue_pay"
             plain
@@ -47,7 +48,7 @@
             class="tools-title"
           ></span>
           <span
-            v-else
+            v-else-if="!item.orderData.pay_error && !item.orderData.return_dbc"
             class="tools-title"
           >{{$t('gpu.remainingTime')}}：{{$secToDate(item.orderData.rest_time_rent*60, 'DHM')}}</span>
         </div>
@@ -92,8 +93,14 @@
         </div>
         <div>
           <span
-            class="td"
+            class="tdred"
+            v-if="item.orderData.mode!==null && item.orderData.mode==='payment'"
           >{{$t('gpu.payDBCs')}}：{{(item.orderData.dbc_total_count+parseFloat(item.orderData.code)).toFixed(4)}}</span>
+          <span
+            class="tdred"
+            v-if="item.orderData.mode!==null && item.orderData.mode==='deposit'"
+          >{{$t('deposit_dbcs_cpu')}}：{{item.orderData.dbc_total_count+parseFloat(item.orderData.code)}}</span>
+
           <span
             class="td"
           >{{$t('my_machine_beused_time')}}：{{parseInt(item.orderData.real_rent_time/60)}}{{$t('my_machine_hour')}}{{item.orderData.real_rent_time%60}}{{$t('my_machine_min')}}</span>
@@ -109,7 +116,7 @@
           <span
             v-if="item.mcData.dbc_version!=='0.3.7.2'"
             class="td"
-          >{{$t('diskspace_remaining')}}：{{parseInt((item.orderData.diskspace+item.orderData.diskspace_giving*item.orderData.gpu_count-item.orderData.diskspace_image_data)/(1024*1024))}}G</span>
+          >{{$t('diskspace_remaining')}}：{{parseInt((item.orderData.diskspace+item.orderData.diskspace_giving-item.orderData.diskspace_image_data)/(1024*1024))}}G</span>
         </div>
         <div>
           <span
@@ -198,7 +205,7 @@
           </div>
         </div>
 
-        <!--     <div class="flex" v-if="item.mcData.dbc_version!=='0.3.7.2'">
+        <!--       <div class="flex" v-if="item.mcData.dbc_version!=='0.3.7.2'">
           <div class="td">
             <span class="fs16">
               {{$t('cpu_containers_list')}}:
@@ -377,31 +384,32 @@
           <span
             v-if="isShowRendSuccessMsg(item.orderData.milli_rent_success_time)&&item.orderData.order_id_pre===null&&!item.orderData.from_stop_to_open"
           >{{$t('myMachine_rent_success_msg')}}</span>
-
+          <span v-else-if="item.orderData.vocing === true">{{$t('myMachine_is_pay_vocing')}}</span>
           <span
             v-if="isShowRendSuccessMsg(item.orderData.milli_rent_success_time)&&item.orderData.order_id_pre!==null&&!item.orderData.from_stop_to_open"
-          >{{$t('myMachine_rent_success_msg_update')}}</span>
+          >{{$t('myMachine_rent_success_msg_update_stop_gpu')}}</span>
           <span
             v-if="isShowRendSuccessMsg(item.orderData.milli_rent_success_time)&&item.orderData.order_id_pre!==null&&item.orderData.from_stop_to_open"
           >{{$t('myMachine_rent_success_msg_update_stop_to_open')}}</span>
 
           <span v-else-if="item.orderData.vocing === true">{{$t('myMachine_is_pay_vocing')}}</span>
+
           <span
             class="cRed"
             v-else-if="item.orderData.order_is_cancer===false&&  (item.orderData.container_is_exist &&item.orderData.wallet_address_dbchain===null)"
           >{{$t('myMachine_maybe_is_used')}}</span>
           <span
             class="cRed"
-            v-else-if="item.orderData.order_id_pre===null&&(item.orderData.creating_container ||creating_container)&& !item.orderData.order_is_cancer&&!item.orderData.order_is_over&&!item.orderData.rent_success&&!item.orderData.pay_error"
+            v-else-if="item.orderData.order_id_pre===null&&item.orderData.creating_container && !item.orderData.order_is_cancer&&!item.orderData.order_is_over&&!item.orderData.rent_success&&!item.orderData.pay_error"
           >{{$t('myMachine_is_vocing_machine')}}</span>
 
           <span
             class="cRed"
-            v-else-if="item.orderData.order_id_pre!==null&&(item.orderData.creating_container ||creating_container) && !item.orderData.order_is_cancer&&!item.orderData.order_is_over&&!item.orderData.rent_success&&!item.orderData.pay_error&&!item.orderData.from_stop_to_open"
-          >{{$t('myMachine_is_vocing_machine_update')}}{{parseInt(item.orderData.diskspace_image_data/(1024*1024*16))+1}}-{{parseInt(item.orderData.diskspace_image_data/(1024*1024*1.5))+9}}{{$t('my_machine_min')}}</span>
+            v-else-if="item.orderData.order_id_pre!==null&&(item.orderData.creating_container|| creating_container  )&& !item.orderData.order_is_cancer&&!item.orderData.order_is_over&&!item.orderData.rent_success&&!item.orderData.pay_error&&!item.orderData.from_stop_to_open"
+          >{{$t('myMachine_is_vocing_machine_update_stop_gpu')}}{{parseInt(item.orderData.diskspace_image_data/(1024*1024*16))+1}}-{{parseInt(item.orderData.diskspace_image_data/(1024*1024*1.5))+9}}{{$t('my_machine_min')}}</span>
           <span
             class="cRed"
-            v-else-if="item.orderData.order_id_pre!==null&&(item.orderData.creating_container ||creating_container)&& !item.orderData.order_is_cancer&&!item.orderData.order_is_over&&!item.orderData.rent_success&&!item.orderData.pay_error&&item.orderData.from_stop_to_open"
+            v-else-if="item.orderData.order_id_pre!==null&&(item.orderData.creating_container|| creating_container  ) && !item.orderData.order_is_cancer&&!item.orderData.order_is_over&&!item.orderData.rent_success&&!item.orderData.pay_error&&item.orderData.from_stop_to_open"
           >{{$t('myMachine_is_vocing_machine_update_stop_to_open')}}{{parseInt(item.orderData.diskspace_image_data/(1024*1024*16))+1}}-{{parseInt(item.orderData.diskspace_image_data/(1024*1024*1.5))+9}}{{$t('my_machine_min')}}</span>
 
           <span
@@ -419,12 +427,8 @@
           >{{$t('my_machine_order_vocing_pay')}}</span>
           <span
             class="cRed"
-            v-else-if="(item.mcData.gpu_be_used===item.mcData.gpu_count)&&item.orderData.order_is_cancer===false&&!item.orderData.rent_success &&!item.orderData.order_is_over&&!item.orderData.container_is_exist"
-          >{{$t('myMachine_maybe_is_used')}}</span>
-          <span
-            class="cRed"
-            v-else-if="!isShowRendSuccessMsg(item.orderData.milli_rent_success_time)&&item.orderData.rent_success&&!item.orderData.order_is_over&&!item.mcData.can_create_cpu_container"
-          >{{$t('no_container')}}</span>
+            v-else-if="!isShowRendSuccessMsg(item.orderData.milli_rent_success_time)&&item.orderData.rent_success&&!item.mcData.idle_status&&!item.orderData.order_is_over"
+          >{{$t('no_idle_gpus')}}</span>
         </div>
         <div
           v-if="item.orderData.order_is_cancer === false && !(item.orderData.return_dbc === true && item.orderData.pay_error === true)"
@@ -443,7 +447,6 @@
                        @click="dlgReload_open = true">
               {{$t('gpu.reload')}}
             </el-button>-->
-
             <el-button
               plain
               v-if="isShowRendSuccessMsg(item.orderData.milli_rent_success_time)"
@@ -460,52 +463,35 @@
               class="tool-btn"
               style="width: 80px"
               size="mini"
-              :loading="continue_payLoading && continue_pay_index===index"
-              @click="openContinuePay(item,index)"
+              :loading="continue_rentLoading && continuepay_index===index"
+              @click="openContinuePay_switch(item,index)"
             >{{$t('continue_pay')}}</el-button>
-            <el-tooltip
-              class="item"
-              v-if="item.mcData.dbc_version!=='0.3.7.2'&&item.orderData.try_rent === false"
-              effect="dark"
-              :content="$t('stoprent_tip_mymachine')"
-            >
-              <el-button
-                plain
-                v-if="item.orderData.try_rent === false"
-                class="tool-btn"
-                style="width: 90px"
-                size="mini"
-                @click="stopRent(item)"
-              >{{$t('unsubscribe')}}</el-button>
-            </el-tooltip>
 
             <el-button
               plain
-              v-if="item.mcData.dbc_version==='0.3.7.2' && item.orderData.try_rent === false"
+              v-if="item.orderData.try_rent === false"
               class="tool-btn"
               style="width: 110px"
               size="mini"
               @click="stopRent(item)"
             >{{$t('unsubscribe')}}</el-button>
 
+            <el-button
+              plain
+              v-if="item.orderData.try_rent === false"
+              class="tool-btn"
+              style="width: 110px"
+              size="mini"
+              :disabled="item.mcData.dbc_version==='0.3.7.2'||!item.mcData.idle_status"
+              :loading="opengpuloading && opengpu_index ===index"
+              @click="openDlg_cpu_to_gpu(item,index)"
+            >{{$t('open_cpu_to_gpu')}}</el-button>
             <el-tooltip
               class="item"
               v-if="item.orderData.try_rent === false"
               effect="dark"
-              :content="$t('stopgpu_tip_mymachine')"
+              :content="$t('restart_tip_mymachine')"
             >
-              <el-button
-                plain
-                class="tool-btn"
-                style="width: 110px"
-                size="mini"
-                @click="stopGpu(item,index)"
-                :disabled="item.mcData.dbc_version==='0.3.7.2'||!item.mcData.can_create_cpu_container"
-                :loading="rentLoading_cpu && rent_cpu_index ===index"
-              >{{$t('stopGpu_mymachine')}}</el-button>
-            </el-tooltip>
-
-            <el-tooltip class="item" effect="dark" :content="$t('restart_tip_mymachine')">
               <el-button
                 plain
                 class="tool-btn"
@@ -515,7 +501,6 @@
               >{{$t('restart_machine')}}</el-button>
             </el-tooltip>
           </template>
-
           <el-button
             v-else-if="item.orderData.return_dbc === false && item.orderData.pay_error"
             class="tool-btn"
@@ -527,8 +512,7 @@
           <template v-else-if="item.orderData.rent_success === false ">
             <el-button
               v-if="((item.orderData.order_id_pre===null&&item.orderData.container_is_exist===true && item.orderData.pay_error===false)
-              ||(item.orderData.order_id_pre!==null&&item.orderData.order_is_over===false&&item.orderData.order_is_cancer===false&&item.orderData.pay_success===false&&
-                    item.orderData.pay_error === false))  "
+              ||(item.orderData.order_id_pre!==null&&item.orderData.order_is_over===false&&item.orderData.order_is_cancer===false&&item.orderData.pay_success===false))  "
               :disabled="item.verifing === true || item.orderData.vocing_pay||ispayPocing"
               plain
               :loading="isPaying"
@@ -536,21 +520,14 @@
               size="mini"
               @click="openPay(item)"
             >{{$t('myMachine_confirm_pay')}}</el-button>
-            <!--     <el-button
-              v-if="item.orderData.container_is_exist===true && item.orderData.pay_error===false"
-              :disabled="isPaying||item.verifing === true || item.orderData.vocing_pay||ispayPocing"
-              plain
-              class="tool-btn"
-              size="mini"
-              @click="paid(item)"
-            >{{$t('myMachine_paid')}}</el-button>-->
+
             <el-button
-              v-if="item.orderData.order_id_pre===null || item.orderData.pay_success===false"
+              v-if="item.orderData.order_id_pre===null|| item.orderData.pay_success===false"
+              plain
               :disabled="isPaying"
               class="tool-btn"
               size="mini"
-              plain
-              :loading="isCancering"
+              :loading="cancelLoading"
               @click="cancelOrder(item)"
             >{{$t('myMachine_concer_order')}}</el-button>
           </template>
@@ -583,21 +560,16 @@
       :place-order-data="placeOrderData"
       @confirm="createOrder"
     ></dlg-continuepay>
-    <dlg-leasestopgpu
-      :open.sync="dlg_stopgpu"
+    <dlg-continuepaydeposit
+      :open.sync="openContinueDlgdeposit"
       :place-order-data="placeOrderData"
-      @confirm="switch_cpu_mode"
-    ></dlg-leasestopgpu>
-    <dlg-leasecpupayment
-      :open.sync="dlg_opencpupayment"
+      @confirm="createOrder_continue_deposit"
+    ></dlg-continuepaydeposit>
+    <dlg-leasecputogpu
+      :open.sync="dlg_open_cpu_to_gpu"
       :place-order-data="placeOrderData"
-      @confirm="createOrderCpu"
-    ></dlg-leasecpupayment>
-    <dlg-leasecpudeposit
-      :open.sync="dlg_opencpudeposit"
-      :place-order-data="placeOrderData"
-      @confirm="createOrderCpu"
-    ></dlg-leasecpudeposit>
+      @confirm="createOrder_cpu_to_gpu"
+    ></dlg-leasecputogpu>
 
     <dlg-leaseconfirmpay
       :open.sync="dlg_leaseconfirmpay"
@@ -617,12 +589,12 @@ import DlgRestart from "@/components/machine/dlg_restart";
 import DlgRate from "@/components/machine/dlg_rate";
 import DlgReturnDbc from "@/components/machine/dlg_returnDbc";
 import DlgContinuepay from "@/components/machine/dlg_continuepay";
-import DlgLeasestopgpu from "@/components/machine/dlg_leasestopgpu";
-import DlgLeasecpudeposit from "@/components/machine/dlg_leasecpudeposit";
-import DlgLeasecpupayment from "@/components/machine/dlg_leasecpupayment";
+import DlgContinuepaydeposit from "@/components/machine/dlg_continuepaydeposit";
+import DlgLeasecputogpu from "@/components/machine/dlg_leasecputogpu";
 import DlgLeaseconfirmpay from "@/components/machine/dlg_leaseconfirmpay";
 import {
   queryBindMail_rent,
+  place_order_cpu_to_gpu,
   continue_pay_get_dbc_price,
   continue_pay_get_pay_dbc_count,
   continue_pay_create_order,
@@ -630,7 +602,7 @@ import {
   query_machine_by_wallet,
   get_create_container_time,
   get_dbchain_address,
-  get_all_order,
+  get_all_order_cpu,
   can_rent_this_machine,
   pay,
   get_cancer_code,
@@ -641,18 +613,19 @@ import {
   stop,
   get_return_dbc_code,
   request_return_dbc,
-  pay_update,
-  update_container_is_ok,
-  place_order_gpu_to_cpu,
   get_dbc_price,
   create_order,
-  send_email_repeat
+  pay_update,
+  update_container_is_ok,
+  send_email_repeat,
+  continue_pay_deposit,
+  continue_pay_deposit_get_time_max
 } from "@/api";
 
 import { getAccount, transfer, getBalance } from "@/utlis";
 
 export default {
-  name: "myMachine_unlock",
+  name: "myMachine_unlock_cpu",
   components: {
     DlgReload,
     DlgHd,
@@ -662,9 +635,8 @@ export default {
     DlgRate,
     DlgReturnDbc,
     DlgContinuepay,
-    DlgLeasecpudeposit,
-    DlgLeasecpupayment,
-    DlgLeasestopgpu,
+    DlgContinuepaydeposit,
+    DlgLeasecputogpu,
     DlgLeaseconfirmpay
   },
   data() {
@@ -676,15 +648,16 @@ export default {
       dlgUnsubscribe_open: false,
       dlgRate_open: false,
       dlgReturnDbc_open: false,
-      dlg_opencpupayment: false,
-      dlg_opencpudeposit: false,
-      dlg_stopgpu: false,
-      openContinueDlg: false,
       dlg_leaseconfirmpay: false,
+      dlg_leaseconfirmpaydeposit: false,
+      openContinueDlg: false,
+      openContinueDlgdeposit: false,
       isNewMail: false,
       isBinding: false,
       isBinded: false,
       placeOrderData: undefined,
+      placeOrderDataDeposit: undefined,
+      dlg_open_cpu_to_gpu: false,
       bindMail: "",
 
       res_body: {
@@ -697,20 +670,18 @@ export default {
       curItem: undefined,
       isRateEdit: false,
       si: undefined,
+      creating_container: false,
       queryOrderListSi: undefined,
       container_tips: "",
-      creating_container: false,
-      isCancering: false,
-      continue_payLoading: false,
-      rentLoading_cpu: false,
-      rent_cpu_index: -1,
+      cancelLoading: false,
+      continue_rentLoading: false,
+      opengpu_index: -1,
       send_email_repeatLoading: false,
       send_email_repeat_index: -1,
-      continue_pay_index: false,
+      continuepay_index: -1,
       times: 20
     };
   },
-
   watch: {
     "$i18n.locale"() {
       this.queryOrderList().then(res => {
@@ -718,6 +689,7 @@ export default {
           this.forceToPocMachine();
           this.forceToPocMachineUpdate();
         }
+        //  pocMachine();
       });
       if (this.queryOrderListSi) {
         clearInterval(this.queryOrderListSi);
@@ -728,27 +700,23 @@ export default {
         if (timesRun === this.times) {
           clearInterval(this.queryOrderListSi);
         }
-
         if (this.isPaying !== true) {
-          this.queryOrderList().then(res => {
-            if (res.status === 1) {
-              this.forceToPocMachine();
-              this.forceToPocMachineUpdate();
-            }
-          });
+          this.queryOrderList();
+          this.forceToPocMachineUpdate();
         }
       }, 15000);
     }
   },
   activated() {
     // this.binding(isNewMail);
-
+    this.ispayPocing = false;
     this.queryMail();
     this.queryOrderList().then(res => {
       if (res.status === 1) {
         this.forceToPocMachine();
         this.forceToPocMachineUpdate();
       }
+      //  pocMachine();
     });
     if (this.queryOrderListSi) {
       clearInterval(this.queryOrderListSi);
@@ -760,12 +728,8 @@ export default {
         clearInterval(this.queryOrderListSi);
       }
       if (this.isPaying !== true) {
-        this.queryOrderList().then(res => {
-          if (res.status === 1) {
-            this.forceToPocMachine();
-            this.forceToPocMachineUpdate();
-          }
-        });
+        this.queryOrderList();
+        this.forceToPocMachineUpdate();
       }
     }, 15000);
   },
@@ -777,7 +741,6 @@ export default {
       clearInterval(this.si);
     }
   },
-
   computed: {
     rentNumber() {
       return this.res_body.content.filter(item => {
@@ -800,42 +763,102 @@ export default {
       }
     },
 
-    stopGpu(item, index) {
-      // item.rentLoading_cpu = true;
-      this.dlg_stopgpu = true;
-      this.placeOrderData = item.orderData;
-      this.placeOrderData.index = index;
-      //   confirm_new("", this.$t("cpu_mode_switch"));
-      //    this.confirm_new("xxx", this.$t("cpu_mode_switch"), item);
-    },
+    paid(item) {
+      clearInterval(this.si);
 
-    switch_cpu_mode(item) {
-      this.dlg_stopgpu = false;
-      if (item.switch_cpu_mode === "payment") {
-        this.to_payment(item, item.index);
-      } else if (item.switch_cpu_mode === "deposit") {
-        this.to_deposit(item, item.index);
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
+      // const txid = res.response.txid;
+      item.orderData.vocing_pay = true;
+      this.ispayPocing = true;
+      if (item.orderData.order_id_pre === null) {
+        this.si = setInterval(() => {
+          return pay({
+            order_id: item.orderData.order_id,
+            // dbc_hash: txid,
+            user_name_platform,
+            language
+          })
+            .then(res => {
+              this.queryOrderList();
+              if (res.status === 1) {
+                clearInterval(this.si);
+
+                this.ispayPocing = false;
+                item.orderData.vocing_pay = false;
+                this.queryOrderList();
+              } else if (res.status === 2) {
+                this.queryOrderList();
+              } else if (res.status === -1) {
+                this.queryOrderList();
+                this.ispayPocing = false;
+                item.orderData.vocing_pay = false;
+                clearInterval(this.si);
+                this.$message({
+                  showClose: true,
+                  message: res.msg,
+                  type: "error"
+                });
+              }
+            })
+            .catch(err => {
+              //  clearInterval(this.si);
+            });
+        }, 5000);
+      } else {
+        this.si = setInterval(() => {
+          return pay_update({
+            order_id: item.orderData.order_id,
+            // dbc_hash: txid,
+            user_name_platform,
+            language
+          })
+            .then(res => {
+              // this.queryOrderList();
+              if (res.status === 1) {
+                clearInterval(this.si);
+                this.ispayPocing = false;
+                this.creating_container = true;
+                item.orderData.vocing_pay = false;
+                this.queryOrderList();
+                this.forceToPocMachineUpdate();
+              } else if (res.status === -1) {
+                clearInterval(this.si);
+                this.ispayPocing = false;
+                item.orderData.vocing_pay = false;
+                this.queryOrderList();
+                this.$message({
+                  showClose: true,
+                  message: res.msg,
+                  type: "error"
+                });
+              } else if (res.status === 2) {
+                // item.orderData.creating_container = true;
+                this.queryOrderList();
+              }
+            })
+            .catch(err => {});
+        }, 5000);
       }
     },
-
-    to_payment(item, index) {
-      this.rentLoading_cpu = true;
-      this.rent_cpu_index = index;
+    openDlg_cpu_to_gpu(item, index) {
+      this.opengpuloading = true;
+      this.opengpu_index = index;
+      //this.queryOrderList();
       this.$forceUpdate();
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
-      place_order_gpu_to_cpu({
-        machine_id: item.machine_id,
+      place_order_cpu_to_gpu({
+        machine_id: item.orderData.machine_id,
         wallet_address_user: getAccount().address,
-        mode: "payment",
-        order_id_pre: item.order_id,
+        order_id_pre: item.orderData.order_id,
         user_name_platform,
         language
       })
         .then(res_1 => {
           if (res_1.status === 1) {
             this.placeOrderData = res_1.content;
-            this.placeOrderData.dbc_price = 0.0026;
+
             return get_dbc_price({
               order_id: this.placeOrderData.order_id,
               user_name_platform,
@@ -849,11 +872,13 @@ export default {
             });
             return Promise.reject(res_1.msg);
           }
+          //  this.opengpuloading = false;
+          //  this.opengpu_index = -1;
         })
         .then(res_2 => {
           if (res_2.status === 1) {
             this.placeOrderData.dbc_price = res_2.content;
-            this.dlg_opencpupayment = true;
+            this.dlg_open_cpu_to_gpu = true;
           } else {
             this.$message({
               showClose: true,
@@ -862,99 +887,17 @@ export default {
             });
             return Promise.reject(res_2.msg);
           }
+          // this.opengpuloading = false;
+          // this.opengpu_index = -1;
         })
         .catch(err => {
+          // this.opengpuloading = false;
+          // this.opengpu_index = -1;
           console.log(err);
         })
         .finally(() => {
-          this.rentLoading_cpu = false;
-          this.rent_cpu_index = index;
-        });
-    },
-
-    to_deposit(item, index) {
-      this.rentLoading_cpu = true;
-      this.rent_cpu_index = index;
-      this.$forceUpdate();
-      const user_name_platform = this.$t("website_name");
-      const language = this.$i18n.locale;
-      place_order_gpu_to_cpu({
-        machine_id: item.machine_id,
-        wallet_address_user: getAccount().address,
-        user_name_platform,
-        mode: "deposit",
-        order_id_pre: item.order_id,
-        language
-      })
-        .then(res_1 => {
-          if (res_1.status === 1) {
-            this.placeOrderData = res_1.content;
-            this.placeOrderData.dbc_price = 0.0026;
-            return get_dbc_price({
-              order_id: this.placeOrderData.order_id,
-              user_name_platform,
-              language
-            });
-          } else {
-            this.$message({
-              showClose: true,
-              message: res_1.msg,
-              type: "error"
-            });
-            return Promise.reject(res_1.msg);
-          }
-        })
-        .then(res_2 => {
-          if (res_2.status === 1) {
-            this.placeOrderData.dbc_price = res_2.content;
-            this.dlg_opencpudeposit = true;
-          } else {
-            this.$message({
-              showClose: true,
-              message: res_2.msg,
-              type: "success"
-            });
-            return Promise.reject(res_2.msg);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        })
-        .finally(() => {
-          this.rentLoading_cpu = false;
-          this.rent_cpu_index = index;
-        });
-    },
-
-    createOrderCpu(params) {
-      const loading = this.$loading();
-      create_order(params)
-        .then(res => {
-          if (res.status === 1) {
-            this.$message({
-              showClose: true,
-              message: this.$t("list_create_order_success"),
-              type: "success"
-            });
-
-            this.dlg_stopgpu = false;
-            this.dlg_opencpupayment = false;
-            this.dlg_opencpudeposit = false;
-            if (params.gpu_count === 0) {
-              this.$router.push("/gpu/myMachine_cpu");
-            } else {
-              this.$router.push("/gpu/myMachine");
-            }
-          } else {
-            this.$message({
-              showClose: true,
-              message: res.msg,
-              type: "error"
-            });
-          }
-        })
-        .finally(() => {
-          loading.close();
+          this.opengpuloading = false;
+          this.opengpu_index = -1;
         });
     },
 
@@ -996,11 +939,65 @@ export default {
           loading.close();
         });
     },
+
+    createOrder_continue_deposit(params) {
+      const loading = this.$loading();
+
+      continue_pay_deposit(params)
+        .then(res => {
+          if (res.status === 1) {
+            this.openContinueDlgdeposit = false;
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "success"
+            });
+            queryOrderList();
+          } else {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "error"
+            });
+          }
+        })
+        .finally(() => {
+          loading.close();
+        });
+    },
+
+    createOrder_cpu_to_gpu(params) {
+      const loading = this.$loading();
+      create_order(params)
+        .then(res => {
+          if (res.status === 1) {
+            this.$message({
+              showClose: true,
+              message: this.$t("list_create_order_success"),
+              type: "success"
+            });
+            this.dlg_open_cpu_to_gpu = false;
+            if (params.gpu_count === 0) {
+              this.$router.push("/gpu/myMachine_cpu");
+            } else {
+              this.$router.push("/gpu/myMachine");
+            }
+          } else {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "error"
+            });
+          }
+        })
+        .finally(() => {
+          loading.close();
+        });
+    },
     // 打开弹窗
     openContinuePay(item, index) {
-      this.continue_payLoading = true;
-      this.continue_pay_index = index;
-      this.$forceUpdate();
+      this.continue_rentLoading = true;
+      this.continuepay_index = index;
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       continue_pay_place_order({
@@ -1044,14 +1041,125 @@ export default {
           console.log(err);
         })
         .finally(() => {
-          this.continue_payLoading = false;
-          this.continue_pay_index = -1;
+          this.continue_rentLoading = false;
+          this.continuepay_index = -1;
         });
+    },
+    openContinuePay_switch(item, index) {
+      if (item.orderData.mode === "deposit") {
+        this.continue_rentLoading = true;
+        this.continuepay_index = index;
+        const user_name_platform = this.$t("website_name");
+        const language = this.$i18n.locale;
+        continue_pay_deposit_get_time_max({
+          order_id: item.orderData.order_id,
+          machine_id: item.orderData.machine_id,
+          user_name_platform,
+          language
+        })
+          .then(res_1 => {
+            if (res_1.status === 1) {
+              this.placeOrderData = res_1.content;
+              this.openContinueDlgdeposit = true;
+            } else {
+              this.$message({
+                showClose: true,
+                message: res_1.msg,
+                type: "error"
+              });
+              return Promise.reject(res_1.msg);
+            }
+          })
+
+          .catch(err => {
+            console.log(err);
+          })
+          .finally(() => {
+            this.continue_rentLoading = false;
+            this.continuepay_index = -1;
+          });
+      } else {
+        this.continue_rentLoading = true;
+        this.continuepay_index = index;
+        const user_name_platform = this.$t("website_name");
+        const language = this.$i18n.locale;
+        continue_pay_place_order({
+          order_id: item.orderData.order_id,
+
+          user_name_platform,
+          language
+        })
+          .then(res_1 => {
+            if (res_1.status === 1) {
+              this.placeOrderData = res_1.content;
+              // this.placeOrderData.dbc_price = -1;
+              return continue_pay_get_dbc_price({
+                continue_pay_order_id: this.placeOrderData
+                  .continue_pay_order_id,
+                user_name_platform,
+                language
+              });
+            } else {
+              this.$message({
+                showClose: true,
+                message: res_1.msg,
+                type: "error"
+              });
+              return Promise.reject(res_1.msg);
+            }
+          })
+          .then(res_2 => {
+            if (res_2.status === 1) {
+              this.placeOrderData.dbc_price = res_2.content;
+              this.openContinueDlg = true;
+            } else {
+              this.$message({
+                showClose: true,
+                message: res_2.msg,
+                type: "success"
+              });
+              return Promise.reject(res_2.msg);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          })
+          .finally(() => {
+            this.continue_rentLoading = false;
+            this.continuepay_index = -1;
+          });
+      }
+    },
+
+    forceToPay() {
+      // console.log('调用强制支付')
+      // 判断如果有订单没有支付完成，强制支付
+      const order = this.res_body.content.find((item, index) => {
+        // console.log(index)
+        // console.log(item.orderData.creating_container)
+        // console.log(item.orderData.container_is_exist)
+        return (
+          !item.orderData.order_is_over &&
+          !item.orderData.order_is_cancer &&
+          !item.orderData.rent_success &&
+          !item.orderData.vocing_pay &&
+          (item.orderData.creating_container ||
+            item.orderData.container_is_exist)
+        );
+      });
+      if (order) {
+        this.payOrder(order);
+      }
+    },
+    isShowRendSuccessMsg(milli_rent_success_time) {
+      const minutes =
+        (new Date().getTime() - milli_rent_success_time) / 1000 / 60;
+      return minutes < 10;
     },
 
     forceToPocMachine() {
       // pay before
-      let order = this.res_body.content.find((item, index) => {
+      const order = this.res_body.content.find((item, index) => {
         // console.log(index)
         // console.log(item.orderData.creating_container)
         // console.log(item.orderData.container_is_exist)
@@ -1072,7 +1180,7 @@ export default {
 
     forceToPocMachineUpdate() {
       // pay before
-      let order = this.res_body.content.find((item, index) => {
+      const order = this.res_body.content.find((item, index) => {
         // console.log(index)
         // console.log(item.orderData.creating_container)
         // console.log(item.orderData.container_is_exist)
@@ -1090,9 +1198,66 @@ export default {
       }
     },
 
+    pocMachineUpdate(item) {
+      this.isPocing = true;
+      clearInterval(this.si);
+      item.orderData.creating_container = true;
+      this.ispayPocing = false;
+      item.orderData.vocing_pay = false;
+      this.creating_container = true;
+      this.si = setInterval(() => {
+        //   if (item.orderData.isPocing) {
+        //     return;
+        //   }
+        const user_name_platform = this.$t("website_name");
+        const language = this.$i18n.locale;
+        return update_container_is_ok({
+          order_id: item.orderData.order_id,
+          user_name_platform,
+          language
+        }).then(res => {
+          if (res.status === 1 && res.content) {
+            console.log(res.msg);
+            item.notice = "";
+            this.queryOrderList();
+            clearInterval(this.si);
+            this.creating_container = false;
+          } else if (res.status === 2) {
+            // item.orderData.creating_container = true;
+            this.queryOrderList();
+          } else if (res.status == -1) {
+            this.container_tips = res.msg;
+            this.creating_container = false;
+            clearInterval(this.si);
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "error"
+            });
+          } else if (!res.content) {
+            this.queryOrderList();
+            this.creating_container = false;
+            clearInterval(this.si);
+          } else {
+            this.queryOrderList();
+            clearInterval(this.si);
+            this.creating_container = false;
+            return Promise.reject({
+              status: -1,
+              msg: res.msg
+            });
+          }
+
+          if (item.orderData.order_is_cancer) {
+            clearInterval(this.si);
+          }
+        });
+      }, 5000);
+    },
+
     forceToPocIsPayed() {
       // pay before
-      let order = this.res_body.content.find((item, index) => {
+      const order = this.res_body.content.find((item, index) => {
         // console.log(index)
         // console.log(item.orderData.creating_container)
         // console.log(item.orderData.container_is_exist)
@@ -1172,210 +1337,50 @@ export default {
           order_id: item.orderData.order_id,
           user_name_platform,
           language
-        })
-          .then(res => {
-            if (res.status === 1 && res.content) {
-              console.log(res.msg);
-              item.notice = "";
-              this.queryOrderList();
-              this.creating_container = false;
-              this.ispayPocing = false;
-              clearInterval(this.si);
-              times = 150;
-            } else if (res.status === 2) {
-              // item.orderData.creating_container = true;
-              this.ispayPocing = false;
-              this.queryOrderList();
-              return Promise.reject({
-                status: 2,
-                msg: "正在验证机器环境是否可用，请耐心等待，大概需要3分钟"
-              });
-            } else if (res.status == -1) {
-              this.container_tips = res.msg;
-              this.creating_container = false;
-              this.ispayPocing = false;
-              clearInterval(this.si);
-              this.queryOrderList();
-              this.$message({
-                showClose: true,
-                message: res.msg,
-                type: "error"
-              });
-            } else if (!res.content) {
-              this.queryOrderList();
-              this.creating_container = false;
-              this.ispayPocing = false;
-              clearInterval(this.si);
-              return Promise.reject({
-                status: -1,
-                msg: "机器可能已经被租用，请取消订单，重新租用其他机器"
-              });
-            } else {
-              this.queryOrderList();
-              this.creating_container = false;
-              this.ispayPocing = false;
-              clearInterval(this.si);
-
-              return Promise.reject({
-                status: -1,
-                msg: res.msg
-              });
-            }
-
-            if (item.orderData.order_is_cancer) {
-              this.ispayPocing = false;
-              clearInterval(this.si);
-            }
-          })
-          .catch(err => {
-            this.ispayPocing = false;
+        }).then(res => {
+          if (res.status === 1 && res.content) {
+            console.log(res.msg);
+            item.notice = "";
             this.queryOrderList();
             clearInterval(this.si);
-          });
-      }, 5000);
-    },
-
-    pocMachineUpdate(item) {
-      this.isPocing = true;
-      clearInterval(this.si);
-      item.orderData.creating_container = true;
-      this.si = setInterval(() => {
-        //   if (item.orderData.isPocing) {
-        //     return;
-        //   }
-        const user_name_platform = this.$t("website_name");
-        const language = this.$i18n.locale;
-        return update_container_is_ok({
-          order_id: item.orderData.order_id,
-          user_name_platform,
-          language
-        })
-          .then(res => {
-            if (res.status === 1 && res.content) {
-              console.log(res.msg);
-              item.notice = "";
-              this.creating_container = false;
-              this.queryOrderList();
-              clearInterval(this.si);
-            } else if (res.status === 2) {
-              // item.orderData.creating_container = true;
-              this.queryOrderList();
-            } else if (res.status == -1) {
-              this.container_tips = res.msg;
-              clearInterval(this.si);
-              this.creating_container = false;
-              this.queryOrderList();
-              this.$message({
-                showClose: true,
-                message: res.msg,
-                type: "error"
-              });
-            } else if (!res.content) {
-              this.queryOrderList();
-              this.creating_container = false;
-              clearInterval(this.si);
-            } else {
-              this.queryOrderList();
-              this.creating_container = false;
-              clearInterval(this.si);
-
-              return Promise.reject({
-                status: -1,
-                msg: res.msg
-              });
-            }
-
-            if (item.orderData.order_is_cancer) {
-              clearInterval(this.si);
-            }
-          })
-          .catch(err => {
+            times = 150;
+          } else if (res.status === 2) {
+            // item.orderData.creating_container = true;
+            this.queryOrderList();
+            return Promise.reject({
+              status: 2,
+              msg: "正在验证机器环境是否可用，请耐心等待，大概需要3分钟"
+            });
+          } else if (res.status == -1) {
+            this.container_tips = res.msg;
+            clearInterval(this.si);
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "error"
+            });
+          } else if (!res.content) {
             this.queryOrderList();
             clearInterval(this.si);
-          });
-      }, 5000);
-    },
-
-    paid(item) {
-      clearInterval(this.si);
-
-      const user_name_platform = this.$t("website_name");
-      const language = this.$i18n.locale;
-      // const txid = res.response.txid;
-      item.orderData.vocing_pay = true;
-      this.ispayPocing = true;
-      if (item.orderData.order_id_pre === null) {
-        this.si = setInterval(() => {
-          return pay({
-            order_id: item.orderData.order_id,
-            // dbc_hash: txid,
-            user_name_platform,
-            language
-          })
-            .then(res => {
-              this.queryOrderList();
-              if (res.status === 1) {
-                clearInterval(this.si);
-
-                this.ispayPocing = false;
-                item.orderData.vocing_pay = false;
-                this.queryOrderList();
-              } else if (res.status === 2) {
-                this.queryOrderList();
-              } else if (res.status === -1) {
-                this.queryOrderList();
-                this.ispayPocing = false;
-                item.orderData.vocing_pay = false;
-                clearInterval(this.si);
-                this.$message({
-                  showClose: true,
-                  message: res.msg,
-                  type: "error"
-                });
-              }
-            })
-            .catch(err => {
-              //  clearInterval(this.si);
+            return Promise.reject({
+              status: -1,
+              msg: "机器可能已经被租用，请取消订单，重新租用其他机器"
             });
-        }, 5000);
-      } else {
-        this.si = setInterval(() => {
-          return pay_update({
-            order_id: item.orderData.order_id,
-            // dbc_hash: txid,
-            user_name_platform,
-            language
-          })
-            .then(res => {
-              // this.queryOrderList();
-              if (res.status === 1) {
-                clearInterval(this.si);
-                this.ispayPocing = false;
-                this.creating_container = true;
-                item.orderData.vocing_pay = false;
-                this.queryOrderList();
-                this.forceToPocMachineUpdate();
-              } else if (res.status === -1) {
-                clearInterval(this.si);
-                this.ispayPocing = false;
-                item.orderData.vocing_pay = false;
-                this.queryOrderList();
-                this.$message({
-                  showClose: true,
-                  message: res.msg,
-                  type: "error"
-                });
-              } else if (res.status === 2) {
-                // item.orderData.creating_container = true;
-                this.queryOrderList();
-              }
-            })
-            .catch(err => {
-              // this.ispayPocing = false;
-              // clearInterval(this.si);
+          } else {
+            this.queryOrderList();
+            clearInterval(this.si);
+
+            return Promise.reject({
+              status: -1,
+              msg: res.msg
             });
-        }, 5000);
-      }
+          }
+
+          if (item.orderData.order_is_cancer) {
+            clearInterval(this.si);
+          }
+        });
+      }, 8000);
     },
 
     // pay
@@ -1394,19 +1399,19 @@ export default {
             item.orderData.dbc_total_count + item.orderData.code * 1;
           this.isPaying = true;
           this.local_pay_error = false;
+
           return transfer({
             toAddress: res.content,
             amount
           }).then(res => {
             if (res.status === 1) {
               console.log("转账成功");
+              const txid = res.response.txid;
               this.$message({
                 showClose: true,
                 message: this.$t("transfer_success"),
                 type: "success"
               });
-              const txid = res.response.txid;
-
               // pay after
               this.isPaying = false;
               item.orderData.vocing_pay = true;
@@ -1415,7 +1420,6 @@ export default {
               this.ispayPocing = true;
               this.times = 10; //此时重新设置为10
               // 支付后确认
-
               if (item.orderData.order_id_pre === null) {
                 this.si = setInterval(() => {
                   return pay({
@@ -1428,7 +1432,6 @@ export default {
                       this.queryOrderList();
                       if (res.status === 1) {
                         clearInterval(this.si);
-
                         this.ispayPocing = false;
                         item.orderData.vocing_pay = false;
                         this.queryOrderList();
@@ -1450,7 +1453,7 @@ export default {
                       //   this.ispayPocing = false;
                       //   clearInterval(this.si);
                     });
-                }, 8000);
+                }, 5000);
               } else {
                 this.si = setInterval(() => {
                   return pay_update({
@@ -1460,12 +1463,12 @@ export default {
                     language
                   })
                     .then(res => {
-                      // this.queryOrderList();
+                      this.queryOrderList();
                       if (res.status === 1) {
                         clearInterval(this.si);
-                        this.ispayPocing = false;
                         this.creating_container = true;
                         item.orderData.vocing_pay = false;
+                        this.ispayPocing = false;
                         this.queryOrderList();
                         this.forceToPocMachineUpdate();
                       } else if (res.status === -1) {
@@ -1486,8 +1489,9 @@ export default {
                     .catch(err => {
                       //   this.ispayPocing = false;
                       //   clearInterval(this.si);
-                    });
-                }, 8000);
+                    })
+                    .finally(() => {});
+                }, 5000);
               }
             } else {
               this.isPaying = false;
@@ -1512,10 +1516,9 @@ export default {
 
       //  }, 5000);
     },
-
     // cancel
     cancelOrder(item) {
-      this.isCancering = true;
+      this.cancelLoading = true;
       get_cancer_code({
         order_id: item.orderData.order_id,
         user_name_platform: this.$t("website_name"),
@@ -1523,6 +1526,7 @@ export default {
       })
         .then(res => {
           if (res.status === 1) {
+            //  item.cancelLoading = false;
             this.$prompt(
               this.$t("myMachine_code_send"),
               this.$t("myMachine_cancer_order"),
@@ -1541,7 +1545,6 @@ export default {
               })
               .then(res => {
                 if (res.status === 1) {
-                  this.isCancering = false;
                   this.$message({
                     showClose: true,
                     message: res.msg,
@@ -1549,7 +1552,6 @@ export default {
                   });
                   this.queryOrderList();
                 } else {
-                  this.isCancering = false;
                   this.$message({
                     showClose: true,
                     message: res.msg,
@@ -1558,26 +1560,27 @@ export default {
                 }
               })
               .catch(err => {
-                this.isCancering = false;
                 if (err) {
                   console.log(err);
                 }
+              })
+              .finally(() => {
+                this.cancelLoading = false;
               });
           } else {
-            this.isCancering = false;
+            this.cancelLoading = false;
             this.$message({
               showClose: true,
               message: res.msg,
               type: "error"
             });
+            //    item.cancelLoading = false;
             return Promise.reject();
           }
         })
-
         .catch(err => {
-          this.isCancering = false;
-        })
-        .finally(() => {});
+          this.cancelLoading = false;
+        });
     },
     // get Order List
     queryOrderList() {
@@ -1594,7 +1597,7 @@ export default {
           user_name_platform,
           language
         }),
-        get_all_order({
+        get_all_order_cpu({
           wallet_address_user,
           user_name_platform,
           language
@@ -1770,6 +1773,7 @@ export default {
           this.send_email_repeat_index = -1;
         });
     },
+
     // bind fail
     bindFail() {
       this.isBinding = false;
@@ -1813,11 +1817,6 @@ export default {
     },
     returnSuccess() {
       this.queryOrderList();
-    },
-    isShowRendSuccessMsg(milli_rent_success_time) {
-      const minutes =
-        (new Date().getTime() - milli_rent_success_time) / 1000 / 60;
-      return minutes < 14;
     }
   }
 };
@@ -1909,6 +1908,11 @@ export default {
   .td {
     display: inline-block;
     width: 33.3%;
+  }
+  .tdred {
+    display: inline-block;
+    width: 33.3%;
+    color: $textColor_red;
   }
 }
 

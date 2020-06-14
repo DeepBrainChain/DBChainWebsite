@@ -2,7 +2,7 @@ import enLocale from 'element-ui/lib/locale/lang/en'
 
 export default {
   message: 'hello i18n !!',
-  website_name: 'opengpu', //yousanai,  dbchain,aionego
+  website_name: 'dbchain', //yousanai,  dbchain,aionego
   $: '$',
   send: 'Send',
   closeWallet: 'Close Wallet',
@@ -59,6 +59,8 @@ export default {
     gpu: 'Rent GPU',
 
     miner: 'Lease GPU',
+    mymachine: "我的机器",
+    mywallet: "我的钱包",
     talk: 'AI Developer Forum',
 
   },
@@ -159,6 +161,11 @@ export default {
     mcTradeInfo: 'Machine transaction information',
     backDbcNum: 'Amount of DBC being refunded',
     rateMsg: 'How many stars would you rate the machine',
+    common: "普通AI训练区",
+    highStabilityAITrain: "高稳定AI训练区",
+    aiInference: "AI推理区",
+    hashCompute: "FileCoin计算区",
+    superNodeCompute: "超级节点算力区"
   },
 
   country: 'Country',
@@ -265,6 +272,8 @@ export default {
     intr_freegputop_1: "FreeGPU",
     intr_tensorgpu_1: "TensorGPU",
     intr_opengpu_1: "OpenGPU",
+    intr_aiyanxishe_1: "AI YanXiShe",
+    intr_codefate_1: "CodeFate",
     intr_1: ' provides GPU rental service.join us! can help your machine very convenient access to the DBC network, gain revenue. \n' +
       '\n' +
       ' If your GPU is ever idle, you can connect it to the DBC network to earn DBC tokens and enjoy the benefit of the tokens appreciation. \n ' +
@@ -542,6 +551,8 @@ export default {
   footer_service_freegputop: "hill_gpu@163.com", //9.17 19:33
   footer_service_tensorgpu: "support@tensorgpu.com", //9.17 19:33
   footer_service_opengpu: "1184823135@qq.com", //9.17 19:33
+  footer_service_aiyanxishe: "kefu@yanxishe.com", //9.17 19:33
+  footer_service_codefate: "wangming1785@foxmail.com", //9.17 19:33
   list_start_rentout: 'minutes later, it can be rented',
   list_can_rentout: 'Users can rent it now',
   my_gpu_count: 'The number of gpus I rent ', //9.17 19:33
@@ -557,7 +568,7 @@ export default {
   continue_pay_success: "Rerent successfully",
   continue_pay_order_is_over: 'Order end',
   restart_machine: 'Restart', //12.22,
-  cpu_mode_switch: "Payment method requires DBC token to be able to use the CPU docker. Pledging doesn't actually cost you any DBC, you just need to pledge DBC in the smart contract then you can use the CPU docker for free. Once your usage has ended all DBCs you pledged will be returned to you. The two methods of usage are not different from each other.",
+  cpu_mode_switch: "Payment method requires DBC token to be able to use the CPU docker. Pledging doesn't actually cost you any DBC, you just need to pledge DBC then you can use the CPU docker for free. Once your usage has ended all DBCs you pledged will be returned to you. The two methods of usage are not different from each other.",
   payment: " Payment method ",
   deposit: " Pledging method ",
   pleae_create_wallet: "Please create wallet account in My Wallet first",
@@ -619,7 +630,7 @@ export default {
   dbc_price_wallet: "DBC Price",
   dbc_price_usd: "USD",
   stopGpu_mymachine: "Stop GPU",
-  stopgpu_please_switch_cpu_mode: "After the GPU is stopped, the GPU docker will become a CPU docker. There are two ways to use the CPU docker. The payment method requires you to pay DBC to use the CPU docker. The pledging method does not actually cost you any DBC. You only need to pledge the DBC into a smart contract to be able to use the CPU docker for free. After use, all the pledged DBC will be returned to you. The two usage methods have the same function.",
+  stopgpu_please_switch_cpu_mode: "After the GPU is stopped, the GPU docker will become a CPU docker. There are two ways to use the CPU docker. The payment method requires you to pay DBC to use the CPU docker. The pledging method does not actually cost you any DBC. You only need to pledge the DBC to use the CPU docker for free. After use, all the pledged DBC will be returned to you. The two usage methods have the same function.",
   stopgpu_to_cpu_payment: "Stop GPU, switch to CPU docker",
   less_data_disk_10g: "Available HD space cannot be smaller than 10G",
   less_data_disk_1g: "Available HD space cannot be smaller than 1G",

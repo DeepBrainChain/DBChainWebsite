@@ -31,6 +31,16 @@
       >{{$t('heads.miner')}}</a>
       <a
         class="item"
+        :class="{active: menuName === 'mymachine'}"
+        @click="pushMenu('mymachine')"
+      >{{$t('heads.mymachine')}}</a>
+      <a
+        class="item"
+        :class="{active: menuName === 'mywallet'}"
+        @click="pushMenu('mywallet')"
+      >{{$t('heads.mywallet')}}</a>
+      <a
+        class="item"
         v-if="this.curLang==='cn' ||this.curLang==='CN' "
         href="http://www.dbctalk.ai"
         target="_blank"
@@ -242,6 +252,10 @@ export default {
         this.link.href = "./tensorgpu.ico";
       } else if (this.$t("website_name") == "opengpu") {
         this.link.href = "./opengpu.ico";
+      } else if (this.$t("website_name") == "aiyanxishe") {
+        this.link.href = "./aiyanxishe.ico";
+      } else if (this.$t("website_name") == "codefate") {
+        this.link.href = "./codefate.ico";
       }
 
       document.getElementsByTagName("head")[0].appendChild(this.link);
@@ -346,6 +360,10 @@ export default {
         document.title = "tensorgpu";
       } else if (this.$t("website_name") == "opengpu") {
         document.title = "opengpu";
+      } else if (this.$t("website_name") == "aiyanxishe") {
+        document.title = "aiyanxishe";
+      } else if (this.$t("website_name") == "codefate") {
+        document.title = "codefate";
       }
     },
     set_logo() {
@@ -447,6 +465,10 @@ export default {
         this.logo = require("../../assets/imgs/tensorgpu@1x.png");
       } else if (this.$t("website_name") == "opengpu") {
         this.logo = require("../../assets/imgs/opengpu@1x.png");
+      } else if (this.$t("website_name") == "aiyanxishe") {
+        this.logo = require("../../assets/imgs/aiyanxishe@1x.png");
+      } else if (this.$t("website_name") == "codefate") {
+        this.logo = require("../../assets/imgs/codefate@1x.png");
       }
     },
     pushMenu(name) {

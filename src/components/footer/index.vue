@@ -128,6 +128,10 @@ export default {
         return this.$t("footer_service_tensorgpu");
       } else if (this.$t("website_name") == "opengpu") {
         return this.$t("footer_service_opengpu");
+      } else if (this.$t("website_name") == "aiyanxishe") {
+        return this.$t("footer_service_aiyanxishe");
+      } else if (this.$t("website_name") == "codefate") {
+        return this.$t("footer_service_codefate");
       }
 
       return this.$t("footer_service_dbchain");

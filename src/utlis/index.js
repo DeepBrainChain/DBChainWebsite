@@ -10,8 +10,11 @@ import cookie from "js-cookie"
 import {
   get_address_abstracts
 } from '@/api/index'
-
-const netType = 'https://seed12.ngd.network:10331'
+import {
+  dbc_balance
+} from "@/api"
+//const netType = 'https://seed12.ngd.network:10331'
+const netType = 'https://neocli.dbchain.ai'
 // const netType = 'http://seed2.aphelion-neo.com:10332'
 const DBCHash = 'b951ecbbc5fe37a9c280a76cb0ce0014827294cf' // DBC assetId
 const DBC_NAME = 'DEEPBRAIN COIN'
@@ -117,6 +120,8 @@ export function getBalance() {
     }
   })
 }
+
+
 
 // new Account
 export function createAccount(password) {

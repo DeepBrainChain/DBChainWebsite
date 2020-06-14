@@ -37,72 +37,43 @@ const router = new Router({
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('./views/gpu'),
-      redirect: '/gpu/myWallet',
+      redirect: '/gpu/list',
       children: [{
           meta: {
             menuIndex: 0
           },
-          path: 'myWallet',
-          component: () => import('./views/gpu/myWallet')
-        },
-        {
-          meta: {
-            menuIndex: 0
-          },
-          path: 'myWalletUnlock',
-          component: () => import('./views/gpu/myWallet_unlock')
+          path: 'list',
+          component: () => import('./views/gpu/list')
         },
 
         {
           meta: {
             menuIndex: 1
           },
-          path: 'myMachine',
-          component: () => import('./views/gpu/myMachine')
+          path: 'highStabilityAITrain',
+          component: () => import('./views/gpu/highStabilityAITrain')
         },
         {
           meta: {
             menuIndex: 2
           },
-          path: 'myMachine_cpu',
-          component: () => import('./views/gpu/myMachine_cpu')
+          path: 'aiInference',
+          component: () => import('./views/gpu/aiInference')
         },
         {
           meta: {
             menuIndex: 3
           },
-          path: 'myMachine_stopped',
-          component: () => import('./views/gpu/myMachine_stopped')
+          path: 'hashCompute',
+          component: () => import('./views/gpu/hashCompute')
         },
         {
           meta: {
             menuIndex: 4
           },
-          path: 'list',
-          component: () => import('./views/gpu/list')
-        },
-        {
-          meta: {
-            menuIndex: 1
-          },
-          path: 'myMachineUnlock',
-          component: () => import('./views/gpu/myMachine_unlock')
-        },
-        {
-          meta: {
-            menuIndex: 2
-          },
-          path: 'myMachineUnlockCPU',
-          component: () => import('./views/gpu/myMachine_unlock_cpu')
-        },
-        {
-          meta: {
-            menuIndex: 3
-          },
-          path: 'myMachineUnlockStopped',
-          component: () => import('./views/gpu/myMachine_unlock_stopped')
+          path: 'superNodeCompute',
+          component: () => import('./views/gpu/superNodeCompute')
         }
-
       ]
     },
     {
@@ -111,20 +82,6 @@ const router = new Router({
       component: () => import('./views/miner'),
       redirect: '/miner/myMachine',
       children: [{
-          meta: {
-            menuIndex: 0
-          },
-          path: 'myWallet',
-          component: () => import('./views/gpu/myWallet')
-        }, {
-          meta: {
-            menuIndex: 0
-          },
-          path: 'myWalletUnlock',
-          component: () => import('./views/gpu/myWallet_unlock')
-        },
-
-        {
           meta: {
             menuIndex: 1
           },
@@ -137,6 +94,87 @@ const router = new Router({
           },
           path: 'myMachineUnlock',
           component: () => import('./views/miner/myMachine_unlock')
+        }
+      ]
+    },
+    {
+      path: '/mymachine',
+      name: 'mymachine',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('./views/mymachine'),
+      redirect: '/mymachine/myMachine',
+      children: [{
+
+
+
+          meta: {
+            menuIndex: 0
+          },
+          path: 'myMachine',
+          component: () => import('./views/mymachine/myMachine')
+        },
+        {
+          meta: {
+            menuIndex: 1
+          },
+          path: 'myMachine_cpu',
+          component: () => import('./views/mymachine/myMachine_cpu')
+        },
+        {
+          meta: {
+            menuIndex: 2
+          },
+          path: 'myMachine_stopped',
+          component: () => import('./views/mymachine/myMachine_stopped')
+        },
+
+        {
+          meta: {
+            menuIndex: 0
+          },
+          path: 'myMachineUnlock',
+          component: () => import('./views/mymachine/myMachine_unlock')
+        },
+        {
+          meta: {
+            menuIndex: 1
+          },
+          path: 'myMachineUnlockCPU',
+          component: () => import('./views/mymachine/myMachine_unlock_cpu')
+        },
+        {
+          meta: {
+            menuIndex: 2
+          },
+          path: 'myMachineUnlockStopped',
+          component: () => import('./views/mymachine/myMachine_unlock_stopped')
+        }
+
+      ]
+    },
+    {
+      path: '/mywallet',
+      name: 'mywallet',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('./views/mywallet'),
+      redirect: '/mywallet/myWallet',
+      children: [{
+          meta: {
+            menuIndex: 0
+          },
+          path: 'myWallet',
+          component: () => import('./views/mywallet/myWallet')
+        },
+        {
+          meta: {
+            menuIndex: 0
+          },
+          path: 'myWalletUnlock',
+          component: () => import('./views/mywallet/myWallet_unlock')
         }
       ]
     },

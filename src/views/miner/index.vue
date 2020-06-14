@@ -27,16 +27,9 @@ export default {
       curNavIndex: 0,
       menus: [
         {
-          title: undefined, //this.$t("gpu.myWallet"),
-          to: "myWallet",
-          index: 0,
-          iconClass: "iconwallet"
-        },
-
-        {
           title: undefined, //
           to: "myMachine",
-          index: 1,
+          index: 0,
           iconClass: "iconmachine"
         }
       ]
@@ -59,7 +52,6 @@ export default {
   },
   computed: {
     inti_menus() {
-      this.menus[0].title = this.$t("gpu.myWallet");
       this.menus[1].title = this.$t("myMachine_gpu_rentout");
     }
   },

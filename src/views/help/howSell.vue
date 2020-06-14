@@ -7,20 +7,20 @@
         {{$t('helpsell.2')}}，
         <a
           v-if="this.$i18n.locale==='cn' || this.$i18n.locale==='CN'"
-          href="https://www.huobi.io/zh-cn/exchange/dbc_btc/"
+          href="https://www.huobi.me/zh-cn/exchange/dbc_btc/"
           target="_blank"
-        >https://www.huobi.io/zh-cn/</a>
+        >https://www.huobi.me/zh-cn/</a>
 
         <a
           v-else
-          href="https://www.huobi.io/en-us/exchange/dbc_btc/"
+          href="https://www.huobi.me/en-us/exchange/dbc_btc/"
           target="_blank"
-        >https://www.huobi.io/en-us/</a>
+        >https://www.huobi.me/en-us/</a>
       </h3>
 
       <h3>
         {{$t('helpsell.3')}}，
-        <a href="https://kcs.top" target="_blank">https://kcs.top</a>
+        <a href="https://www.kucoin.io" target="_blank">https://www.kucoin.io</a>
       </h3>
 
       <h3>

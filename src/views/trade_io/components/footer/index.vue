@@ -7,10 +7,10 @@
 
         <a href="http://www.dbcminer.io" target="_blank">{{$t('footer.DBCMiner')}}</a>
         <a href="http://www.dbctalk.ai" target="_blank">{{$t('footer.DBCTalk')}}</a>
-        <a href="https://www.kcs.top/" target="_blank">{{$t('footer.KuCoin')}}</a>
+        <a href="https://www.kucoin.io" target="_blank">{{$t('footer.KuCoin')}}</a>
         <a href="/trade">{{$t('footer.DBCTrade')}}</a>
         <!--        <a href="#">{{$t('footer.DBCloud')}}</a>-->
-        <a href="https://www.huobi.co" target="_blank">{{$t('footer.HuobiPro')}}</a>
+        <a href="https://www.huobi.me" target="_blank">{{$t('footer.HuobiPro')}}</a>
         <a href="https://www.gateio.la/" target="_blank">{{$t('footer.GateIo')}}</a>
       </div>
       <div class="line" tyle=" text-align:center"></div>

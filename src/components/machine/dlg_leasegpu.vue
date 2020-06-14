@@ -157,7 +157,7 @@ export default {
           code: "0.3848",
           time_max: 1500,
           gpu_count_max: 1,
-          images_tag: "pytorch 1.2+tensorflow 1.14@pytorch 1.4+tensorflow 2.0",
+          images_tag: "tensorflow1.14-pytorch1.2",
           diskspace_giving: 31457280,
           diskSpace_per_gpu_max: 210736353,
           memory_per_gpu_max: 23741925,
@@ -185,7 +185,7 @@ export default {
         }
       ],
       gpuCount: 1,
-      images: "pytorch 1.2+tensorflow 1.14",
+      images: "tensorflow1.14-pytorch1.2",
       time: 1,
       total_price: "0",
       isGetTotalPrice: false,
@@ -239,6 +239,12 @@ export default {
     imagesOptions() {
       let opts = [];
       var tags = new Array();
+      if (
+        this.placeOrderData.images_tag === null ||
+        this.placeOrderData.images_tag === ""
+      ) {
+        this.placeOrderData.images_tag = "tensorflow1.14-pytorch1.2";
+      }
       tags = this.placeOrderData.images_tag.split("@");
       for (let i = 0; i <= tags.length; i++) {
         opts.push({
@@ -248,7 +254,7 @@ export default {
       }
       opts.push({
         name: this.$t("user_defined"),
-        value: "py1.2+tf1.14"
+        value: "tensorflow114andpytorch12"
       });
       return opts;
     },

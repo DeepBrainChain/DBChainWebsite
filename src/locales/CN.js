@@ -3,10 +3,10 @@ import enLocale from "element-ui/lib/locale/lang/en";
 export default {
   message: "hello i18n !!",
 
-  website_name: "opengpu", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
+  website_name: "dbchain", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
   //alpha-dbchain/aichriscloud/deepbit/vnxmart/aiaicloud/snbt/heekmind/redstonewill/rocketai/aicv/\shareaiot\freegpu\boincplanet\topgpu\thinkotech
   //coolgpu\scclouds\nvidiaai\deligpu\longway\sharedgpu\aipower\cvstudy\gpuhub\district51\deepmind\transportation\planetc\sdnu\freegputop\tensorgpu
-  //opengpu
+  //opengpu\aiyanxishe\codefate
   $: "$",
   send: "发送",
   closeWallet: "关闭钱包",
@@ -61,8 +61,9 @@ export default {
     logo: "DBChain",
     home: "首页",
     gpu: "租用GPU",
-
     miner: "GPU出租",
+    mymachine: "我的机器",
+    mywallet: "我的钱包",
     talk: "AI开发者论坛"
   },
   footer: {
@@ -160,7 +161,13 @@ export default {
     userRate: "用户评价",
     mcTradeInfo: "机器交易信息",
     backDbcNum: "退回DBC数量为",
-    rateMsg: "你想给它评几星"
+    rateMsg: "你想给它评几星",
+    common: "普通AI训练区",
+    highStabilityAITrain: "高稳定AI训练区",
+    aiInference: "AI推理区",
+    hashCompute: "FileCoin计算区",
+    superNodeCompute: "超级节点算力区"
+
   },
 
   country: "国家",
@@ -269,6 +276,8 @@ export default {
     intr_freegputop_1: "免费GPU租用平台",
     intr_tensorgpu_1: "张量GPU",
     intr_opengpu_1: "OpenGPU",
+    intr_aiyanxishe_1: "AI研习社云平台",
+    intr_codefate_1: "码缘",
 
     intr_1: "提供GPU出租服务，加入我们，可以帮助您的机器非常方便的接入到深脑链网络中，获取收益。\n" +
       "\n" +
@@ -328,12 +337,12 @@ export default {
   },
   mcList: {},
   my_machine_binding_email: "绑定的邮箱",
-  my_machine_vocing: "正在验证中, 大概需要几分钟(若等待时间超过5分钟,请切换网络后刷新页面或者关闭VPN)",
+  my_machine_vocing: "正在验证中, 大概需要几分钟(若等待时间超过5分钟,请切换手机热点后刷新页面并且关闭VPN)",
   my_machine_isnormal_over: "订单已结束",
   my_machine_nonormal_over: "订单被中断",
   my_machine_order_cancer: "订单已取消",
   my_machine_order_rent_success: "正在使用中",
-  my_machine_order_vocing_pay: "正在进行支付验证中，大概需要几分钟(若等待时间超过5分钟,请切换网络后刷新页面或者关闭VPN)",
+  my_machine_order_vocing_pay: "正在进行支付验证中，大概需要几分钟(若等待时间超过5分钟,请切换手机热点后刷新页面并且关闭VPN)",
   my_machine_order_pay_error: "验证失败，已经超过支付有效期",
   my_machine_order_return_dbc: "退币成功",
   my_machine_order_vocing_machine_success: "机器环境验证成功，请点击支付",
@@ -380,8 +389,8 @@ export default {
   myMachine_rent_success_msg: "机器租用成功，登陆信息已发送至您的邮箱，请查收并妥善保管",
   myMachine_is_pay_vocing: "支付确认中",
   myMachine_maybe_is_used: "机器可能已经被租用，请取消订单，重新租用其他机器",
-  myMachine_is_vocing_machine: "正在验证机器环境是否可用，请耐心等待，大概需要1-3分钟(若等待时间超过5分钟,请切换网络后刷新页面或者关闭VPN)",
-  myMachine_is_dbc_transfering: "正在DBC转账中(若无法转账，请查看是否已关闭VPN,若关闭VPN并刷新当前页后仍无法转账，或者切换网络后刷新页面)",
+  myMachine_is_vocing_machine: "正在验证机器环境是否可用，请耐心等待，大概需要1-3分钟(若等待时间超过5分钟,请切换手机热点后刷新页面并且关闭VPN)",
+  myMachine_is_dbc_transfering: "正在DBC转账中(若20s后仍然正在转账中，请查看是否关闭VPN,若关闭VPN并刷新当前页后仍无法转账，请切换到手机热点后刷新页面)",
   myMachine_is_transfer_error: "DBC转账失败，请重新支付",
   myMachine_return_dbc: "退币",
   myMachine_confirm_pay: "继续支付",
@@ -525,7 +534,8 @@ export default {
   footer_service_nvidiaai: "167442878@qq.com", //9.17 19:33
   footer_service_deligpu: "arrky@mail.ru", //9.17 19:33
   footer_service_longway: "2546954766@qq.com", //9.17 19:33
-  footer_service_thinkotech: "wyking@163..com", //9.17 19:33
+
+
   footer_service_aipower: "1272068154@qq.com", //9.17 19:33
   footer_service_cvstudy: "cvstudy@163.com", //9.17 19:33
   footer_service_gpuhub: "gpuhub@foxmail.com", //9.17 19:33
@@ -537,6 +547,9 @@ export default {
   footer_service_freegputop: "hill_gpu@163.com", //9.17 19:33
   footer_service_tensorgpu: "support@tensorgpu.com", //9.17 19:33
   footer_service_opengpu: "1184823135@qq.com", //9.17 19:33
+  footer_service_aiyanxishe: "kefu@yanxishe.com", //9.17 19:33
+  footer_service_codefate: "wangming1785@foxmail.com", //9.17 19:33
+
   list_start_rentout: "分钟后可租用", //9.17 19:33
   list_can_rentout: "用户现在可租用", //9.17 19:33
   my_gpu_count: "我租用的GPU数量", //9.17 19:33
@@ -554,7 +567,7 @@ export default {
   restart_machine: '重启容器', //12.22
 
 
-  cpu_mode_switch: '付费方式需要支付DBC才可以使用CPU容器。质押方式不需要实际花费DBC，只需要将DBC质押到智能合约中，就可以免费使用CPU容器，使用结束后，质押的DBC会全部退回。两种使用方式功能上没有任何区别。',
+  cpu_mode_switch: '付费方式需要支付DBC才可以使用CPU容器。质押方式不需要实际花费DBC，只需要将质押DBC，就可以免费使用CPU容器，使用结束后，质押的DBC会全部退回。两种使用方式功能上没有任何区别。',
   payment: ' 付费方式 ',
   deposit: ' 质押方式 ',
   pleae_create_wallet: '请先在我的钱包中创建钱包账号',
@@ -615,7 +628,7 @@ export default {
   dbc_price_wallet: 'DBC价格',
   dbc_price_usd: '美金',
   stopGpu_mymachine: '停止GPU',
-  stopgpu_please_switch_cpu_mode: 'GPU停止后，GPU容器将会变成CPU容器。CPU容器有两种使用方式，付费方式需要支付DBC才可以使用CPU容器，质押方式不需要实际花费DBC，只需要将DBC质押到智能合约中，就可以免费使用CPU容器，使用结束后，质押的DBC会全部退回.两种使用方式，功能完全一样。',
+  stopgpu_please_switch_cpu_mode: 'GPU停止后，GPU容器将会变成CPU容器。CPU容器有两种使用方式，付费方式需要支付DBC才可以使用CPU容器，质押方式不需要实际花费DBC，只需要质押DBC，就可以免费使用CPU容器，使用结束后，质押的DBC会全部退回.两种使用方式，功能完全一样。',
   stopgpu_to_cpu_payment: '停止GPU，切换到CPU容器',
   less_data_disk_10g: '可用硬盘空间不能小于10G',
   less_data_disk_1g: '可用硬盘空间不能小于1G',
