@@ -8,9 +8,11 @@
       <div class="cRed">
         <label>{{$t('container_is_closed_update')}}</label>
       </div>
+
       <div class="form mt20">
         <label>{{$t('gpu.choseGpuCount')}}：</label>
         <el-select
+          v-if="!gpu_rentout_whole"
           class="time-select ml10"
           v-model="gpuCount"
           size="small"
@@ -23,9 +25,25 @@
             :value="item.value"
           ></el-option>
         </el-select>
+        <label
+          v-if="gpu_rentout_whole"
+        >{{placeOrderData.gpu_count_max}}&nbsp;&nbsp;&nbsp;&nbsp;{{$t('whole_rent_machine_tip')}}</label>
       </div>
-
       <div class="form mt20">
+        <el-radio-group v-model="discount" @change="computeTotalDBC">
+          <el-radio label="0">{{$t('leaseback_anytime')}}</el-radio>
+
+          <el-radio label="2">{{$t('monthly')}}</el-radio>
+          <el-radio label="3">{{$t('quarterly')}}</el-radio>
+          <el-radio label="4">{{$t('yearly')}}</el-radio>
+        </el-radio-group>
+      </div>
+      <div class="form mt20">
+        <label class="cRed" v-if="discount==='2'">{{$t('month_discount_instruction')}}</label>
+        <label class="cRed" v-else-if="discount==='3'">{{$t('quarter_discount_instruction')}}</label>
+        <label class="cRed" v-else-if="discount==='4'">{{$t('year_discount_instruction')}}</label>
+      </div>
+      <div class="form mt20" v-if="discount==='0'">
         <label>{{$t('dlg_lease_time')}}：</label>
         <el-input
           style="width: 180px"
@@ -51,37 +69,15 @@
           class="fs12 cGray ml10"
         >{{(placeOrderData.gpu_price_dollar)}}$/{{$t('my_machine_hour')}}</span>
       </div>
-
-      <!--     <div class="form mt20">
-        <label>{{$t('diskspace_dlg')}}：</label>
-        <label>{{$t('diskspace_giving')}}{{disk_giving}}G</label>
-
-        <label>({{$t('diskspace_giving_gpu')}}{{disk_giving_every_gpu}}G)</label>
-        <label>,{{$t('diskspace_every_cpu_can_buy')}}{{diskspace_every_cpu_can_buy}}G</label>
-      </div>-->
       <div class="form mt20">
         <label>{{$t('diskspace_cpu_data')}}:{{disk_cpu_data}}G</label>
       </div>
-      <!--     <div class="form mt20" >
-        <label>{{$t('buy_diskspace')}}:</label>
-        <el-input
-          style="width: 120px"
-          size="small"
-          type="number"
-          v-model.number.trim="disk_buy"
-          @input="computeTotalDBC"
-        />
-        <span class="fs12 cGray ml10">G</span>
-        <span
-          class="fs12 cGray ml10"
-        >{{(placeOrderData.disk_GB_perhour_dollar)}}$/{{$t('disk_hour')}}</span>
 
-        <span class="fs12 cGray ml10">{{$t('disk_max')}}{{(disk_max)}}G</span>
-      </div>-->
       <div class="form mt20">
         <label>({{$t('diskspace_new_gpu')}}{{disk_buy-disk_cpu_data}}G)</label>
         <span
           class="fs12 cGray ml10"
+          v-if="!gpu_rentout_whole"
         >{{(placeOrderData.disk_GB_perhour_dollar)}}$/{{$t('disk_hour')}}</span>
       </div>
       <div class="form mt20">
@@ -139,7 +135,9 @@ export default {
           memory_max_cpu: 0,
           disk_GB_perhour_dollar: 3.3333334e-5,
           diskspace_image_data: 0,
-          disk_space: 60
+          disk_space: 60,
+          gpu_rentout_whole: false,
+          machine_type: 0
         };
       }
     }
@@ -173,7 +171,11 @@ export default {
       memory: 0,
       memory_every_gpu: 0,
       disk_cpu_data: 0,
-      diskspace_every_cpu_can_buy: 0
+      diskspace_every_cpu_can_buy: 0,
+
+      discount: "0",
+      gpu_rentout_whole: false,
+      machine_type: 0
     };
   },
   watch: {
@@ -182,6 +184,8 @@ export default {
       if (newVal) {
         this.time = 1;
         this.dbc_price = "";
+        this.gpu_rentout_whole = this.placeOrderData.gpu_rentout_whole;
+        this.machine_type = this.placeOrderData.machine_type;
         this.getPayDbcCount();
         this.getBalance();
       }
@@ -199,7 +203,7 @@ export default {
       const hours = parseInt(this.placeOrderData.time_max / 60);
       const day = Math.floor(hours / 24);
       const h = hours - day * 24;
-      return `${day}D${h}H`;
+      return `${day}d${h}h`;
     },
     gpuCountOptions() {
       let opts = [];
@@ -232,16 +236,36 @@ export default {
     },
 
     totalPrice() {
-      return (
-        this.placeOrderData.gpu_price_dollar *
-          this.gpuCount *
-          this.time *
-          this.timeSelect +
-        this.placeOrderData.disk_GB_perhour_dollar *
-          this.disk_buy *
-          this.time *
-          this.timeSelect
-      );
+      if (this.gpu_rentout_whole) {
+        this.gpuCount = this.placeOrderData.gpu_count_max;
+      }
+      if (this.discount === "2") {
+        return (
+          this.placeOrderData.gpu_price_dollar * this.gpuCount * 24 * 30 +
+          this.placeOrderData.disk_GB_perhour_dollar * this.disk_buy * 24 * 30
+        );
+      } else if (this.discount === "3") {
+        return (
+          this.placeOrderData.gpu_price_dollar * this.gpuCount * 24 * 90 +
+          this.placeOrderData.disk_GB_perhour_dollar * this.disk_buy * 24 * 90
+        );
+      } else if (this.discount === "4") {
+        return (
+          this.placeOrderData.gpu_price_dollar * this.gpuCount * 24 * 365 +
+          this.placeOrderData.disk_GB_perhour_dollar * this.disk_buy * 24 * 365
+        );
+      } else {
+        return (
+          this.placeOrderData.gpu_price_dollar *
+            this.gpuCount *
+            this.time *
+            this.timeSelect +
+          this.placeOrderData.disk_GB_perhour_dollar *
+            this.disk_buy *
+            this.time *
+            this.timeSelect
+        );
+      }
     },
     dbcNum() {
       return Math.floor(this.totalPrice / this.placeOrderData.dbc_price);
@@ -306,6 +330,19 @@ export default {
       }
     },
     getPayDbcCount() {
+      let rent_type = 0;
+      if (this.discount === "1") {
+        rent_type = 1;
+      } else if (this.discount === "2") {
+        rent_type = 2;
+      } else if (this.discount === "3") {
+        rent_type = 3;
+      } else if (this.discount === "4") {
+        rent_type = 4;
+      }
+      if (this.gpu_rentout_whole) {
+        this.gpuCount = this.placeOrderData.gpu_count_max;
+      }
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       this.disk_giving = parseInt(
@@ -343,6 +380,7 @@ export default {
         gpu_count: this.gpuCount,
         diskspace: this.disk_buy * 1024 * 1024,
         order_id: this.placeOrderData.order_id,
+        rent_type: rent_type,
         user_name_platform,
         language
       }).then(res => {
@@ -359,6 +397,19 @@ export default {
     },
 
     confirm() {
+      let rent_type = 0;
+      if (this.discount === "1") {
+        rent_type = 1;
+      } else if (this.discount === "2") {
+        rent_type = 2;
+      } else if (this.discount === "3") {
+        rent_type = 3;
+      } else if (this.discount === "4") {
+        rent_type = 4;
+      }
+      if (this.gpu_rentout_whole) {
+        this.gpuCount = this.placeOrderData.gpu_count_max;
+      }
       const params = {
         rent_time_length: this.time * this.timeSelect * 60,
 
@@ -367,7 +418,8 @@ export default {
         diskspace: this.disk_buy * 1024 * 1024,
         order_type: "training",
         order_id: this.placeOrderData.order_id,
-
+        rent_type: rent_type,
+        machine_type: this.machine_type,
         user_name_platform: this.$t("website_name"),
         language: this.$i18n.locale
       };

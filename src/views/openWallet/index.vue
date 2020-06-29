@@ -186,8 +186,8 @@ export default {
       }
     },
     pushToMyWalletUnlock() {
-      const type = this.$route.params.type;
-      this.$router.push(`/${type}/myWalletUnlock`);
+      // const type = this.$route.params.type;
+      this.$router.push(`/mywallet/myWalletUnlock`);
     },
     closeAlert() {}
   },

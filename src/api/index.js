@@ -1,10 +1,10 @@
 import axios from "@/utlis/axios";
 //const host = 'http://13.124.237.200:8031'
 //const host = "https://otherinfo.dbchain.ai";
-//const host = "https://info.dbchain.ai";
-const host = "https://infotest.dbchain.ai";
+const host = "https://info.dbchain.ai";
+//const host = "https://infotest.dbchain.ai";
 //const host = 'http://116.85.24.172:8031'
-//const host = "http://192.168.1.186:8080";
+//const host = "http://192.168.1.187:8080";
 //const host = "http://192.168.31.241:8080";
 //const host = "http://192.168.43.178:8080";
 //const host = "http://192.168.225.22:8080";
@@ -82,11 +82,29 @@ export const getMcList = params => {
   });
 };
 
+// 根据类型查询机器列表
+export const query_machines_by_machine_type = params => {
+  return axios({
+    method: "post",
+    url: host + "/query_machines_by_machine_type",
+    params
+  });
+};
+
 // 试用-获取创建前的信息
 export const try_place_order = params => {
   return axios({
     method: "post",
     url: host + "/try_rent/place_order",
+    params
+  });
+};
+
+// 试用-获取创建前的信息
+export const try_place_order_new = params => {
+  return axios({
+    method: "post",
+    url: host + "/try_rent/place_order_new",
     params
   });
 };
@@ -99,6 +117,16 @@ export const place_order = params => {
     params
   });
 };
+
+// 获取订单前信息
+export const place_order_gpu_new = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/place_order_gpu_new",
+    params
+  });
+};
+
 export const get_max_disk_can_use = params => {
   return axios({
     method: "post",
@@ -152,12 +180,38 @@ export const place_order_gpu_to_cpu = params => {
   });
 };
 
+// 获取订单前信息
+export const place_order_cpu_to_gpu_new = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/place_order_cpu_to_gpu_new",
+    params
+  });
+};
+
+// 获取订单前信息
+export const place_order_gpu_to_cpu_new = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/place_order_gpu_to_cpu_new",
+    params
+  });
+};
 
 // 获取订单前信息
 export const place_order_cpu = params => {
   return axios({
     method: "post",
     url: host + "/rent/place_order_cpu",
+    params
+  });
+};
+
+// 获取订单前信息
+export const place_order_cpu_new = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/place_order_cpu_new",
     params
   });
 };
@@ -182,7 +236,25 @@ export const place_order_stop_to_gpu = params => {
   });
 };
 
+// 获取订单前信息
+export const place_order_stop_to_cpu_new = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/place_order_stop_to_cpu_new",
+    params
+  });
+};
 
+
+
+// 获取订单前信息
+export const place_order_stop_to_gpu_new = params => {
+  return axios({
+    method: "post",
+    url: host + "/rent/place_order_stop_to_gpu_new",
+    params
+  });
+};
 
 // 创建订单
 export const create_order = params => {
@@ -544,6 +616,15 @@ export const add_or_modify = params => {
   });
 };
 
+// 添加或者修改出租信息
+export const add_or_modify_new = params => {
+  return axios({
+    method: "post",
+    url: host + "/rentout/add_or_modify_new",
+    params
+  });
+};
+
 // 获取国家列表
 export const get_country_list = params => {
   return axios({
@@ -642,6 +723,50 @@ export const get_gate_dbc_price = (
     method: "get",
     url: `https://gateio.life/api2/1/ticker/${dbc}`
 
+  });
+};
+// 验证矿工质押的dbc
+export const vocing_deposite_dbc = params => {
+  return axios({
+    method: "post",
+    url: host + "/rentout/vocing_deposite_dbc",
+    params
+  });
+};
+
+// 清除矿工质押验证错误标识位
+export const vocing_deposite_dbc_repeat = params => {
+  return axios({
+    method: "post",
+    url: host + "/rentout/vocing_deposite_dbc_repeat",
+    params
+  });
+};
+
+// 获取下架机器验证码
+export const get_sold_out_machine_code = params => {
+  return axios({
+    method: "post",
+    url: host + "/rentout/get_sold_out_machine_code",
+    params
+  });
+};
+
+// 下架机器
+export const sold_out_machine = params => {
+  return axios({
+    method: "post",
+    url: host + "/rentout/sold_out_machine",
+    params
+  });
+};
+
+// 获取需要质押的dbc数量
+export const dbc_deposite_count = params => {
+  return axios({
+    method: "get",
+    url: host + "/query/dbc_deposite_count",
+    params
   });
 };
 

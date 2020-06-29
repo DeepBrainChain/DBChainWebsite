@@ -129,11 +129,11 @@
         <div class="flex status-title">
           <div>
             <span>{{item.mcData.machine_id}}</span>
-            <span class="fs28">
+            <!--    <span class="fs28">
               <span
                 class="cPrimaryColor"
               >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$ {{item.mcData.gpu_price_dollar }}/{{$t('my_machine_hour')}}</span>
-            </span>
+            </span>-->
           </div>
           <div class="td">
             <span class="fs16">
@@ -142,6 +142,7 @@
             </span>
           </div>
         </div>
+
         <div class="flex">
           <div class="td2">
             <span class="fs28">
@@ -153,6 +154,67 @@
             <span class="fs28">
               <a class="cPrimaryColor">{{item.mcData.country}}</a>
             </span>
+          </div>
+        </div>
+        <div class="flex">
+          <div class="td5">
+            <el-tooltip class="item" effect="dark" :content="$t('month_discount_instruction')">
+              <span class="fs28">
+                <a
+                  class="cPrimaryColor"
+                >{{$t('month_discount')}}:{{item.mcData.discount_week}}%&nbsp;&nbsp;</a>
+              </span>
+            </el-tooltip>
+          </div>
+          <div class="td5">
+            <el-tooltip class="item" effect="dark" :content="$t('quarter_discount_instruction')">
+              <span class="fs28">
+                <a
+                  class="cPrimaryColor"
+                >{{$t('quarter_discount')}}:{{item.mcData.discount_quarter}}%&nbsp;&nbsp;</a>
+              </span>
+            </el-tooltip>
+          </div>
+          <div class="td5">
+            <el-tooltip class="item" effect="dark" :content="$t('year_discount_instruction')">
+              <span class="fs28">
+                <a
+                  class="cPrimaryColor"
+                >{{$t('year_discount')}}:{{item.mcData.discount_year}}%&nbsp;&nbsp;</a>
+              </span>
+            </el-tooltip>
+          </div>
+          <div class="td5">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              :content="$t('rentout_machine_whole_instruction')"
+              v-if="item.mcData.gpu_rentout_whole"
+            >
+              <span class="fs28">
+                <a class="cPrimaryColor">{{$t('rentout_machine_whole')}}</a>
+              </span>
+            </el-tooltip>
+            <el-tooltip
+              class="item"
+              effect="dark"
+              :content="$t('rentout_machine_one_gpu_instruction')"
+              v-else
+            >
+              <span class="fs28">
+                <a class="cPrimaryColor">{{$t('rentout_machine_one_gpu')}}</a>
+              </span>
+            </el-tooltip>
+          </div>
+          <div class="td5">
+            <span class="fs28"></span>
+            <el-tooltip class="item" effect="dark" :content="$t('deposite_dbc_count_instruction')">
+              <span class="fs28">
+                <a
+                  class="cPrimaryColor"
+                >{{$t('compensation_dbc_count')}}:{{item.mcData.rentout_deposite_dbc_count/item.mcData.gpu_count}}</a>
+              </span>
+            </el-tooltip>
           </div>
         </div>
         <div class="flex">
@@ -282,7 +344,7 @@
               {{$t('list_gpu_ram_size')}}：
               <a
                 class="cPrimaryColor"
-              >{{parseInt(item.mcData.gpu_ram_size/(1024*1024))}}GB</a>
+              >{{parseInt(item.mcData.gpu_ram_size/(1000*1000))}}GB</a>
             </span>
           </div>
           <div class="td">
@@ -425,6 +487,11 @@
             class="cRed"
             v-else-if="!isShowRendSuccessMsg(item.orderData.milli_rent_success_time)&&item.orderData.rent_success&&!item.orderData.order_is_over&&!item.mcData.can_create_cpu_container"
           >{{$t('no_container')}}</span>
+          <span
+            v-else-if="item.orderData.rent_success === false &&(((item.orderData.order_id_pre===null&&item.orderData.container_is_exist===true && item.orderData.pay_error===false)
+              ||(item.orderData.order_id_pre!==null&&item.orderData.order_is_over===false&&item.orderData.order_is_cancer===false&&item.orderData.pay_success===false&&
+                    item.orderData.pay_error === false))) "
+          >{{$t('myMachine_confirm_pay_tip')}}</span>
         </div>
         <div
           v-if="item.orderData.order_is_cancer === false && !(item.orderData.return_dbc === true && item.orderData.pay_error === true)"
@@ -643,7 +710,7 @@ import {
   request_return_dbc,
   pay_update,
   update_container_is_ok,
-  place_order_gpu_to_cpu,
+  place_order_gpu_to_cpu_new,
   get_dbc_price,
   create_order,
   send_email_repeat
@@ -706,7 +773,7 @@ export default {
       rent_cpu_index: -1,
       send_email_repeatLoading: false,
       send_email_repeat_index: -1,
-      continue_pay_index: false,
+      continue_pay_index: -1,
       times: 20
     };
   },
@@ -824,7 +891,8 @@ export default {
       this.$forceUpdate();
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
-      place_order_gpu_to_cpu({
+      place_order_gpu_to_cpu_new({
+        machine_type: item.machine_type,
         machine_id: item.machine_id,
         wallet_address_user: getAccount().address,
         mode: "payment",
@@ -878,7 +946,8 @@ export default {
       this.$forceUpdate();
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
-      place_order_gpu_to_cpu({
+      place_order_gpu_to_cpu_new({
+        machine_type: item.machine_type,
         machine_id: item.machine_id,
         wallet_address_user: getAccount().address,
         user_name_platform,
@@ -941,9 +1010,9 @@ export default {
             this.dlg_opencpupayment = false;
             this.dlg_opencpudeposit = false;
             if (params.gpu_count === 0) {
-              this.$router.push("/gpu/myMachine_cpu");
+              this.$router.push("/mymachine/myMachine_cpu");
             } else {
-              this.$router.push("/gpu/myMachine");
+              this.$router.push("/mymachine/myMachine");
             }
           } else {
             this.$message({
@@ -1399,7 +1468,6 @@ export default {
             amount
           }).then(res => {
             if (res.status === 1) {
-              console.log("转账成功");
               this.$message({
                 showClose: true,
                 message: this.$t("transfer_success"),
@@ -1984,6 +2052,18 @@ export default {
 
       .downSpeed {
         transform: rotateZ(180deg);
+      }
+    }
+    .td5 {
+      width: 20%;
+      line-height: 24px;
+
+      .cPrimaryColor {
+        font-size: 18px;
+
+        &.fs16 {
+          font-size: 18px;
+        }
       }
     }
   }

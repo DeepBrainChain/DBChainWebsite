@@ -9,7 +9,7 @@
 
       <div
         class="cRed"
-        v-if="!placeOrderData.from_stop_to_open&&!placeOrderData.dbc_version!=='0.3.7.2'"
+        v-if="!placeOrderData.from_stop_to_open&&!placeOrderData.dbc_version!=='0.3.7.2'&&machine_type!==3"
       >
         <label>{{$t('cpu_container_instruaction')}}</label>
       </div>
@@ -28,6 +28,7 @@
       <div class="form mt20">
         <label>{{$t('gpu.choseGpuCount')}}：</label>
         <el-select
+          v-if="!gpu_rentout_whole"
           class="time-select ml10"
           v-model="gpuCount"
           size="small"
@@ -40,9 +41,25 @@
             :value="item.value"
           ></el-option>
         </el-select>
+        <label
+          v-if="gpu_rentout_whole"
+        >{{placeOrderData.gpu_count_max}}&nbsp;&nbsp;&nbsp;&nbsp;{{$t('whole_rent_machine_tip')}}</label>
       </div>
-
       <div class="form mt20">
+        <el-radio-group v-model="discount" @change="computeTotalDBC">
+          <el-radio label="0">{{$t('leaseback_anytime')}}</el-radio>
+
+          <el-radio label="2">{{$t('monthly')}}</el-radio>
+          <el-radio label="3">{{$t('quarterly')}}</el-radio>
+          <el-radio label="4">{{$t('yearly')}}</el-radio>
+        </el-radio-group>
+      </div>
+      <div class="form mt20">
+        <label class="cRed" v-if="discount==='2'">{{$t('month_discount_instruction')}}</label>
+        <label class="cRed" v-else-if="discount==='3'">{{$t('quarter_discount_instruction')}}</label>
+        <label class="cRed" v-else-if="discount==='4'">{{$t('year_discount_instruction')}}</label>
+      </div>
+      <div class="form mt20" v-if="discount==='0'">
         <label>{{$t('dlg_lease_time')}}：</label>
         <el-input
           style="width: 180px"
@@ -69,7 +86,7 @@
         >{{(placeOrderData.gpu_price_dollar)}}$/{{$t('my_machine_hour')}}</span>
       </div>
 
-      <div class="form mt20" v-if="!placeOrderData.from_stop_to_open">
+      <div class="form mt20" v-if="!placeOrderData.from_stop_to_open&&machine_type!==3">
         <label>{{$t('diskspace_dlg')}}：</label>
         <label>{{$t('diskspace_giving')}}{{disk_giving}}G</label>
         <label>({{$t('diskspace_giving_gpu')}}{{disk_giving_every_gpu}}G)</label>
@@ -83,7 +100,7 @@
         >{{$t('diskspace_gpu_data')}}{{(placeOrderData.diskspace_image_data / (1024 * 1024)).toFixed(2)}}G</label>
       </div>
 
-      <div class="form mt20" v-if="!placeOrderData.from_stop_to_open">
+      <div class="form mt20" v-if="!placeOrderData.from_stop_to_open&&machine_type!==3">
         <label>{{$t('buy_diskspace')}}：</label>
         <el-input
           style="width: 120px"
@@ -108,7 +125,12 @@
         >({{$t('diskspace_new_cpu_stop')}}:{{(disk_buy-placeOrderData.diskspace_image_data / (1024 * 1024)).toFixed(2)}}G)</label>
         <span
           class="fs12 cGray ml10"
+          v-if="!gpu_rentout_whole"
         >{{(placeOrderData.disk_GB_perhour_dollar)}}$/{{$t('disk_hour')}}</span>
+      </div>
+      <div class="form mt20" v-if="machine_type===3&&!placeOrderData.from_stop_to_open">
+        <label>{{$t('disk_auto_machine_type')}}：</label>
+        <label>{{disk_giving+disk_max}}G</label>
       </div>
       <div class="form mt20">
         <label>{{$t('memory_dlg')}}：</label>
@@ -157,7 +179,7 @@ export default {
           code: "0.3848",
           time_max: 1500,
           gpu_count_max: 1,
-          images_tag: "tensorflow1.14-pytorch1.2",
+          images_tag: "",
           diskspace_giving: 31457280,
           diskSpace_per_gpu_max: 210736353,
           memory_per_gpu_max: 23741925,
@@ -165,7 +187,9 @@ export default {
           memory_max_cpu: 0,
           disk_GB_perhour_dollar: 3.3333334e-5,
           diskspace_image_data: 0,
-          disk_space: 60
+          disk_space: 60,
+          gpu_rentout_whole: false,
+          machine_type: 0
         };
       }
     }
@@ -185,7 +209,7 @@ export default {
         }
       ],
       gpuCount: 1,
-      images: "tensorflow1.14-pytorch1.2",
+      images: "",
       time: 1,
       total_price: "0",
       isGetTotalPrice: false,
@@ -197,7 +221,10 @@ export default {
       disk_max: 100,
       balance: "0",
       memory: 0,
-      memory_every_gpu: 0
+      memory_every_gpu: 0,
+      discount: "0",
+      gpu_rentout_whole: false,
+      machine_type: 0
     };
   },
   watch: {
@@ -208,6 +235,9 @@ export default {
         this.dbc_price = "";
         this.getPayDbcCount();
         this.getBalance();
+        this.gpu_rentout_whole = this.placeOrderData.gpu_rentout_whole;
+        this.machine_type = this.placeOrderData.machine_type;
+        this.computeTotalDBC();
       }
     },
     time(newVal) {
@@ -223,7 +253,7 @@ export default {
       const hours = parseInt(this.placeOrderData.time_max / 60);
       const day = Math.floor(hours / 24);
       const h = hours - day * 24;
-      return `${day}D${h}H`;
+      return `${day}d${h}h`;
     },
     gpuCountOptions() {
       let opts = [];
@@ -243,45 +273,98 @@ export default {
         this.placeOrderData.images_tag === null ||
         this.placeOrderData.images_tag === ""
       ) {
-        this.placeOrderData.images_tag = "tensorflow1.14-pytorch1.2";
+        if (this.placeOrderData.machine_type !== 3) {
+          this.placeOrderData.images_tag = "tensorflow1.14-pytorch1.2";
+          this.images = "tensorflow1.14-pytorch1.2";
+        } else {
+          this.placeOrderData.images_tag = "filecoin-proof";
+          this.images = "filecoin-proof";
+        }
+      } else {
+        this.images = "tensorflow1.14-pytorch1.2";
       }
       tags = this.placeOrderData.images_tag.split("@");
+
       for (let i = 0; i <= tags.length; i++) {
+        if (i === 0) {
+          this.images = tags[i];
+        }
+
         opts.push({
           name: tags[i],
           value: tags[i]
         });
       }
-      opts.push({
-        name: this.$t("user_defined"),
-        value: "tensorflow114andpytorch12"
-      });
+      if (
+        this.placeOrderData.machine_type !== 3 &&
+        this.placeOrderData.machine_type !== 4
+      ) {
+        opts.push({
+          name: this.$t("user_defined"),
+          value: "tensorflow114andpytorch12"
+        });
+      }
+
       return opts;
     },
 
     totalPrice() {
-      return (
-        this.placeOrderData.gpu_price_dollar *
-          this.gpuCount *
-          this.time *
-          this.timeSelect +
-        this.placeOrderData.disk_GB_perhour_dollar *
-          this.disk_buy *
-          this.time *
-          this.timeSelect
-      );
+      if (this.gpu_rentout_whole) {
+        this.gpuCount = this.placeOrderData.gpu_count_max;
+      }
+      if (this.discount === "2") {
+        return (
+          this.placeOrderData.gpu_price_dollar * this.gpuCount * 24 * 30 +
+          this.placeOrderData.disk_GB_perhour_dollar * this.disk_buy * 24 * 30
+        );
+      } else if (this.discount === "3") {
+        return (
+          this.placeOrderData.gpu_price_dollar * this.gpuCount * 24 * 90 +
+          this.placeOrderData.disk_GB_perhour_dollar * this.disk_buy * 24 * 90
+        );
+      } else if (this.discount === "4") {
+        return (
+          this.placeOrderData.gpu_price_dollar * this.gpuCount * 24 * 365 +
+          this.placeOrderData.disk_GB_perhour_dollar * this.disk_buy * 24 * 365
+        );
+      } else {
+        return (
+          this.placeOrderData.gpu_price_dollar *
+            this.gpuCount *
+            this.time *
+            this.timeSelect +
+          this.placeOrderData.disk_GB_perhour_dollar *
+            this.disk_buy *
+            this.time *
+            this.timeSelect
+        );
+      }
     },
     dbcNum() {
       return Math.floor(this.totalPrice / this.placeOrderData.dbc_price);
     }
   },
   methods: {
+    updateChecked() {},
     getBalance() {
       getBalance().then(res => {
         this.balance = res.balance;
       });
     },
     computeTotalDBC() {
+      let rent_type = 0;
+      if (this.discount === "1") {
+        rent_type = 1;
+      } else if (this.discount === "2") {
+        rent_type = 2;
+      } else if (this.discount === "3") {
+        rent_type = 3;
+      } else if (this.discount === "4") {
+        rent_type = 4;
+      }
+      if (this.gpu_rentout_whole) {
+        this.gpuCount = this.placeOrderData.gpu_count_max;
+      }
       if (this.time) {
         clearTimeout(this.reqSt);
         this.reqSt = setTimeout(() => {
@@ -325,6 +408,20 @@ export default {
       }
     },
     getPayDbcCount() {
+      let rent_type = 0;
+      if (this.discount === "1") {
+        rent_type = 1;
+      } else if (this.discount === "2") {
+        rent_type = 2;
+      } else if (this.discount === "3") {
+        rent_type = 3;
+      } else if (this.discount === "4") {
+        rent_type = 4;
+      }
+      if (this.gpu_rentout_whole) {
+        this.gpuCount = this.placeOrderData.gpu_count_max;
+      }
+
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       this.disk_giving = parseInt(
@@ -367,6 +464,7 @@ export default {
         gpu_count: this.gpuCount,
         diskspace: this.disk_buy * 1024 * 1024,
         order_id: this.placeOrderData.order_id,
+        rent_type: rent_type,
         user_name_platform,
         language
       }).then(res => {
@@ -401,6 +499,22 @@ export default {
         });
         return;
       }
+      let rent_type = 0;
+      if (this.discount === "1") {
+        rent_type = 1;
+      } else if (this.discount === "2") {
+        rent_type = 2;
+      } else if (this.discount === "3") {
+        rent_type = 3;
+      } else if (this.discount === "4") {
+        rent_type = 4;
+      }
+      if (this.gpu_rentout_whole) {
+        this.gpuCount = this.placeOrderData.gpu_count_max;
+      }
+      if (this.machine_type === 3) {
+        this.disk_buy = this.disk_max;
+      }
       const params = {
         rent_time_length: this.time * this.timeSelect * 60,
         order_is_over: this.placeOrderData.order_is_over,
@@ -411,6 +525,8 @@ export default {
         order_type: "training",
         order_id: this.placeOrderData.order_id,
         dbc_total_count: this.total_price,
+        rent_type: rent_type,
+        machine_type: this.machine_type,
         user_name_platform: this.$t("website_name"),
         language: this.$i18n.locale
       };

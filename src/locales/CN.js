@@ -3,7 +3,7 @@ import enLocale from "element-ui/lib/locale/lang/en";
 export default {
   message: "hello i18n !!",
 
-  website_name: "dbchain", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
+  website_name: "freegpu", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
   //alpha-dbchain/aichriscloud/deepbit/vnxmart/aiaicloud/snbt/heekmind/redstonewill/rocketai/aicv/\shareaiot\freegpu\boincplanet\topgpu\thinkotech
   //coolgpu\scclouds\nvidiaai\deligpu\longway\sharedgpu\aipower\cvstudy\gpuhub\district51\deepmind\transportation\planetc\sdnu\freegputop\tensorgpu
   //opengpu\aiyanxishe\codefate
@@ -61,9 +61,10 @@ export default {
     logo: "DBChain",
     home: "首页",
     gpu: "租用GPU",
-    miner: "GPU出租",
+    miner: "出租GPU",
     mymachine: "我的机器",
     mywallet: "我的钱包",
+    help: '帮助文档',
     talk: "AI开发者论坛"
   },
   footer: {
@@ -199,8 +200,8 @@ export default {
   msg: {
     dlg_0: "当前机器最长可以租用{time}，最短1个小时。 \n" +
       "容器使用完成后，可以提前退租，只会收取实际产生的费用，剩余费用将会退还到钱包中. " +
-      "时间到期,容器会被停用.并且如果钱包余额不足20000DBC,容器将会被立即销毁.如果您的钱包余额超过20000DBC,机器所有数据将会" +
-      "被自动保留7天(在这期间钱包余额也必须超过20000DBC),7天内任何时间可以继续启用容器,进行使用,容器停止超过7天将会被销毁.",
+      "时间到期,容器会被停用,机器所有数据将会" +
+      "被自动保留7天,如果您的钱包余额超过20000DBC,7天内任何时间可以继续启用容器,进行使用,容器停止超过7天将会被销毁.",
 
 
     dlg_5: "使用过程中机器出现中断，如果使用时间不超过144小时，则退回全部DBC \n" +
@@ -330,7 +331,7 @@ export default {
     addMc_msg_5: "",
 
     addMc_msg_6: [
-      "请保持机器不能断网、断电，如果机器使用过程中出现中断，则将会把质押的144小时机器使用量的DBC扣除。 出租时间不超过144小时，则",
+      "请保持机器不能断网、断电、掉卡，如果机器使用过程中出现中断，则将会把质押的144小时机器使用量的DBC扣除。 出租时间不超过144小时，则",
       "按照实际使用时间全部扣除！"
     ],
     mc_msg_1: "如果机器使用过程中出现中断，则将会把质押的144小时机器使用量的DBC扣除。<br>出租时间不超过144小时，则全部扣除"
@@ -389,8 +390,8 @@ export default {
   myMachine_rent_success_msg: "机器租用成功，登陆信息已发送至您的邮箱，请查收并妥善保管",
   myMachine_is_pay_vocing: "支付确认中",
   myMachine_maybe_is_used: "机器可能已经被租用，请取消订单，重新租用其他机器",
-  myMachine_is_vocing_machine: "正在验证机器环境是否可用，请耐心等待，大概需要1-3分钟(若等待时间超过5分钟,请切换手机热点后刷新页面并且关闭VPN)",
-  myMachine_is_dbc_transfering: "正在DBC转账中(若20s后仍然正在转账中，请查看是否关闭VPN,若关闭VPN并刷新当前页后仍无法转账，请切换到手机热点后刷新页面)",
+  myMachine_is_vocing_machine: "正在验证机器环境是否可用，大概需要1-3分钟(若等待时间超过5分钟,请切换手机热点后刷新页面且关闭VPN)",
+  myMachine_is_dbc_transfering: "正在DBC转账中(若20s后仍然正在转账中，请切换到手机热点后刷新页面且关闭VPN)",
   myMachine_is_transfer_error: "DBC转账失败，请重新支付",
   myMachine_return_dbc: "退币",
   myMachine_confirm_pay: "继续支付",
@@ -423,7 +424,7 @@ export default {
 
   dlg_return_dbc: "退币",
   dlg_input_code: "输入邮件验证码",
-  dlg_input_code_stop: "输入邮件验证码(如果钱包余额不足20000DBC，容器停止后数据会被销毁)", // 2020.1.21
+  dlg_input_code_stop: "输入邮件验证码，退租后数据和环境会保留7天，可以在我的停止容器里面启动", // 2020.1.21
 
   dlg_get_code: "获取验证码",
 
@@ -467,7 +468,7 @@ export default {
   machine_order_hour: "小时",
   machine_order_min: "分钟",
 
-  add_machine_download: "下载操作手册",
+  add_machine_download: "打开操作手册",
   add_machine_input_time: "输入时间",
   add_machine_from: "从",
   add_machine_from_time: "小时以后开始出租",
@@ -475,8 +476,7 @@ export default {
   add_machine_to_time: "小时以后结束出租",
   add_machine_input_id: "请输入机器id",
   add_machine_machine_id: "机器id",
-  add_machine_msg_tips: "平台收取10%的费用。\n" +
-    "当挖矿开始后,深脑链全网每天有95.89万个DBC的挖矿奖励,会根据机器的综合性能指标进行自动奖励分配，我们会争取第一时间接入", //9.15 21.27
+  add_machine_msg_tips: "当挖矿开始后(预计时间在9-10月份),深脑链全网每天固定有95.89万个DBC的额外在线奖励,会根据机器的综合性能指标进行自动奖励分配，但是参与挖矿需要每卡质押300-600美金左右等值的DBC", //9.15 21.27
 
   my_machine_miner_info: "我出租的机器信息",
   my_machine_miner_tips: "如果机器使用过程中出现中断，则将会把合约中质押的7天机器使用量的DBC扣除。出租时间不超过7天，则全部扣除",
@@ -571,7 +571,7 @@ export default {
   payment: ' 付费方式 ',
   deposit: ' 质押方式 ',
   pleae_create_wallet: '请先在我的钱包中创建钱包账号',
-  choseImages: '请选择镜像',
+  choseImages: '请选择环境框架',
   diskspace_dlg: "硬盘空间",
   diskspace_giving: '容器创建后，空间无法扩增，请注意硬盘空间充足，免费赠送',
 
@@ -672,7 +672,7 @@ export default {
   myMachine_is_vocing_machine_rentout: '正在验证机器是否可用，请耐心等待，大概需要5-10分钟',
   my_machine_miner_vocing_rentout: '验证中',
   my_machine_miner_vocing_error: '验证失败',
-  stoprent_tip_mymachine: '退租后,如果当前钱包余额大于20000DBC,数据会被继续保存，可以在我的停止容器中启动后继续使用',
+  stoprent_tip_mymachine: '退租后,数据会被继续保存7天，如果钱包余额大于20000DBC,可以在我的停止容器中启动后继续使用',
   list_gpu_count_tip: '当前机器的GPU型号和GPU总数',
   transfer_tips: '在目标地址中输入对方的DBC钱包地址，然后输入转账的DBC数量，点击发送，就可以把DBC转账到对方的DBC钱包中,大概10-30秒对方就可以收到DBC',
   dbc_price_wallet_tips: 'DBC价格是随时波动的，购买DBC的时候请注意波动风险',
@@ -685,6 +685,73 @@ export default {
   diskspace_less_zero: '容器剩余可用空间不能小于0',
 
   myMachine_rentout_success_msg_mining: '验证成功，当前机器为挖矿机器，3分钟后机器可以在云算力平台上线', //2020 4.9
+
+
+  month_discount: "包月折扣",
+  quarter_discount: "包季折扣",
+  year_discount: "包年折扣",
+  rentout_machine_classification: '机器分区',
+  rentout_machine_classification_tag: '普通AI训练区@高稳定AI训练区',
+  rentout_machine_normal: '普通AI训练区',
+  rentout_machine_high: '高稳定AI训练区',
+  rentout_machine_type: '机器出租方式',
+  rentout_machine_tag: '支持单卡出租@仅支持整租',
+  rentout_machine_whole: '仅支持整租',
+  rentout_machine_one_gpu: '支持单卡出租',
+  rentout_machine_type_info: '如果希望机器可以同时在Filecoin计算区出租必须要选择"仅支持整租",同时需要质押DBC',
+  high_stability_conditions0: '机器进入高稳定AI训练区，需满足条件:',
+  high_stability_conditions1: '1) 累计稳定运行超过144小时',
+  high_stability_conditions2: '2) 历史上没有中断记录，如果机器有一次中断记录，将会被自动分配到普通AI训练区',
+  high_stability_conditions3: '3) 根据当前DBC实时价格每卡至少质押{dbc_count}DBC，质押数量没有最高限制，相同参数机器，质押的数量越高，用户租用的概率越大，当机器出现断网、断电、掉卡三种情况之一，按照正在使用的卡数补偿用户DBC，剩余的退回',
+  high_stability_conditions4: '如果机器出问题时，质押的50%DBC用于补偿用户；如果机器出现问题后24小时内没有再次上架机器，另外的50%也将会被扣除',
+  miner_confirmPay: "质押DBC",
+  input_deposite_dbc_count: "输入每卡质押的DBC",
+  deposite_dbc_count_total: "质押的DBC总数为",
+  deposite_dbc_count: "每卡质押的DBC",
+  compensation_dbc_count: "每卡补偿的DBC",
+  my_machine_miner_close_status: "机器已下架",
+  my_machine_will_close: "下架机器",
+  miner_confirmPay_repeat: "继续支付验证",
+  my_machine_order_vocing_pay_error: '支付验证失败，请再次支付验证',
+  unkown_error: "未知错误，请再试一次",
+  deposite_dbc_count_instruction: "如果当前机器在使用过程中机器本身出现断网、断电、掉卡的现象，除了会返回最多144小时的已使用DBC,还会每卡额外再补偿的DBC数量",
+  week_discount_instruction: "选择包周租用机器，在租用成功后的24小时内可以随时退租，提前退租没有折扣优惠,超过24小时不能退租",
+  month_discount_instruction: "选择包月租用机器，在租用成功后的48小时内可以随时退租，提前退租没有折扣优惠,超过48小时不能退租",
+  quarter_discount_instruction: "选择包季度租用机器，在租用成功后的72小时内可以随时退租，提前退租没有折扣优惠,超过72小时不能退租",
+  year_discount_instruction: "选择包年租用机器，在租用成功后的96小时内可以随时退租，提前退租没有折扣优惠,超过96小时不能退租",
+  rentout_machine_whole_instruction: "只能同时租用当前机器的所有GPU",
+  rentout_machine_one_gpu_instruction: "可以最少租用机器的1个GPU，也可以租用多GPU",
+  sold_out_machine_confirm: "确定下架机器",
+  please_sold_out_machine_confirm: "请确认是否下架机器",
+  my_machine_will_putaway: "上架机器",
+  success_connectivity_verification: "机器使用环境验证成功",
+  sold_out_machine_tip: "只有在当前没有用户使用的时候才能下架机器，但是12小时内需要上架机器，否则会扣除质押的50%DBC。如果永久下架机器，需要最后一个用户使用结束超过8天，否则会扣除质押的50%DBC，机器下架48小时后，会退还质押的全部DBC",
+  time_sold_out_machine: '机器已经下架的时间',
+  operation_sold_out_machine_used_tip: '当前有用户正在使用，不能下架机器',
+  time_sold_out_machine_tip2: '当前机器在用户使用的时候发生中断，请尽快上架机器',
+  time_sold_out_machine_tip3: '请尽快上架机器，否则机器下架超过12小时将会被扣除DBC',
+  time_sold_out_machine_tip4: '机器下架48小时后将会退回质押的DBC',
+  accounting_area_info: '机器所在的出租区域',
+  leaseback_anytime: '随时可退租',
+
+  monthly: '包月',
+  quarterly: '包季',
+  yearly: '包年',
+  whole_rent_machine_tip: '（当前机器只能整组）',
+  disk_auto_machine_type: '分配的硬盘空间',
+  miner_confirmPay_tip0: '质押DBC成功后，机器将会进入高稳定AI训练区',
+  miner_confirmPay_tip1: '质押DBC成功后，机器将会进入Filecoin计算区',
+  ai_help: 'AI训练和推理帮助文档',
+  filecoin_help: 'Filecoin计算帮助文档',
+  supernode_help: '超级节点租用帮助文档',
+  rent_machine_ai_help: '租用AI服务器帮助文档',
+  use_machine_ai_help: 'AI服务器使用手册',
+  question_machine_ai_help: '常见问题汇总',
+  rent_machine_filecoin_help: '租用Filecoin Snark计算服务器帮助文档',
+  use_machine_filecoin_help: 'Filecoin Snark计算API接口使用手册',
+  rent_machine_dbc_help: 'DBC超级节点租用帮助文档',
+  use_machine_dbc_help: '启用DBC超级节点帮助文档',
+  myMachine_confirm_pay_tip: '如果已经支付，请点击继续支付后，在弹框中点击我已支付；如果没有支付，请点击继续支付后，在弹框中点击确认支付',
 
   ...enLocale
 };

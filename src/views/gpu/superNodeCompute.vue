@@ -16,13 +16,7 @@
         :dropList="dbc_version"
         @selected="queryMc"
       ></drop-item>
-      <drop-item
-        class="machine-item"
-        :title="$t('have_ip_title')"
-        v-model="req_body.have_ip"
-        :dropList="have_ip"
-        @selected="queryMc"
-      ></drop-item>
+
       <drop-item
         class="machine-item"
         :title="$t('idle_status')"
@@ -277,6 +271,63 @@
           </div>
         </div>
         <div class="flex">
+          <div class="td5">
+            <el-tooltip class="item" effect="dark" :content="$t('month_discount_instruction')">
+              <span class="fs28">
+                <a class="cPrimaryColor">{{$t('month_discount')}}:{{item.discount_month}}%&nbsp;&nbsp;</a>
+              </span>
+            </el-tooltip>
+          </div>
+          <div class="td5">
+            <el-tooltip class="item" effect="dark" :content="$t('quarter_discount_instruction')">
+              <span class="fs28">
+                <a
+                  class="cPrimaryColor"
+                >{{$t('quarter_discount')}}:{{item.discount_quarter}}%&nbsp;&nbsp;</a>
+              </span>
+            </el-tooltip>
+          </div>
+          <div class="td5">
+            <el-tooltip class="item" effect="dark" :content="$t('year_discount_instruction')">
+              <span class="fs28">
+                <a class="cPrimaryColor">{{$t('year_discount')}}:{{item.discount_year}}%&nbsp;&nbsp;</a>
+              </span>
+            </el-tooltip>
+          </div>
+          <div class="td5">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              :content="$t('rentout_machine_whole_instruction')"
+              v-if="item.gpu_rentout_whole"
+            >
+              <span class="fs28">
+                <a class="cPrimaryColor">{{$t('rentout_machine_whole')}}</a>
+              </span>
+            </el-tooltip>
+            <el-tooltip
+              class="item"
+              effect="dark"
+              :content="$t('rentout_machine_one_gpu_instruction')"
+              v-else
+            >
+              <span class="fs28">
+                <a class="cPrimaryColor">{{$t('rentout_machine_one_gpu')}}</a>
+              </span>
+            </el-tooltip>
+          </div>
+          <div class="td5">
+            <span class="fs28"></span>
+            <el-tooltip class="item" effect="dark" :content="$t('deposite_dbc_count_instruction')">
+              <span class="fs28">
+                <a
+                  class="cPrimaryColor"
+                >{{$t('compensation_dbc_count')}}:{{item.rentout_deposite_dbc_count/item.gpu_count}}</a>
+              </span>
+            </el-tooltip>
+          </div>
+        </div>
+        <div class="flex">
           <div class="td">
             <span class="fs16">
               {{$t('list_idle_gpus')}}:
@@ -399,7 +450,7 @@
               {{$t('list_gpu_ram_size')}}：
               <a
                 class="cPrimaryColor"
-              >{{parseInt(item.gpu_ram_size/(1024*1024))}}GB</a>
+              >{{parseInt(item.gpu_ram_size/(1000*1000))}}GB</a>
             </span>
           </div>
           <div v-if="item.disk_bandwidth> 0" class="td">
@@ -518,14 +569,15 @@ import DlgLeaseswitchcpu from "@/components/machine/dlg_leaseswitchcpu";
 import DlgTry from "@/components/machine/dlg_try";
 import {
   getMcList,
-  try_place_order,
-  place_order,
-  place_order_cpu,
+  query_machines_by_machine_type,
+  try_place_order_new,
+  place_order_gpu_new,
+  place_order_cpu_new,
   create_order,
   get_dbc_price
 } from "@/api";
 import { getAccount } from "@/utlis";
-
+import { mapActions, mapState } from "vuex";
 export default {
   name: "superNodeCompute",
   components: {
@@ -723,7 +775,8 @@ export default {
       this.$forceUpdate();
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
-      place_order({
+      place_order_gpu_new({
+        machine_type: 4,
         machine_id: item.machine_id,
         wallet_address_user: getAccount().address,
         user_name_platform,
@@ -812,7 +865,8 @@ export default {
       this.$forceUpdate();
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
-      place_order_cpu({
+      place_order_cpu_new({
+        machine_type: 4,
         machine_id: item.machine_id,
         wallet_address_user: getAccount().address,
         mode: "payment",
@@ -865,7 +919,8 @@ export default {
       this.$forceUpdate();
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
-      place_order_cpu({
+      place_order_cpu_new({
+        machine_type: 4,
         machine_id: item.machine_id,
         wallet_address_user: getAccount().address,
         user_name_platform,
@@ -926,7 +981,8 @@ export default {
       this.$forceUpdate();
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
-      try_place_order({
+      try_place_order_new({
+        machine_type: 4,
         machine_id: item.machine_id,
         wallet_address_user: getAccount().address,
         user_name_platform,
@@ -987,9 +1043,11 @@ export default {
             this.dlg_opencpupayment = false;
             this.dlg_opencpudeposit = false;
             if (params.gpu_count === 0) {
-              this.$router.push("/gpu/myMachine_cpu");
+              this.$router.push("/mymachine/myMachine_cpu");
+              this.$store.commit("setMenuName", "mymachine");
             } else {
-              this.$router.push("/gpu/myMachine");
+              this.$router.push("/mymachine/myMachine");
+              this.$store.commit("setMenuName", "mymachine");
             }
           } else if (res.status === -1) {
             this.$message({
@@ -1020,7 +1078,8 @@ export default {
         .then(res => {
           if (res.status === 1) {
             this.$message(res.msg);
-            this.$router.push("/gpu/myMachine_cpu");
+            this.$router.push("/mymachine/myMachine_cpu");
+            this.$store.commit("setMenuName", "mymachine");
           } else {
             this.$message(res.msg);
           }
@@ -1031,6 +1090,7 @@ export default {
     },
     queryMc() {
       let params = {
+        machine_type: 4,
         country: this.req_body.country,
         idle_status: this.req_body.idle_status,
         total_time: this.req_body.totalTime,
@@ -1059,7 +1119,7 @@ export default {
         user_name_platform: this.$t("website_name"),
         language: this.language
       };
-      getMcList(params).then(res => {
+      query_machines_by_machine_type(params).then(res => {
         this.res_body = res;
       });
       if (this.si) {
@@ -1071,7 +1131,7 @@ export default {
         if (timesRun === 10) {
           clearInterval(this.si);
         }
-        getMcList(params).then(res => {
+        query_machines_by_machine_type(params).then(res => {
           this.res_body = res;
         });
       }, 15000);
@@ -1823,6 +1883,18 @@ export default {
 
         &.fs16 {
           font-size: 16px;
+        }
+      }
+    }
+    .td5 {
+      width: 20%;
+      line-height: 24px;
+
+      .cPrimaryColor {
+        font-size: 18px;
+
+        &.fs16 {
+          font-size: 18px;
         }
       }
     }

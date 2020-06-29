@@ -30,7 +30,7 @@ export default {
         "hashCompute",
         "superNodeCompute"
       ],
-      curNavIndex: 0,
+      curNavIndex: 1,
       menus: [
         {
           title: undefined, //this.$t("gpu.myWallet"),

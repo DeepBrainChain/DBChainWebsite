@@ -95,6 +95,7 @@
 
 <script>
 // @ is an alias to /src
+import { mapActions, mapState } from "vuex";
 export default {
   name: "home",
   data() {
@@ -102,7 +103,8 @@ export default {
   },
   methods: {
     pushToWallet() {
-      this.$router.push("/miner/myWallet");
+      this.$router.push("/miner/myMinerMachine");
+      this.$store.commit("setMenuName", "miner");
     }
   },
   computed: {

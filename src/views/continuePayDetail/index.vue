@@ -64,6 +64,9 @@
               class="cRed"
               v-else-if="item.vocing_pay && !item.order_is_cancer&& !item.pay_success&& !item.pay_error"
             >{{$t('my_machine_order_vocing_pay')}}</span>
+            <span
+              v-else-if="item.pay_success===false&& item.order_is_cancer===false&&item.pay_error===false "
+            >{{$t('myMachine_confirm_pay_tip')}}</span>
           </div>
           <div v-if="item.pay_success===false&& item.order_is_cancer===false " class="r-wrap">
             <template>

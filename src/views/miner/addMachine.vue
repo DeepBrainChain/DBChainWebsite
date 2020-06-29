@@ -7,7 +7,7 @@
         {{$t('miner.addMc_msg_1[0]')}}(
         <a
           class="is-link"
-          href="/DBC_install.docx"
+          href="https://kdocs.cn/l/sCsGPLlCl?f=111"
           target="_blank"
         >{{$t('add_machine_download')}}</a>
         ),{{$t('miner.addMc_msg_1[1]')}}
@@ -82,6 +82,7 @@
         style="width: 700px;"
       ></mu-text-field>
     </div>
+
     <div class="label mt20">{{isEditor ? 3:4}}.{{$t('miner.addMc_price')}}</div>
     <div class="text">
       <span>{{$t('miner.addMc_msg_4[0]')}}:</span>
@@ -92,15 +93,152 @@
         type="number"
       ></mu-text-field>
       $/{{$t('hour')}}
-      <!--<span class="ml60">
-        {{$t('miner.addMc_msg_4[1]')}}:
-      </span>
-      <mu-text-field class="mc-input" v-model.number="storePrice" style="width: 162px;" type="number"></mu-text-field>
-      $/{{$t('hour')}}-->
+    </div>
+    <div class="subText">&nbsp;&nbsp;</div>
+    <div class="text">
+      <span>{{$t('month_discount')}}：</span>
+
+      <el-select class="time-select ml10" v-model="digital90" style="width: 360px" size="small">
+        <el-option
+          v-for="item in digitalOptions"
+          :key="item.value"
+          :label="item.name"
+          :value="item.value"
+        ></el-option>
+      </el-select>
+    </div>
+    <div class="subText">&nbsp;&nbsp;</div>
+    <div class="text">
+      <span>{{$t('quarter_discount')}}：</span>
+
+      <el-select class="time-select ml10" v-model="digital85" style="width: 360px" size="small">
+        <el-option
+          v-for="item in digitalOptions"
+          :key="item.value"
+          :label="item.name"
+          :value="item.value"
+        ></el-option>
+      </el-select>
+    </div>
+    <div class="subText">&nbsp;&nbsp;</div>
+    <div class="text">
+      <span>{{$t('year_discount')}}：</span>
+      <el-select class="time-select ml10" v-model="digital80" style="width: 360px" size="small">
+        <el-option
+          v-for="item in digitalOptions"
+          :key="item.value"
+          :label="item.name"
+          :value="item.value"
+        ></el-option>
+      </el-select>
     </div>
     <div class="subText">{{$t('add_machine_msg_tips')}}</div>
 
-    <div class="label mt20">{{isEditor ? 4:5}}.{{$t('your_country')}}</div>
+    <div class="label mt20">
+      <span>{{isEditor ? 4:5}}.{{$t('rentout_machine_classification')}}:</span>
+      <span
+        class="time-select ml10"
+        v-if="this.$route.query.success_pay_deposite && this.$route.query.machine_mode===1 "
+      >{{$t('rentout_machine_high')}}</span>
+      <el-select
+        class="time-select ml10"
+        v-model="rentout_machine_classification"
+        style="width: 360px"
+        size="small"
+        v-else-if="this.$route.query.error_rent_count===0 &&this.$route.query.total_time_be_used>=8640 "
+      >
+        <el-option
+          v-for="item in rentout_machine_classificationOptions"
+          :key="item.value"
+          :label="item.name"
+          :value="item.value"
+        ></el-option>
+      </el-select>
+      <span class="time-select ml10" v-else>{{$t('rentout_machine_normal')}}</span>
+    </div>
+    <div class="subText">{{$t('high_stability_conditions0')}}</div>
+    <div class="subText">{{$t('high_stability_conditions1')}}</div>
+    <div class="subText">{{$t('high_stability_conditions2')}}</div>
+    <div class="subText">{{$t('high_stability_conditions3',{dbc_count: dbc_deposite_count})}}</div>
+    <div class="subText">{{$t('high_stability_conditions4')}}</div>
+    <div
+      class="label mt30"
+      v-if="rentout_machine_classification===1&&this.$route.query.rentout_deposite_dbc_count===0 "
+    >
+      <span>&nbsp;&nbsp;{{$t('input_deposite_dbc_count')}}:&nbsp;&nbsp;</span>
+      <mu-text-field class="mc-input" v-model="dbc_count" style="width: 162px;" type="number"></mu-text-field>
+      <span
+        class="time-select ml10"
+        v-if="this.$route.query.gpu_count!=0"
+      >{{$t('deposite_dbc_count_total')}}：{{dbc_count*this.$route.query.gpu_count}}</span>
+      <span
+        class="subText"
+      >&nbsp;&nbsp;{{$t('dlg_lease_wallet_balance')}}: {{(this.$store.state.balance).toFixed(4)}}</span>
+    </div>
+    <div
+      class="label mt30"
+      v-if="rentout_machine_classification===1&&this.$route.query.rentout_deposite_dbc_count!==0 "
+    >
+      <span>&nbsp;&nbsp;{{$t('deposite_dbc_count')}}:&nbsp;&nbsp;{{dbc_count}}</span>
+
+      <span
+        class="time-select ml10"
+        v-if="this.$route.query.gpu_count!=0"
+      >{{$t('deposite_dbc_count_total')}}：{{dbc_count*this.$route.query.gpu_count}}</span>
+      <span
+        class="subText"
+      >&nbsp;&nbsp;{{$t('dlg_lease_wallet_balance')}}: {{(this.$store.state.balance).toFixed(4)}}</span>
+    </div>
+
+    <div class="label mt20">
+      <span>{{isEditor ? 5:6}}.{{$t('rentout_machine_type')}}:</span>
+      <el-select
+        class="time-select ml10"
+        v-model="rentout_machine_type"
+        style="width: 360px"
+        size="small"
+        @change="get_dbc_count "
+      >
+        <el-option
+          v-for="item in rentout_machine_typeOptions"
+          :key="item.value"
+          :label="item.name"
+          :value="item.value"
+        ></el-option>
+      </el-select>
+      <span class="subText">&nbsp;&nbsp;{{$t('rentout_machine_type_info')}}</span>
+    </div>
+    <div
+      class="label mt30"
+      v-if="rentout_machine_classification===0&&this.$route.query.rentout_deposite_dbc_count===0 && rentout_machine_type===1"
+    >
+      <span>&nbsp;&nbsp;{{$t('input_deposite_dbc_count')}}:&nbsp;&nbsp;</span>
+      <mu-text-field class="mc-input" v-model="dbc_count" style="width: 162px;" type="number"></mu-text-field>
+      <span
+        class="time-select ml10"
+        v-if="this.$route.query.gpu_count!=0"
+      >{{$t('deposite_dbc_count_total')}}：{{dbc_count*this.$route.query.gpu_count}}</span>
+      <span
+        class="subText"
+      >&nbsp;&nbsp;{{$t('dlg_lease_wallet_balance')}}: {{(this.$store.state.balance).toFixed(4)}}</span>
+    </div>
+
+    <div
+      class="label mt30"
+      v-if="rentout_machine_classification===0&&this.$route.query.rentout_deposite_dbc_count!==0 && rentout_machine_type===1"
+    >
+      <span>&nbsp;&nbsp;{{$t('deposite_dbc_count')}}:&nbsp;&nbsp;{{dbc_count}}</span>
+
+      <span
+        class="time-select ml10"
+        v-if="this.$route.query.gpu_count!=0"
+      >{{$t('deposite_dbc_count_total')}}：{{dbc_count*this.$route.query.gpu_count}}</span>
+      <span
+        class="subText"
+      >&nbsp;&nbsp;{{$t('dlg_lease_wallet_balance')}}: {{(this.$store.state.balance).toFixed(4)}}</span>
+    </div>
+
+    <div class="label mt20">{{isEditor ? 6:7}}.{{$t('your_country')}}</div>
     <div class="subText">&nbsp;&nbsp;</div>
     <div class="form">
       <el-select class="time-select ml10" v-model="country_code" style="width: 240px" size="small">
@@ -113,7 +251,7 @@
       </el-select>
     </div>
 
-    <div class="label mt30">{{isEditor ? 5:6}}.{{$t('miner.addMc_dbc')}}</div>
+    <div class="label mt30">{{isEditor ? 8:9}}.{{$t('miner.addMc_dbc')}}</div>
 
     <div>
       <mu-text-field class="verityMail-input" v-model="code" type="number"></mu-text-field>
@@ -165,12 +303,19 @@
 </template>
 
 <script>
-import { add_or_modify, get_rentout_code, get_country_list } from "@/api";
+import {
+  add_or_modify,
+  add_or_modify_new,
+  get_rentout_code,
+  get_country_list,
+  dbc_deposite_count
+} from "@/api";
 
 import { getAccount } from "@/utlis";
-
+import { mapState } from "vuex";
 export default {
   name: "addMachine",
+  open: Boolean,
   data() {
     return {
       isCoding: false,
@@ -198,11 +343,26 @@ export default {
       end_rent_out_time_later: "",
       machine_id: "",
       country_code: "CN",
-      country: "中国"
+      country: this.$t("my_machine_china"),
+      digital90: "90",
+      digital85: "85",
+      digital80: "80",
+      rentout_machine_type: 0,
+      rentout_machine_classification: 0,
+
+      dbc_count: "0",
+
+      rentout_deposite_dbc_count_every_gpu: 0,
+      dbc_deposite_count: 0
     };
   },
+
   created() {
     this.gpu_price_dollar = (this.$route.query.gpu_price_dollar / 11) * 10;
+    if (this.$route.query.gpu_rentout_whole) {
+      this.rentout_machine_type = 1;
+    }
+
     this.can_rent_start_time_later =
       this.$route.query.can_rent_start_time_later > 0
         ? 0
@@ -212,6 +372,36 @@ export default {
     );
     this.machine_id = this.$route.query.machine_id;
     this.country_code = this.$route.query.country_code;
+    if (
+      !this.$route.query.discount_month ||
+      this.$route.query.discount_month === 0
+    ) {
+      this.digital90 = "100";
+    } else {
+      this.digital90 = this.$route.query.discount_month + "";
+    }
+    if (
+      !this.$route.query.discount_quarter ||
+      this.$route.query.discount_quarter === 0
+    ) {
+      this.digital85 = "100";
+    } else {
+      this.digital85 = this.$route.query.discount_quarter + "";
+    }
+    if (
+      !this.$route.query.discount_year ||
+      this.$route.query.discount_year === 0
+    ) {
+      this.digital80 = "100";
+    } else {
+      this.digital80 = this.$route.query.discount_year + "";
+    }
+
+    if (this.$route.query.machine_mode === 1) {
+      this.rentout_machine_classification = 1;
+    }
+
+    this.get_dbc_count();
   },
   computed: {
     isEditor() {
@@ -253,9 +443,77 @@ export default {
       });
 
       return opts;
+    },
+    digitalOptions() {
+      let opts = [];
+      var tags = new Array();
+      var value = new Array();
+      let digital_tag = "100%@95%@90%@85%@80%@75%@70%@65%@60%@55%@50%";
+      let value_tag = "100@95@90@85@80@75@70@65@60@55@50";
+      tags = digital_tag.split("@");
+      value = value_tag.split("@");
+      for (let i = 0; i < tags.length; i++) {
+        opts.push({
+          name: tags[i],
+          value: value[i]
+        });
+      }
+
+      return opts;
+    },
+    rentout_machine_typeOptions() {
+      let opts = [];
+      var tags = new Array();
+
+      let rentout_machine_tag = this.$t("rentout_machine_tag");
+
+      tags = rentout_machine_tag.split("@");
+
+      for (let i = 0; i < tags.length; i++) {
+        opts.push({
+          name: tags[i],
+          value: i
+        });
+      }
+
+      return opts;
+    },
+    rentout_machine_classificationOptions() {
+      let opts = [];
+      var tags = new Array();
+
+      let rentout_machine_classification_tag = this.$t(
+        "rentout_machine_classification_tag"
+      );
+
+      tags = rentout_machine_classification_tag.split("@");
+
+      for (let i = 0; i < tags.length; i++) {
+        opts.push({
+          name: tags[i],
+          value: i
+        });
+      }
+
+      return opts;
     }
   },
   methods: {
+    get_dbc_count() {
+      let whole = false;
+      if (this.rentout_machine_type === 1) {
+        whole = true;
+      }
+      dbc_deposite_count({ gpu_rentout_whole: whole }).then(res => {
+        if (res.status === 1) {
+          this.dbc_deposite_count = res.content;
+          this.dbc_count = this.$route.query.rentout_deposite_dbc_count;
+          if (this.dbc_count == 0) {
+            this.dbc_count = this.dbc_deposite_count;
+          }
+        }
+      });
+    },
     getCode() {
       if (!getAccount()) {
         //  this.$router.push(`/openWallet/${type}`);
@@ -302,10 +560,26 @@ export default {
       this.isLoading = true;
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
+
+      if (
+        this.rentout_machine_classification === 0 &&
+        this.rentout_machine_type === 0
+      ) {
+        this.rentout_deposite_dbc_count_every_gpu = 0;
+      } else {
+        this.rentout_deposite_dbc_count_every_gpu = this.dbc_count;
+      }
+
       if (this.country_code === "") {
         this.country_code = "CN";
       }
-      add_or_modify({
+      let rentout_machine_type_local = false;
+      if (this.rentout_machine_type === 0) {
+        rentout_machine_type_local = false;
+      } else {
+        rentout_machine_type_local = true;
+      }
+      add_or_modify_new({
         wallet_address: getAccount().address,
         machine_id: this.machine_id,
         gpu_price_dollar: this.gpu_price_dollar,
@@ -314,16 +588,24 @@ export default {
         code: this.code,
         user_name_platform,
         language,
-        country_code: this.country_code
+        country_code: this.country_code,
+
+        discount_month: this.digital90,
+        discount_quarter: this.digital85,
+        discount_year: this.digital80,
+        gpu_rentout_whole: rentout_machine_type_local,
+        machine_mode: this.rentout_machine_classification,
+        rentout_deposite_dbc_count_every_gpu: this
+          .rentout_deposite_dbc_count_every_gpu
       })
         .then(res => {
           if (res.status === 1) {
             // var tip = res.msg + String(res.content) + "h";
-            this.$message({
-              showClose: true,
-              message: res.msg,
-              type: "success"
-            });
+            //    this.$message({
+            //     showClose: true,
+            //     message: res.msg,
+            //     type: "success"
+            //   });
             this.$router.back();
           } else {
             this.$message({
@@ -336,10 +618,10 @@ export default {
         .finally(() => {
           this.isLoading = false;
         });
-    },
-    back() {
-      this.$router.back();
     }
+    // back() {
+    // this.$router.back();
+    // }
   }
 };
 </script>

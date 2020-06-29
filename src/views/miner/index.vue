@@ -19,16 +19,16 @@
 import Navi from "@/components/naviMenu";
 
 export default {
-  name: "miner",
+  name: "index",
   data() {
     return {
       // 缓存组件列表
-      cacheList: ["myMachine_unlock"],
+      cacheList: ["myMinerMachine_unlock"],
       curNavIndex: 0,
       menus: [
         {
-          title: undefined, //
-          to: "myMachine",
+          title: undefined, //this.$t("gpu.myMachine"),
+          to: "myMinerMachine",
           index: 0,
           iconClass: "iconmachine"
         }
@@ -43,16 +43,17 @@ export default {
   created() {
     // const curRoute = this.$route.matched.find(item => item.path === this.$route.path)
     this.curNavIndex = this.$route.meta.menuIndex;
-    this.inti_menus();
+    this.init_menus();
   },
   watch: {
     "$i18n.locale"() {
-      this.inti_menus();
+      this.init_menus();
     }
   },
-  computed: {
-    inti_menus() {
-      this.menus[1].title = this.$t("myMachine_gpu_rentout");
+  computed: {},
+  methods: {
+    init_menus() {
+      this.menus[0].title = this.$t("myMachine_gpu_rentout");
     }
   },
   components: {

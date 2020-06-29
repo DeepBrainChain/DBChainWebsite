@@ -14,7 +14,8 @@ import {
 
 import {
   get_dbc_price,
-  dbc_info
+  dbc_info,
+  dbc_balance
 } from '@/api'
 import cookie from 'js-cookie'
 
@@ -33,7 +34,8 @@ export default new Vuex.Store({
     publicKey: '',
     address: '',
     transferList: [],
-    dbcToUS: 0 // DBC对美金汇率
+    dbcToUS: 0, // DBC对美金汇率
+    menuName: ''
   },
   mutations: {
     setAccount(state, data) {
@@ -68,6 +70,9 @@ export default new Vuex.Store({
     },
     setDbcChange(state, data) {
       state.dbcChange = data
+    },
+    setMenuName(state, data) {
+      state.menuName = data
     }
   },
   actions: {
@@ -103,6 +108,8 @@ export default new Vuex.Store({
       }).catch(err => {
 
       })
+
+
     },
 
     getGate({
@@ -165,15 +172,29 @@ export default new Vuex.Store({
     }) {
       return new Promise((resolve, reject) => {
         const ac = getAccount()
+        const language = "CN"
         if (ac) {
           commit('setData', {
             privateKey: ac.privateKey,
             publicKey: ac.publicKey,
             address: ac.address
           })
+          dbc_balance({
+            user_wallet_address: ac.address,
+            language
+          }).then(res => {
+
+            commit('setBalances', res.content)
+
+
+          }).catch(err => {
+
+          })
+
           getBalance().then(data => {
             resolve(data)
-            commit('setBalances', data.balance)
+
+            // commit('setBalances', data.balance)
           }).catch(err => {
             reject('please open wallet')
           })
@@ -197,6 +218,8 @@ export default new Vuex.Store({
             address: account.address
           })
           resolve(account)
+
+
         } else {
           reject('createAccount is fail')
         }

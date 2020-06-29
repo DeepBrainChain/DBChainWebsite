@@ -4,7 +4,7 @@
       <img class="logo" :src="logo" />
       <el-dropdown
         class="item"
-        :class="{active: menuName === 'home' || menuName === 'minerHome'}"
+        :class="{active: this.$store.state.menuName === 'home' || this.$store.state.menuName=== 'minerHome'}"
         trigger="click"
         v-on:command="drop_home"
       >
@@ -20,25 +20,30 @@
       <!--      <a class="item" :class="{active: menuName === 'home'}" @click="pushMenu('home')">{{$t('heads.home')}}</a>-->
       <a
         class="item"
-        :class="{active: menuName === 'gpu'}"
+        :class="{active: this.$store.state.menuName === 'gpu'}"
         @click="pushMenu('gpu')"
       >{{$t('heads.gpu')}}</a>
       <!--      <router-link class="item" to="/network">{{$t('heads.network')}}</router-link>-->
       <a
         class="item"
-        :class="{active: menuName === 'miner'}"
+        :class="{active: this.$store.state.menuName === 'miner'}"
         @click="pushMenu('miner')"
       >{{$t('heads.miner')}}</a>
       <a
         class="item"
-        :class="{active: menuName === 'mymachine'}"
+        :class="{active: this.$store.state.menuName === 'mymachine'}"
         @click="pushMenu('mymachine')"
       >{{$t('heads.mymachine')}}</a>
       <a
         class="item"
-        :class="{active: menuName === 'mywallet'}"
+        :class="{active: this.$store.state.menuName === 'mywallet'}"
         @click="pushMenu('mywallet')"
       >{{$t('heads.mywallet')}}</a>
+      <a
+        class="item"
+        :class="{active: this.$store.state.menuName === 'help'}"
+        @click="pushMenu('help')"
+      >{{$t('heads.help')}}</a>
       <a
         class="item"
         v-if="this.curLang==='cn' ||this.curLang==='CN' "
@@ -70,14 +75,13 @@
 </template>
 
 <script >
-import { mapState } from "vuex";
-
+import { mapActions, mapState } from "vuex";
 export default {
   name: "Head",
   data() {
     return {
       curLang: undefined, //this.$i18n.locale,
-      menuName: "",
+      //  menuName: "",
       link: undefined,
       title: undefined,
       logo: undefined,
@@ -89,13 +93,34 @@ export default {
     this.set_title();
     this.set_logo();
     this.setLanguageCode();
+    this.initData();
   },
   computed: {
+    ...mapState([
+      "address",
+      "balance",
+      "transferList",
+      "dbcToUS",
+      "dbcPrice",
+      "dbcChange"
+    ]),
     set_dbctalk() {
       return "";
     }
   },
   methods: {
+    ...mapActions([
+      "getAccountState",
+      "getTransferList",
+      "getExchangeRate",
+      "getGate"
+    ]),
+    initData() {
+      this.getExchangeRate();
+      this.getAccountState()
+        .then(data => {})
+        .catch(err => {});
+    },
     setLanguageCode() {
       let type = navigator.appName;
       let lang = "";
@@ -472,14 +497,17 @@ export default {
       }
     },
     pushMenu(name) {
-      this.menuName = name;
+      //  this.menuName = name;
+      this.$store.commit("setMenuName", name);
       this.$router.push("/" + name);
     },
+
     pushToPreview() {
       this.$router.push("/preview");
     },
     drop_home(name) {
-      this.menuName = name;
+      // this.menuName = name;
+      this.$store.commit("setMenuName", name);
       this.$router.push("/" + name);
     },
     drop_command(lang) {

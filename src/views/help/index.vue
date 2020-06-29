@@ -19,34 +19,30 @@
 import Navi from "@/components/naviMenu";
 
 export default {
-  name: "mymachine",
+  name: "help",
   data() {
     return {
       // 缓存组件列表
-      cacheList: [
-        "myMachine_unlock",
-        "myMachine_unlock_cpu",
-        "myMachine_unlock_stopped"
-      ],
+      cacheList: ["aiHelp", "filecoinHelp", "supernodeHelp"],
       curNavIndex: 0,
       menus: [
         {
-          title: undefined, //this.$t("gpu.myMachine"),
-          to: "myMachine",
+          title: undefined, //this.$t("gpu.myWallet"),
+          to: "aiHelp",
           index: 0,
-          iconClass: "iconmachine"
+          iconClass: "iconwallet"
         },
         {
-          title: undefined, //this.$t("gpu.machineList"),
-          to: "myMachine_cpu",
+          title: undefined, //this.$t("gpu.myMachine"),
+          to: "filecoinHelp",
           index: 1,
           iconClass: "iconmachine"
         },
         {
           title: undefined, //this.$t("gpu.machineList"),
-          to: "myMachine_stopped",
+          to: "supernodeHelp",
           index: 2,
-          iconClass: "iconmachine"
+          iconClass: "iconlist"
         }
       ]
     };
@@ -59,20 +55,20 @@ export default {
   created() {
     // const curRoute = this.$route.matched.find(item => item.path === this.$route.path)
     this.curNavIndex = this.$route.meta.menuIndex;
-    this.init_menus();
+    this.inti_menus();
   },
   watch: {
     "$i18n.locale"() {
-      this.init_menus();
+      this.inti_menus();
     }
   },
-  computed: {},
-  methods: {
-    init_menus() {
-      this.menus[0].title = this.$t("gpu.myMachine_gpu");
+  computed: {
+    inti_menus() {
+      this.menus[0].title = this.$t("ai_help");
 
-      this.menus[1].title = this.$t("gpu.myMachine_cpu");
-      this.menus[2].title = this.$t("gpu.myMachine_stopped");
+      this.menus[1].title = this.$t("filecoin_help");
+
+      this.menus[2].title = this.$t("supernode_help");
     }
   },
   components: {

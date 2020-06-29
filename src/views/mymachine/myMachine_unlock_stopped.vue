@@ -259,7 +259,7 @@
               {{$t('list_gpu_ram_size')}}：
               <a
                 class="cPrimaryColor"
-              >{{parseInt(item.mcData.gpu_ram_size/(1024*1024))}}GB</a>
+              >{{parseInt(item.mcData.gpu_ram_size/(1000*1000))}}GB</a>
             </span>
           </div>
           <div class="td">
@@ -414,7 +414,6 @@ import DlgLeasegpu from "@/components/machine/dlg_leasegpu";
 import DlgLeaseswitchcpu from "@/components/machine/dlg_leaseswitchcpu";
 import {
   queryBindMail_rent,
-  place_order_cpu_to_gpu,
   continue_pay_get_dbc_price,
   continue_pay_get_pay_dbc_count,
   continue_pay_create_order,
@@ -437,8 +436,8 @@ import {
   create_order,
   pay_update,
   update_container_is_ok,
-  place_order_stop_to_gpu,
-  place_order_stop_to_cpu
+  place_order_stop_to_gpu_new,
+  place_order_stop_to_cpu_new
 } from "@/api";
 
 import { getAccount, transfer, getBalance } from "@/utlis";
@@ -580,7 +579,8 @@ export default {
       this.rentLoading_index = index;
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
-      place_order_stop_to_gpu({
+      place_order_stop_to_gpu_new({
+        machine_type: item.orderData.machine_type,
         machine_id: item.orderData.machine_id,
         wallet_address_user: getAccount().address,
         order_id_pre: item.orderData.order_id,
@@ -669,7 +669,8 @@ export default {
       this.rentLoading_index = index;
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
-      place_order_stop_to_cpu({
+      place_order_stop_to_cpu_new({
+        machine_type: item.machine_type,
         machine_id: item.machine_id,
         wallet_address_user: getAccount().address,
         mode: "payment",
@@ -722,7 +723,8 @@ export default {
       this.rentLoading_index = index;
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
-      place_order_stop_to_cpu({
+      place_order_stop_to_cpu_new({
+        machine_type: item.machine_type,
         machine_id: item.machine_id,
         wallet_address_user: getAccount().address,
         order_id_pre: item.order_id,
@@ -795,9 +797,9 @@ export default {
             this.dlg_opencpupayment = false;
             this.dlg_opencpudeposit = false;
             if (params.gpu_count === 0) {
-              this.$router.push("/gpu/myMachine_cpu");
+              this.$router.push("/mymachine/myMachine_cpu");
             } else {
-              this.$router.push("/gpu/myMachine");
+              this.$router.push("/mymachine/myMachine");
             }
           } else {
             this.$message({

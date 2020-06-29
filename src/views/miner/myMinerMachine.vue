@@ -19,7 +19,7 @@ import { mapActions, mapState } from "vuex";
 import { getAccount } from "@/utlis";
 
 export default {
-  name: "myWallet",
+  name: "myMinerMachine",
   created() {
     console.log(this.$route);
     this.initData();
@@ -28,7 +28,7 @@ export default {
     ...mapActions(["getAccountState", "getTransferList"]),
     initData() {
       if (getAccount()) {
-        this.$router.replace("myMachineUnlock");
+        this.$router.replace("myMinerMachine_unlock");
       }
     },
     openCreateWallet() {
@@ -38,7 +38,7 @@ export default {
     openWallet() {
       this.getAccountState()
         .then(data => {
-          this.$router.push("/gpu/myMachine_unlock");
+          this.$router.push("myMinerMachine_unlock");
         })
         .catch(err => {
           const type = this.$route.path.search("gpu") !== -1 ? "gpu" : "miner";

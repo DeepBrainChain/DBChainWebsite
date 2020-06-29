@@ -35,17 +35,24 @@
       <div class="tools-head">
         <div class="l-wrap">
           <span
-            v-if="item.mcData.online_status && item.mcData.dbc_open_status"
+            v-if="!item.mcData.dbc_open_status && item.mcData.time_dbc_close_status!=null &&!item.mcData.vocing_connectivity_verification"
+          >{{$t('my_machine_miner_status')}}：{{$t('my_machine_miner_close_status')}}</span>
+          <span
+            v-else-if="item.mcData.online_status && item.mcData.dbc_open_status"
           >{{$t('my_machine_miner_status')}}：{{$t('my_machine_miner_online')}}</span>
           <span
-            v-if="item.mcData.online_status && !item.mcData.dbc_open_status &&!item.mcData.vocing_error "
+            v-else-if="item.mcData.online_status && !item.mcData.dbc_open_status &&item.mcData.vocing_connectivity_verification"
           >{{$t('my_machine_miner_status')}}：{{$t('my_machine_miner_vocing_rentout')}}</span>
           <span
-            v-if="!item.mcData.online_status "
+            v-else-if="!item.mcData.online_status"
           >{{$t('my_machine_miner_status')}}：{{$t('my_machine_miner_offline')}}</span>
           <span
-            v-if="item.mcData.vocing_error "
+            v-else-if="item.mcData.error_connectivity_verification"
           >{{$t('my_machine_miner_status')}}：{{$t('my_machine_miner_vocing_error')}}</span>
+          <span
+            class="cRed"
+            v-if="!item.mcData.dbc_open_status && item.mcData.time_dbc_close_status!=null"
+          >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{$t('time_sold_out_machine')}}:{{$secToDate(item.mcData.min_time_dbc_close_status*60, 'DHM')}}</span>
         </div>
         <div class="r-wrap">
           <el-tooltip effect="light" placement="left">
@@ -65,8 +72,17 @@
         </div>
       </div>
       <div class="status-wrap">
-        <div class="flex vCenter right">
+        <div class="flex status-title">
           <el-rate :value="item.mcData.evaluation_score_average/2"></el-rate>
+          <span class="fs28">
+            <span
+              v-if="item.mcData.dbc_open_status"
+            >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{$t('accounting_area_info')}}:</span>
+            <span
+              class="cPrimaryColor"
+              v-if="item.mcData.dbc_open_status"
+            >{{item.mcData.machine_mode_String }}</span>
+          </span>
           <!--   <span>{{item.mcData.evaluation_score_average}}{{$t('scores')}}</span> -->
         </div>
         <div class="flex status-title">
@@ -101,14 +117,75 @@
               <a class="cPrimaryColor">{{item.mcData.country}}</a>
             </span>
           </div>
-          <div class="td" v-if="item.mcData.can_rent_start_time_later<=0">
+          <div
+            class="td"
+            v-if="item.mcData.can_rent_start_time_later<=0 && item.mcData.dbc_open_status"
+          >
             <span class="fs16">
               <a class="cPrimaryColor">{{-item.mcData.can_rent_start_time_later}}</a>
               {{$t('list_start_rentout')}}
             </span>
           </div>
-          <div class="td" v-else-if="item.mcData.can_rent_start_time_later>0">
+          <div
+            class="td"
+            v-else-if="item.mcData.can_rent_start_time_later>0&& item.mcData.dbc_open_status"
+          >
             <span class="fs16">{{$t('list_can_rentout')}}</span>
+          </div>
+        </div>
+        <div class="flex">
+          <div class="td5">
+            <span class="fs28">
+              <a
+                class="cPrimaryColor"
+              >{{$t('month_discount')}}:{{item.mcData.discount_month}}%&nbsp;&nbsp;</a>
+            </span>
+          </div>
+          <div class="td5">
+            <span class="fs28">
+              <a
+                class="cPrimaryColor"
+              >{{$t('quarter_discount')}}:{{item.mcData.discount_quarter}}%&nbsp;&nbsp;</a>
+            </span>
+          </div>
+          <div class="td5">
+            <span class="fs28">
+              <a
+                class="cPrimaryColor"
+              >{{$t('year_discount')}}:{{item.mcData.discount_year}}%&nbsp;&nbsp;</a>
+            </span>
+          </div>
+          <div class="td5">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              :content="$t('rentout_machine_whole_instruction')"
+              v-if="item.mcData.gpu_rentout_whole"
+            >
+              <span class="fs28">
+                <a class="cPrimaryColor">{{$t('rentout_machine_whole')}}</a>
+              </span>
+            </el-tooltip>
+            <el-tooltip
+              class="item"
+              effect="dark"
+              :content="$t('rentout_machine_one_gpu_instruction')"
+              v-else
+            >
+              <span class="fs28">
+                <a class="cPrimaryColor">{{$t('rentout_machine_one_gpu')}}</a>
+              </span>
+            </el-tooltip>
+          </div>
+          <div class="td5">
+            <span class="fs28"></span>
+            <el-tooltip class="item" effect="dark" :content="$t('high_stability_conditions4')">
+              <span class="fs28">
+                <a
+                  class="cPrimaryColor"
+                >{{$t('deposite_dbc_count')}}:{{item.mcData.rentout_deposite_dbc_count/item.mcData.gpu_count}}</a>
+              </span>
+            </el-tooltip>
           </div>
         </div>
         <div class="flex">
@@ -196,7 +273,7 @@
               {{$t('list_gpu_ram_size')}}：
               <a
                 class="cPrimaryColor"
-              >{{parseInt(item.mcData.gpu_ram_size/(1024*1024))}}GB</a>
+              >{{parseInt(item.mcData.gpu_ram_size/(1000*1000))}}GB</a>
             </span>
           </div>
           <div class="td">
@@ -289,25 +366,99 @@
       <div class="tools-head">
         <div class="l-wrap">
           <span
-            v-if="isShowRendSuccessMsg(item.mcData.milli_can_rent_start_time)&&item.mcData.dbc_open_status&&item.mcData.usage_type!==2"
+            v-if="isShowRendSuccessMsg(item.mcData.milli_time_dbc_open_status)&&item.mcData.dbc_open_status&&item.mcData.usage_type!==2"
           >{{$t('myMachine_rentout_success_msg')}}</span>
 
           <span
-            v-if="isShowRendSuccessMsg(item.mcData.milli_can_rent_start_time)&&item.mcData.dbc_open_status&&item.mcData.usage_type===2"
+            v-else-if="isShowRendSuccessMsg(item.mcData.milli_time_dbc_open_status)&&item.mcData.dbc_open_status&&item.mcData.usage_type===2"
           >{{$t('myMachine_rentout_success_msg_mining')}}</span>
 
           <!--   <span class="cRed" v-else-if="item.mcData.vocing_error">{{$t('myMachine_rentout_error')}}</span>-->
-          <span class="cRed" v-else-if="item.mcData.vocing_error">{{tip}}</span>
+
           <span
             class="cRed"
-            v-else-if="item.mcData.vocing"
+            v-else-if="(ispayPocing||item.mcData.vocing_pay_deposite)&&pay_index===index"
+          >{{$t('my_machine_order_vocing_pay')}}</span>
+
+          <span
+            class="cRed"
+            v-else-if="item.mcData.error_pay_deposite&&!item.mcData.dbc_open_status"
+          >{{$t('my_machine_order_vocing_pay_error')}}</span>
+
+          <span class="cRed" v-else-if="item.mcData.error_connectivity_verification">{{tip}}</span>
+          <span
+            class="cRed"
+            v-else-if="isPaying&&pay_index===index"
+          >{{$t('myMachine_is_dbc_transfering')}}</span>
+
+          <span
+            class="cRed"
+            v-else-if="item.mcData.vocing_connectivity_verification"
           >{{$t('myMachine_is_vocing_machine_rentout')}}</span>
+          <span
+            class="cRed"
+            v-else-if="item.mcData.success_connectivity_verification && !item.mcData.dbc_open_status"
+          >{{$t('success_connectivity_verification')}}</span>
+          <span
+            class="cRed"
+            v-else-if="!item.mcData.dbc_open_status && item.mcData.time_dbc_close_status!=null"
+          >{{$t('sold_out_machine_tip')}}</span>
         </div>
         <div class="r-wrap">
+          <el-tooltip class="item" effect="dark" :content="$t('miner_confirmPay_tip0')">
+            <el-button
+              v-if="item.mcData.need_deposite_dbc && !item.mcData.success_pay_deposite&&
+            !item.mcData.error_pay_deposite&& !ispayPocing&&!item.mcData.vocing_pay_deposite&&item.mcData.success_connectivity_verification&&!item.mcData.gpu_rentout_whole"
+              plain
+              class="tool-btn"
+              size="mini"
+              style="width: 86px"
+              @click="openPay(item,index)"
+            >{{$t('miner_confirmPay')}}</el-button>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" :content="$t('miner_confirmPay_tip1')">
+            <el-button
+              v-if="item.mcData.need_deposite_dbc && !item.mcData.success_pay_deposite&&
+            !item.mcData.error_pay_deposite&& !ispayPocing&&!item.mcData.vocing_pay_deposite&&item.mcData.success_connectivity_verification&&item.mcData.gpu_rentout_whole"
+              plain
+              class="tool-btn"
+              size="mini"
+              style="width: 86px"
+              @click="openPay(item,index)"
+            >{{$t('miner_confirmPay')}}</el-button>
+          </el-tooltip>
+          <el-button
+            v-if="item.mcData.error_pay_deposite && !ispayPocing&&!item.mcData.vocing_pay_deposite"
+            plain
+            class="tool-btn"
+            size="mini"
+            style="width: 126px"
+            @click="openPayRepeat(item,index)"
+          >{{$t('miner_confirmPay_repeat')}}</el-button>
+          <el-tooltip class="item" effect="dark" :content="$t('sold_out_machine_tip')">
+            <el-button
+              plain
+              class="tool-btn"
+              size="mini"
+              v-if="(item.mcData.dbc_open_status)&&(!ispayPocing&&!item.mcData.vocing_pay_deposite)"
+              style="width: 86px"
+              @click="openSold_out_machine(item.mcData)"
+            >{{$t('my_machine_will_close')}}</el-button>
+          </el-tooltip>
+
           <el-button
             plain
             class="tool-btn"
             size="mini"
+            v-if="item.mcData.online_status&&!item.mcData.dbc_open_status&&item.mcData.time_dbc_close_status!=null&&!item.mcData.vocing_connectivity_verification"
+            style="width: 86px"
+            @click="pushToEditMc(item.mcData)"
+          >{{$t('my_machine_will_putaway')}}</el-button>
+          <el-button
+            plain
+            class="tool-btn"
+            size="mini"
+            v-else-if="item.mcData.online_status &&!item.mcData.error_pay_deposite&&!ispayPocing &&!item.mcData.vocing_pay_deposite&&!item.mcData.vocing_connectivity_verification"
             style="width: 86px"
             @click="pushToEditMc(item.mcData)"
           >{{$t('my_machine_edit')}}</el-button>
@@ -331,6 +482,13 @@
     <dlg-rate :open.sync="dlgRate_open" :item="curItem" @success="successRate"></dlg-rate>
     <!--    return dbc-->
     <dlg-return-dbc :open.sync="dlgReturnDbc_open" :item="curItem" @success="returnSuccess"></dlg-return-dbc>
+    <dlg-minerpaydeposite
+      :open.sync="dlgMinerpaydeposite_open"
+      :place-order-data="placeOrderData"
+      @confirm="switch_pay"
+    ></dlg-minerpaydeposite>
+
+    <dlg-soldoutmachine :open.sync="dlgsold_out_machine" :item="curItem" @success="soldOutSuccess"></dlg-soldoutmachine>
   </div>
 </template>
 
@@ -342,34 +500,31 @@ import DlgMail from "@/components/machine/dlg_bindMail";
 import DlgUnsubscribe from "@/components/machine/dlg_unsubscribe";
 import DlgRate from "@/components/machine/dlg_rate";
 import DlgReturnDbc from "@/components/machine/dlg_returnDbc";
+import DlgMinerpaydeposite from "@/components/machine/dlg_minerpaydeposite";
+import DlgSoldoutmachine from "@/components/machine/dlg_soldoutmachine";
 import {
   queryBindMail_rent,
-  query_machine_by_wallet,
-  get_all_order,
-  can_rent_this_machine,
-  pay,
-  get_cancer_code,
-  cancer_order,
   binding_is_ok,
   binding_is_ok_modify,
-  get_stop_code,
-  stop,
-  get_return_dbc_code,
-  request_return_dbc,
   rentout_get_machines_list,
-  voc_machine
+  vocing_deposite_dbc,
+  voc_machine,
+  vocing_deposite_dbc_repeat,
+  sold_out_machine
 } from "@/api";
 import { getAccount, transfer } from "@/utlis";
 
 export default {
-  name: "myMachine_unlock",
+  name: "myMinerMachine_unlock",
   components: {
     DlgReload,
     DlgHd,
     DlgMail,
     DlgUnsubscribe,
     DlgRate,
-    DlgReturnDbc
+    DlgReturnDbc,
+    DlgMinerpaydeposite,
+    DlgSoldoutmachine
   },
   data() {
     return {
@@ -380,6 +535,8 @@ export default {
       dlgUnsubscribe_open: false,
       dlgRate_open: false,
       dlgReturnDbc_open: false,
+      dlgMinerpaydeposite_open: false,
+      dlgsold_out_machine: false,
       isNewMail: false,
       isBinding: false,
       isBinded: false,
@@ -391,7 +548,10 @@ export default {
       curItem: undefined,
       isRateEdit: false,
       si: undefined,
-      tip: ""
+      tip: "",
+      ispayPocing: false,
+      local_pay_error: false,
+      pay_index: -1
     };
   },
   activated() {
@@ -416,19 +576,251 @@ export default {
     }
   },
   methods: {
+    soldOutSuccess() {
+      this.queryMcList();
+    },
+    openPay(item, index) {
+      this.pay_index = index;
+      this.dlgMinerpaydeposite_open = true;
+      this.placeOrderData = item;
+    },
+
+    openSold_out_machine(item) {
+      this.dlgsold_out_machine = true;
+      this.curItem = item;
+    },
+
+    openPayRepeat(item, index) {
+      this.pay_index = index;
+      const language = this.$i18n.locale;
+      return vocing_deposite_dbc_repeat({
+        machine_id: item.mcData.machine_id,
+
+        language
+      })
+        .then(res => {
+          if (res.status === 1) {
+            this.dlgMinerpaydeposite_open = true;
+          } else if (res.status === -1) {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "error"
+            });
+          }
+        })
+        .catch(err => {
+          this.$message({
+            showClose: true,
+            message: this.$t("unkown_error"),
+            type: "error"
+          });
+        });
+    },
+
+    sold_out_machine(item) {
+      const language = this.$i18n.locale;
+      return sold_out_machine({
+        machine_id: item.machine_id,
+
+        language
+      })
+        .then(res => {
+          if (res.status === 1) {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "success"
+            });
+            this.queryMcList();
+          } else if (res.status === -1) {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "error"
+            });
+          }
+        })
+        .catch(err => {
+          this.$message({
+            showClose: true,
+            message: this.$t("unkown_error"),
+            type: "error"
+          });
+        });
+    },
+
     forceToPocMachine() {
       // pay before
-      let item = this.res_body.content.find((item, index) => {
+      let item = this.res_body.content.find(item => {
         // console.log(index)
         // console.log(item.orderData.creating_container)
         // console.log(item.orderData.container_is_exist)
-        return item.mcData.vocing || item.mcData.vocing_error;
+        return (
+          item.mcData.vocing_connectivity_verification ||
+          item.mcData.error_connectivity_verification
+        );
       });
       if (item) {
         this.pocMachine(item.mcData);
       }
     },
+    switch_pay(item) {
+      this.dlgMinerpaydeposite_open = false;
+      if (item.switch_pay_mode === "confirm_pay") {
+        this.payOrder(item);
+      } else if (item.switch_pay_mode === "paid") {
+        this.paid(item);
+      }
+    },
+    confirm_sold_out_machine(item) {
+      this.dlgsold_out_machine = false;
+      this.sold_out_machine(item);
+    },
+    // pay
+    payOrder(item) {
+      this.ispayPocing = false;
 
+      const amount = item.mcData.rentout_deposite_dbc_count;
+
+      this.isPaying = true;
+      this.local_pay_error = false;
+      transfer({
+        toAddress: item.mcData.rentout_deposite_wallet_address,
+        amount
+      })
+        .then(res => {
+          if (res.status === 1) {
+            console.log("转账成功");
+            this.$message({
+              showClose: true,
+              message: this.$t("transfer_success"),
+              type: "success"
+            });
+
+            // pay after
+            this.isPaying = false;
+
+            const language = this.$i18n.locale;
+            this.ispayPocing = true;
+
+            // 支付后确认
+            this.si = setInterval(() => {
+              return vocing_deposite_dbc({
+                machine_id: item.mcData.machine_id,
+
+                language
+              })
+                .then(res => {
+                  this.queryMcList();
+                  if (res.status === 1) {
+                    clearInterval(this.si);
+                    this.pay_index = -1;
+                    this.ispayPocing = false;
+                  } else if (res.status === -1) {
+                    this.ispayPocing = false;
+                    this.pay_index = -1;
+                    clearInterval(this.si);
+                    this.$message({
+                      showClose: true,
+                      message: res.msg,
+                      type: "error"
+                    });
+                  } else if (res.status === 2) {
+                    this.ispayPocing = true;
+
+                    this.queryMcList();
+                  }
+                })
+                .catch(err => {
+                  this.$message({
+                    showClose: true,
+                    message: this.$t("unkown_error"),
+                    type: "error"
+                  });
+                  this.ispayPocing = false;
+                  this.pay_index = -1;
+                  clearInterval(this.si);
+                });
+            }, 8000);
+          } else if (res.status === -1) {
+            this.isPaying = false;
+            this.pay_index = -1;
+            this.$message({
+              showClose: true,
+              message: this.$t("dbc_lack_of_balance"),
+              type: "error"
+            });
+            clearInterval(this.si);
+            this.local_pay_error = true;
+          } else {
+            this.isPaying = false;
+            this.pay_index = -1;
+            this.$message({
+              showClose: true,
+              message: this.$t("transfer_error"),
+              type: "error"
+            });
+            clearInterval(this.si);
+            this.local_pay_error = true;
+          }
+        })
+        .catch(err => {
+          this.isPaying = false;
+          this.pay_index = -1;
+          clearInterval(this.si);
+          this.$message({
+            showClose: true,
+            message: this.$t("transfer_error"),
+            type: "error"
+          });
+        });
+
+      //  }, 5000);
+    },
+
+    paid(item) {
+      clearInterval(this.si);
+
+      const language = this.$i18n.locale;
+      // const txid = res.response.txid;
+      item.mcData.vocing_pay = true;
+      this.ispayPocing = true;
+
+      this.si = setInterval(() => {
+        return vocing_deposite_dbc({
+          machine_id: item.mcData.machine_id,
+
+          language
+        })
+          .then(res => {
+            this.queryMcList();
+            if (res.status === 1) {
+              clearInterval(this.si);
+
+              this.ispayPocing = false;
+            } else if (res.status === -1) {
+              this.ispayPocing = false;
+
+              clearInterval(this.si);
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: "error"
+              });
+            }
+          })
+          .catch(err => {
+            this.$message({
+              showClose: true,
+              message: this.$t("unkown_error"),
+              type: "error"
+            });
+            this.ispayPocing = false;
+            clearInterval(this.si);
+          });
+      }, 8000);
+    },
     pocMachine(item) {
       clearInterval(this.si);
 
@@ -443,8 +835,6 @@ export default {
         language
       }).then(res => {
         if (res.status === 1 && res.content) {
-          console.log(res.msg);
-
           //  this.queryMcList();
 
           clearInterval(this.si);
@@ -467,12 +857,22 @@ export default {
           can_rent_start_time_later: 0,
           end_rent_out_time_later: 600000,
           gpu_price_dollar: 0,
-          country_code: "CN"
+          country_code: "CN",
+          error_rent_count: 0,
+          total_time_be_used: 0,
+          success_pay_deposite: false,
+          discount_week: 90,
+          discount_month: 85,
+          discount_year: 80,
+          gpu_rentout_whole: false,
+          machine_mode: 0,
+          gpu_count: 0,
+          rentout_deposite_dbc_count: 0
         }
       });
     },
     pushToEditMc(item) {
-      console.log(item);
+      //  console.log(item);
       this.$router.push({
         path: "/editMc",
         query: {
@@ -480,7 +880,18 @@ export default {
           can_rent_start_time_later: item.can_rent_start_time_later,
           end_rent_out_time_later: item.end_rent_out_time_later,
           gpu_price_dollar: item.gpu_price_dollar,
-          country_code: item.country_code
+          country_code: item.country_code,
+          error_rent_count: item.error_rent_count,
+          total_time_be_used: item.total_time_be_used,
+          success_pay_deposite: item.success_pay_deposite,
+          discount_week: item.discount_week,
+          discount_month: item.discount_month,
+          discount_year: item.discount_year,
+          gpu_rentout_whole: item.gpu_rentout_whole,
+          machine_mode: item.machine_mode,
+          gpu_count: item.gpu_count,
+          rentout_deposite_dbc_count:
+            item.rentout_deposite_dbc_count / item.gpu_count
         }
       });
     },
@@ -501,11 +912,7 @@ export default {
         }
       });
     },
-    isShowRendSuccessMsg(milli_rent_success_time) {
-      const hours =
-        (new Date().getTime() - milli_rent_success_time) / 1000 / 3600;
-      return hours < 1;
-    },
+
     pushOrder(machine_id) {
       this.$router.push("/machineOrder?machine_id=" + machine_id);
     },
@@ -617,7 +1024,7 @@ export default {
     isShowRendSuccessMsg(milli_rent_success_time) {
       const minutes =
         (new Date().getTime() - milli_rent_success_time) / 1000 / 60;
-      return minutes < 20;
+      return minutes < 1;
     }
   }
 };
@@ -784,6 +1191,18 @@ export default {
 
       .downSpeed {
         transform: rotateZ(180deg);
+      }
+    }
+    .td5 {
+      width: 20%;
+      line-height: 24px;
+
+      .cPrimaryColor {
+        font-size: 18px;
+
+        &.fs16 {
+          font-size: 18px;
+        }
       }
     }
   }

@@ -5,7 +5,7 @@ import Preview from './views/preview'
 
 Vue.use(Router)
 
-console.log(process.env.NODE_ENV)
+//console.log(process.env.NODE_ENV)
 const router = new Router({
   // base: process.env.NODE_ENV === 'production' ? '/DBC_GPU' : '/',
   base: process.env.NODE_ENV === 'production' ? '/' : '/',
@@ -37,7 +37,7 @@ const router = new Router({
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import('./views/gpu'),
-      redirect: '/gpu/list',
+      redirect: '/gpu/highStabilityAITrain',
       children: [{
           meta: {
             menuIndex: 0
@@ -80,20 +80,20 @@ const router = new Router({
       path: '/miner',
       name: 'miner',
       component: () => import('./views/miner'),
-      redirect: '/miner/myMachine',
+      redirect: '/miner/myMinerMachine',
       children: [{
           meta: {
-            menuIndex: 1
+            menuIndex: 0
           },
-          path: 'myMachine',
-          component: () => import('./views/miner/myMachine')
+          path: 'myMinerMachine',
+          component: () => import('./views/miner/myMinerMachine')
         },
         {
           meta: {
-            menuIndex: 1
+            menuIndex: 0
           },
-          path: 'myMachineUnlock',
-          component: () => import('./views/miner/myMachine_unlock')
+          path: 'myMinerMachine_unlock',
+          component: () => import('./views/miner/myMinerMachine_unlock')
         }
       ]
     },
@@ -175,6 +175,58 @@ const router = new Router({
           },
           path: 'myWalletUnlock',
           component: () => import('./views/mywallet/myWallet_unlock')
+        }
+      ]
+    },
+    {
+      path: '/help',
+      name: 'help',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('./views/help'),
+      redirect: '/help/aiHelp',
+      children: [{
+          meta: {
+            menuIndex: 0
+          },
+          path: 'aiHelp',
+          component: () => import('./views/help/aiHelp')
+        },
+
+        {
+          meta: {
+            menuIndex: 1
+          },
+          path: 'filecoinHelp',
+          component: () => import('./views/help/filecoinHelp')
+        },
+        {
+          meta: {
+            menuIndex: 2
+          },
+          path: 'supernodeHelp',
+          component: () => import('./views/help/supernodeHelp')
+        }
+      ]
+    }, {
+      path: '/miner',
+      name: 'miner',
+      component: () => import('./views/miner'),
+      redirect: '/miner/myMinerMachine',
+      children: [{
+          meta: {
+            menuIndex: 0
+          },
+          path: 'myMinerMachine',
+          component: () => import('./views/miner/myMinerMachine')
+        },
+        {
+          meta: {
+            menuIndex: 0
+          },
+          path: 'myMinerMachine_unlock',
+          component: () => import('./views/miner/myMinerMachine_unlock')
         }
       ]
     },

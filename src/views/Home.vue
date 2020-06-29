@@ -98,6 +98,7 @@
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
 // @ is an alias to /src
 export default {
   name: "home",
@@ -110,14 +111,35 @@ export default {
     this.set_image1();
   },
   methods: {
+    ...mapActions([
+      "getAccountState",
+      "getTransferList",
+      "getExchangeRate",
+      "getGate"
+    ]),
+    initData() {
+      this.getExchangeRate();
+      this.getAccountState()
+        .then(data => {})
+        .catch(err => {});
+    },
     pushToWallet() {
-      this.$router.push("/gpu/myWallet");
+      this.$router.push("/gpu");
+      this.$store.commit("setMenuName", "gpu");
     },
     set_image1() {
       this.image1 = require("../assets/imgs/building@1x.png");
     }
   },
   computed: {
+    ...mapState([
+      "address",
+      "balance",
+      "transferList",
+      "dbcToUS",
+      "dbcPrice",
+      "dbcChange"
+    ]),
     get_text1() {
       if (this.$t("website_name") == "dbchain") {
         return this.$t("home.intr_dbchain_1");

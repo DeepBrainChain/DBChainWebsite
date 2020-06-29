@@ -224,7 +224,7 @@ export default {
       const hours = parseInt(this.placeOrderData.time_max / 60);
       const day = Math.floor(hours / 24);
       const h = hours - day * 24;
-      return `${day}D${h}H`;
+      return `${day}d${h}h`;
     },
     imagesOptions() {
       let opts = [];

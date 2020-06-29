@@ -115,7 +115,7 @@ import tradeList from "@/components/wallet/tradeList";
 import walletDetail from "@/components/wallet/walletBox";
 import { MessageBox } from "element-ui";
 export default {
-  name: "myWallet-unlock",
+  name: "myWalletUnlock",
   components: {
     tradeList,
     walletDetail

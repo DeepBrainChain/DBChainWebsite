@@ -289,7 +289,7 @@
               {{$t('list_gpu_ram_size')}}：
               <a
                 class="cPrimaryColor"
-              >{{parseInt(item.mcData.gpu_ram_size/(1024*1024))}}GB</a>
+              >{{parseInt(item.mcData.gpu_ram_size/(1000*1000))}}GB</a>
             </span>
           </div>
           <div class="td">
@@ -429,6 +429,10 @@
             class="cRed"
             v-else-if="!isShowRendSuccessMsg(item.orderData.milli_rent_success_time)&&item.orderData.rent_success&&!item.mcData.idle_status&&!item.orderData.order_is_over"
           >{{$t('no_idle_gpus')}}</span>
+          <span
+            v-else-if="item.orderData.rent_success === false &&(((item.orderData.order_id_pre===null&&item.orderData.container_is_exist===true && item.orderData.pay_error===false)
+              ||(item.orderData.order_id_pre!==null&&item.orderData.order_is_over===false&&item.orderData.order_is_cancer===false&&item.orderData.pay_success===false)) ) "
+          >{{$t('myMachine_confirm_pay_tip')}}</span>
         </div>
         <div
           v-if="item.orderData.order_is_cancer === false && !(item.orderData.return_dbc === true && item.orderData.pay_error === true)"
@@ -594,7 +598,7 @@ import DlgLeasecputogpu from "@/components/machine/dlg_leasecputogpu";
 import DlgLeaseconfirmpay from "@/components/machine/dlg_leaseconfirmpay";
 import {
   queryBindMail_rent,
-  place_order_cpu_to_gpu,
+  place_order_cpu_to_gpu_new,
   continue_pay_get_dbc_price,
   continue_pay_get_pay_dbc_count,
   continue_pay_create_order,
@@ -848,7 +852,8 @@ export default {
       this.$forceUpdate();
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
-      place_order_cpu_to_gpu({
+      place_order_cpu_to_gpu_new({
+        machine_type: item.orderData.machine_type,
         machine_id: item.orderData.machine_id,
         wallet_address_user: getAccount().address,
         order_id_pre: item.orderData.order_id,
@@ -978,9 +983,9 @@ export default {
             });
             this.dlg_open_cpu_to_gpu = false;
             if (params.gpu_count === 0) {
-              this.$router.push("/gpu/myMachine_cpu");
+              this.$router.push("/mymachine/myMachine_cpu");
             } else {
-              this.$router.push("/gpu/myMachine");
+              this.$router.push("/mymachine/myMachine");
             }
           } else {
             this.$message({
