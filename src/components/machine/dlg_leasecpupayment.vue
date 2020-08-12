@@ -113,6 +113,7 @@
         <span class="ml20">{{$t('gpu.exchangeDBC')}}：{{dbc_count}}</span>
       </div>
       <div class="form-notice">{{$t('dlg_lease_wallet_balance')}}: {{balance}}</div>
+      <div class="form-notice">{{$t('left_gasamount')}}: {{gas_balance.toFixed(3)}}</div>
       <div class="desc-box" v-html="$t('msg.dlg_5')"></div>
     </div>
     <div class="dlg-bottom">
@@ -135,7 +136,7 @@ import {
   get_memory_cpu_payment,
   get_max_disk_can_use
 } from "@/api";
-import { getBalance } from "@/utlis";
+import { getBalance, getGasBalance } from "@/utlis";
 
 export default {
   name: "popup_reload",
@@ -192,6 +193,7 @@ export default {
       disk_giving_every_gpu: 0,
       disk_max: 100,
       balance: "0",
+      gas_balance: 0,
       memory: 0,
       memory_every_gpu: 0,
       diskspace_max_cpu: 300 * 1024 * 1024,
@@ -209,6 +211,7 @@ export default {
         this.computeTotalDBC();
         //  this.getPayDbcCount();
         this.getBalance();
+        this.getGasBalance();
       }
     },
     time(newVal) {
@@ -265,6 +268,11 @@ export default {
     getBalance() {
       getBalance().then(res => {
         this.balance = res.balance;
+      });
+    },
+    getGasBalance() {
+      getGasBalance().then(res => {
+        this.gas_balance = res.gas_balance;
       });
     },
     computeTotalDBC() {
@@ -455,6 +463,15 @@ export default {
         });
         return;
       }
+      if (this.gas_balance === 0) {
+        this.$message({
+          showClose: true,
+          message: this.$t("zerogas"),
+          type: "error"
+        });
+        return;
+      }
+
       if (this.placeOrderData.order_id_pre !== null) {
         params = {
           rent_time_length: this.time * this.timeSelect * 60,

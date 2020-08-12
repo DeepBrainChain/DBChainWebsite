@@ -35,6 +35,18 @@
         @click="toCoinWeb"
       >{{$t('gpu.clickCoinmarktcap')}}</a>
     </div>
+    <div class="form-input pt40">
+      <label>
+        <span>{{$t('gasamount')}}：</span>
+        <span class="money-input">{{(gasbalance).toFixed(3)}}</span>
+      </label>
+      <el-tooltip class="cRed" effect="dark" :content="$t('gas_info')">
+        <span>({{$t('what_gas')}})&nbsp; &nbsp;&nbsp;&nbsp;</span>
+      </el-tooltip>
+      <el-tooltip class="cRed" effect="dark" :content="$t('how_get_gas_info')">
+        <span>({{$t('how_get_gas')}})</span>
+      </el-tooltip>
+    </div>
     <div class="pt40 form-input">
       <label>
         <span>{{$t('gpu.exchangeCash')}}：</span>
@@ -146,12 +158,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions([
-      "getAccountState",
-      "getTransferList",
-      "getExchangeRate",
-      "getGate"
-    ]),
+    ...mapActions(["getAccountState", "getExchangeRate", "getGate"]),
     initData() {
       this.getExchangeRate();
       // this.getGate();
@@ -263,7 +270,8 @@ export default {
     ...mapState([
       "address",
       "balance",
-      "transferList",
+      "gasbalance",
+
       "dbcToUS",
       "dbcPrice",
       "dbcChange"

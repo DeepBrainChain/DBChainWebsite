@@ -280,7 +280,9 @@
           <div class="td5">
             <el-tooltip class="item" effect="dark" :content="$t('month_discount_instruction')">
               <span class="fs28">
-                <a class="cPrimaryColor">{{$t('month_discount')}}:{{item.discount_month}}%&nbsp;&nbsp;</a>
+                <a
+                  class="cPrimaryColor"
+                >{{$t('month_discount')}}:{{item.discount_month}}%&nbsp;&nbsp;</a>
               </span>
             </el-tooltip>
           </div>
@@ -576,7 +578,7 @@ import DlgTry from "@/components/machine/dlg_try";
 import {
   getMcList,
   query_machines_by_machine_type,
-  try_place_order_new,
+  try_place_order,
   place_order,
   place_order_cpu,
   create_order,
@@ -984,7 +986,7 @@ export default {
       this.$forceUpdate();
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
-      try_place_order_new({
+      try_place_order({
         machine_id: item.machine_id,
         wallet_address_user: getAccount().address,
         user_name_platform,

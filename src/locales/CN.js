@@ -3,10 +3,10 @@ import enLocale from "element-ui/lib/locale/lang/en";
 export default {
   message: "hello i18n !!",
 
-  website_name: "freegpu", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
+  website_name: "aipower", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
   //alpha-dbchain/aichriscloud/deepbit/vnxmart/aiaicloud/snbt/heekmind/redstonewill/rocketai/aicv/\shareaiot\freegpu\boincplanet\topgpu\thinkotech
   //coolgpu\scclouds\nvidiaai\deligpu\longway\sharedgpu\aipower\cvstudy\gpuhub\district51\deepmind\transportation\planetc\sdnu\freegputop\tensorgpu
-  //opengpu\aiyanxishe\codefate
+  //opengpu\aiyanxishe\codefate\changhe
   $: "$",
   send: "发送",
   closeWallet: "关闭钱包",
@@ -279,6 +279,7 @@ export default {
     intr_opengpu_1: "OpenGPU",
     intr_aiyanxishe_1: "AI研习社云平台",
     intr_codefate_1: "码缘",
+    intr_changhe_1: "长河云",
 
     intr_1: "提供GPU出租服务，加入我们，可以帮助您的机器非常方便的接入到深脑链网络中，获取收益。\n" +
       "\n" +
@@ -288,8 +289,8 @@ export default {
     intr_2: "这里的GPU来自于全球各地，通过DBC分布式网络连接在一起，这里面没有中心化服务器，你的数据不会被窃取。",
     intr_3: "在这个DBC网络购买机器需要使用DBC Token进行支付。GPU是按照美元定价，DBC价格越高需要的数量越少。",
 
-    intr_4: "致力于为用户提供高性价比的人工智能算力服务，采用DBC TOKEN进行结算。深脑链是一个分布在全球的去中心化人工智能算力网络，通过我们您可以方便地使用网络中的机器，我们提供丰富的服务满足您的需求",
-    intr_5: "在我们平台中你可以找到便宜且类型多样的GPU。当你使用的时候，所有的数据都是加密传输的",
+    intr_4: "致力于为用户提供高性价比的人工智能算力服务，采用DBC TOKEN进行结算。深脑链是一个分布在全球的去中心化人工智能算力网络，通过我们您可以方便地使用深脑链网络中的机器，我们提供丰富的服务满足您的需求。",
+    intr_5: "在我们的云平台中你可以找到便宜且类型多样的GPU。当你使用的时候，所有的数据都是加密传输的",
     intr_6: "GPU租用按照分钟计费，GPU使用过程中如果出现中断，将会最多补偿144小时的费用",
     intr_7: "深脑链从2020年开始每年产出5亿 DBC，3年后，每年产出2.5亿，并且以后每5年产出减半，总计有40亿",
     intr_8: "加入深脑链收益组成：超级节点收益+奖励收益+租金收益",
@@ -549,6 +550,7 @@ export default {
   footer_service_opengpu: "1184823135@qq.com", //9.17 19:33
   footer_service_aiyanxishe: "kefu@yanxishe.com", //9.17 19:33
   footer_service_codefate: "wangming1785@foxmail.com", //9.17 19:33
+  footer_service_changhe: "changhecloud@outlook.com", //9.17 19:33
 
   list_start_rentout: "分钟后可租用", //9.17 19:33
   list_can_rentout: "用户现在可租用", //9.17 19:33
@@ -604,8 +606,8 @@ export default {
   deposit_dbc_count: '需要质押的DBC数量',
   return_deposit_dbc: '使用过程中，如果机器发生中断，将会退回所有质押的DBC',
   deposit_time_tip: "当前机器最长可以选择使用{time}，最短1个小时.",
-  stop_time_tip: "如果机器时间到期,容器会被停用.并且如果钱包余额不足20000DBC,容器将会被立即销毁.如果您的钱包余额超过20000DBC,机器所有数据将会" +
-    "被自动保留7天(在这期间钱包余额也必须超过20000DBC),7天内任何时间可以继续启用容器,进行使用,容器停止超过7天将会被销毁." +
+  stop_time_tip: "如果机器时间到期,容器会被停用.,机器所有数据将会" +
+    "被自动保留7天,7天内任何时间可以继续启用容器,进行使用,但是启用的时候钱包DBC余额需要大于20000DBC,容器停止超过7天将会被销毁." +
     "机器使用完成后,可以提前退租,质押的DBC将会退还到钱包中.",
   deposit_dbcs_cpu: '质押的DBC总数',
   cpu_containers_list: '已创建CPU容器数',
@@ -704,7 +706,7 @@ export default {
   high_stability_conditions2: '2) 历史上没有中断记录，如果机器有一次中断记录，将会被自动分配到普通AI训练区',
   high_stability_conditions3: '3) 根据当前DBC实时价格每卡至少质押{dbc_count}DBC，质押数量没有最高限制，相同参数机器，质押的数量越高，用户租用的概率越大，当机器出现断网、断电、掉卡三种情况之一，按照正在使用的卡数补偿用户DBC，剩余的退回',
   high_stability_conditions4: '如果机器出问题时，质押的50%DBC用于补偿用户；如果机器出现问题后24小时内没有再次上架机器，另外的50%也将会被扣除',
-  miner_confirmPay: "质押DBC",
+  miner_confirmPay: "开始质押DBC",
   input_deposite_dbc_count: "输入每卡质押的DBC",
   deposite_dbc_count_total: "质押的DBC总数为",
   deposite_dbc_count: "每卡质押的DBC",
@@ -725,7 +727,7 @@ export default {
   please_sold_out_machine_confirm: "请确认是否下架机器",
   my_machine_will_putaway: "上架机器",
   success_connectivity_verification: "机器使用环境验证成功",
-  sold_out_machine_tip: "只有在当前没有用户使用的时候才能下架机器，但是12小时内需要上架机器，否则会扣除质押的50%DBC。如果永久下架机器，需要最后一个用户使用结束超过8天，否则会扣除质押的50%DBC，机器下架48小时后，会退还质押的全部DBC",
+  sold_out_machine_tip: "只有在当前没有用户使用的时候才能下架机器，但是12小时内需要上架机器，否则会扣除质押的50%DBC。如果永久下架机器，需要最后一个用户使用结束超过8天，否则会扣除质押的50%DBC，机器下架48小时后，会退还质押的全部DBC.机器下架超过72小时后，当前机器将会从列表中删除",
   time_sold_out_machine: '机器已经下架的时间',
   operation_sold_out_machine_used_tip: '当前有用户正在使用，不能下架机器',
   time_sold_out_machine_tip2: '当前机器在用户使用的时候发生中断，请尽快上架机器',
@@ -752,6 +754,13 @@ export default {
   rent_machine_dbc_help: 'DBC超级节点租用帮助文档',
   use_machine_dbc_help: '启用DBC超级节点帮助文档',
   myMachine_confirm_pay_tip: '如果已经支付，请点击继续支付后，在弹框中点击我已支付；如果没有支付，请点击继续支付后，在弹框中点击确认支付',
-
+  miner_confirmPay_tip3: '请点击开始质押DBC,质押DBC成功后，机器将会正式上线',
+  gasamount: "GAS数量",
+  what_gas: "什么是GAS",
+  gas_info: "GAS是一种转账费用的单位，每进行一次DBC转账或者支付DBC购买机器，都需要消耗0.001个GAS，如果钱包GAS为0,则支付DBC购买机器会失败",
+  how_get_gas: "怎样获取GAS",
+  how_get_gas_info: "通过支付宝购买DBC，会自动获得一定数量的GAS",
+  left_gasamount: "当前钱包GAS数量",
+  zerogas: "当前钱包GAS为0,无法支付，请在支付宝购买100个DBC，会免费获得0.005个gas",
   ...enLocale
 };

@@ -8,6 +8,7 @@ import {
   initAccount,
   initAccountFromEncryptedKey,
   getBalance,
+  getGasBalance,
   getTransfer,
   getTransactions
 } from '../utlis'
@@ -15,7 +16,8 @@ import {
 import {
   get_dbc_price,
   dbc_info,
-  dbc_balance
+  dbc_balance,
+  dbc_gas_balance
 } from '@/api'
 import cookie from 'js-cookie'
 
@@ -26,6 +28,7 @@ export default new Vuex.Store({
   state: {
     account: undefined,
     balance: 0,
+    gasbalance: 0,
     dbcChange: 0,
     dbcPrice: 0,
     rpcClient: undefined,
@@ -43,6 +46,9 @@ export default new Vuex.Store({
     },
     setBalances(state, data) {
       state.balance = data
+    },
+    setGasBalances(state, data) {
+      state.gasbalance = data
     },
     setRPC(state, data) {
       state.rpcClient = data
@@ -191,13 +197,32 @@ export default new Vuex.Store({
 
           })
 
-          getBalance().then(data => {
-            resolve(data)
+          dbc_gas_balance({
+            user_wallet_address: ac.address,
+            language
+          }).then(res => {
 
-            // commit('setBalances', data.balance)
+            commit('setGasBalances', res.content)
+
+
           }).catch(err => {
-            reject('please open wallet')
+
           })
+
+          getTransactions(state.address, 1).then(res => {
+            const array = res.entries.map(item => {
+              return {
+                txHash: item.txid,
+                fromAddress: item.address_from,
+                toAddress: item.address_to,
+                time: item.time,
+                amount: item.amount
+              }
+            })
+            commit('setTransferList', array)
+          })
+
+
         } else {
           reject('please open wallet')
         }

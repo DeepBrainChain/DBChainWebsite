@@ -50,6 +50,7 @@
         <span class="ml20">{{$t('gpu.exchangeDBC')}}：{{total_price}}</span>
       </div>
       <div class="form-notice">{{$t('dlg_lease_wallet_balance')}}: {{balance}}</div>
+      <div class="form-notice">{{$t('left_gasamount')}}: {{gas_balance.toFixed(3)}}</div>
       <div class="desc-box" v-html="$t('msg.dlg_5')"></div>
     </div>
     <div class="dlg-bottom">
@@ -67,7 +68,7 @@
 
 <script>
 import { continue_pay_get_pay_dbc_count, can_rent_this_machine } from "@/api";
-import { getBalance } from "@/utlis";
+import { getBalance, getGasBalance } from "@/utlis";
 
 export default {
   name: "popup_continuepay",
@@ -109,7 +110,8 @@ export default {
       isGetTotalPrice: false,
       reqSt: undefined,
       isCanCreateOrder: true,
-      balance: ""
+      balance: "0",
+      gas_balance: 0
     };
   },
   watch: {
@@ -120,6 +122,7 @@ export default {
         this.dbc_price = "";
         this.getPayDbcCount();
         this.getBalance();
+        this.getGasBalance();
       }
     },
     time(newVal) {
@@ -173,6 +176,13 @@ export default {
         this.balance = res.balance;
       });
     },
+
+    getGasBalance() {
+      getGasBalance().then(res => {
+        this.gas_balance = res.gas_balance;
+      });
+    },
+
     computeTotalDBC() {
       if (this.time) {
         clearTimeout(this.reqSt);
@@ -214,6 +224,23 @@ export default {
       });
     },
     confirm() {
+      if (parseInt(this.dbc_count) > parseInt(this.balance)) {
+        this.$message({
+          showClose: true,
+          message: this.$t("lessdbc"),
+          type: "error"
+        });
+        return;
+      }
+      if (this.gas_balance === 0) {
+        this.$message({
+          showClose: true,
+          message: this.$t("zerogas"),
+          type: "error"
+        });
+        return;
+      }
+
       const params = {
         rent_time_length: this.time * this.timeSelect * 60,
         order_id: this.placeOrderData.order_id,

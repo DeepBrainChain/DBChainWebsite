@@ -243,6 +243,8 @@ export default {
         return this.$t("home.intr_aiyanxishe_1");
       } else if (this.$t("website_name") == "codefate") {
         return this.$t("home.intr_codefate_1");
+      } else if (this.$t("website_name") == "changhe") {
+        return this.$t("home.intr_changhe_1");
       }
 
       return this.$t("home.intr_dbchain_1");

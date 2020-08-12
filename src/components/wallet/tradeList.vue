@@ -27,6 +27,7 @@
               v-else
               :title="item.fromAddress"
               :href="`https://neotracker.io/address/${item.fromAddress}`"
+              target="_blank"
             >{{item.fromAddress}}</a>
           </td>
           <td :title="item.toAddress">
@@ -35,6 +36,7 @@
               v-else
               class="cPrimaryColor"
               :href="`https://neotracker.io/address/${item.toAddress}`"
+              target="_blank"
             >{{item.toAddress}}</a>
           </td>
           <td>{{$thousandsNum((item.amount * 1).toFixed(4))}}</td>
@@ -55,8 +57,11 @@ export default {
       tempNum: 12335234234.23456
     };
   },
+  methods: {
+    ...mapActions(["getTransferList"])
+  },
   computed: {
-    ...mapState(["address", "transferList", "dbcToUS", "dbcPrice", "dbcChange"])
+    ...mapState(["transferList"])
   }
 };
 </script>

@@ -125,9 +125,9 @@ export default {
       this.isNext = true;
     },
     pushToMyWallet() {
-      const type = this.$route.params.type;
+      // const type = this.$route.params.type;
       saveCookie(getAccount());
-      this.$router.push(`/${type}/myWalletUnlock`);
+      this.$router.push(`/mywallet/myWalletUnlock`);
     },
     next() {
       if (this.isNext) {

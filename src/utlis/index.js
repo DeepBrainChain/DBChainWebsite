@@ -13,7 +13,8 @@ import {
 } from "@/api/index";
 
 import {
-  dbc_balance
+  dbc_balance,
+  dbc_gas_balance
 } from "@/api";
 //const netType = 'https://api.neoscan.io'
 const netType = "https://neocli.dbchain.ai";
@@ -157,6 +158,28 @@ export function getBalance() {
   });
 }
 
+export function getGasBalance() {
+  return new Promise((resolve, reject) => {
+    if (account) {
+      dbc_gas_balance({
+        user_wallet_address: account.address,
+        language: "CN"
+      }).then(res => {
+
+        resolve({
+          symbol: DBC_NAME,
+          gas_balance: res.content
+        });
+
+      }).catch(err => {
+
+      })
+    } else {
+      reject("please open wallet");
+    }
+  });
+}
+
 // new Account
 export function createAccount(password) {
   return new Promise((resole, reject) => {
@@ -230,8 +253,7 @@ export function getTransactions(address, page, assetsHash = DBCHash) {
 // send assets to address
 export function transfer({
   toAddress = testAddress,
-  amount,
-  gas = 0
+  amount
 }) {
   return dbc_balance({
       user_wallet_address: account.address,
@@ -240,8 +262,9 @@ export function transfer({
     .then(res => {
       if (res.content > amount) {
 
-        const apiCli = new api.neoCli.instance("https://neocli.dbchain.ai"); //or "http://seed5.ngd.network:20332" for TestNet );
-
+        const apiCli = new api.neoCli.instance("https://neocli.dbchain.ai");
+        //https://neocli.dbchain.ai
+        //https://seed11.ngd.network:10331
         //const apiProvider = new api.neoscan.instance('https://api.neoscan.io/api/main_net')
         //  const apiProvider = new api.neoscan.instance('https://neocli.dbchain.ai')
         // console.log(apiProvider)
@@ -262,7 +285,9 @@ export function transfer({
           account: account, // The sending Account
           // intents: undefined, // Additional intents to move assets
           script: script, // The Smart Contract invocation script
-          gas // Additional GAS for invocation.
+          gas: 0, //,
+          fees: 0.001
+
         };
         // console.log(res.balance)
         return Neon.doInvoke(config).then(res => {

@@ -106,6 +106,7 @@
         <span class="ml20">{{$t('deposit_dbc_count')}}：{{dbc_count}}</span>
       </div>
       <div class="form-notice">{{$t('dlg_lease_wallet_balance')}}: {{balance}}</div>
+      <div class="form-notice">{{$t('left_gasamount')}}: {{gas_balance.toFixed(3)}}</div>
       <div class="desc-box" v-html="$t('return_deposit_dbc')"></div>
     </div>
     <div class="dlg-bottom">
@@ -129,7 +130,7 @@ import {
   get_memory_deposit_list,
   get_deposit_dbc_count
 } from "@/api";
-import { getBalance } from "@/utlis";
+import { getBalance, getGasBalance } from "@/utlis";
 
 export default {
   name: "popup_reload",
@@ -192,6 +193,7 @@ export default {
       disk_giving_every_gpu: 0,
       disk_max: 100,
       balance: "0",
+      gas_balance: 0,
       memory: 0,
       memory_every_gpu: 0
 
@@ -206,6 +208,7 @@ export default {
         this.time = 1;
         this.computeTotalDBC();
         this.getBalance();
+        this.getGasBalance();
       }
     }
   },
@@ -321,6 +324,12 @@ export default {
         this.balance = res.balance;
       });
     },
+
+    getGasBalance() {
+      getGasBalance().then(res => {
+        this.gas_balance = res.gas_balance;
+      });
+    },
     /* computeTotalDBC() {
       if (this.time) {
         clearTimeout(this.reqSt);
@@ -334,7 +343,11 @@ export default {
     computeTotalDBC() {
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
-
+      if (this.placeOrderData.order_id_pre !== null) {
+        this.diskSelect =
+          this.placeOrderData.disk_space -
+          this.placeOrderData.diskspace_image_data;
+      }
       get_deposit_dbc_count({
         order_id: this.placeOrderData.order_id,
         diskspace: this.diskSelect * (1024 * 1024),
@@ -376,7 +389,19 @@ export default {
         });
         return;
       }
+      if (this.gas_balance === 0) {
+        this.$message({
+          showClose: true,
+          message: this.$t("zerogas"),
+          type: "error"
+        });
+        return;
+      }
+
       if (this.placeOrderData.order_id_pre !== null) {
+        this.diskSelect =
+          this.placeOrderData.disk_space -
+          this.placeOrderData.diskspace_image_data;
         params = {
           rent_time_length: this.time * this.timeSelect * 60,
 

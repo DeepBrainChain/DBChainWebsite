@@ -403,6 +403,10 @@
             class="cRed"
             v-else-if="!item.mcData.dbc_open_status && item.mcData.time_dbc_close_status!=null"
           >{{$t('sold_out_machine_tip')}}</span>
+          <span
+            v-else-if="item.mcData.need_deposite_dbc && !item.mcData.success_pay_deposite&&
+            !item.mcData.error_pay_deposite&& !ispayPocing&&!item.mcData.vocing_pay_deposite&&item.mcData.success_connectivity_verification"
+          >{{$t('miner_confirmPay_tip3')}}</span>
         </div>
         <div class="r-wrap">
           <el-tooltip class="item" effect="dark" :content="$t('miner_confirmPay_tip0')">
@@ -412,7 +416,7 @@
               plain
               class="tool-btn"
               size="mini"
-              style="width: 86px"
+              style="width: 126px"
               @click="openPay(item,index)"
             >{{$t('miner_confirmPay')}}</el-button>
           </el-tooltip>
@@ -423,7 +427,7 @@
               plain
               class="tool-btn"
               size="mini"
-              style="width: 86px"
+              style="width: 126px"
               @click="openPay(item,index)"
             >{{$t('miner_confirmPay')}}</el-button>
           </el-tooltip>
@@ -440,7 +444,7 @@
               plain
               class="tool-btn"
               size="mini"
-              v-if="(item.mcData.dbc_open_status)&&(!ispayPocing&&!item.mcData.vocing_pay_deposite)"
+              v-if="(!ispayPocing&&!item.mcData.vocing_pay_deposite)&& item.mcData.time_dbc_close_status==null"
               style="width: 86px"
               @click="openSold_out_machine(item.mcData)"
             >{{$t('my_machine_will_close')}}</el-button>
@@ -656,10 +660,7 @@ export default {
         // console.log(index)
         // console.log(item.orderData.creating_container)
         // console.log(item.orderData.container_is_exist)
-        return (
-          item.mcData.vocing_connectivity_verification ||
-          item.mcData.error_connectivity_verification
-        );
+        return item.mcData.vocing_connectivity_verification;
       });
       if (item) {
         this.pocMachine(item.mcData);
@@ -784,7 +785,7 @@ export default {
 
       const language = this.$i18n.locale;
       // const txid = res.response.txid;
-      item.mcData.vocing_pay = true;
+      //item.mcData.vocing_pay = true;
       this.ispayPocing = true;
 
       this.si = setInterval(() => {
@@ -822,11 +823,6 @@ export default {
       }, 8000);
     },
     pocMachine(item) {
-      clearInterval(this.si);
-
-      //   if (item.orderData.isPocing) {
-      //     return;
-      //   }
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       return voc_machine({
@@ -835,14 +831,12 @@ export default {
         language
       }).then(res => {
         if (res.status === 1 && res.content) {
-          //  this.queryMcList();
-
-          clearInterval(this.si);
+          this.queryMcList();
         } else if (res.status === 2) {
           // item.orderData.creating_container = true;
-          //   this.queryMcList();
+          this.queryMcList();
         } else if (res.status == -1) {
-          //   this.queryMcList();
+          this.queryMcList();
           this.tip = res.msg;
         }
       });

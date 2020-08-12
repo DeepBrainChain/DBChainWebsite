@@ -145,6 +145,7 @@
         <span class="ml20">{{$t('gpu.exchangeDBC')}}：{{total_price}}</span>
       </div>
       <div class="form-notice">{{$t('dlg_lease_wallet_balance')}}: {{balance}}</div>
+      <div class="form-notice">{{$t('left_gasamount')}}: {{gas_balance.toFixed(3)}}</div>
       <div class="desc-box" v-html="$t('msg.dlg_5')"></div>
     </div>
     <div class="dlg-bottom">
@@ -162,7 +163,7 @@
 
 <script>
 import { get_pay_dbc_count, can_rent_this_machine } from "@/api";
-import { getBalance } from "@/utlis";
+import { getBalance, getGasBalance } from "@/utlis";
 
 export default {
   name: "popup_reload",
@@ -220,6 +221,7 @@ export default {
       disk_giving_every_gpu: 0,
       disk_max: 100,
       balance: "0",
+      gas_balance: 0,
       memory: 0,
       memory_every_gpu: 0,
       discount: "0",
@@ -235,6 +237,7 @@ export default {
         this.dbc_price = "";
         this.getPayDbcCount();
         this.getBalance();
+        this.getGasBalance();
         this.gpu_rentout_whole = this.placeOrderData.gpu_rentout_whole;
         this.machine_type = this.placeOrderData.machine_type;
         this.computeTotalDBC();
@@ -349,6 +352,11 @@ export default {
     getBalance() {
       getBalance().then(res => {
         this.balance = res.balance;
+      });
+    },
+    getGasBalance() {
+      getGasBalance().then(res => {
+        this.gas_balance = res.gas_balance;
       });
     },
     computeTotalDBC() {
@@ -499,6 +507,16 @@ export default {
         });
         return;
       }
+
+      if (this.gas_balance === 0) {
+        this.$message({
+          showClose: true,
+          message: this.$t("zerogas"),
+          type: "error"
+        });
+        return;
+      }
+
       let rent_type = 0;
       if (this.discount === "1") {
         rent_type = 1;

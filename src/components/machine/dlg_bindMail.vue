@@ -50,7 +50,7 @@ import {
   modifyBindMail_rent,
   modifySendMail_rent
 } from "@/api/index";
-import { getAccount, transfer } from "@/utlis";
+import { getAccount, transfer, getGasBalance } from "@/utlis";
 
 export default {
   name: "popup_reload",
@@ -63,6 +63,7 @@ export default {
       this.isOpen = newVal;
       this.form.email = "";
       this.form.dbcNum = "";
+      this.getGasBalance();
     }
   },
   data() {
@@ -70,6 +71,7 @@ export default {
       isOpen: this.open,
       isLoading: false,
       isSending: false,
+      gas_balance: 0,
       form: {
         email: "",
         dbcNum: ""
@@ -89,6 +91,11 @@ export default {
     closed() {
       this.isOpen = false;
       this.$emit("update:open", false);
+    },
+    getGasBalance() {
+      getGasBalance().then(res => {
+        this.gas_balance = res.gas_balance;
+      });
     },
     binding() {
       // const self = this
@@ -114,6 +121,16 @@ export default {
         });
         return;
       }
+
+      if (this.gas_balance === 0) {
+        this.$message({
+          showClose: true,
+          message: this.$t("zerogas"),
+          type: "error"
+        });
+        return;
+      }
+
       this.isLoading = true;
       transfer({
         toAddress: this.$tAddress,

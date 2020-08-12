@@ -2,7 +2,7 @@ import enLocale from 'element-ui/lib/locale/lang/en'
 
 export default {
   message: 'hello i18n !!',
-  website_name: 'freegpu', //yousanai,  dbchain,aionego
+  website_name: 'aipower', //yousanai,  dbchain,aionego
   $: '$',
   send: 'Send',
   closeWallet: 'Close Wallet',
@@ -275,6 +275,7 @@ export default {
     intr_opengpu_1: "OpenGPU",
     intr_aiyanxishe_1: "AI YanXiShe",
     intr_codefate_1: "CodeFate",
+    intr_changhe_1: "ChangHe Cloud",
     intr_1: ' provides GPU rental service.join us! can help your machine very convenient access to the DBC network, gain revenue. \n' +
       '\n' +
       ' If your GPU is ever idle, you can connect it to the DBC network to earn DBC tokens and enjoy the benefit of the tokens appreciation. \n ' +
@@ -554,6 +555,7 @@ export default {
   footer_service_opengpu: "1184823135@qq.com", //9.17 19:33
   footer_service_aiyanxishe: "kefu@yanxishe.com", //9.17 19:33
   footer_service_codefate: "wangming1785@foxmail.com", //9.17 19:33
+  footer_service_changhe: "changhecloud@outlook.com", //9.17 19:33
   list_start_rentout: 'minutes later, it can be rented',
   list_can_rentout: 'Users can rent it now',
   my_gpu_count: 'The number of gpus I rent ', //9.17 19:33
@@ -704,7 +706,7 @@ export default {
   high_stability_conditions2: '2) 历史上没有中断记录，如果机器有一次中断记录，将会被自动分配到普通AI训练区',
   high_stability_conditions3: '3) 根据当前DBC实时价格每卡至少质押{dbc_count}DBC，质押数量没有最高限制，相同参数机器，质押的数量越高，用户租用的概率越大，当机器出现断网、断电、掉卡三种情况之一，按照正在使用的卡数补偿用户DBC，剩余的退回',
   high_stability_conditions4: '如果机器出问题时，质押的50%DBC用于补偿用户；如果机器出现问题后24小时内没有再次上架机器，另外的50%也将会被扣除',
-  miner_confirmPay: "质押DBC",
+  miner_confirmPay: "开始质押DBC",
   input_deposite_dbc_count: "输入每卡质押的DBC",
   deposite_dbc_count_total: "质押的DBC总数为",
   deposite_dbc_count: "每卡质押的DBC",
@@ -752,5 +754,8 @@ export default {
   rent_machine_dbc_help: 'DBC超级节点租用帮助文档',
   use_machine_dbc_help: '启用DBC超级节点帮助文档',
   myMachine_confirm_pay_tip: '如果已经支付，请点击继续支付后，在弹框中点击我已支付；如果没有支付，请点击继续支付后，在弹框中点击确认支付',
+  miner_confirmPay_tip3: '请点击开始质押DBC,质押DBC成功后，机器将会正式上线',
+  gasamount: "GAS amount",
+  what_gas: "What's GAS?",
   ...enLocale
 }

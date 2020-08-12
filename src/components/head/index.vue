@@ -62,6 +62,7 @@
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="CN">简体中文</el-dropdown-item>
           <el-dropdown-item command="EN">ENGLISH</el-dropdown-item>
+          <el-dropdown-item command="RU">Ру́сский язы́к</el-dropdown-item>
           <!--    <el-dropdown-item command="VI">Việt nam</el-dropdown-item>
           <el-dropdown-item command="KO">한국어</el-dropdown-item>
           <el-dropdown-item command="TH">ภาษาไทย</el-dropdown-item>
@@ -134,8 +135,6 @@ export default {
         lang = "CN";
       } else if (lang === "en") {
         lang = "EN";
-      } else {
-        lang = "EN";
       }
       // else if (lang === "vi") {
       //  lang = "VI";
@@ -143,9 +142,11 @@ export default {
       //   lang = "KO";
       // } else if (lang === "th") {
       //   lang = "TH";
-      // } else if (lang === "ru") {
-      //   lang = "RU";
-      //} else if (lang === "tr") {
+      // }
+      else if (lang === "ru") {
+        lang = "RU";
+      }
+      //else if (lang === "tr") {
       //  lang = "TR";
       // } else if (lang === "ja") {
       //  lang = "JA";
@@ -166,9 +167,11 @@ export default {
         //   this.language_name = "한국어";
         //} else if (lang === "TH") {
         //   this.language_name = "ภาษาไทย";
-        // } else if (lang === "RU") {
-        //  this.language_name = "Ру́сский язы́к";
-        //} else if (lang === "TR") {
+        // }
+        else if (lang === "RU") {
+          this.language_name = "Ру́сский язы́к";
+        }
+        //else if (lang === "TR") {
         //  this.language_name = "Türk Dili";
         // } else if (lang === "JA") {
         //   this.language_name = "日本語";
@@ -281,6 +284,8 @@ export default {
         this.link.href = "./aiyanxishe.ico";
       } else if (this.$t("website_name") == "codefate") {
         this.link.href = "./codefate.ico";
+      } else if (this.$t("website_name") == "changhe") {
+        this.link.href = "./changhe.ico";
       }
 
       document.getElementsByTagName("head")[0].appendChild(this.link);
@@ -389,6 +394,8 @@ export default {
         document.title = "aiyanxishe";
       } else if (this.$t("website_name") == "codefate") {
         document.title = "codefate";
+      } else if (this.$t("website_name") == "changhe") {
+        document.title = "changhe";
       }
     },
     set_logo() {
@@ -494,6 +501,8 @@ export default {
         this.logo = require("../../assets/imgs/aiyanxishe@1x.png");
       } else if (this.$t("website_name") == "codefate") {
         this.logo = require("../../assets/imgs/codefate@1x.png");
+      } else if (this.$t("website_name") == "changhe") {
+        this.logo = require("../../assets/imgs/changhe@1x.png");
       }
     },
     pushMenu(name) {

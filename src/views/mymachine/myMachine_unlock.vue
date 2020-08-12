@@ -162,7 +162,7 @@
               <span class="fs28">
                 <a
                   class="cPrimaryColor"
-                >{{$t('month_discount')}}:{{item.mcData.discount_week}}%&nbsp;&nbsp;</a>
+                >{{$t('month_discount')}}:{{item.mcData.discount_month}}%&nbsp;&nbsp;</a>
               </span>
             </el-tooltip>
           </div>

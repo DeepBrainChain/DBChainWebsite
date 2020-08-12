@@ -4,7 +4,7 @@ import axios from "@/utlis/axios";
 const host = "https://info.dbchain.ai";
 //const host = "https://infotest.dbchain.ai";
 //const host = 'http://116.85.24.172:8031'
-//const host = "http://192.168.1.187:8080";
+//const host = "http://192.168.1.186:8080";
 //const host = "http://192.168.31.241:8080";
 //const host = "http://192.168.43.178:8080";
 //const host = "http://192.168.225.22:8080";
@@ -152,7 +152,6 @@ export const get_disk_deposit_list = params => {
   });
 };
 
-
 // 获取内存质押数据
 export const get_memory_deposit_list = params => {
   return axios({
@@ -225,8 +224,6 @@ export const place_order_stop_to_cpu = params => {
   });
 };
 
-
-
 // 获取订单前信息
 export const place_order_stop_to_gpu = params => {
   return axios({
@@ -244,8 +241,6 @@ export const place_order_stop_to_cpu_new = params => {
     params
   });
 };
-
-
 
 // 获取订单前信息
 export const place_order_stop_to_gpu_new = params => {
@@ -299,7 +294,6 @@ export const pay_update = params => {
   });
 };
 
-
 //获取租用订单DBC价格
 export const get_dbc_price = params => {
   return axios({
@@ -344,7 +338,6 @@ export const get_deposit_dbc_count = params => {
     params
   });
 };
-
 
 // 获取续租订单计算后DBC的数量
 export const continue_pay_get_pay_dbc_count = params => {
@@ -400,8 +393,6 @@ export const get_all_order_be_stopped = params => {
   });
 };
 
-
-
 // 获得取消订单的验证码
 export const get_cancer_code = params => {
   return axios({
@@ -456,7 +447,6 @@ export const restart = params => {
   });
 };
 
-
 // 退币验证码
 export const get_return_dbc_code = params => {
   return axios({
@@ -506,8 +496,6 @@ export const continue_pay_deposit_get_time_max = params => {
     params
   });
 };
-
-
 
 //续租订单验证
 export const continue_pay_voc_pay = params => {
@@ -706,6 +694,15 @@ export const dbc_balance = params => {
   });
 };
 
+// 获得用户钱包dbc余额
+export const dbc_gas_balance = params => {
+  return axios({
+    method: "get",
+    url: host + "/query/dbc_gas_balance",
+    params
+  });
+};
+
 // 重发邮件
 export const send_email_repeat = params => {
   return axios({
@@ -716,13 +713,10 @@ export const send_email_repeat = params => {
 };
 
 // 机器id获取订单列表
-export const get_gate_dbc_price = (
-  dbc
-) => {
+export const get_gate_dbc_price = dbc => {
   return axios({
     method: "get",
     url: `https://gateio.life/api2/1/ticker/${dbc}`
-
   });
 };
 // 验证矿工质押的dbc
