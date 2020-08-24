@@ -3,7 +3,7 @@ import enLocale from "element-ui/lib/locale/lang/en";
 export default {
 
   message: "hello i18n !!",
-  website_name: "aicv",
+  website_name: "dbchain",
   $: "$",
   send: "отправить",
   closeWallet: "закрыть кошелёк",
@@ -159,11 +159,11 @@ export default {
     mcTradeInfo: "информация о финансовых операциях оборудования",
     backDbcNum: "возвращаемая сумма DBC",
     rateMsg: "сколько звезд Вы поставите для оценки",
-    common: "普通AI训练区",
-    highStabilityAITrain: "高稳定AI训练区",
-    aiInference: "AI推理区",
-    hashCompute: "FileCoin计算区",
-    superNodeCompute: "超级节点算力区"
+    common: "Обычная тренировочная зона ии",
+    highStabilityAITrain: "Высокостабильная тренировочная зона ии",
+    aiInference: "Область дедукции ии",
+    hashCompute: "Вычислительная зона FileCoin",
+    superNodeCompute: "Суперузловая вычислительная зона"
   },
 
   country: "страна",
@@ -686,17 +686,17 @@ export default {
 
   myMachine_rentout_success_msg_mining: 'Верификация прошла успешно. Текущее оборудование теперь является майнинговым оборудованием. Через 3 минуты оборудование может выйти в интернет на платформу облачных вычислений', //2020 4.9
 
-  month_discount: "包月折扣",
-  quarter_discount: "包季折扣",
-  year_discount: "包年折扣",
+  month_discount: "Скидка за месяц",
+  quarter_discount: "Квартальная скидка",
+  year_discount: "Ежегодная скидка",
   rentout_machine_classification: '机器分区',
   rentout_machine_classification_tag: '普通AI训练区@高稳定AI训练区',
   rentout_machine_normal: '普通AI训练区',
   rentout_machine_high: '高稳定AI训练区',
   rentout_machine_type: '机器出租方式',
   rentout_machine_tag: '支持单卡出租@仅支持整租',
-  rentout_machine_whole: '仅支持整租',
-  rentout_machine_one_gpu: '支持单卡出租',
+  rentout_machine_whole: 'Поддерживаем только полную арендную плату',
+  rentout_machine_one_gpu: 'Поддерживает однокарточный прокат',
   rentout_machine_type_info: '如果希望机器可以同时在Filecoin计算区出租必须要选择"仅支持整租",同时需要质押DBC',
   high_stability_conditions0: '机器进入高稳定AI训练区，需满足条件:',
   high_stability_conditions1: '1) 累计稳定运行超过144小时',
@@ -707,7 +707,7 @@ export default {
   input_deposite_dbc_count: "输入每卡质押的DBC",
   deposite_dbc_count_total: "质押的DBC总数为",
   deposite_dbc_count: "每卡质押的DBC",
-  compensation_dbc_count: "每卡补偿的DBC",
+  compensation_dbc_count: "Общий анализ крови для компенсации за GPU",
   my_machine_miner_close_status: "机器已下架",
   my_machine_will_close: "下架机器",
   miner_confirmPay_repeat: "继续支付验证",
@@ -752,5 +752,12 @@ export default {
   use_machine_dbc_help: '启用DBC超级节点帮助文档',
   myMachine_confirm_pay_tip: '如果已经支付，请点击继续支付后，在弹框中点击我已支付；如果没有支付，请点击继续支付后，在弹框中点击确认支付',
   miner_confirmPay_tip3: '请点击开始质押DBC,质押DBC成功后，机器将会正式上线',
+  gasamount: "GAS количеств",
+  what_gas: "Что такое GAS",
+  gas_info: "GAS — это единица, в которой каждый перевод DBC или оплата DBC за покупку машины требует 0,001 GAS, и если суммарный газ равен 0, оплата DBC за покупку машины не будет успешной",
+  how_get_gas: "Как доступ к GAS",
+  how_get_gas_info: "Плати за DBC, автоматически получаешь определенное количество GAS",
+  left_gasamount: "Текущий номер кошелька GAS",
+  zerogas: "Текущий бумажник GAS равен 0, который не может быть оплачен, поэтому, пожалуйста, в случае покупки paw 100 DBC в качестве оплаты, вы получаете 0,005 GAS бесплатно",
   ...enLocale
 };

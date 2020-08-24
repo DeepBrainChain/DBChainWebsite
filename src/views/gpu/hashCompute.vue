@@ -9,13 +9,14 @@
         @selected="queryMc"
       ></drop-item>
       <!--      <drop-item class="machine-item" title="Image" :dropList="images"></drop-item>-->
-      <drop-item
+       <!--    <drop-item
         class="machine-item"
         :title="$t('dbc_version_title')"
         v-model="req_body.dbcVersion"
         :dropList="dbc_version"
         @selected="queryMc"
-      ></drop-item>
+      ></drop-item>-->
+
       <drop-item
         class="machine-item"
         :title="$t('have_ip_title')"
@@ -237,7 +238,7 @@
               :loading="try_rentLoading && try_rent_index===index "
             >{{$t('list_try')}}</el-button>
             <el-button
-              style="width: 105px"
+              style="width: 150px"
               type="primary"
               size="mini"
               @click="openDlg_gpu(item,index)"

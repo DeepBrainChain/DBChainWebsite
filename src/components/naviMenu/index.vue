@@ -37,12 +37,12 @@ export default {
 @import "~@/assets/css/variables.scss";
 
 .btn-list {
-  padding-top: 30px;
+  padding-top: 20px;
   li {
     margin-bottom: 40px;
     text-align: center;
     .naviBtn {
-      width: 240px;
+      width: 280px;
       color: $textColor_gray;
       border-color: $textColor_gray;
       &.active,
@@ -63,7 +63,7 @@ export default {
         //panchuangai,alpha-dbchain:#008bf3
       } // //sharegpu:rgb( 25, 93, 145),52lm:rgb(25,93,145);,mayi:rgb(25,93,145);windywinter\dimi\52cv\ainlp\1024lab\litaai,redstonewill\snbt:rgb(25,93,145);
       i {
-        margin-right: 20px;
+        margin-right: 10px;
         vertical-align: middle;
       }
       span {

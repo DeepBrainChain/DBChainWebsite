@@ -99,9 +99,9 @@ export default {
 
 <style lang="scss" scoped>
 .gpu {
-  margin-bottom: 42px;
+  margin-bottom: 22px;
 }
 .right-wrap {
-  margin-left: 20px;
+  margin-left: 10px;
 }
 </style>

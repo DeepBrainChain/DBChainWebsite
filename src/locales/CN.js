@@ -3,7 +3,7 @@ import enLocale from "element-ui/lib/locale/lang/en";
 export default {
   message: "hello i18n !!",
 
-  website_name: "aipower", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
+  website_name: "dbchain", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
   //alpha-dbchain/aichriscloud/deepbit/vnxmart/aiaicloud/snbt/heekmind/redstonewill/rocketai/aicv/\shareaiot\freegpu\boincplanet\topgpu\thinkotech
   //coolgpu\scclouds\nvidiaai\deligpu\longway\sharedgpu\aipower\cvstudy\gpuhub\district51\deepmind\transportation\planetc\sdnu\freegputop\tensorgpu
   //opengpu\aiyanxishe\codefate\changhe
@@ -166,7 +166,7 @@ export default {
     common: "普通AI训练区",
     highStabilityAITrain: "高稳定AI训练区",
     aiInference: "AI推理区",
-    hashCompute: "FileCoin计算区",
+    hashCompute: "高性能并行计算区",
     superNodeCompute: "超级节点算力区"
 
   },

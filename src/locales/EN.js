@@ -2,7 +2,7 @@ import enLocale from 'element-ui/lib/locale/lang/en'
 
 export default {
   message: 'hello i18n !!',
-  website_name: 'aipower', //yousanai,  dbchain,aionego
+  website_name: 'dbchain', //yousanai,  dbchain,aionego
   $: '$',
   send: 'Send',
   closeWallet: 'Close Wallet',
@@ -77,7 +77,9 @@ export default {
   },
   gpu: {
     myWallet: 'My Wallet',
-    myMachine: 'My Machine',
+    myMachine_gpu: "My GPU containers", //2020 1.9
+    myMachine_cpu: "My CPU containers", //2020 1.9
+    myMachine_stopped: "My stopped containers", //2020 1.9
     machineList: 'Machine List',
     walletAddress: 'Wallet Address',
     notice_1: 'Please keep your private key safe, once a private key is lost, no one can retrieve your DBC asset for you!',
@@ -162,11 +164,11 @@ export default {
     mcTradeInfo: 'Machine transaction information',
     backDbcNum: 'Amount of DBC being refunded',
     rateMsg: 'How many stars would you rate the machine',
-    common: "普通AI训练区",
-    highStabilityAITrain: "高稳定AI训练区",
-    aiInference: "AI推理区",
-    hashCompute: "FileCoin计算区",
-    superNodeCompute: "超级节点算力区"
+    common: "Normal AI training area",
+    highStabilityAITrain: "High stability AI training area",
+    aiInference: "AI inference area",
+    hashCompute: "FileCoin calculation area",
+    superNodeCompute: "Supernode force region"
   },
 
   country: 'Country',
@@ -367,8 +369,8 @@ export default {
   list_country: 'Country',
   list_dbc_version: 'DBC Version',
   list_try: 'Trial',
-  list_rentout_gpu: "租用GPU容器", //2020 1 9
-  list_rentout_cpu: "租用CPU容器", //2020 1 9
+  list_rentout_gpu: "Rent GPU container", //2020 1 9
+  list_rentout_cpu: "Rent CPU container", //2020 1 9
   list_china: 'China',
   list_idle_gpus: 'Idle GPUs',
   list_length_of_available_time: 'Available Time',
@@ -689,17 +691,17 @@ export default {
   send_email_repeat: "Re-sent email",
   diskspace_less_zero: "Available space in docker cannot be less than 1G",
   myMachine_rentout_success_msg_mining: 'The verification is successful, the current machine is a mining machine, and the machine can be launched on the cloud computing platform in 3 minutes', //2020 4.9
-  month_discount: "包月折扣",
-  quarter_discount: "包季折扣",
-  year_discount: "包年折扣",
+  month_discount: "Monthly discount",
+  quarter_discount: "Seasonly discount",
+  year_discount: "Yearly discount",
   rentout_machine_classification: '机器分区',
   rentout_machine_classification_tag: '普通AI训练区@高稳定AI训练区',
   rentout_machine_normal: '普通AI训练区',
   rentout_machine_high: '高稳定AI训练区',
   rentout_machine_type: '机器出租方式',
   rentout_machine_tag: '支持单卡出租@仅支持整租',
-  rentout_machine_whole: '仅支持整租',
-  rentout_machine_one_gpu: '支持单卡出租',
+  rentout_machine_whole: 'Only supports the whole',
+  rentout_machine_one_gpu: 'Support single GPU for rent',
   rentout_machine_type_info: '如果希望机器可以同时在Filecoin计算区出租必须要选择"仅支持整租",同时需要质押DBC',
   high_stability_conditions0: '机器进入高稳定AI训练区，需满足条件:',
   high_stability_conditions1: '1) 累计稳定运行超过144小时',
@@ -710,7 +712,7 @@ export default {
   input_deposite_dbc_count: "输入每卡质押的DBC",
   deposite_dbc_count_total: "质押的DBC总数为",
   deposite_dbc_count: "每卡质押的DBC",
-  compensation_dbc_count: "每卡补偿的DBC",
+  compensation_dbc_count: "Each GPU compensates for the DBCs",
   my_machine_miner_close_status: "机器已下架",
   my_machine_will_close: "下架机器",
   miner_confirmPay_repeat: "继续支付验证",
@@ -757,5 +759,8 @@ export default {
   miner_confirmPay_tip3: '请点击开始质押DBC,质押DBC成功后，机器将会正式上线',
   gasamount: "GAS amount",
   what_gas: "What's GAS?",
+  gas_info: "GAS is a unit of transfer expense. For each DBC transfer or DBC purchase machine, 0.001 GAS is consumed. If the wallet GAS is 0, the payment for DBC purchase machine will fail",
+  how_get_gas: "How to get GAS",
+  how_get_gas_info: "If you buy the DBC through Alipay, you will automatically get a certain amount of GAS",
   ...enLocale
 }
