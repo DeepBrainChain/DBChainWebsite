@@ -144,6 +144,7 @@ export default {
   background: rgba(0, 139, 243, 1);
   border-radius: 4px;
   position: relative;
+  cursor: pointer;
 }
 .button-text {
   width: 72px;

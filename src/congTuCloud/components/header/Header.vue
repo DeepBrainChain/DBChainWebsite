@@ -56,6 +56,7 @@ export default {
   position: absolute;
   top: 15px;
   left: 83px;
+  cursor: pointer;
 }
 .container {
   width: 644px;
@@ -82,6 +83,7 @@ export default {
   line-height: 22px;
   float: left;
   margin-right: 60px;
+  cursor: pointer;
 }
 li:nth-child(1) {
   font-family: PingFangSC-Medium, PingFang SC;
@@ -111,6 +113,7 @@ li:nth-child(1) {
   position: absolute;
   top: 22px;
   left: 361px;
+  cursor: pointer;
 }
 .lang > div {
   float: left;
@@ -145,6 +148,7 @@ li:nth-child(1) {
   position: absolute;
   top: 15px;
   right: 0;
+  cursor: pointer;
 }
 .button-text {
   width: 80px;

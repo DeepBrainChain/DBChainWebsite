@@ -164,6 +164,7 @@ export default {
   line-height: 26px;
   float: left;
   margin-right: 100px;
+  cursor: pointer;
 }
 .options div:nth-child(2) {
   width: 162px;
