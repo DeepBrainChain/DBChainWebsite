@@ -1,11 +1,11 @@
 <template>
   <div class="wrap">
     <div class="container">
-      <div class="left">在线编辑调试</div>
+      <div class="left">{{$t("congTuCloud.page6.iconText")}}</div>
       <div class="right">
         <div class="content">
-          <div class="title">支持在线编辑调试</div>
-          <div class="text">平台内置调试工具，可在线编辑代码、调试任务，一键启动，免去开发环境配置。</div>
+          <div class="title">{{$t("congTuCloud.page6.title")}}</div>
+          <div class="text">{{$t("congTuCloud.page6.describe")}}</div>
         </div>
       </div>
     </div>

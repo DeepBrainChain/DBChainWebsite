@@ -1,34 +1,34 @@
 <template>
   <div class="wrap">
-    <div class="title">兼容第三方工具</div>
+    <div class="title">{{$t("congTuCloud.page5.title")}}</div>
     <div class="container">
       <div class="item">
         <div id="icon-1"></div>
-        <div id="text">Jupyter</div>
+        <div id="text">{{$t("congTuCloud.page5.iconText[0]")}}</div>
       </div>
       <div class="item">
         <div id="icon-2"></div>
-        <div id="text">PyCharm</div>
+        <div id="text">{{$t("congTuCloud.page5.iconText[1]")}}</div>
       </div>
       <div class="item">
         <div id="icon-3"></div>
-        <div id="text">Xshell</div>
+        <div id="text">{{$t("congTuCloud.page5.iconText[2]")}}</div>
       </div>
       <div class="item">
         <div id="icon-4"></div>
-        <div id="text">VS Code</div>
+        <div id="text">{{$t("congTuCloud.page5.iconText[3]")}}</div>
       </div>
       <div class="item">
         <div id="icon-5"></div>
-        <div id="text">Spyder</div>
+        <div id="text">{{$t("congTuCloud.page5.iconText[4]")}}</div>
       </div>
       <div class="item">
         <div id="icon-6"></div>
-        <div id="text">PuTTY</div>
+        <div id="text">{{$t("congTuCloud.page5.iconText[5]")}}</div>
       </div>
       <div class="item">
         <div id="icon-7"></div>
-        <div id="text">VNC</div>
+        <div id="text">{{$t("congTuCloud.page5.iconText[6]")}}</div>
       </div>
     </div>
   </div>

@@ -1,8 +1,8 @@
 <template>
   <div class="wrap">
     <div class="top">
-      <div class="title">合作的客户</div>
-      <div class="describe">各大高校师生和企业都在使用矩池云</div>
+      <div class="title">{{$t("congTuCloud.page7.title")}}</div>
+      <div class="describe">{{$t("congTuCloud.page7.describe")}}</div>
     </div>
     <div class="container">
       <div class="university">

@@ -1,29 +1,29 @@
 <template>
   <div class="wrap">
     <div class="top">
-      <div class="title">五大保障</div>
-      <div class="describe">拥有多维度全方位的支持</div>
+      <div class="title">{{$t("congTuCloud.page2.title")}}</div>
+      <div class="describe">{{$t("congTuCloud.page2.describe")}}</div>
     </div>
     <div class="container">
       <div class="item-1 item">
         <div class="item-1_icon icon"></div>
-        <div class="item-text">高性价比GPU资源</div>
+        <div class="item-text">{{$t("congTuCloud.page2.iconText[0]")}}</div>
       </div>
       <div class="item-2 item">
         <div class="item-2_icon icon"></div>
-        <div class="item-text">免费1T高速网盘</div>
+        <div class="item-text">{{$t("congTuCloud.page2.iconText[1]")}}</div>
       </div>
       <div class="item-3 item">
         <div class="item-3_icon icon"></div>
-        <div class="item-text">在线编程调试</div>
+        <div class="item-text">{{$t("congTuCloud.page2.iconText[2]")}}</div>
       </div>
       <div class="item-4 item">
         <div class="item-4_icon icon"></div>
-        <div class="item-text">丰富的训练数据支持</div>
+        <div class="item-text">{{$t("congTuCloud.page2.iconText[3]")}}</div>
       </div>
       <div class="item-5 item">
         <div class="item-5_icon icon"></div>
-        <div class="item-text">安全稳定可靠</div>
+        <div class="item-text">{{$t("congTuCloud.page2.iconText[4]")}}</div>
       </div>
     </div>
   </div>
@@ -42,30 +42,33 @@ export default {
   background: rgba(243, 245, 249, 1);
 }
 .top {
-  width: 154px;
+  width: 100%;
   height: 78px;
   padding: 60px 0 40px;
   box-sizing: content-box;
   margin: 0 auto;
 }
 .title {
-  width: 136px;
+  width: 500px;
   height: 48px;
   font-size: 34px;
   font-family: PingFangSC-Medium, PingFang SC;
   font-weight: 500;
   color: rgba(27, 31, 51, 1);
   line-height: 48px;
+  text-align: center;
   margin: 0 auto 8px;
 }
 .describe {
-  width: 154px;
+  width: 500px;
   height: 22px;
   font-size: 14px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: rgba(155, 167, 178, 1);
   line-height: 22px;
+  text-align: center;
+  margin: 0 auto;
 }
 .container {
   display: flex;

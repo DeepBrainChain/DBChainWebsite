@@ -5,19 +5,19 @@
       <div class="logo"></div>
       <div class="container">
         <ul class="nav">
-          <li>首页</li>
-          <li>租用GPU</li>
-          <li>帮助</li>
+          <li>{{$t("congTuCloud.header.home")}}</li>
+          <li>{{$t("congTuCloud.header.rentingGPU")}}</li>
+          <li>{{$t("congTuCloud.header.help")}}</li>
         </ul>
         <div class="underline"></div>
         <div class="dividing-line"></div>
         <div class="lang">
           <div class="lang-icon"></div>
-          <div class="lang-option">简体中文</div>
+          <div class="lang-option">{{$t("congTuCloud.header.cn")}}</div>
           <div class="triangle-icon"></div>
         </div>
         <div class="button">
-          <div class="button-text">控制台登录</div>
+          <div class="button-text">{{$t("congTuCloud.header.login")}}</div>
         </div>
       </div>
     </div>

@@ -2,28 +2,28 @@
   <div class="wrap">
     <div class="banner1 banner" ref="banner1">
       <div class="container">
-        <div class="title">聪图云</div>
-        <div class="describe">国内专业提供GPU算力的平台</div>
+        <div class="title">{{$t("congTuCloud.page1.title[0]")}}</div>
+        <div class="describe">{{$t("congTuCloud.page1.describe[0]")}}</div>
         <div class="button">
-          <div class="button-text">立即体验</div>
+          <div class="button-text">{{$t("congTuCloud.page1.buttonText[0]")}}</div>
         </div>
       </div>
     </div>
     <div class="banner2 banner" ref="banner2">
       <div class="container">
-        <div class="title">聪图云</div>
-        <div class="describe">国内专业提供GPU算力的平台</div>
+        <div class="title">{{$t("congTuCloud.page1.title[1]")}}</div>
+        <div class="describe">{{$t("congTuCloud.page1.describe[1]")}}</div>
         <div class="button">
-          <div class="button-text">立即体验</div>
+          <div class="button-text">{{$t("congTuCloud.page1.buttonText[1]")}}</div>
         </div>
       </div>
     </div>
     <div class="banner3 banner" ref="banner3">
       <div class="container">
-        <div class="title">聪图云</div>
-        <div class="describe">国内专业提供GPU算力的平台</div>
+        <div class="title">{{$t("congTuCloud.page1.title[2]")}}</div>
+        <div class="describe">{{$t("congTuCloud.page1.describe[2]")}}</div>
         <div class="button">
-          <div class="button-text">立即体验</div>
+          <div class="button-text">{{$t("congTuCloud.page1.buttonText[2]")}}</div>
         </div>
       </div>
     </div>
@@ -109,7 +109,7 @@ export default {
   display: none;
 }
 .container {
-  width: 265px;
+  width: 400px;
   height: 172px;
   position: absolute;
   top: 0;
@@ -119,7 +119,7 @@ export default {
   margin: auto auto auto 12%;
 }
 .title {
-  width: 102px;
+  width: 100%;
   height: 48px;
   font-size: 34px;
   font-family: PingFangSC-Medium, PingFang SC;
@@ -129,7 +129,7 @@ export default {
   margin-bottom: 14px;
 }
 .describe {
-  width: 263px;
+  width: 100%;
   height: 24px;
   font-size: 20px;
   font-family: PingFangSC-Regular, PingFang SC;
@@ -143,23 +143,17 @@ export default {
   height: 46px;
   background: rgba(0, 139, 243, 1);
   border-radius: 4px;
-  position: relative;
   cursor: pointer;
 }
 .button-text {
-  width: 72px;
+  width: 100%;
   height: 24px;
   font-size: 16px;
   font-family: PingFangSC-Medium, PingFang SC;
   font-weight: 500;
   color: rgba(255, 255, 255, 1);
-  line-height: 24px;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  margin: auto auto;
+  line-height: 46px;
+  text-align: center;
 }
 .underline {
   width: 96px;

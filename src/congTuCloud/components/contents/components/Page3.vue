@@ -15,9 +15,9 @@
       <div class="icon-11"></div>
       <div class="icon-12"></div>
       <div class="text">
-        <span class="text-1">支持&nbsp;</span>
-        <span class="text-2">886&nbsp;</span>
-        <span class="text-3">种主流框架</span>
+        <span class="text-1">{{$t("congTuCloud.page3.text[0]")}}&nbsp;</span>
+        <span class="text-2">{{$t("congTuCloud.page3.text[1]")}}&nbsp;</span>
+        <span class="text-3">{{$t("congTuCloud.page3.text[2]")}}</span>
       </div>
     </div>
   </div>

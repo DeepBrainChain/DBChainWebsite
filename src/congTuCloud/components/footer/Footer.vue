@@ -2,24 +2,24 @@
   <div class="wrap">
     <div class="container">
       <div class="col-1">
-        <div class="title">关于我们</div>
-        <div class="text">聪图人工智能科技（上海）有限公司</div>
-        <div class="text">2016-2020&nbsp;&copy;&nbsp;All&nbsp;Rights&nbsp;Reserved</div>
-        <div class="text record">沪ICP备&nbsp;8888888888-1号</div>
+        <div class="title">{{$t("congTuCloud.footer.abloutUs")}}</div>
+        <div class="text">{{$t("congTuCloud.footer.company")}}</div>
+        <div class="text">{{$t("congTuCloud.footer.copyright")}}</div>
+        <div class="text record">{{$t("congTuCloud.footer.record")}}</div>
       </div>
       <div class="col-2">
-        <div class="title">人才招募</div>
-        <div class="text">HR邮箱:&nbsp;temp@163.com</div>
-        <div class="text">HR微信:&nbsp;temp</div>
+        <div class="title">{{$t("congTuCloud.footer.recruit")}}</div>
+        <div class="text">{{$t("congTuCloud.footer.HREmail")}}</div>
+        <div class="text">{{$t("congTuCloud.footer.HRWechat")}}</div>
       </div>
       <div class="col-3">
-        <div class="title">联系我们</div>
-        <div class="text">公司邮箱:&nbsp;temp@163.com</div>
-        <div class="text">公司微信:&nbsp;temp</div>
+        <div class="title">{{$t("congTuCloud.footer.contactUs")}}</div>
+        <div class="text">{{$t("congTuCloud.footer.comEmail")}}</div>
+        <div class="text">{{$t("congTuCloud.footer.comWechat")}}</div>
       </div>
       <div class="col-4">
         <div class="QR-code"></div>
-        <div class="text wechat">微信公众号</div>
+        <div class="text wechat">{{$t("congTuCloud.footer.wechat")}}</div>
       </div>
     </div>
   </div>

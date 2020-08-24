@@ -1,16 +1,16 @@
 <template>
   <div class="wrap">
     <div class="top">
-      <div class="title">支持主流数据集</div>
-      <div class="describe">常用数据集无需上传，矩池云为用户提供了现成的主流深度学习数据集，供用户快速访问和使用。</div>
+      <div class="title">{{$t("congTuCloud.page4.title")}}</div>
+      <div class="describe">{{$t("congTuCloud.page4.describe")}}</div>
     </div>
     <div class="container">
       <div class="container-top">
         <div class="options">
-          <div class="option-1">图像数据集</div>
-          <div class="option-2">自然语言处理数据集</div>
-          <div class="option-3">KAGGLE</div>
-          <div class="option-4">天池</div>
+          <div class="option-1">{{$t("congTuCloud.page4.options[0]")}}</div>
+          <div class="option-2">{{$t("congTuCloud.page4.options[1]")}}</div>
+          <div class="option-3">{{$t("congTuCloud.page4.options[2]")}}</div>
+          <div class="option-4">{{$t("congTuCloud.page4.options[3]")}}</div>
         </div>
         <div class="underline"></div>
       </div>
@@ -18,76 +18,76 @@
       <div class="container-bottom">
         <div class="rotation-chart">
           <div class="chart-1">
-            <div class="chart-title">图像数据集</div>
+            <div class="chart-title">{{$t("congTuCloud.page4.chart1.title")}}</div>
             <div class="chart-col">
               <ul class="col-1">
-                <li>dbpedia</li>
-                <li>amazonreviews</li>
-                <li>youtube8m</li>
+                <li>{{$t("congTuCloud.page4.chart1.col1[0]")}}</li>
+                <li>{{$t("congTuCloud.page4.chart1.col1[1]")}}</li>
+                <li>{{$t("congTuCloud.page4.chart1.col1[2]")}}</li>
               </ul>
               <ul class="col-2">
-                <li>imdb-sentiments</li>
-                <li>UCI-spambase</li>
-                <li>stanford-question-answering</li>
+                <li>{{$t("congTuCloud.page4.chart1.col2[0]")}}</li>
+                <li>{{$t("congTuCloud.page4.chart1.col2[1]")}}</li>
+                <li>{{$t("congTuCloud.page4.chart1.col2[2]")}}</li>
               </ul>
               <ul class="col-3">
-                <li>3D_Segmentation</li>
-                <li>ImageNet2012</li>
+                <li>{{$t("congTuCloud.page4.chart1.col3[0]")}}</li>
+                <li>{{$t("congTuCloud.page4.chart1.col3[1]")}}</li>
               </ul>
             </div>
           </div>
           <div class="chart-2">
-            <div class="chart-title">自然语言处理数据集</div>
+            <div class="chart-title">{{$t("congTuCloud.page4.chart2.title")}}</div>
             <div class="chart-col">
               <ul class="col-1">
-                <li>dbpedia</li>
-                <li>amazonreviews</li>
-                <li>youtube8m</li>
+                <li>{{$t("congTuCloud.page4.chart2.col1[0]")}}</li>
+                <li>{{$t("congTuCloud.page4.chart2.col1[1]")}}</li>
+                <li>{{$t("congTuCloud.page4.chart2.col1[2]")}}</li>
               </ul>
               <ul class="col-2">
-                <li>imdb-sentiments</li>
-                <li>UCI-spambase</li>
-                <li>stanford-question-answering</li>
+                <li>{{$t("congTuCloud.page4.chart2.col2[0]")}}</li>
+                <li>{{$t("congTuCloud.page4.chart2.col2[1]")}}</li>
+                <li>{{$t("congTuCloud.page4.chart2.col2[2]")}}</li>
               </ul>
               <ul class="col-3">
-                <li>beethoven</li>
-                <li>videos_and_music</li>
+                <li>{{$t("congTuCloud.page4.chart2.col3[0]")}}</li>
+                <li>{{$t("congTuCloud.page4.chart2.col3[1]")}}</li>
               </ul>
             </div>
           </div>
           <div class="chart-3">
-            <div class="chart-title">KAGGLE</div>
+            <div class="chart-title">{{$t("congTuCloud.page4.chart3.title")}}</div>
             <div class="chart-col">
               <ul class="col-1">
-                <li>MNIST</li>
-                <li>VOC2012</li>
+                <li>{{$t("congTuCloud.page4.chart3.col1[0]")}}</li>
+                <li>{{$t("congTuCloud.page4.chart3.col1[1]")}}</li>
               </ul>
               <ul class="col-2">
-                <li>imdb-sentiments</li>
-                <li>UCI-spambase</li>
+                <li>{{$t("congTuCloud.page4.chart3.col2[0]")}}</li>
+                <li>{{$t("congTuCloud.page4.chart3.col2[1]")}}</li>
               </ul>
               <ul class="col-3">
-                <li>beethoven</li>
-                <li>videos_and_music</li>
+                <li>{{$t("congTuCloud.page4.chart3.col3[0]")}}</li>
+                <li>{{$t("congTuCloud.page4.chart3.col3[1]")}}</li>
               </ul>
             </div>
           </div>
           <div class="chart-4">
-            <div class="chart-title">天池</div>
+            <div class="chart-title">{{$t("congTuCloud.page4.chart4.title")}}</div>
             <div class="chart-col">
               <ul class="col-1">
-                <li>dbpedia</li>
-                <li>amazonreviews</li>
-                <li>youtube8m</li>
+                <li>{{$t("congTuCloud.page4.chart4.col1[0]")}}</li>
+                <li>{{$t("congTuCloud.page4.chart4.col1[1]")}}</li>
+                <li>{{$t("congTuCloud.page4.chart4.col1[2]")}}</li>
               </ul>
               <ul class="col-2">
-                <li>imdb-sentiments</li>
-                <li>UCI-spambase</li>
-                <li>stanford-question-answering</li>
+                <li>{{$t("congTuCloud.page4.chart4.col2[0]")}}</li>
+                <li>{{$t("congTuCloud.page4.chart4.col2[1]")}}</li>
+                <li>{{$t("congTuCloud.page4.chart4.col2[2]")}}</li>
               </ul>
               <ul class="col-3">
-                <li>beethoven</li>
-                <li>videos_and_music</li>
+                <li>{{$t("congTuCloud.page4.chart4.col3[0]")}}</li>
+                <li>{{$t("congTuCloud.page4.chart4.col3[1]")}}</li>
               </ul>
             </div>
           </div>
@@ -113,30 +113,33 @@ export default {
   overflow: hidden;
 }
 .top {
-  width: 602px;
+  width: 100%;
   height: 84px;
   margin: 0 auto;
   padding-top: 80px;
   box-sizing: content-box;
 }
 .title {
-  width: 238px;
+  width: 700px;
   height: 48px;
   font-size: 34px;
   font-family: PingFangSC-Medium, PingFang SC;
   font-weight: 500;
   color: rgba(255, 255, 255, 1);
   line-height: 48px;
+  text-align: center;
   margin: 0 auto 12px;
 }
 .describe {
-  width: 602px;
+  width: 1000px;
   height: 24px;
   font-size: 14px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.6);
   line-height: 24px;
+  text-align: center;
+  margin: 0 auto;
 }
 .container {
   width: 100%;

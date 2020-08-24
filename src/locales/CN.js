@@ -2,6 +2,66 @@ import enLocale from "element-ui/lib/locale/lang/en";
 
 export default {
   webtype: "0", // 0: 表示聪图网站首页,  1: 表示dbchain首页
+  congTuCloud: {
+    header: {
+      home: "首页",
+      rentingGPU: "租用GPU",
+      help: "帮助",
+      cn: "简体中文",
+      login: "控制台登录"
+    },
+    page1: {
+      title: ["聪图云", "标题测试2", "标题测试3"],
+      describe: ["国内专业提供GPU算力的平台", "描述测试2", "描述测试3"],
+      buttonText: ["立即体验", "按钮测试2", "按钮测试3"]
+    },
+    page2: {
+      title: "五大保障",
+      describe: "拥有多维度全方位的支持",
+      iconText: ["高性价比GPU资源", "免费1T高速网盘", "在线编程调试", "丰富的训练数据支持", "安全稳定可靠"]
+    },
+    page3: {
+      text: ["支持", "886", "种主流框架"]
+    },
+    page4: {
+      title: "支持主流数据集",
+      describe: "常用数据集无需上传，矩池云为用户提供了现成的主流深度学习数据集，供用户快速访问和使用。",
+      options: ["图像数据集", "自然语言处理数据集", "KAGGLE", "天池"],
+      chart1: { title: "图像数据集", col1: ["测试", "测试", "测试"], col2: ["测试", "测试", "测试"], col3: ["3D_Segmentation", "ImageNet2012"] },
+      chart2: { title: "自然语言处理数据集", col1: ["dbpedia", "amazonreviews", "youtube8m"], col2: ["imdb-sentiments", "UCI-spambase", "stanford-question-answering"], col3: ["beethoven", "videos_and_music"] },
+      chart3: { title: "KAGGLE", col1: ["MNIST", "VOC2012"], col2: ["测试", "测试"], col3: ["测试", "测试"] },
+      chart4: { title: "天池", col1: ["测试", "测试", "测试"], col2: ["测试", "测试", "测试"], col3: ["测试", "测试"] }
+    },
+    page5: {
+      title: "兼容第三方工具",
+      iconText: ["Jupyter", "PyCharm", "Xshell", "VS Code", "Spyder", "PuTTY", "VNC"]
+    },
+    page6: {
+      iconText: "在线编辑调试",
+      title: "支持在线编辑调试",
+      describe: "平台内置调试工具，可在线编辑代码、调试任务，一键启动，免去开发环境配置。"
+    },
+    page7: {
+      title: "合作的客户",
+      describe: "各大高校师生和企业都在使用矩池云"
+    },
+    footer: {
+      abloutUs: "关于我们",
+      company: "聪图人工智能科技（上海）有限公司",
+      copyright: "2016-2020 © All Rights Reserved",
+      record: "沪ICP备 8888888888-1号",
+
+      recruit: "人才招募",
+      HREmail: "HR邮箱: temp@163.com",
+      HRWechat: "HR微信: temp",
+
+      contactUs: "联系我们",
+      comEmail: "公司邮箱: temp@163.com",
+      comWechat: "公司微信: temp",
+
+      wechat: "微信公众号"
+    }
+  },
 
   message: "hello i18n !!",
 
