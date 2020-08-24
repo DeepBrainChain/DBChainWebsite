@@ -1,6 +1,24 @@
 <template>
   <div class="wrap">
-    <div class="banner">
+    <div class="banner1 banner" ref="banner1">
+      <div class="container">
+        <div class="title">聪图云</div>
+        <div class="describe">国内专业提供GPU算力的平台</div>
+        <div class="button">
+          <div class="button-text">立即体验</div>
+        </div>
+      </div>
+    </div>
+    <div class="banner2 banner" ref="banner2">
+      <div class="container">
+        <div class="title">聪图云</div>
+        <div class="describe">国内专业提供GPU算力的平台</div>
+        <div class="button">
+          <div class="button-text">立即体验</div>
+        </div>
+      </div>
+    </div>
+    <div class="banner3 banner" ref="banner3">
       <div class="container">
         <div class="title">聪图云</div>
         <div class="describe">国内专业提供GPU算力的平台</div>
@@ -10,16 +28,53 @@
       </div>
     </div>
     <div class="underline">
-      <div class="underline-1"></div>
-      <div class="underline-2"></div>
-      <div class="underline-3"></div>
+      <div class="underline-1" ref="underline1"></div>
+      <div class="underline-2" ref="underline2"></div>
+      <div class="underline-3" ref="underline3"></div>
     </div>
   </div>
 </template>
 <script>
 export default {
   data() {
-    return {};
+    return {
+      bannerFlag: 1,
+    };
+  },
+  mounted: function () {
+    setInterval(this.bannerSwitching, 5000);
+  },
+  methods: {
+    bannerSwitching: function () {
+      this.bannerFlag++;
+
+      if (this.bannerFlag === 1) {
+        this.$refs.banner1.style.display = "block";
+        this.$refs.banner2.style.display = "none";
+        this.$refs.banner3.style.display = "none";
+
+        this.$refs.underline1.style.opacity = 1;
+        this.$refs.underline2.style.opacity = 0.25;
+        this.$refs.underline3.style.opacity = 0.25;
+      } else if (this.bannerFlag === 2) {
+        this.$refs.banner1.style.display = "none";
+        this.$refs.banner2.style.display = "block";
+        this.$refs.banner3.style.display = "none";
+
+        this.$refs.underline1.style.opacity = 0.25;
+        this.$refs.underline2.style.opacity = 1;
+        this.$refs.underline3.style.opacity = 0.25;
+      } else {
+        this.$refs.banner1.style.display = "none";
+        this.$refs.banner2.style.display = "none";
+        this.$refs.banner3.style.display = "block";
+
+        this.$refs.underline1.style.opacity = 0.25;
+        this.$refs.underline2.style.opacity = 0.25;
+        this.$refs.underline3.style.opacity = 1;
+        this.bannerFlag = 0;
+      }
+    },
   },
 };
 </script>
@@ -30,9 +85,28 @@ export default {
 .banner {
   width: 100%;
   height: 100%;
+  position: absolute;
+}
+.banner1 {
   background: url(../../../assets/imgs/page1/banner01@0x.svg) no-repeat center;
   background-size: cover;
-  position: relative;
+  top: 0;
+  left: 0;
+  display: block;
+}
+.banner2 {
+  background: url(../../../assets/imgs/page1/banner02@0x.svg) no-repeat center;
+  background-size: cover;
+  top: 0;
+  left: 0;
+  display: none;
+}
+.banner3 {
+  background: url(../../../assets/imgs/page1/banner03@0x.svg) no-repeat center;
+  background-size: cover;
+  top: 0;
+  left: 0;
+  display: none;
 }
 .container {
   width: 265px;
