@@ -1,6 +1,8 @@
 import enLocale from "element-ui/lib/locale/lang/en";
 
 export default {
+  webtype: "0", // 0: 表示聪图网站首页,  1: 表示dbchain首页
+
   message: "hello i18n !!",
 
   website_name: "dbchain", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab

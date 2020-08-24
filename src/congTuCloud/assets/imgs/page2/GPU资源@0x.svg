@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="62px" height="63px" viewBox="0 0 62 63" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>GPU资源@1x</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#90BBFF" offset="0%"></stop>
+            <stop stop-color="#2B55FF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="22.6423139%" y1="17.9043651%" x2="76.2373326%" y2="83.7690455%" id="linearGradient-2">
+            <stop stop-color="#DBECFE" offset="0%"></stop>
+            <stop stop-color="#BCDDFC" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="119.281179%" y1="50%" x2="-11.6829964%" y2="50%" id="linearGradient-3">
+            <stop stop-color="#76AFFF" offset="0%"></stop>
+            <stop stop-color="#0C3BFD" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="-10.5022012%" y1="50%" x2="100%" y2="50%" id="linearGradient-4">
+            <stop stop-color="#76AFFF" offset="0%"></stop>
+            <stop stop-color="#0C3BFD" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="-18.6916829%" x2="50%" y2="106.924305%" id="linearGradient-5">
+            <stop stop-color="#76AFFF" offset="0%"></stop>
+            <stop stop-color="#0C3BFD" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="52.1357141%" y1="108.582673%" x2="52.1357141%" y2="-24.2551136%" id="linearGradient-6">
+            <stop stop-color="#76AFFF" offset="0%"></stop>
+            <stop stop-color="#0C3BFD" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-7">
+            <stop stop-color="#76AFFF" offset="0%"></stop>
+            <stop stop-color="#0C3BFD" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="55.1974859%" y1="-6.70585716%" x2="55.1974859%" y2="109.697768%" id="linearGradient-8">
+            <stop stop-color="#E3EEFF" offset="0%"></stop>
+            <stop stop-color="#A3BBFF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="切图" transform="translate(-626.000000, -1815.000000)">
+            <g id="GPU资源" transform="translate(626.000000, 1816.000000)">
+                <g id="编组-5">
+                    <g id="编组" transform="translate(20.024468, 22.299976)">
+                        <rect id="矩形" fill-opacity="0.01" fill="#FFFFFF" x="0" y="0" width="21.844874" height="21.844874"></rect>
+                        <rect id="矩形" stroke="#333333" stroke-width="2" fill="#FFFFFF" fill-rule="nonzero" stroke-linejoin="round" x="3.64081233" y="3.64081233" width="14.5632493" height="14.5632493" rx="1"></rect>
+                        <rect id="矩形" stroke="#333333" stroke-width="2" fill="#FFFFFF" fill-rule="nonzero" stroke-linejoin="round" x="8.19182775" y="8.19182775" width="5.4612185" height="5.4612185"></rect>
+                        <line x1="6.78515025" y1="0.910203083" x2="6.78515025" y2="3.64081233" id="路径" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <line x1="6.78515025" y1="18.2040617" x2="6.78515025" y2="20.9346709" id="路径" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <line x1="10.922437" y1="0.910203083" x2="10.922437" y2="3.64081233" id="路径" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <line x1="10.922437" y1="18.2040617" x2="10.922437" y2="20.9346709" id="路径" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <line x1="15.0597237" y1="0.910203083" x2="15.0597237" y2="3.64081233" id="路径" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <line x1="15.0597237" y1="18.2040617" x2="15.0597237" y2="20.9346709" id="路径" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <line x1="0.910203083" y1="6.78515025" x2="3.64081233" y2="6.78515025" id="路径" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <line x1="18.2040617" y1="6.78515025" x2="20.9346709" y2="6.78515025" id="路径" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <line x1="0.910203083" y1="10.922437" x2="3.64081233" y2="10.922437" id="路径" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <line x1="18.2040617" y1="10.922437" x2="20.9346709" y2="10.922437" id="路径" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <line x1="0.910203083" y1="15.0597237" x2="3.64081233" y2="15.0597237" id="路径" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <line x1="18.2040617" y1="15.0597237" x2="20.9346709" y2="15.0597237" id="路径" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
+                    </g>
+                    <g id="编组-2复制-5">
+                        <path d="M30.9469048,-0.345143644 L58.0477106,15.0714159 L58.0477106,45.9121906 L30.9469048,61.3287502 L3.84609908,45.9121906 L3.84609908,15.0714159 L30.9469048,-0.345143644 Z" id="多边形复制-3" stroke="url(#linearGradient-1)" stroke-width="0.6" fill="#F2F8FF" opacity="0.36"></path>
+                        <polygon id="多边形复制-5" fill="#EBF4FE" points="30.9469048 30.50229 57.7531996 15.2616317 57.7531996 45.7429483 30.9469048 60.9836066"></polygon>
+                        <polygon id="多边形复制-3" fill="#DFEEFE" opacity="0.602469308" points="30.9469048 30.5001827 30.9469048 60.9836066 4.14503784 45.7418946 4.14503784 15.2584708"></polygon>
+                        <polygon id="路径" fill="url(#linearGradient-2)" opacity="0.601004464" points="31.1034662 7.20278994 51.3877059 19.367054 51.332657 42.2230604 30.9912826 53.7808166 10.7377918 42.3186551 10.7928407 19.4626487"></polygon>
+                        <line x1="31.0341799" y1="30.4124544" x2="4.14503784" y2="15.2584708" id="直线" stroke="#7DA7FF" stroke-width="0.6" opacity="0.3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1,2"></line>
+                        <line x1="31.0341799" y1="30.4124544" x2="57.7531996" y2="15.2616317" id="直线复制" stroke="#7DA7FF" stroke-width="0.6" opacity="0.3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1,2"></line>
+                        <line x1="30.9469048" y1="60.4848444" x2="31.0341799" y2="30.1510462" id="直线复制-2" stroke="#7DA7FF" stroke-width="0.6" opacity="0.3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1,2"></line>
+                    </g>
+                </g>
+                <g id="编组" transform="translate(17.000000, 17.491803)">
+                    <rect id="矩形" fill-opacity="0.01" fill="#FFFFFF" x="0" y="0" width="27.3688994" height="27.3688994"></rect>
+                    <path d="M22.8074161,8.50094601 L27.1151084,8.50094601 M22.8074161,13.6844497 L27.1151084,13.6844497 M22.8074161,18.8679533 L27.1151084,18.8679533" id="形状结合" stroke="url(#linearGradient-3)" stroke-width="2" opacity="0.657635" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M0.0634477294,8.50094601 L4.37114004,8.50094601 M0.0634477294,13.6844497 L4.37114004,13.6844497 M0.0634477294,18.8679533 L4.37114004,18.8679533" id="形状结合" stroke="url(#linearGradient-4)" stroke-width="2" opacity="0.657635" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M8.50094601,0.463987342 L8.50094601,4.77167965 M13.6844497,0.463987342 L13.6844497,4.77167965 M18.8679533,0.463987342 L18.8679533,4.77167965" id="形状结合" stroke="url(#linearGradient-5)" stroke-width="2" opacity="0.657635" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M8.50094601,23.061207 L8.50094601,27.3688994 M13.6844497,23.061207 L13.6844497,27.3688994 M18.8679533,23.061207 L18.8679533,27.3688994" id="形状结合" stroke="url(#linearGradient-6)" stroke-width="2" opacity="0.657635" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <rect id="矩形" fill="url(#linearGradient-7)" x="3.99214198" y="3.99214198" width="19.3846154" height="19.3846154" rx="1"></rect>
+                    <rect id="矩形" stroke="url(#linearGradient-8)" stroke-width="1.6" stroke-linejoin="round" fill-rule="nonzero" x="10.2633373" y="10.2633373" width="6.84222484" height="6.84222484"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

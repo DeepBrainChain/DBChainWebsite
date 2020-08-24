@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="9px" height="14px" viewBox="0 0 9 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>三角形@1x</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="切图" transform="translate(-550.000000, -1816.000000)" fill="#F5F6F9">
+            <path d="M555.638464,1820.34066 L561,1828 L561,1828 L547,1828 L552.361536,1820.34066 C552.994965,1819.43576 554.242026,1819.21569 555.146925,1819.84912 C555.338207,1819.98302 555.504566,1820.14938 555.638464,1820.34066 Z" id="三角形" transform="translate(554.000000, 1823.000000) rotate(-90.000000) translate(-554.000000, -1823.000000) "></path>
+        </g>
+    </g>
+</svg>

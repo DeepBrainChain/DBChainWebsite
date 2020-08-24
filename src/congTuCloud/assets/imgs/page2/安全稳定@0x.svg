@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="62px" height="63px" viewBox="0 0 62 63" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>安全稳定@1x</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#90BBFF" offset="0%"></stop>
+            <stop stop-color="#2B55FF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="22.6423139%" y1="17.9043651%" x2="76.2373326%" y2="83.7690455%" id="linearGradient-2">
+            <stop stop-color="#DBECFE" offset="0%"></stop>
+            <stop stop-color="#BCDDFC" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#71A9FF" offset="0%"></stop>
+            <stop stop-color="#1342FD" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="-13.5514226%" x2="50%" y2="100%" id="linearGradient-4">
+            <stop stop-color="#76AFFF" offset="0%"></stop>
+            <stop stop-color="#0C3BFD" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="80.7141096%" y1="50%" x2="0%" y2="50%" id="linearGradient-5">
+            <stop stop-color="#E3EEFF" offset="0%"></stop>
+            <stop stop-color="#A3BBFF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="切图" transform="translate(-1194.000000, -1815.000000)">
+            <g id="安全稳定" transform="translate(1194.000000, 1816.000000)">
+                <g id="编组-2复制-5">
+                    <path d="M30.9469048,-0.345143644 L58.0477106,15.0714159 L58.0477106,45.9121906 L30.9469048,61.3287502 L3.84609908,45.9121906 L3.84609908,15.0714159 L30.9469048,-0.345143644 Z" id="多边形复制-3" stroke="url(#linearGradient-1)" stroke-width="0.6" fill="#F2F8FF" opacity="0.36"></path>
+                    <polygon id="多边形复制-5" fill="#EBF4FE" points="30.9469048 30.50229 57.7531996 15.2616317 57.7531996 45.7429483 30.9469048 60.9836066"></polygon>
+                    <polygon id="多边形复制-3" fill="#DFEEFE" opacity="0.602469308" points="30.9469048 30.5001827 30.9469048 60.9836066 4.14503784 45.7418946 4.14503784 15.2584708"></polygon>
+                    <polygon id="路径" fill="url(#linearGradient-2)" opacity="0.601004464" points="31.1034662 7.20278994 51.3877059 19.367054 51.332657 42.2230604 30.9912826 53.7808166 10.7377918 42.3186551 10.7928407 19.4626487"></polygon>
+                    <line x1="31.0341799" y1="30.4124544" x2="4.14503784" y2="15.2584708" id="直线" stroke="#7DA7FF" stroke-width="0.6" opacity="0.3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1,2"></line>
+                    <line x1="31.0341799" y1="30.4124544" x2="57.7531996" y2="15.2616317" id="直线复制" stroke="#7DA7FF" stroke-width="0.6" opacity="0.3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1,2"></line>
+                    <line x1="30.9469048" y1="60.4848444" x2="31.0341799" y2="30.1510462" id="直线复制-2" stroke="#7DA7FF" stroke-width="0.6" opacity="0.3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1,2"></line>
+                </g>
+                <g id="编组" transform="translate(17.518519, 16.600000)">
+                    <rect id="矩形" fill-opacity="0.01" fill="#FFFFFF" x="0" y="0.251159718" width="26.962963" height="26.962963"></rect>
+                    <path d="M3.37037037,5.67446661 L13.4264198,1.71191315 L23.5925926,5.67446661 L23.5925926,11.7287954 C23.5925926,18.0923376 19.5201866,23.7417748 13.4829557,25.7533693 C7.44406918,23.7418098 3.37037037,18.0911 3.37037037,11.7259981 L3.37037037,5.67446661 Z" id="路径" stroke="url(#linearGradient-4)" stroke-width="2" fill="url(#linearGradient-3)" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <polyline id="路径" stroke="url(#linearGradient-5)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill-rule="nonzero" points="8.42592593 13.3950617 12.3580247 17.3271605 19.0987654 10.5864198"></polyline>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
