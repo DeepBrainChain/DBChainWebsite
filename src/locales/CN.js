@@ -46,7 +46,7 @@ export default {
       describe: "各大高校师生和企业都在使用矩池云"
     },
     footer: {
-      abloutUs: "关于我们",
+      aboutUs: "关于我们",
       company: "聪图人工智能科技（上海）有限公司",
       copyright: "2016-2020 © All Rights Reserved",
       record: "沪ICP备 8888888888-1号",
