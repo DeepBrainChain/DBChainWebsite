@@ -52,8 +52,8 @@ export default {
       record: "沪ICP备 8888888888-1号",
 
       recruit: "人才招募",
-      HREmail: "HR邮箱: temp@163.com",
-      HRWechat: "HR微信: temp",
+      HREmail: "HR邮箱: hr@dbchain.ai",
+      HRWechat: "HR微信: DCloud2019",
 
       contactUs: "联系我们",
       comEmail: "公司邮箱: temp@163.com",
