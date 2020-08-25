@@ -5,13 +5,13 @@
     <Footer></Footer>-->
 
     <!-- dbc首页 -->
-    <div v-if="false">
+    <div v-if="webtypeSwitch">
       <Head></Head>
       <router-view></router-view>
       <Footer></Footer>
     </div>
     <!-- 聪图云首页 -->
-    <div v-else-if="true">
+    <div v-else>
       <CongTuCloudHome />
     </div>
   </div>
@@ -26,6 +26,13 @@ export default {
   name: "app",
   beforeRouteUpdate(to, from, next) {
     next();
+  },
+  computed: {
+    webtypeSwitch: {
+      get: function () {
+        return this.$t("webtype") === "1" ? true : false;
+      },
+    },
   },
   components: {
     Head,
