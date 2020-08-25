@@ -71,7 +71,7 @@ export default {
     },
     handlerClickUnderline: function (e) {
       let underlineIndex = e.target.getAttribute("index");
-      if (underlineIndex > 2 || underlineIndex < 0) {
+      if (underlineIndex > 2 || underlineIndex < 0 || underlineIndex == null) {
         return;
       }
       clearInterval(this.timerFlag);
