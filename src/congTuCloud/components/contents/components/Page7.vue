@@ -120,13 +120,13 @@ li {
   left: 20px;
 }
 .com-icon-2 {
-  width: 207px;
-  height: 70px;
-  background: url(../../../assets/imgs/page7/com-2.png) no-repeat center;
+  width: 195px;
+  height: 81px;
+  background: url(../../../assets/imgs/page7/com-16.png) no-repeat center;
   background-size: cover;
   top: 20px;
   // left: 370px;
-  left: 325px;
+  left: 336px;
 }
 .com-icon-3 {
   width: 265px;
