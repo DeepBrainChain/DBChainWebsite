@@ -7,11 +7,6 @@ export default {
 
   congTuCloud: {
     header: {
-      home: "首页",
-      rentingGPU: "租用GPU",
-      help: "帮助",
-      cn: "简体中文",
-      login: "控制台登录"
     },
     page1: {
       title: ["聪图云", "标题测试2", "标题测试3"],
@@ -68,10 +63,11 @@ export default {
 
   message: "hello i18n !!",
 
-  website_name: "dbchain", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
+  website_name: "congTuCloud", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
   //alpha-dbchain/aichriscloud/deepbit/vnxmart/aiaicloud/snbt/heekmind/redstonewill/rocketai/aicv/\shareaiot\freegpu\boincplanet\topgpu\thinkotech
   //coolgpu\scclouds\nvidiaai\deligpu\longway\sharedgpu\aipower\cvstudy\gpuhub\district51\deepmind\transportation\planetc\sdnu\freegputop\tensorgpu
   //opengpu\aiyanxishe\codefate\changhe
+  // congTuCloud
   $: "$",
   send: "发送",
   closeWallet: "关闭钱包",
