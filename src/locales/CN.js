@@ -1,7 +1,10 @@
 import enLocale from "element-ui/lib/locale/lang/en";
 
 export default {
+
+  /* 关于webtype，修改数值时，要让router.js文件开头引入的HOME组件与此类型一致 */
   webtype: "0", // 0: 表示聪图网站首页,  1: 表示dbchain首页
+
   congTuCloud: {
     header: {
       home: "首页",

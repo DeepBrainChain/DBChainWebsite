@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+// import Home from './views/Home.vue'
+import Home from "./congTuCloud/components/contents/Container";
 import Preview from './views/preview'
-// import CongTuHome from './congTuCloud/pages/home'
 
 Vue.use(Router)
 
@@ -13,11 +13,6 @@ const router = new Router({
 
   mode: 'history',
   routes: [
-    // {
-    //   path: '/cong-tu-home',
-    //   name: ' cong-tu-home',
-    //   component: CongTuHome
-    // },
     {
       path: '/preview',
       name: ' preview',

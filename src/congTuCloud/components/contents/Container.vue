@@ -53,7 +53,7 @@ export default {
 .page4 {
   width: 100%;
   height: 720px;
-  margin: 525px auto 0;
+  // margin: 525px auto 0;
 }
 .page5 {
   width: 100%;
