@@ -1,17 +1,17 @@
 <template>
   <div id="app">
+    <!-- 聪图云首页 -->
+    <div v-if="this.$store.state.webtype" id="ct-wrap">
+      <!-- <CongTuCloudHome /> -->
+      <!-- <CongTuCloudHeader id="ct-header" /> -->
+      <router-view></router-view>
+      <!-- <CongTuCloudFooter id="ct-footer" /> -->
+    </div>
     <!-- dbc首页 -->
-    <div v-if="webtypeSwitch">
+    <div v-else>
       <Head></Head>
       <router-view></router-view>
       <Footer></Footer>
-    </div>
-    <!-- 聪图云首页 -->
-    <div v-else id="ct-wrap">
-      <!-- <CongTuCloudHome /> -->
-      <CongTuCloudHeader id="ct-header" />
-      <router-view></router-view>
-      <CongTuCloudFooter id="ct-footer" />
     </div>
   </div>
 </template>
@@ -22,18 +22,21 @@ import Head from "./components/head";
 import Footer from "./components/footer";
 // 聪图云
 // import CongTuCloudHome from "./congTuCloud/pages/home";
-import CongTuCloudHeader from "./congTuCloud/components/header/Header";
-import CongTuCloudFooter from "./congTuCloud/components/footer/Footer";
+// import CongTuCloudHeader from "./congTuCloud/components/header/Header";
+// import CongTuCloudFooter from "./congTuCloud/components/footer/Footer";
 
 export default {
   name: "app",
   beforeRouteUpdate(to, from, next) {
     next();
   },
+  created() {
+    this.$store.commit("setWebtype", this.webtypeSwitch);
+  },
   computed: {
     webtypeSwitch: {
       get: function () {
-        return this.$t("webtype") === "1" ? true : false;
+        return this.$t("webtype") === "0" ? true : false;
       },
     },
   },
@@ -41,8 +44,8 @@ export default {
     Head,
     Footer,
     // CongTuCloudHome,
-    CongTuCloudHeader,
-    CongTuCloudFooter,
+    // CongTuCloudHeader,
+    // CongTuCloudFooter,
   },
 };
 </script>

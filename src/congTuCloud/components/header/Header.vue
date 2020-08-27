@@ -106,9 +106,6 @@ export default {
       } else if (itemIndex == 4) {
         width = "65px";
         left = "467px";
-      } else if (itemIndex == 5) {
-        width = "65px";
-        left = "592px";
       } else {
         return;
       }
@@ -117,9 +114,10 @@ export default {
     },
     changeItemcolor: function (items, index) {
       for (let i = 0; i < items.length; i++) {
-        items[i].style.color = "rgba(255, 255, 255, 0.6)";
+        items[i].style.color = "rgba(255, 255, 255, .6)";
       }
       items[index].style.color = "rgba(255, 255, 255, 1)";
+      this.$refs.nav;
     },
     changeUnderlineWidthLeft: function (underline, width, left) {
       underline.style.width = width;
@@ -608,11 +606,11 @@ export default {
   line-height: 22px;
   float: left;
   margin-right: 60px;
-  cursor: pointer;
 }
 .item:hover {
   font-weight: 500;
   color: rgba(255, 255, 255, 1);
+  cursor: pointer;
 }
 .item:nth-child(2) {
   font-family: PingFangSC-Medium, PingFang SC;

@@ -38,7 +38,8 @@ export default new Vuex.Store({
     address: '',
     transferList: [],
     dbcToUS: 0, // DBC对美金汇率
-    menuName: ''
+    menuName: '',
+    webtype: ""
   },
   mutations: {
     setAccount(state, data) {
@@ -79,6 +80,9 @@ export default new Vuex.Store({
     },
     setMenuName(state, data) {
       state.menuName = data
+    },
+    setWebtype(state, data) {
+      state.webtype = data
     }
   },
   actions: {
