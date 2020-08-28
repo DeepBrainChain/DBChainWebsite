@@ -1,6 +1,6 @@
 <template>
   <div class="gpu">
-    <Header v-if="this.$store.state.webtype" />
+    <Header v-if="this.$store.state.webtype" :underlineStyle="underlineStyle" />
     <div class="box">
       <el-container>
         <el-aside class="left-wrap">
@@ -19,7 +19,7 @@
 
 <script>
 import Navi from "@/components/naviMenu";
-import Header from "@/congTuCloud/components/header/Header.vue";
+import Header from "@/congTuCloud/components/header/SubHeader.vue";
 import Footer from "@/congTuCloud/components/footer/Footer.vue";
 
 export default {
@@ -37,6 +37,10 @@ export default {
           iconClass: "iconmachine",
         },
       ],
+      underlineStyle: {
+        width: "65px",
+        left: "343px",
+      },
     };
   },
   beforeRouteUpdate(to, from, next) {

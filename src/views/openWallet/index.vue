@@ -97,7 +97,7 @@
 import PsInput from "@/components/wallet/inputPassword";
 import { mapActions, mapState } from "vuex";
 import { wallet } from "@cityofzion/neon-js";
-import Header from "@/congTuCloud/components/header/Header.vue";
+import Header from "@/congTuCloud/components/header/SubHeader.vue";
 import Footer from "@/congTuCloud/components/footer/Footer.vue";
 
 export default {
