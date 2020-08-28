@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header v-if="this.$store.state.webtype" />
+    <Header v-if="this.$store.state.webtype" :underlineStyle="underlineStyle" />
     <div class="wrap1200 bg-box">
       <div class="border-box">
         <h3 class="wallet-title">{{$t('open_wallet')}}</h3>
@@ -113,6 +113,10 @@ export default {
       errText: "",
       canInputPassword: "",
       isLoading: false,
+      underlineStyle: {
+        width: "65px",
+        left: "343px",
+      },
     };
   },
   methods: {
