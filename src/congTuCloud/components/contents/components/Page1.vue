@@ -149,6 +149,9 @@ export default {
   border-radius: 4px;
   cursor: pointer;
 }
+.button:hover {
+  background: rgba(0, 139, 243, 0.7);
+}
 .button-text {
   width: 100%;
   height: 24px;
