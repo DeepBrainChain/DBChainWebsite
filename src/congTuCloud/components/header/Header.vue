@@ -109,7 +109,7 @@ export default {
       } else {
         return;
       }
-      this.changeUnderlineWidthLeft(underline, width, left);
+      // this.changeUnderlineWidthLeft(underline, width, left);
       this.changeItemcolor(items, itemIndex);
     },
     changeItemcolor: function (items, index) {
@@ -583,8 +583,13 @@ export default {
   width: 36px;
   height: 36px;
   position: absolute;
-  top: 15px;
+  top: 0;
+  right: 0;
+  bottom: 0;
   left: 83px;
+  margin: auto 0;
+}
+.logo:hover {
   cursor: pointer;
 }
 .nav {

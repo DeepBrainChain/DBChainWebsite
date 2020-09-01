@@ -553,7 +553,7 @@ export default {
 <style lang="scss" scoped>
 .header {
   width: 100%;
-  height: 66px;
+  height: 100px;
   position: relative;
 }
 .mask {
@@ -561,7 +561,7 @@ export default {
   height: 100%;
   background: rgba(6, 23, 101, 1);
   box-shadow: 0px 2px 10px 0px rgba(102, 102, 102, 0.12);
-  opacity: 0.3;
+  opacity: 0.7;
   position: absolute;
 }
 .wrap {
@@ -574,8 +574,13 @@ export default {
   width: 36px;
   height: 36px;
   position: absolute;
-  top: 15px;
+  top: 0;
+  right: 0;
+  bottom: 0;
   left: 83px;
+  margin: auto 0;
+}
+.logo:hover {
   cursor: pointer;
 }
 .nav {
