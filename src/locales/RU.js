@@ -3,7 +3,7 @@ import enLocale from "element-ui/lib/locale/lang/en";
 export default {
 
   message: "hello i18n !!",
-  website_name: "dbchain",
+  website_name: "topgpu",
   $: "$",
   send: "отправить",
   closeWallet: "закрыть кошелёк",

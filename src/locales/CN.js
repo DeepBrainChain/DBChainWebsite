@@ -1,7 +1,7 @@
 import enLocale from "element-ui/lib/locale/lang/en";
 
 export default {
-  webtype: "0", // 0: 表示聪图网站首页,  1: 表示dbchain首页
+  webtype: "0", // 0: 表示聪图网站首页,  1: 表示dbchain首页
   congTuCloud: {
     header: {
       home: "首页",
@@ -27,10 +27,30 @@ export default {
       title: "支持主流数据集",
       describe: "常用数据集无需上传，矩池云为用户提供了现成的主流深度学习数据集，供用户快速访问和使用。",
       options: ["图像数据集", "自然语言处理数据集", "KAGGLE", "天池"],
-      chart1: { title: "图像数据集", col1: ["测试", "测试", "测试"], col2: ["测试", "测试", "测试"], col3: ["3D_Segmentation", "ImageNet2012"] },
-      chart2: { title: "自然语言处理数据集", col1: ["dbpedia", "amazonreviews", "youtube8m"], col2: ["imdb-sentiments", "UCI-spambase", "stanford-question-answering"], col3: ["beethoven", "videos_and_music"] },
-      chart3: { title: "KAGGLE", col1: ["MNIST", "VOC2012"], col2: ["测试", "测试"], col3: ["测试", "测试"] },
-      chart4: { title: "天池", col1: ["测试", "测试", "测试"], col2: ["测试", "测试", "测试"], col3: ["测试", "测试"] }
+      chart1: {
+        title: "图像数据集",
+        col1: ["测试", "测试", "测试"],
+        col2: ["测试", "测试", "测试"],
+        col3: ["3D_Segmentation", "ImageNet2012"]
+      },
+      chart2: {
+        title: "自然语言处理数据集",
+        col1: ["dbpedia", "amazonreviews", "youtube8m"],
+        col2: ["imdb-sentiments", "UCI-spambase", "stanford-question-answering"],
+        col3: ["beethoven", "videos_and_music"]
+      },
+      chart3: {
+        title: "KAGGLE",
+        col1: ["MNIST", "VOC2012"],
+        col2: ["测试", "测试"],
+        col3: ["测试", "测试"]
+      },
+      chart4: {
+        title: "天池",
+        col1: ["测试", "测试", "测试"],
+        col2: ["测试", "测试", "测试"],
+        col3: ["测试", "测试"]
+      }
     },
     page5: {
       title: "兼容第三方工具",
@@ -65,7 +85,7 @@ export default {
 
   message: "hello i18n !!",
 
-  website_name: "dbchain", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
+  website_name: "topgpu", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
   //alpha-dbchain/aichriscloud/deepbit/vnxmart/aiaicloud/snbt/heekmind/redstonewill/rocketai/aicv/\shareaiot\freegpu\boincplanet\topgpu\thinkotech
   //coolgpu\scclouds\nvidiaai\deligpu\longway\sharedgpu\aipower\cvstudy\gpuhub\district51\deepmind\transportation\planetc\sdnu\freegputop\tensorgpu
   //opengpu\aiyanxishe\codefate\changhe
