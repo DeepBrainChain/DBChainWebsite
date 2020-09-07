@@ -134,6 +134,8 @@ export default {
         return this.$t("footer_service_codefate");
       } else if (this.$t("website_name") == "changhe") {
         return this.$t("footer_service_changhe");
+      } else if (this.$t("website_name") == "dpool") {
+        return this.$t("footer_service_dpool");
       }
 
       return this.$t("footer_service_dbchain");

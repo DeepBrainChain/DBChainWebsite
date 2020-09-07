@@ -613,6 +613,15 @@ export const add_or_modify_new = params => {
   });
 };
 
+// 添加或者修改出租信息
+export const add_or_modify_new2 = params => {
+  return axios({
+    method: "post",
+    url: host + "/rentout/add_or_modify_new2",
+    params
+  });
+};
+
 // 获取国家列表
 export const get_country_list = params => {
   return axios({
@@ -760,6 +769,15 @@ export const dbc_deposite_count = params => {
   return axios({
     method: "get",
     url: host + "/query/dbc_deposite_count",
+    params
+  });
+};
+
+// 获取需要质押的dbc数量
+export const dbc_deposite_count_new = params => {
+  return axios({
+    method: "get",
+    url: host + "/query/dbc_deposite_count_new",
     params
   });
 };

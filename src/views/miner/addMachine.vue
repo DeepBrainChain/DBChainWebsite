@@ -133,7 +133,24 @@
       </el-select>
     </div>
     <div class="subText">{{$t('add_machine_msg_tips')}}</div>
-
+    <div class="label mt20" v-if="display_select_rent_platform">
+      <span>{{$t('rentout_machine_ai_platform_select')}}:</span>
+      <el-select
+        class="time-select ml10"
+        v-model="rentout_machine_platform_select"
+        style="width: 360px"
+        size="small"
+        @change="get_dbc_count"
+      >
+        <el-option
+          v-for="item in rentout_machine_platformOptions"
+          :key="item.value"
+          :label="item.name"
+          :value="item.value"
+        ></el-option>
+      </el-select>
+      <span class="subText">&nbsp;&nbsp;{{$t('rentout_machine_ai_platform_select_info')}}</span>
+    </div>
     <div class="label mt20">
       <span>{{isEditor ? 4:5}}.{{$t('rentout_machine_classification')}}:</span>
       <span
@@ -251,7 +268,7 @@
       </el-select>
     </div>
 
-    <div class="label mt30">{{isEditor ? 8:9}}.{{$t('miner.addMc_dbc')}}</div>
+    <div class="label mt30">{{isEditor ? 7:8}}.{{$t('miner.addMc_dbc')}}</div>
 
     <div>
       <mu-text-field class="verityMail-input" v-model="code" type="number"></mu-text-field>
@@ -305,10 +322,10 @@
 <script>
 import {
   add_or_modify,
-  add_or_modify_new,
+  add_or_modify_new2,
   get_rentout_code,
   get_country_list,
-  dbc_deposite_count
+  dbc_deposite_count_new
 } from "@/api";
 
 import { getAccount } from "@/utlis";
@@ -337,7 +354,7 @@ export default {
       selArea: "",
       period: "",
 
-      gpu_price_dollar: "",
+      gpu_price_dollar: 0.1,
       code: "",
       can_rent_start_time_later: "",
       end_rent_out_time_later: "",
@@ -353,12 +370,17 @@ export default {
       dbc_count: "0",
 
       rentout_deposite_dbc_count_every_gpu: 0,
-      dbc_deposite_count: 0
+      dbc_deposite_count: 0,
+      rentout_machine_platform_select: 0, //0:代表所有云平台，1:只在当前平台
+      display_select_rent_platform: false
     };
   },
 
   created() {
     this.gpu_price_dollar = (this.$route.query.gpu_price_dollar / 11) * 10;
+    if (this.gpu_price_dollar <= 0) {
+      this.gpu_price_dollar = 0.1;
+    }
     if (this.$route.query.gpu_rentout_whole) {
       this.rentout_machine_type = 1;
     }
@@ -400,7 +422,9 @@ export default {
     if (this.$route.query.machine_mode === 1) {
       this.rentout_machine_classification = 1;
     }
-
+    if (this.$t("display_select_rent_platform") === "1") {
+      this.display_select_rent_platform = true;
+    }
     this.get_dbc_count();
   },
   computed: {
@@ -478,6 +502,26 @@ export default {
 
       return opts;
     },
+
+    rentout_machine_platformOptions() {
+      let opts = [];
+      var tags = new Array();
+
+      let rentout_machine_platform_tag = this.$t(
+        "rentout_machine_platform_tag"
+      );
+
+      tags = rentout_machine_platform_tag.split("@");
+
+      for (let i = 0; i < tags.length; i++) {
+        opts.push({
+          name: tags[i],
+          value: i
+        });
+      }
+
+      return opts;
+    },
     rentout_machine_classificationOptions() {
       let opts = [];
       var tags = new Array();
@@ -504,7 +548,16 @@ export default {
       if (this.rentout_machine_type === 1) {
         whole = true;
       }
-      dbc_deposite_count({ gpu_rentout_whole: whole }).then(res => {
+
+      let only_pool_display = false;
+      if (this.rentout_machine_platform_select === 1) {
+        only_pool_display = true;
+      }
+
+      dbc_deposite_count_new({
+        gpu_rentout_whole: whole,
+        only_pool_display: only_pool_display
+      }).then(res => {
         if (res.status === 1) {
           this.dbc_deposite_count = res.content;
           this.dbc_count = this.$route.query.rentout_deposite_dbc_count;
@@ -514,6 +567,7 @@ export default {
         }
       });
     },
+
     getCode() {
       if (!getAccount()) {
         //  this.$router.push(`/openWallet/${type}`);
@@ -579,7 +633,13 @@ export default {
       } else {
         rentout_machine_type_local = true;
       }
-      add_or_modify_new({
+
+      let only_pool_display = false;
+      if (this.rentout_machine_platform_select === 1) {
+        only_pool_display = true;
+      }
+
+      add_or_modify_new2({
         wallet_address: getAccount().address,
         machine_id: this.machine_id,
         gpu_price_dollar: this.gpu_price_dollar,
@@ -596,7 +656,8 @@ export default {
         gpu_rentout_whole: rentout_machine_type_local,
         machine_mode: this.rentout_machine_classification,
         rentout_deposite_dbc_count_every_gpu: this
-          .rentout_deposite_dbc_count_every_gpu
+          .rentout_deposite_dbc_count_every_gpu,
+        only_pool_display: only_pool_display
       })
         .then(res => {
           if (res.status === 1) {

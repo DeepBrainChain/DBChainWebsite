@@ -286,7 +286,7 @@ export default {
         this.link.href = "./codefate.ico";
       } else if (this.$t("website_name") == "changhe") {
         this.link.href = "./changhe.ico";
-      }
+      } 
 
       document.getElementsByTagName("head")[0].appendChild(this.link);
     },
@@ -396,6 +396,8 @@ export default {
         document.title = "codefate";
       } else if (this.$t("website_name") == "changhe") {
         document.title = "changhe";
+      }else if (this.$t("website_name") == "dpool") {
+        document.title = "dpool";
       }
     },
     set_logo() {
