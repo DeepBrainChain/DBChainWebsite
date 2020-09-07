@@ -55,7 +55,7 @@ export default {
       link: undefined,
       title: undefined,
       logo: undefined,
-      language_name: "简体中文",
+      language_name: "简体中文"
     };
   },
   created() {
@@ -72,20 +72,20 @@ export default {
       "transferList",
       "dbcToUS",
       "dbcPrice",
-      "dbcChange",
+      "dbcChange"
     ]),
     set_dbctalk() {
       return "";
-    },
+    }
   },
   methods: {
-    handlerClickNav: function (e) {
+    handlerClickNav: function(e) {
       let items = [
         this.$refs.item0,
         this.$refs.item1,
         this.$refs.item2,
         this.$refs.item3,
-        this.$refs.item4,
+        this.$refs.item4
       ];
 
       let itemIndex = parseInt(e.target.getAttribute("index"));
@@ -112,14 +112,14 @@ export default {
       // this.changeUnderlineWidthLeft(underline, width, left);
       this.changeItemcolor(items, itemIndex);
     },
-    changeItemcolor: function (items, index) {
+    changeItemcolor: function(items, index) {
       for (let i = 0; i < items.length; i++) {
         items[i].style.color = "rgba(255, 255, 255, .6)";
       }
       items[index].style.color = "rgba(255, 255, 255, 1)";
       this.$refs.nav;
     },
-    changeUnderlineWidthLeft: function (underline, width, left) {
+    changeUnderlineWidthLeft: function(underline, width, left) {
       underline.style.width = width;
       underline.style.left = left;
     },
@@ -127,13 +127,13 @@ export default {
       "getAccountState",
       "getTransferList",
       "getExchangeRate",
-      "getGate",
+      "getGate"
     ]),
     initData() {
       this.getExchangeRate();
       this.getAccountState()
-        .then((data) => {})
-        .catch((err) => {});
+        .then(data => {})
+        .catch(err => {});
     },
     setLanguageCode() {
       let type = navigator.appName;
@@ -299,8 +299,6 @@ export default {
         this.link.href = "./codefate.ico";
       } else if (this.$t("website_name") == "changhe") {
         this.link.href = "./changhe.ico";
-      } else if (this.$t("website_name") == "changhe") {
-        this.link.href = "./changhe.ico";
       }
 
       document.getElementsByTagName("head")[0].appendChild(this.link);
@@ -411,8 +409,6 @@ export default {
         document.title = "codefate";
       } else if (this.$t("website_name") == "changhe") {
         document.title = "changhe";
-      }else if (this.$t("website_name") == "changhe") {
-        document.title = "changhe";
       }
     },
     set_logo() {
@@ -522,8 +518,6 @@ export default {
         this.logo = require("../../../assets/imgs/changhe@1x.png");
       } else if (this.$t("website_name") == "congTuCloud") {
         this.logo = require("../../assets/imgs/header/WechatIMG19@0x.svg");
-      }else if (this.$t("website_name") == "congTuCloud") {
-        this.logo = require("../../assets/imgs/header/WechatIMG19@0x.svg");
       }
     },
     pushMenu(name) {
@@ -561,8 +555,8 @@ export default {
           this.language_name = "日本語";
         }
       });
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

@@ -2,13 +2,12 @@ import enLocale from "element-ui/lib/locale/lang/en";
 
 export default {
 
-
   /* 关于webtype:
    ** 修改数值时，要把router.js文件开头引入的Home组件切换与此类型一致，
    ** 下方的website_name也要修改
    */
-  webtype: "1", // 0: 表示聪图网站首页,  1: 表示dbchain首页
-  website_name: "dpool", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
+  webtype: "0", //0:表示法币支付网站,1:表示dbc支付网站
+  website_name: "congTuCloud", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
   display_select_rent_platform: "1", //0：不显示机器出租的云平台选项，1:显示出租的云平台选项
   //alpha-dbchain/aichriscloud/deepbit/vnxmart/aiaicloud/snbt/heekmind/redstonewill/rocketai/aicv/\shareaiot\freegpu\boincplanet\topgpu\thinkotech
   //coolgpu\scclouds\nvidiaai\deligpu\longway\sharedgpu\aipower\cvstudy\gpuhub\district51\deepmind\transportation\planetc\sdnu\freegputop\tensorgpu
@@ -74,7 +73,7 @@ export default {
     miner: "出租GPU",
     mymachine: "我的机器",
     mywallet: "我的钱包",
-    help: '帮助文档',
+    help: "帮助文档",
     talk: "AI开发者论坛"
   },
   footer: {
@@ -92,9 +91,7 @@ export default {
     yikeweiqi: "奕客围棋",
     modelbase: "飞桨github",
     PaddleVideo: "飞桨模型库",
-    models: "飞桨模型库",
-
-
+    models: "飞桨模型库"
   },
   gpu: {
     myWallet: "我的钱包",
@@ -178,7 +175,6 @@ export default {
     aiInference: "AI推理区",
     hashCompute: "高性能并行计算区",
     superNodeCompute: "超级节点算力区"
-
   },
 
   country: "国家",
@@ -212,7 +208,6 @@ export default {
       "容器使用完成后，可以提前退租，只会收取实际产生的费用，剩余费用将会退还到钱包中. " +
       "时间到期,容器会被停用,机器所有数据将会" +
       "被自动保留7天,如果您的钱包余额超过20000DBC,7天内任何时间可以继续启用容器,进行使用,容器停止超过7天将会被销毁.",
-
 
     dlg_5: "使用过程中机器出现中断，如果使用时间不超过144小时，则退回全部DBC \n" +
       "<br>" +
@@ -411,7 +406,7 @@ export default {
   myMachine_please_confirm_pay: "请确认支付",
   myMachine_confirm: "确定",
   myMachine_cancer: "取消",
-  myMachine_paid: '我已支付',
+  myMachine_paid: "我已支付",
   myMachine_code_send: "验证码已发送至您的邮箱，请填写验证码",
   myMachine_cancer_order: "取消订单",
 
@@ -546,7 +541,6 @@ export default {
   footer_service_deligpu: "arrky@mail.ru", //9.17 19:33
   footer_service_longway: "2546954766@qq.com", //9.17 19:33
 
-
   footer_service_aipower: "1272068154@qq.com", //9.17 19:33
   footer_service_cvstudy: "cvstudy@163.com", //9.17 19:33
   footer_service_gpuhub: "gpuhub@foxmail.com", //9.17 19:33
@@ -568,155 +562,150 @@ export default {
   my_gpu_count: "我租用的GPU数量", //9.17 19:33
 
   pay_over_time: "无法支付，已经超过10分钟有效期，订单将会在1分钟内自动取消", //9.29 00:26
-  click_to_view: '点击查看',
+  click_to_view: "点击查看",
   continue_pay: "续租",
   continue_pay_time: "续租时长",
   continue_pay_details: "订单详情",
   click_to_view_continue_pay: "查看续租订单详情",
   continue_pay_pay_success: "支付成功",
   continue_pay_success: "续租成功",
-  continue_pay_order_is_over: '订单结束',
+  continue_pay_order_is_over: "订单结束",
 
-  restart_machine: '重启容器', //12.22
+  restart_machine: "重启容器", //12.22
 
-
-  cpu_mode_switch: '付费方式需要支付DBC才可以使用CPU容器。质押方式不需要实际花费DBC，只需要将质押DBC，就可以免费使用CPU容器，使用结束后，质押的DBC会全部退回。两种使用方式功能上没有任何区别。',
-  payment: ' 付费方式 ',
-  deposit: ' 质押方式 ',
-  pleae_create_wallet: '请先在我的钱包中创建钱包账号',
-  choseImages: '请选择环境框架',
+  cpu_mode_switch: "付费方式需要支付DBC才可以使用CPU容器。质押方式不需要实际花费DBC，只需要将质押DBC，就可以免费使用CPU容器，使用结束后，质押的DBC会全部退回。两种使用方式功能上没有任何区别。",
+  payment: " 付费方式 ",
+  deposit: " 质押方式 ",
+  pleae_create_wallet: "请先在我的钱包中创建钱包账号",
+  choseImages: "请选择环境框架",
   diskspace_dlg: "硬盘空间",
-  diskspace_giving: '容器创建后，空间无法扩增，请注意硬盘空间充足，免费赠送',
+  diskspace_giving: "容器创建后，空间无法扩增，请注意硬盘空间充足，免费赠送",
 
-  diskspace_giving_gpu: '每个GPU赠送',
-  buy_diskspace: '额外购买硬盘空间',
-  disk_hour: 'G*h',
-  disk_max: '最多可以购买',
-  memory_dlg: '分配的内存空间',
-  memory_every_gpu: '每个GPU分配内存数为',
-  lease_gpu: '租用GPU容器',
-  over_max_disk: '购买硬盘空间超限,增加GPU数量，可以增加最大硬盘空间',
-  diskspace_remaining: '最大可用硬盘空间',
-  memory_more: '购买的硬盘空间越大，分配的内存空间越多',
-  open_cpu_to_gpu: '启用GPU',
-  diskspace_cpu_data: '当前CPU容器已经使用的硬盘空间为',
-  diskspace_gpu_data: '当前GPU容器已经使用的硬盘空间为：',
-  diskspace_new_gpu: '启动GPU后容器剩余空间为',
-  diskspace_every_cpu_can_buy: '每个GPU最多可以购买',
-  myMachine_is_vocing_machine_update: '正在启动GPU(如果无法启动，可以联系support@dbchain.ai)，根据您容器已存储的数据大小，大概需要',
-  container_is_closed_update: '在启动GPU的过程中,当前CPU容器会处于关闭状态,无法使用,启动完成后,可以重新登陆',
-  rent_cpu_cotainer: '租用CPU容器',
-  open_gpu_cpu_to_gpu: '启动GPU',
-  deposit_tips1: '1.免费容器功能可以帮助在准备环境、传输数据的时候节省费用.当所有条件准备好过后,可以再付费启用gpu,进行训练或者推理',
-  deposit_tips2: '2.质押功能不收取任何费用,但需要抵押DBC作为押金,当容器停止使用或者开启使用GPU后押金会自动退回',
-  deposit_tips3: '3.押金会打到区块链智能合约中,可以通过钱包地址随时查看押金的状态,任何人无法动用押金',
-  myMachine_rent_success_msg_update: 'GPU启动成功，稍等3分钟，可以登陆使用',
-  please_switch_cpu_mode: '请选择CPU容器使用方式',
-  switch_diskspace: '选择硬盘空间',
-  switch_memory: '选择内存空间',
-  deposit_dbc_count: '需要质押的DBC数量',
-  return_deposit_dbc: '使用过程中，如果机器发生中断，将会退回所有质押的DBC',
+  diskspace_giving_gpu: "每个GPU赠送",
+  buy_diskspace: "额外购买硬盘空间",
+  disk_hour: "G*h",
+  disk_max: "最多可以购买",
+  memory_dlg: "分配的内存空间",
+  memory_every_gpu: "每个GPU分配内存数为",
+  lease_gpu: "租用GPU容器",
+  over_max_disk: "购买硬盘空间超限,增加GPU数量，可以增加最大硬盘空间",
+  diskspace_remaining: "最大可用硬盘空间",
+  memory_more: "购买的硬盘空间越大，分配的内存空间越多",
+  open_cpu_to_gpu: "启用GPU",
+  diskspace_cpu_data: "当前CPU容器已经使用的硬盘空间为",
+  diskspace_gpu_data: "当前GPU容器已经使用的硬盘空间为：",
+  diskspace_new_gpu: "启动GPU后容器剩余空间为",
+  diskspace_every_cpu_can_buy: "每个GPU最多可以购买",
+  myMachine_is_vocing_machine_update: "正在启动GPU(如果无法启动，可以联系support@dbchain.ai)，根据您容器已存储的数据大小，大概需要",
+  container_is_closed_update: "在启动GPU的过程中,当前CPU容器会处于关闭状态,无法使用,启动完成后,可以重新登陆",
+  rent_cpu_cotainer: "租用CPU容器",
+  open_gpu_cpu_to_gpu: "启动GPU",
+  deposit_tips1: "1.免费容器功能可以帮助在准备环境、传输数据的时候节省费用.当所有条件准备好过后,可以再付费启用gpu,进行训练或者推理",
+  deposit_tips2: "2.质押功能不收取任何费用,但需要抵押DBC作为押金,当容器停止使用或者开启使用GPU后押金会自动退回",
+  deposit_tips3: "3.押金会打到区块链智能合约中,可以通过钱包地址随时查看押金的状态,任何人无法动用押金",
+  myMachine_rent_success_msg_update: "GPU启动成功，稍等3分钟，可以登陆使用",
+  please_switch_cpu_mode: "请选择CPU容器使用方式",
+  switch_diskspace: "选择硬盘空间",
+  switch_memory: "选择内存空间",
+  deposit_dbc_count: "需要质押的DBC数量",
+  return_deposit_dbc: "使用过程中，如果机器发生中断，将会退回所有质押的DBC",
   deposit_time_tip: "当前机器最长可以选择使用{time}，最短1个小时.",
   stop_time_tip: "如果机器时间到期,容器会被停用.,机器所有数据将会" +
     "被自动保留7天,7天内任何时间可以继续启用容器,进行使用,但是启用的时候钱包DBC余额需要大于20000DBC,容器停止超过7天将会被销毁." +
     "机器使用完成后,可以提前退租,质押的DBC将会退还到钱包中.",
-  deposit_dbcs_cpu: '质押的DBC总数',
-  cpu_containers_list: '已创建CPU容器数',
-  cpu_containers_can_use_memory_list: 'CPU容器可分配内存',
-  cpu_containers_can_use_disk_list: 'CPU容器可分配硬盘',
-  gpu_containers_can_use_memory_list: 'GPU容器可分配内存',
-  gpu_containers_can_use_disk_list: 'GPU容器可分配硬盘',
-  memory_space: '内存空间',
-  howsellDBC: '如何出售DBC',
+  deposit_dbcs_cpu: "质押的DBC总数",
+  cpu_containers_list: "已创建CPU容器数",
+  cpu_containers_can_use_memory_list: "CPU容器可分配内存",
+  cpu_containers_can_use_disk_list: "CPU容器可分配硬盘",
+  gpu_containers_can_use_memory_list: "GPU容器可分配内存",
+  gpu_containers_can_use_disk_list: "GPU容器可分配硬盘",
+  memory_space: "内存空间",
+  howsellDBC: "如何出售DBC",
   helpsell: {
     title: "如何出售DBC",
 
-
     "2": "1.从火币出售DBC（先将DBC换成比特币，然后将BTC换成人民币进入银行账户或者支付宝）",
     "3": "2.从库币出售DBC",
-    "4": "3.从Gate.io出售DBC",
-
-
+    "4": "3.从Gate.io出售DBC"
   },
-  dbc_price_wallet: 'DBC价格',
-  dbc_price_usd: '美金',
-  stopGpu_mymachine: '停止GPU',
-  stopgpu_please_switch_cpu_mode: 'GPU停止后，GPU容器将会变成CPU容器。CPU容器有两种使用方式，付费方式需要支付DBC才可以使用CPU容器，质押方式不需要实际花费DBC，只需要质押DBC，就可以免费使用CPU容器，使用结束后，质押的DBC会全部退回.两种使用方式，功能完全一样。',
-  stopgpu_to_cpu_payment: '停止GPU，切换到CPU容器',
-  less_data_disk_10g: '可用硬盘空间不能小于10G',
-  less_data_disk_1g: '可用硬盘空间不能小于1G',
-  less_data_disk_over_max: 'GPU容器数据过大，无法停止GPU',
-  diskspace_new_cpu: '关闭GPU后，容器剩余空间为',
-  myMachine_rent_success_msg_update_stop_gpu: '停止GPU成功，稍等3分钟，可以登陆使用',
-  myMachine_is_vocing_machine_update_stop_gpu: '正在停止GPU(如果无法停止，可以联系support@dbchain.ai)，根据您容器已存储的数据大小，大概需要',
-  container_is_closed_update_stop_gpu: '在停止GPU的过程中,当前GPU容器会处于关闭状态,无法使用,启动完成后,可以重新登陆',
-  open_gpu_stopped: '启动为GPU容器',
-  open_cpu_stopped: '启动为CPU容器',
-  container_id: '容器ID',
-  stop_containers_number: '我的已停止容器数',
-  remaining_time_length: '容器销毁时间倒计时',
-  stopped_time_length: '容器已经停止的时间',
-  image_data_stopped: '容器实际占用空间',
-  container_isnormal_over: '容器已停止',
-  dbc_vesion_error: 'DBC版本号低于0.3.7.3.不支持容器启动功能',
-  no_idle_gpus: '当前机器无空闲GPU',
-  no_container: '当前机器CPU容器已满',
-  stop_to_cpu_container: '启动为CPU容器',
+  dbc_price_wallet: "DBC价格",
+  dbc_price_usd: "美金",
+  stopGpu_mymachine: "停止GPU",
+  stopgpu_please_switch_cpu_mode: "GPU停止后，GPU容器将会变成CPU容器。CPU容器有两种使用方式，付费方式需要支付DBC才可以使用CPU容器，质押方式不需要实际花费DBC，只需要质押DBC，就可以免费使用CPU容器，使用结束后，质押的DBC会全部退回.两种使用方式，功能完全一样。",
+  stopgpu_to_cpu_payment: "停止GPU，切换到CPU容器",
+  less_data_disk_10g: "可用硬盘空间不能小于10G",
+  less_data_disk_1g: "可用硬盘空间不能小于1G",
+  less_data_disk_over_max: "GPU容器数据过大，无法停止GPU",
+  diskspace_new_cpu: "关闭GPU后，容器剩余空间为",
+  myMachine_rent_success_msg_update_stop_gpu: "停止GPU成功，稍等3分钟，可以登陆使用",
+  myMachine_is_vocing_machine_update_stop_gpu: "正在停止GPU(如果无法停止，可以联系support@dbchain.ai)，根据您容器已存储的数据大小，大概需要",
+  container_is_closed_update_stop_gpu: "在停止GPU的过程中,当前GPU容器会处于关闭状态,无法使用,启动完成后,可以重新登陆",
+  open_gpu_stopped: "启动为GPU容器",
+  open_cpu_stopped: "启动为CPU容器",
+  container_id: "容器ID",
+  stop_containers_number: "我的已停止容器数",
+  remaining_time_length: "容器销毁时间倒计时",
+  stopped_time_length: "容器已经停止的时间",
+  image_data_stopped: "容器实际占用空间",
+  container_isnormal_over: "容器已停止",
+  dbc_vesion_error: "DBC版本号低于0.3.7.3.不支持容器启动功能",
+  no_idle_gpus: "当前机器无空闲GPU",
+  no_container: "当前机器CPU容器已满",
+  stop_to_cpu_container: "启动为CPU容器",
   myMachine_is_vocing_machine_update_stop_to_open: "正在启动容器(如果无法启动，可以联系support@dbchain.ai)，根据您容器已存储的数据大小，大概需要",
 
-  myMachine_rent_success_msg_update_stop_to_open: '容器启动成功，稍等3分钟，可以登陆使用',
-  stop_to_gpu_container: '启动为GPU容器',
-  user_defined: '自定义安装',
-  cpu_container_instruaction: '温馨提示：先租用CPU容器，准备好环境和数据后，再切换成GPU容器，可以节省费用',
-  diskspace_data_stop: '当前容器已经使用的硬盘空间为：',
-  diskspace_new_cpu_stop: '容器启动后剩余空间为',
-  myMachine_gpu_rentout: '我出租的机器',
-  lessdbc: 'DBC余额不足',
-  transfer_error: '转账失败，请再次尝试',
-  transfer_success: '转账成功',
-  dbc_lack_of_balance: 'DBC余额不足',
-  please_confirm_pay: '请确认支付',
-  stop_instruaction: '温馨提示：您钱包余额大于20000DBC，可以启用已经停止的容器，历史数据保存在里面',
-  dbcnum_error: '输入数字不正确',
-  your_country: '添加机器所处地理位置',
-  stopgpu_tip_mymachine: '停止GPU后，会切换成CPU容器，所有数据都会被保存,并且可以继续使用',
-  myMachine_rentout_success_msg: '验证成功，3分钟后机器可以对外出租',
-  myMachine_rentout_error: '验证失败，机器无法上线，技术支持联系support@dbchain.ai',
-  myMachine_is_vocing_machine_rentout: '正在验证机器是否可用，请耐心等待，大概需要5-10分钟',
-  my_machine_miner_vocing_rentout: '验证中',
-  my_machine_miner_vocing_error: '验证失败',
-  stoprent_tip_mymachine: '退租后,数据会被继续保存7天，如果钱包余额大于20000DBC,可以在我的停止容器中启动后继续使用',
-  list_gpu_count_tip: '当前机器的GPU型号和GPU总数',
-  transfer_tips: '在目标地址中输入对方的DBC钱包地址，然后输入转账的DBC数量，点击发送，就可以把DBC转账到对方的DBC钱包中,大概10-30秒对方就可以收到DBC',
-  dbc_price_wallet_tips: 'DBC价格是随时波动的，购买DBC的时候请注意波动风险',
-  dbcChange_tips: 'DBC 24小时价格变化',
+  myMachine_rent_success_msg_update_stop_to_open: "容器启动成功，稍等3分钟，可以登陆使用",
+  stop_to_gpu_container: "启动为GPU容器",
+  user_defined: "自定义安装",
+  cpu_container_instruaction: "温馨提示：先租用CPU容器，准备好环境和数据后，再切换成GPU容器，可以节省费用",
+  diskspace_data_stop: "当前容器已经使用的硬盘空间为：",
+  diskspace_new_cpu_stop: "容器启动后剩余空间为",
+  myMachine_gpu_rentout: "我出租的机器",
+  lessdbc: "DBC余额不足",
+  transfer_error: "转账失败，请再次尝试",
+  transfer_success: "转账成功",
+  dbc_lack_of_balance: "DBC余额不足",
+  please_confirm_pay: "请确认支付",
+  stop_instruaction: "温馨提示：您钱包余额大于20000DBC，可以启用已经停止的容器，历史数据保存在里面",
+  dbcnum_error: "输入数字不正确",
+  your_country: "添加机器所处地理位置",
+  stopgpu_tip_mymachine: "停止GPU后，会切换成CPU容器，所有数据都会被保存,并且可以继续使用",
+  myMachine_rentout_success_msg: "验证成功，3分钟后机器可以对外出租",
+  myMachine_rentout_error: "验证失败，机器无法上线，技术支持联系support@dbchain.ai",
+  myMachine_is_vocing_machine_rentout: "正在验证机器是否可用，请耐心等待，大概需要5-10分钟",
+  my_machine_miner_vocing_rentout: "验证中",
+  my_machine_miner_vocing_error: "验证失败",
+  stoprent_tip_mymachine: "退租后,数据会被继续保存7天，如果钱包余额大于20000DBC,可以在我的停止容器中启动后继续使用",
+  list_gpu_count_tip: "当前机器的GPU型号和GPU总数",
+  transfer_tips: "在目标地址中输入对方的DBC钱包地址，然后输入转账的DBC数量，点击发送，就可以把DBC转账到对方的DBC钱包中,大概10-30秒对方就可以收到DBC",
+  dbc_price_wallet_tips: "DBC价格是随时波动的，购买DBC的时候请注意波动风险",
+  dbcChange_tips: "DBC 24小时价格变化",
   dlg_bindMail_dbc_tip: "温馨提示:钱包中需要至少1个DBC才能绑定成功",
   dlg_bindMail_voc_failure: "验证失败，请重新获取验证吗，进行验证",
-  restart_tip_mymachine: '如果容器无法连接，可以重启容器，进程会被杀死，数据不会丢失、环境不会被重置',
-  send_email_error: '邮件发送失败，请再次点击发送',
-  send_email_repeat: '重发邮件',
-  diskspace_less_zero: '容器剩余可用空间不能小于0',
+  restart_tip_mymachine: "如果容器无法连接，可以重启容器，进程会被杀死，数据不会丢失、环境不会被重置",
+  send_email_error: "邮件发送失败，请再次点击发送",
+  send_email_repeat: "重发邮件",
+  diskspace_less_zero: "容器剩余可用空间不能小于0",
 
-  myMachine_rentout_success_msg_mining: '验证成功，当前机器为挖矿机器，3分钟后机器可以在云算力平台上线', //2020 4.9
-
+  myMachine_rentout_success_msg_mining: "验证成功，当前机器为挖矿机器，3分钟后机器可以在云算力平台上线", //2020 4.9
 
   month_discount: "包月折扣",
   quarter_discount: "包季折扣",
   year_discount: "包年折扣",
-  rentout_machine_classification: '机器分区',
-  rentout_machine_classification_tag: '普通AI训练区@高稳定AI训练区',
-  rentout_machine_normal: '普通AI训练区',
-  rentout_machine_high: '高稳定AI训练区',
-  rentout_machine_type: '机器出租方式',
-  rentout_machine_tag: '支持单卡出租@仅支持整租',
-  rentout_machine_whole: '仅支持整租',
-  rentout_machine_one_gpu: '支持单卡出租',
+  rentout_machine_classification: "机器分区",
+  rentout_machine_classification_tag: "普通AI训练区@高稳定AI训练区",
+  rentout_machine_normal: "普通AI训练区",
+  rentout_machine_high: "高稳定AI训练区",
+  rentout_machine_type: "机器出租方式",
+  rentout_machine_tag: "支持单卡出租@仅支持整租",
+  rentout_machine_whole: "仅支持整租",
+  rentout_machine_one_gpu: "支持单卡出租",
   rentout_machine_type_info: '如果希望机器可以同时在Filecoin计算区出租必须要选择"仅支持整租",同时需要质押DBC',
-  high_stability_conditions0: '机器进入高稳定AI训练区，需满足条件:',
-  high_stability_conditions1: '1) 累计稳定运行超过144小时',
-  high_stability_conditions2: '2) 历史上没有中断记录，如果机器有一次中断记录，将会被自动分配到普通AI训练区',
-  high_stability_conditions3: '3) 根据当前DBC实时价格每卡至少质押{dbc_count}DBC，质押数量没有最高限制，相同参数机器，质押的数量越高，用户租用的概率越大，当机器出现断网、断电、掉卡三种情况之一，按照正在使用的卡数补偿用户DBC，剩余的退回',
-  high_stability_conditions4: '如果机器出问题时，质押的50%DBC用于补偿用户；如果机器出现问题后24小时内没有再次上架机器，另外的50%也将会被扣除',
+  high_stability_conditions0: "机器进入高稳定AI训练区，需满足条件:",
+  high_stability_conditions1: "1) 累计稳定运行超过144小时",
+  high_stability_conditions2: "2) 历史上没有中断记录，如果机器有一次中断记录，将会被自动分配到普通AI训练区",
+  high_stability_conditions3: "3) 根据当前DBC实时价格每卡至少质押{dbc_count}DBC，质押数量没有最高限制，相同参数机器，质押的数量越高，用户租用的概率越大，当机器出现断网、断电、掉卡三种情况之一，按照正在使用的卡数补偿用户DBC，剩余的退回",
+  high_stability_conditions4: "如果机器出问题时，质押的50%DBC用于补偿用户；如果机器出现问题后24小时内没有再次上架机器，另外的50%也将会被扣除",
   miner_confirmPay: "开始质押DBC",
   input_deposite_dbc_count: "输入每卡质押的DBC",
   deposite_dbc_count_total: "质押的DBC总数为",
@@ -725,7 +714,7 @@ export default {
   my_machine_miner_close_status: "机器已下架",
   my_machine_will_close: "下架机器",
   miner_confirmPay_repeat: "继续支付验证",
-  my_machine_order_vocing_pay_error: '支付验证失败，请再次支付验证',
+  my_machine_order_vocing_pay_error: "支付验证失败，请再次支付验证",
   unkown_error: "未知错误，请再试一次",
   deposite_dbc_count_instruction: "如果当前机器在使用过程中机器本身出现断网、断电、掉卡的现象，除了会返回最多144小时的已使用DBC,还会每卡额外再补偿的DBC数量",
   week_discount_instruction: "选择包周租用机器，在租用成功后的24小时内可以随时退租，提前退租没有折扣优惠,超过24小时不能退租",
@@ -739,33 +728,33 @@ export default {
   my_machine_will_putaway: "上架机器",
   success_connectivity_verification: "机器使用环境验证成功",
   sold_out_machine_tip: "只有在当前没有用户使用的时候才能下架机器，但是12小时内需要上架机器，否则会扣除质押的50%DBC。如果永久下架机器，需要最后一个用户使用结束超过8天，否则会扣除质押的50%DBC，机器下架48小时后，会退还质押的全部DBC.机器下架超过72小时后，当前机器将会从列表中删除",
-  time_sold_out_machine: '机器已经下架的时间',
-  operation_sold_out_machine_used_tip: '当前有用户正在使用，不能下架机器',
-  time_sold_out_machine_tip2: '当前机器在用户使用的时候发生中断，请尽快上架机器',
-  time_sold_out_machine_tip3: '请尽快上架机器，否则机器下架超过12小时将会被扣除DBC',
-  time_sold_out_machine_tip4: '机器下架48小时后将会退回质押的DBC',
-  accounting_area_info: '机器所在的出租区域',
-  leaseback_anytime: '随时可退租',
+  time_sold_out_machine: "机器已经下架的时间",
+  operation_sold_out_machine_used_tip: "当前有用户正在使用，不能下架机器",
+  time_sold_out_machine_tip2: "当前机器在用户使用的时候发生中断，请尽快上架机器",
+  time_sold_out_machine_tip3: "请尽快上架机器，否则机器下架超过12小时将会被扣除DBC",
+  time_sold_out_machine_tip4: "机器下架48小时后将会退回质押的DBC",
+  accounting_area_info: "机器所在的出租区域",
+  leaseback_anytime: "随时可退租",
 
-  monthly: '包月',
-  quarterly: '包季',
-  yearly: '包年',
-  whole_rent_machine_tip: '（当前机器只能整组）',
-  disk_auto_machine_type: '分配的硬盘空间',
-  miner_confirmPay_tip0: '质押DBC成功后，机器将会进入高稳定AI训练区',
-  miner_confirmPay_tip1: '质押DBC成功后，机器将会进入Filecoin计算区',
-  ai_help: 'AI训练和推理帮助文档',
-  filecoin_help: 'Filecoin计算帮助文档',
-  supernode_help: '超级节点租用帮助文档',
-  rent_machine_ai_help: '租用AI服务器帮助文档',
-  use_machine_ai_help: 'AI服务器使用手册',
-  question_machine_ai_help: '常见问题汇总',
-  rent_machine_filecoin_help: '租用Filecoin Snark计算服务器帮助文档',
-  use_machine_filecoin_help: 'Filecoin Snark计算API接口使用手册',
-  rent_machine_dbc_help: 'DBC超级节点租用帮助文档',
-  use_machine_dbc_help: '启用DBC超级节点帮助文档',
-  myMachine_confirm_pay_tip: '如果已经支付，请点击继续支付后，在弹框中点击我已支付；如果没有支付，请点击继续支付后，在弹框中点击确认支付',
-  miner_confirmPay_tip3: '请点击开始质押DBC,质押DBC成功后，机器将会正式上线',
+  monthly: "包月",
+  quarterly: "包季",
+  yearly: "包年",
+  whole_rent_machine_tip: "（当前机器只能整组）",
+  disk_auto_machine_type: "分配的硬盘空间",
+  miner_confirmPay_tip0: "质押DBC成功后，机器将会进入高稳定AI训练区",
+  miner_confirmPay_tip1: "质押DBC成功后，机器将会进入Filecoin计算区",
+  ai_help: "AI训练和推理帮助文档",
+  filecoin_help: "Filecoin计算帮助文档",
+  supernode_help: "超级节点租用帮助文档",
+  rent_machine_ai_help: "租用AI服务器帮助文档",
+  use_machine_ai_help: "AI服务器使用手册",
+  question_machine_ai_help: "常见问题汇总",
+  rent_machine_filecoin_help: "租用Filecoin Snark计算服务器帮助文档",
+  use_machine_filecoin_help: "Filecoin Snark计算API接口使用手册",
+  rent_machine_dbc_help: "DBC超级节点租用帮助文档",
+  use_machine_dbc_help: "启用DBC超级节点帮助文档",
+  myMachine_confirm_pay_tip: "如果已经支付，请点击继续支付后，在弹框中点击我已支付；如果没有支付，请点击继续支付后，在弹框中点击确认支付",
+  miner_confirmPay_tip3: "请点击开始质押DBC,质押DBC成功后，机器将会正式上线",
   gasamount: "GAS数量",
   what_gas: "什么是GAS",
   gas_info: "GAS是一种转账费用的单位，每进行一次DBC转账或者支付DBC购买机器，都需要消耗0.001个GAS，如果钱包GAS为0,则支付DBC购买机器会失败",
@@ -776,50 +765,68 @@ export default {
   congTuCloud: {
     header: {},
     page1: {
-      title: ["聪图云", "标题测试2", "标题测试3"],
-      describe: ["国内专业提供GPU算力的平台", "描述测试2", "描述测试3"],
-      buttonText: ["立即体验", "按钮测试2", "按钮测试3"]
+      title: ["聪图云", "聪图云", "聪图云"],
+      describe: ["全球分布式GPU算力平台", "提供高性价比GPU算力", "安全、稳定、可靠、便捷、便宜"],
+      buttonText: ["立即体验", "立即体验", "立即体验"]
     },
     page2: {
       title: "五大保障",
       describe: "拥有多维度全方位的支持",
-      iconText: ["高性价比GPU资源", "免费1T高速网盘", "在线编程调试", "丰富的训练数据支持", "安全稳定可靠"]
+      iconText: [
+        "高性价比GPU资源",
+        "免费100G高速网盘",
+        "在线编程调试",
+        "丰富的训练数据支持",
+        "安全稳定可靠"
+      ]
     },
     page3: {
-      text: ["支持", "886", "种主流框架"]
+      text: ["支持", "12", "种主流框架"]
     },
     page4: {
       title: "支持主流数据集",
-      describe: "常用数据集无需上传，矩池云为用户提供了现成的主流深度学习数据集，供用户快速访问和使用。",
+      describe: "常用数据集无需上传，聪图云为用户提供了现成的主流深度学习数据集，供用户快速访问和使用。",
       options: ["图像数据集", "自然语言处理数据集", "KAGGLE", "天池"],
       chart1: {
         title: "图像数据集",
-        col1: ["测试", "测试", "测试"],
-        col2: ["测试", "测试", "测试"],
-        col3: ["3D_Segmentation", "ImageNet2012"]
+        col1: ["PASCAL VOC", "Labelme", "COCO"],
+        col2: ["SUN", "Caltech", "Corel5k"],
+        col3: ["3D_Segmentation", "ImageNet"]
       },
       chart2: {
         title: "自然语言处理数据集",
         col1: ["dbpedia", "amazonreviews", "youtube8m"],
-        col2: ["imdb-sentiments", "UCI-spambase", "stanford-question-answering"],
+        col2: [
+          "imdb-sentiments",
+          "UCI-spambase",
+          "stanford-question-answering"
+        ],
         col3: ["beethoven", "videos_and_music"]
       },
       chart3: {
         title: "KAGGLE",
         col1: ["MNIST", "VOC2012"],
-        col2: ["测试", "测试"],
-        col3: ["测试", "测试"]
+        col2: ["IMDB reviews", "Sentiment140"],
+        col3: ["Google Books Ngrams", "Jeopardy"]
       },
       chart4: {
         title: "天池",
-        col1: ["测试", "测试", "测试"],
-        col2: ["测试", "测试", "测试"],
-        col3: ["测试", "测试"]
+        col1: ["ChnSentiCorp_htl_all", "weibo_senti_100k", "SIGHAN Bakeoff 2005"],
+        col2: ["ez_douban", "BERT", "ELMO"],
+        col3: ["NLTK Corpora", "NLTK Corpora"]
       }
     },
     page5: {
       title: "兼容第三方工具",
-      iconText: ["Jupyter", "PyCharm", "Xshell", "VS Code", "Spyder", "PuTTY", "VNC"]
+      iconText: [
+        "Jupyter",
+        "PyCharm",
+        "Xshell",
+        "VS Code",
+        "Spyder",
+        "PuTTY",
+        "VNC"
+      ]
     },
     page6: {
       iconText: "在线编辑调试",
@@ -828,21 +835,21 @@ export default {
     },
     page7: {
       title: "合作的客户",
-      describe: "各大高校师生和企业都在使用矩池云"
+      describe: "各大高校师生和企业都在使用聪图云"
     },
     footer: {
       aboutUs: "关于我们",
       company: "聪图人工智能科技（上海）有限公司",
-      copyright: "2016-2020 © All Rights Reserved",
-      record: "沪ICP备 8888888888-1号",
+      copyright: "2018-2020 © All Rights Reserved",
+      record: "沪ICP备 85895278-1号",
 
       recruit: "人才招募",
       HREmail: "HR邮箱: hr@dbchain.ai",
       HRWechat: "HR微信: DCloud2019",
 
       contactUs: "联系我们",
-      comEmail: "公司邮箱: temp@163.com",
-      comWechat: "公司微信: temp",
+      comEmail: "技术支持邮箱: support@congtu.cloud",
+      comWechat: "公司微信: DCloud2019",
 
       wechat: "微信公众号"
     }
