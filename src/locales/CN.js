@@ -1,94 +1,22 @@
 import enLocale from "element-ui/lib/locale/lang/en";
 
 export default {
-  webtype: "0", // 0: 表示聪图网站首页,  1: 表示dbchain首页
-  congTuCloud: {
-    header: {
-      home: "首页",
-      rentingGPU: "租用GPU",
-      help: "帮助",
-      cn: "简体中文",
-      login: "控制台登录"
-    },
-    page1: {
-      title: ["聪图云", "标题测试2", "标题测试3"],
-      describe: ["国内专业提供GPU算力的平台", "描述测试2", "描述测试3"],
-      buttonText: ["立即体验", "按钮测试2", "按钮测试3"]
-    },
-    page2: {
-      title: "五大保障",
-      describe: "拥有多维度全方位的支持",
-      iconText: ["高性价比GPU资源", "免费1T高速网盘", "在线编程调试", "丰富的训练数据支持", "安全稳定可靠"]
-    },
-    page3: {
-      text: ["支持", "886", "种主流框架"]
-    },
-    page4: {
-      title: "支持主流数据集",
-      describe: "常用数据集无需上传，矩池云为用户提供了现成的主流深度学习数据集，供用户快速访问和使用。",
-      options: ["图像数据集", "自然语言处理数据集", "KAGGLE", "天池"],
-      chart1: {
-        title: "图像数据集",
-        col1: ["测试", "测试", "测试"],
-        col2: ["测试", "测试", "测试"],
-        col3: ["3D_Segmentation", "ImageNet2012"]
-      },
-      chart2: {
-        title: "自然语言处理数据集",
-        col1: ["dbpedia", "amazonreviews", "youtube8m"],
-        col2: ["imdb-sentiments", "UCI-spambase", "stanford-question-answering"],
-        col3: ["beethoven", "videos_and_music"]
-      },
-      chart3: {
-        title: "KAGGLE",
-        col1: ["MNIST", "VOC2012"],
-        col2: ["测试", "测试"],
-        col3: ["测试", "测试"]
-      },
-      chart4: {
-        title: "天池",
-        col1: ["测试", "测试", "测试"],
-        col2: ["测试", "测试", "测试"],
-        col3: ["测试", "测试"]
-      }
-    },
-    page5: {
-      title: "兼容第三方工具",
-      iconText: ["Jupyter", "PyCharm", "Xshell", "VS Code", "Spyder", "PuTTY", "VNC"]
-    },
-    page6: {
-      iconText: "在线编辑调试",
-      title: "支持在线编辑调试",
-      describe: "平台内置调试工具，可在线编辑代码、调试任务，一键启动，免去开发环境配置。"
-    },
-    page7: {
-      title: "合作的客户",
-      describe: "各大高校师生和企业都在使用矩池云"
-    },
-    footer: {
-      aboutUs: "关于我们",
-      company: "聪图人工智能科技（上海）有限公司",
-      copyright: "2016-2020 © All Rights Reserved",
-      record: "沪ICP备 8888888888-1号",
 
-      recruit: "人才招募",
-      HREmail: "HR邮箱: temp@163.com",
-      HRWechat: "HR微信: temp",
 
-      contactUs: "联系我们",
-      comEmail: "公司邮箱: temp@163.com",
-      comWechat: "公司微信: temp",
-
-      wechat: "微信公众号"
-    }
-  },
+  /* 关于webtype:
+   ** 修改数值时，要把router.js文件开头引入的Home组件切换与此类型一致，
+   ** 下方的website_name也要修改
+   */
+  webtype: "1", // 0: 表示聪图网站首页,  1: 表示dbchain首页
+  website_name: "dpool", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
+  display_select_rent_platform: "1", //0：不显示机器出租的云平台选项，1:显示出租的云平台选项
+  //alpha-dbchain/aichriscloud/deepbit/vnxmart/aiaicloud/snbt/heekmind/redstonewill/rocketai/aicv/\shareaiot\freegpu\boincplanet\topgpu\thinkotech
+  //coolgpu\scclouds\nvidiaai\deligpu\longway\sharedgpu\aipower\cvstudy\gpuhub\district51\deepmind\transportation\planetc\sdnu\freegputop\tensorgpu
+  //opengpu\aiyanxishe\codefate\changhe\dpool
+  // congTuCloud
 
   message: "hello i18n !!",
 
-  website_name: "topgpu", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab
-  //alpha-dbchain/aichriscloud/deepbit/vnxmart/aiaicloud/snbt/heekmind/redstonewill/rocketai/aicv/\shareaiot\freegpu\boincplanet\topgpu\thinkotech
-  //coolgpu\scclouds\nvidiaai\deligpu\longway\sharedgpu\aipower\cvstudy\gpuhub\district51\deepmind\transportation\planetc\sdnu\freegputop\tensorgpu
-  //opengpu\aiyanxishe\codefate\changhe
   $: "$",
   send: "发送",
   closeWallet: "关闭钱包",
@@ -362,7 +290,7 @@ export default {
     intr_aiyanxishe_1: "AI研习社云平台",
     intr_codefate_1: "码缘",
     intr_changhe_1: "长河云",
-
+    intr_dpool_1: "DPool",
     intr_1: "提供GPU出租服务，加入我们，可以帮助您的机器非常方便的接入到深脑链网络中，获取收益。\n" +
       "\n" +
       "       只要你的GPU有空闲，就可以加入我们赚取DBC Token，同时可以享受Token升值带来的更多收益。\n" +
@@ -633,6 +561,7 @@ export default {
   footer_service_aiyanxishe: "kefu@yanxishe.com", //9.17 19:33
   footer_service_codefate: "wangming1785@foxmail.com", //9.17 19:33
   footer_service_changhe: "changhecloud@outlook.com", //9.17 19:33
+  footer_service_dpool: "hello@decentral.cc", //9.17 19:33
 
   list_start_rentout: "分钟后可租用", //9.17 19:33
   list_can_rentout: "用户现在可租用", //9.17 19:33
@@ -844,5 +773,82 @@ export default {
   how_get_gas_info: "通过支付宝购买DBC，会自动获得一定数量的GAS",
   left_gasamount: "当前钱包GAS数量",
   zerogas: "当前钱包GAS为0,无法支付，请在支付宝购买100个DBC，会免费获得0.005个gas",
+  congTuCloud: {
+    header: {},
+    page1: {
+      title: ["聪图云", "标题测试2", "标题测试3"],
+      describe: ["国内专业提供GPU算力的平台", "描述测试2", "描述测试3"],
+      buttonText: ["立即体验", "按钮测试2", "按钮测试3"]
+    },
+    page2: {
+      title: "五大保障",
+      describe: "拥有多维度全方位的支持",
+      iconText: ["高性价比GPU资源", "免费1T高速网盘", "在线编程调试", "丰富的训练数据支持", "安全稳定可靠"]
+    },
+    page3: {
+      text: ["支持", "886", "种主流框架"]
+    },
+    page4: {
+      title: "支持主流数据集",
+      describe: "常用数据集无需上传，矩池云为用户提供了现成的主流深度学习数据集，供用户快速访问和使用。",
+      options: ["图像数据集", "自然语言处理数据集", "KAGGLE", "天池"],
+      chart1: {
+        title: "图像数据集",
+        col1: ["测试", "测试", "测试"],
+        col2: ["测试", "测试", "测试"],
+        col3: ["3D_Segmentation", "ImageNet2012"]
+      },
+      chart2: {
+        title: "自然语言处理数据集",
+        col1: ["dbpedia", "amazonreviews", "youtube8m"],
+        col2: ["imdb-sentiments", "UCI-spambase", "stanford-question-answering"],
+        col3: ["beethoven", "videos_and_music"]
+      },
+      chart3: {
+        title: "KAGGLE",
+        col1: ["MNIST", "VOC2012"],
+        col2: ["测试", "测试"],
+        col3: ["测试", "测试"]
+      },
+      chart4: {
+        title: "天池",
+        col1: ["测试", "测试", "测试"],
+        col2: ["测试", "测试", "测试"],
+        col3: ["测试", "测试"]
+      }
+    },
+    page5: {
+      title: "兼容第三方工具",
+      iconText: ["Jupyter", "PyCharm", "Xshell", "VS Code", "Spyder", "PuTTY", "VNC"]
+    },
+    page6: {
+      iconText: "在线编辑调试",
+      title: "支持在线编辑调试",
+      describe: "平台内置调试工具，可在线编辑代码、调试任务，一键启动，免去开发环境配置。"
+    },
+    page7: {
+      title: "合作的客户",
+      describe: "各大高校师生和企业都在使用矩池云"
+    },
+    footer: {
+      aboutUs: "关于我们",
+      company: "聪图人工智能科技（上海）有限公司",
+      copyright: "2016-2020 © All Rights Reserved",
+      record: "沪ICP备 8888888888-1号",
+
+      recruit: "人才招募",
+      HREmail: "HR邮箱: hr@dbchain.ai",
+      HRWechat: "HR微信: DCloud2019",
+
+      contactUs: "联系我们",
+      comEmail: "公司邮箱: temp@163.com",
+      comWechat: "公司微信: temp",
+
+      wechat: "微信公众号"
+    }
+  },
+  rentout_machine_ai_platform_select: "请选择在哪些云平台出租此机器",
+  rentout_machine_platform_tag: "在所有云平台出租机器@只在本平台出租机器",
+  rentout_machine_ai_platform_select_info: "基于DBC网络的云平台全球有数十家，如果选择在所有云平台出租机器，则这些云平台的用户都可以看到您的机器并且能够租用，如果选择只在本云平台出租机器，则只有本平台的用户可以看到和租用",
   ...enLocale
 };

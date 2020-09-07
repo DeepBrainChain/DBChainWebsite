@@ -27,10 +27,10 @@
         </div>
       </div>
     </div>
-    <div class="underline">
-      <div class="underline-1" ref="underline1"></div>
-      <div class="underline-2" ref="underline2"></div>
-      <div class="underline-3" ref="underline3"></div>
+    <div class="underline" @click="handlerClickUnderline($event)">
+      <div class="underline-1" index="0" ref="underline1"></div>
+      <div class="underline-2" index="1" ref="underline2"></div>
+      <div class="underline-3" index="2" ref="underline3"></div>
     </div>
   </div>
 </template>
@@ -38,42 +38,46 @@
 export default {
   data() {
     return {
-      bannerFlag: 1,
+      banners: [],
+      bannerIndex: 0,
+      underlines: [],
+      timerFlag: {},
     };
   },
   mounted: function () {
-    setInterval(this.bannerSwitching, 5000);
+    this.banners = [this.$refs.banner1, this.$refs.banner2, this.$refs.banner3];
+    this.underlines = [
+      this.$refs.underline1,
+      this.$refs.underline2,
+      this.$refs.underline3,
+    ];
+    this.timerFlag = setInterval(this.bannerSwitching, 2500);
   },
   methods: {
     bannerSwitching: function () {
-      this.bannerFlag++;
-
-      if (this.bannerFlag === 1) {
-        this.$refs.banner1.style.display = "block";
-        this.$refs.banner2.style.display = "none";
-        this.$refs.banner3.style.display = "none";
-
-        this.$refs.underline1.style.opacity = 1;
-        this.$refs.underline2.style.opacity = 0.25;
-        this.$refs.underline3.style.opacity = 0.25;
-      } else if (this.bannerFlag === 2) {
-        this.$refs.banner1.style.display = "none";
-        this.$refs.banner2.style.display = "block";
-        this.$refs.banner3.style.display = "none";
-
-        this.$refs.underline1.style.opacity = 0.25;
-        this.$refs.underline2.style.opacity = 1;
-        this.$refs.underline3.style.opacity = 0.25;
-      } else {
-        this.$refs.banner1.style.display = "none";
-        this.$refs.banner2.style.display = "none";
-        this.$refs.banner3.style.display = "block";
-
-        this.$refs.underline1.style.opacity = 0.25;
-        this.$refs.underline2.style.opacity = 0.25;
-        this.$refs.underline3.style.opacity = 1;
-        this.bannerFlag = 0;
+      this.bannerIndex++;
+      this.changeBannerShow(this.bannerIndex);
+      if (this.bannerIndex >= 2) {
+        this.bannerIndex = -1;
       }
+    },
+    changeBannerShow: function (bannerIndex) {
+      for (let i = 0; i < this.banners.length; i++) {
+        this.banners[i].style.display = "none";
+        this.underlines[i].style.opacity = 0.25;
+      }
+      this.banners[bannerIndex].style.display = "block";
+      this.underlines[bannerIndex].style.opacity = 1;
+    },
+    handlerClickUnderline: function (e) {
+      let underlineIndex = e.target.getAttribute("index");
+      if (underlineIndex > 2 || underlineIndex < 0 || underlineIndex == null) {
+        return;
+      }
+      clearInterval(this.timerFlag);
+      this.bannerIndex = underlineIndex - 1;
+      this.bannerSwitching();
+      this.timerFlag = setInterval(this.bannerSwitching, 2500);
     },
   },
 };
@@ -145,6 +149,9 @@ export default {
   border-radius: 4px;
   cursor: pointer;
 }
+.button:hover {
+  background: rgba(0, 139, 243, 0.7);
+}
 .button-text {
   width: 100%;
   height: 24px;
@@ -175,6 +182,7 @@ export default {
   border-radius: 2px;
   opacity: 0.25;
   float: left;
+  cursor: pointer;
 }
 div.underline-1 {
   opacity: 1;

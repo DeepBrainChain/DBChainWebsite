@@ -1,5 +1,6 @@
 <template>
   <div class="gpu">
+    <Header v-if="this.$store.state.webtype" :underlineStyle="underlineStyle" />
     <div class="box">
       <el-container>
         <el-aside class="left-wrap">
@@ -12,11 +13,14 @@
         </el-main>
       </el-container>
     </div>
+    <Footer v-if="this.$store.state.webtype" />
   </div>
 </template>
 
 <script>
 import Navi from "@/components/naviMenu";
+import Header from "@/congTuCloud/components/header/SubHeader.vue";
+import Footer from "@/congTuCloud/components/footer/Footer.vue";
 
 export default {
   name: "mymachine",
@@ -26,7 +30,7 @@ export default {
       cacheList: [
         "myMachine_unlock",
         "myMachine_unlock_cpu",
-        "myMachine_unlock_stopped"
+        "myMachine_unlock_stopped",
       ],
       curNavIndex: 0,
       menus: [
@@ -34,21 +38,25 @@ export default {
           title: undefined, //this.$t("gpu.myMachine"),
           to: "myMachine",
           index: 0,
-          iconClass: "iconmachine"
+          iconClass: "iconmachine",
         },
         {
           title: undefined, //this.$t("gpu.machineList"),
           to: "myMachine_cpu",
           index: 1,
-          iconClass: "iconmachine"
+          iconClass: "iconmachine",
         },
         {
           title: undefined, //this.$t("gpu.machineList"),
           to: "myMachine_stopped",
           index: 2,
-          iconClass: "iconmachine"
-        }
-      ]
+          iconClass: "iconmachine",
+        },
+      ],
+      underlineStyle: {
+        width: "65px",
+        left: "218px",
+      },
     };
   },
   beforeRouteUpdate(to, from, next) {
@@ -64,7 +72,7 @@ export default {
   watch: {
     "$i18n.locale"() {
       this.init_menus();
-    }
+    },
   },
   computed: {},
   methods: {
@@ -73,11 +81,13 @@ export default {
 
       this.menus[1].title = this.$t("gpu.myMachine_cpu");
       this.menus[2].title = this.$t("gpu.myMachine_stopped");
-    }
+    },
   },
   components: {
-    Navi
-  }
+    Navi,
+    Header,
+    Footer,
+  },
 };
 </script>
 

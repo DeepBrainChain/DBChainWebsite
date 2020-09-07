@@ -1,65 +1,69 @@
 <template>
-  <div class="wrap1200 bg-box">
-    <div class="border-box">
-      <h3 class="wallet-title">{{$t('newWallet')}}</h3>
-      <template v-if="step === 0">
-        <p class="wallet-subText">{{$t('msg.wallet_5')}}</p>
-        <div class="input-wrap">
-          <ps-input :isPassword="true" :placeholder="$t('enterPassword')" v-model.trim="password"></ps-input>
-        </div>
-      </template>
-      <template v-if="step === 1">
-        <p class="wallet-subText">{{$t('msg.wallet_0')}}</p>
-        <div>
-          <el-button class="btn lg" plain @click="saveKeyFile">{{$t('dlEncryptedKey')}}</el-button>
-        </div>
-        <p class="wallet-notice" v-html="$t('msg.wallet_1')"></p>
-      </template>
-      <template v-if="step === 2">
-        <p class="wallet-subText">{{$t('msg.wallet_2')}}</p>
-        <p class="private-key">{{this.wif}}</p>
-        <p class="wallet-notice" v-html="$t('msg.wallet_3')"></p>
-      </template>
-      <el-alert
-        class="mt20"
-        v-if="errText.length > 0"
-        title="error"
-        type="error"
-        :description="errText"
-        show-icon
-        :closable="false"
-      ></el-alert>
-      <div class="btn-wrap">
-        <el-button
-          v-if="step === 0"
-          class="w200"
-          type="primary"
-          :loading="btnloading"
-          @click="generateAccount"
-        >{{$t('create')}}</el-button>
-        <el-tooltip
-          v-else-if="step === 1"
-          :disabled="isNext"
-          :content="$t('creat_wallet_index_download')"
-        >
+  <div>
+    <Header v-if="this.$store.state.webtype" :underlineStyle="underlineStyle" />
+    <div class="wrap1200 bg-box">
+      <div class="border-box">
+        <h3 class="wallet-title">{{$t('newWallet')}}</h3>
+        <template v-if="step === 0">
+          <p class="wallet-subText">{{$t('msg.wallet_5')}}</p>
+          <div class="input-wrap">
+            <ps-input :isPassword="true" :placeholder="$t('enterPassword')" v-model.trim="password"></ps-input>
+          </div>
+        </template>
+        <template v-if="step === 1">
+          <p class="wallet-subText">{{$t('msg.wallet_0')}}</p>
+          <div>
+            <el-button class="btn lg" plain @click="saveKeyFile">{{$t('dlEncryptedKey')}}</el-button>
+          </div>
+          <p class="wallet-notice" v-html="$t('msg.wallet_1')"></p>
+        </template>
+        <template v-if="step === 2">
+          <p class="wallet-subText">{{$t('msg.wallet_2')}}</p>
+          <p class="private-key">{{this.wif}}</p>
+          <p class="wallet-notice" v-html="$t('msg.wallet_3')"></p>
+        </template>
+        <el-alert
+          class="mt20"
+          v-if="errText.length > 0"
+          title="error"
+          type="error"
+          :description="errText"
+          show-icon
+          :closable="false"
+        ></el-alert>
+        <div class="btn-wrap">
           <el-button
+            v-if="step === 0"
             class="w200"
-            :class="{'is-disabled': !isNext}"
             type="primary"
             :loading="btnloading"
-            @click="next"
-          >{{$t('continue')}}</el-button>
-        </el-tooltip>
+            @click="generateAccount"
+          >{{$t('create')}}</el-button>
+          <el-tooltip
+            v-else-if="step === 1"
+            :disabled="isNext"
+            :content="$t('creat_wallet_index_download')"
+          >
+            <el-button
+              class="w200"
+              :class="{'is-disabled': !isNext}"
+              type="primary"
+              :loading="btnloading"
+              @click="next"
+            >{{$t('continue')}}</el-button>
+          </el-tooltip>
 
-        <el-button
-          v-else-if="step === 2"
-          class="w200"
-          type="primary"
-          :loading="btnloading"
-          @click="pushToMyWallet"
-        >{{$t('finished')}}</el-button>
+          <el-button
+            v-else-if="step === 2"
+            class="w200"
+            type="primary"
+            :loading="btnloading"
+            @click="pushToMyWallet"
+          >{{$t('finished')}}</el-button>
+        </div>
       </div>
     </div>
+    <Footer v-if="this.$store.state.webtype" />
   </div>
 </template>
 
@@ -69,9 +73,11 @@ import {
   createAccount,
   getWIFFromPrivateKey,
   saveCookie,
-  getAccount
+  getAccount,
 } from "@/utlis";
 import fileSave from "file-saver";
+import Header from "@/congTuCloud/components/header/SubHeader.vue";
+import Footer from "@/congTuCloud/components/footer/Footer.vue";
 
 export default {
   name: "index",
@@ -84,7 +90,11 @@ export default {
       step: 0,
       nep2Key: "",
       wif: "",
-      isNext: false
+      isNext: false,
+      underlineStyle: {
+        width: "65px",
+        left: "343px",
+      },
     };
   },
   created() {},
@@ -95,7 +105,7 @@ export default {
       } else {
         this.errText = this.$t("inputPsWarning");
       }
-    }
+    },
   },
   methods: {
     generateAccount() {
@@ -107,7 +117,7 @@ export default {
             this.wif = getWIFFromPrivateKey(privateKey);
             this.step = 1;
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err);
           })
           .finally(() => {
@@ -119,7 +129,7 @@ export default {
     },
     saveKeyFile() {
       const blob = new Blob([this.nep2Key], {
-        type: "text/plain;charset=utf-8"
+        type: "text/plain;charset=utf-8",
       });
       fileSave.saveAs(blob, `${this.nep2Key}.txt`);
       this.isNext = true;
@@ -133,11 +143,13 @@ export default {
       if (this.isNext) {
         this.step = 2;
       }
-    }
+    },
   },
   components: {
-    PsInput
-  }
+    PsInput,
+    Header,
+    Footer,
+  },
 };
 </script>
 

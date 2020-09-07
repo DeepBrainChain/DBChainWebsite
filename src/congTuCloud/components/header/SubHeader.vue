@@ -4,7 +4,7 @@
     <div class="wrap content wrap1440">
       <img class="logo" :src="logo" />
       <div class="nav" @click="handlerClickNav($event)">
-        <div class="underline" ref="underline"></div>
+        <div class="underline" ref="underline" :style="underlineStyle"></div>
         <a
           class="item"
           :class="{active: this.$store.state.menuName === 'home'}"
@@ -48,6 +48,7 @@
 import { mapActions, mapState } from "vuex";
 export default {
   name: "Header",
+  props: ["underlineStyle"],
   data() {
     return {
       curLang: undefined, //this.$i18n.locale,
@@ -92,24 +93,14 @@ export default {
       let underline = this.$refs.underline;
       let width, left;
       if (itemIndex == 0) {
-        width = "32px";
-        left = "0px";
       } else if (itemIndex == 1) {
-        width = "65px";
-        left = "92px";
       } else if (itemIndex == 2) {
-        width = "65px";
-        left = "218px";
       } else if (itemIndex == 3) {
-        width = "65px";
-        left = "343px";
       } else if (itemIndex == 4) {
-        width = "65px";
-        left = "467px";
       } else {
         return;
       }
-      // this.changeUnderlineWidthLeft(underline, width, left);
+      this.changeUnderlineWidthLeft(underline);
       this.changeItemcolor(items, itemIndex);
     },
     changeItemcolor: function (items, index) {
@@ -119,9 +110,9 @@ export default {
       items[index].style.color = "rgba(255, 255, 255, 1)";
       this.$refs.nav;
     },
-    changeUnderlineWidthLeft: function (underline, width, left) {
-      underline.style.width = width;
-      underline.style.left = left;
+    changeUnderlineWidthLeft: function (underline) {
+      underline.style.width = this.underlineStyle.width;
+      underline.style.left = this.underlineStyle.left;
     },
     ...mapActions([
       "getAccountState",
@@ -562,7 +553,7 @@ export default {
 <style lang="scss" scoped>
 .header {
   width: 100%;
-  height: 66px;
+  height: 100px;
   position: relative;
 }
 .mask {
@@ -570,7 +561,7 @@ export default {
   height: 100%;
   background: rgba(6, 23, 101, 1);
   box-shadow: 0px 2px 10px 0px rgba(102, 102, 102, 0.12);
-  opacity: 0.3;
+  opacity: 0.7;
   position: absolute;
 }
 .wrap {
@@ -632,6 +623,6 @@ export default {
   border-radius: 2px;
   position: absolute;
   top: 32px;
-  left: 0px;
+  // left: 0px;
 }
 </style>

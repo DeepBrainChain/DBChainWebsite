@@ -1,7 +1,7 @@
 <template>
   <div class="wrap">
     <Header class="header" />
-    <Container class="container" />
+    <Container id="container" />
     <Footer class="footer" />
   </div>
 </template>
@@ -25,7 +25,6 @@ export default {
 .wrap {
   /* width: 100%; */
   min-width: 1366px;
-  /* height: 4091px; */
   background-color: #fff;
 }
 .header {
@@ -40,10 +39,8 @@ export default {
   margin: 0 auto;
   z-index: 9;
 }
-.container {
+#container {
   width: 100%;
-  /* height: 3891px; */
-  margin: 0 auto;
 }
 .footer {
   width: 100%;

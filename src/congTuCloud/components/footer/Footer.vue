@@ -96,7 +96,7 @@ export default {
 .QR-code {
   width: 94px;
   height: 94px;
-  background: url(../../assets/imgs/footer/QR-code.png) no-repeat center;
+  background: url(../../assets/imgs/footer/QR-code.jpg) no-repeat center;
   background-size: cover;
   margin: 0 0 7px;
 }

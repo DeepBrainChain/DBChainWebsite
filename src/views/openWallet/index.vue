@@ -1,87 +1,95 @@
 <template>
-  <div class="wrap1200 bg-box">
-    <div class="border-box">
-      <h3 class="wallet-title">{{$t('open_wallet')}}</h3>
-      <p class="wallet-subText">{{$t('access_wallet')}}</p>
-      <el-radio-group class="wallet-group" v-model="radio" @change="radioChange">
-        <div class="row">
-          <el-radio class="radio-item" label="1">{{$t('keystore_file')}}</el-radio>
-        </div>
-        <div class="row">
-          <el-radio class="radio-item" label="2">{{$t('private_key')}}</el-radio>
-        </div>
-        <!--  <div class="row">
+  <div>
+    <Header v-if="this.$store.state.webtype" :underlineStyle="underlineStyle" />
+    <div class="wrap1200 bg-box">
+      <div class="border-box">
+        <h3 class="wallet-title">{{$t('open_wallet')}}</h3>
+        <p class="wallet-subText">{{$t('access_wallet')}}</p>
+        <el-radio-group class="wallet-group" v-model="radio" @change="radioChange">
+          <div class="row">
+            <el-radio class="radio-item" label="1">{{$t('keystore_file')}}</el-radio>
+          </div>
+          <div class="row">
+            <el-radio class="radio-item" label="2">{{$t('private_key')}}</el-radio>
+          </div>
+          <!--  <div class="row">
           <el-radio class="radio-item" label="3">{{$t('encrypted_key')}}</el-radio>
-        </div>-->
-      </el-radio-group>
+          </div>-->
+        </el-radio-group>
 
-      <el-form @submit.native.prevent>
-        <!--      keyfileStore-->
-        <div v-if="radio ==='1' || radio === '3'">
-          <div v-if="radio === '1'">
-            <!--          read filekey-->
-            <el-upload
-              class="upload-demo"
-              action="/"
-              ref="upload"
-              :multiple="false"
-              :show-file-list="false"
-              :auto-upload="false"
-              :on-change="keyFileChange"
-              :disabled="disableBtn"
-            >
-              <el-button slot="trigger" size="small" type="primary">{{$t('select_wallet_file')}}</el-button>
-            </el-upload>
+        <el-form @submit.native.prevent>
+          <!--      keyfileStore-->
+          <div v-if="radio ==='1' || radio === '3'">
+            <div v-if="radio === '1'">
+              <!--          read filekey-->
+              <el-upload
+                class="upload-demo"
+                action="/"
+                ref="upload"
+                :multiple="false"
+                :show-file-list="false"
+                :auto-upload="false"
+                :on-change="keyFileChange"
+                :disabled="disableBtn"
+              >
+                <el-button slot="trigger" size="small" type="primary">{{$t('select_wallet_file')}}</el-button>
+              </el-upload>
+            </div>
+            <!--      EncryptedKey input-->
+            <div v-else-if="radio === '3'" class="input-wrap">
+              <ps-input v-model="encryptedKey">{{$t('paste_key')}}</ps-input>
+            </div>
+            <!--         password input-->
+            <div v-if="canInputPassword" class="input-wrap mt20">
+              <ps-input v-model.trim="password" :isPassword="true" :placeholder="$t('enter_key')"></ps-input>
+            </div>
+            <div v-if="radio === '3' && !canInputPassword" class="btn-wrap">
+              <el-button
+                class="w200"
+                type="primary"
+                @click="continueEncryptedKey"
+              >{{$t('continue')}}c</el-button>
+            </div>
+            <div v-if="canInputPassword" class="btn-wrap">
+              <el-button
+                class="w200"
+                type="primary"
+                native-type="submit"
+                @keyup.enter.native="unlockWalletFromEncryptedKey"
+                @click.native="unlockWalletFromEncryptedKey"
+                :loading="isLoading"
+              >{{$t('unlock')}}</el-button>
+            </div>
           </div>
-          <!--      EncryptedKey input-->
-          <div v-else-if="radio === '3'" class="input-wrap">
-            <ps-input v-model="encryptedKey">{{$t('paste_key')}}</ps-input>
-          </div>
-          <!--         password input-->
-          <div v-if="canInputPassword" class="input-wrap mt20">
-            <ps-input v-model.trim="password" :isPassword="true" :placeholder="$t('enter_key')"></ps-input>
-          </div>
-          <div v-if="radio === '3' && !canInputPassword" class="btn-wrap">
-            <el-button class="w200" type="primary" @click="continueEncryptedKey">{{$t('continue')}}c</el-button>
-          </div>
-          <div v-if="canInputPassword" class="btn-wrap">
-            <el-button
-              class="w200"
-              type="primary"
-              native-type="submit"
-              @keyup.enter.native="unlockWalletFromEncryptedKey"
-              @click.native="unlockWalletFromEncryptedKey"
-              :loading="isLoading"
-            >{{$t('unlock')}}</el-button>
-          </div>
-        </div>
 
-        <!--      privatekey-->
-        <div v-else-if="radio === '2'">
-          <div class="input-wrap">
-            <ps-input v-model="privateKey" :placeholder="$t('paste_key')"></ps-input>
+          <!--      privatekey-->
+          <div v-else-if="radio === '2'">
+            <div class="input-wrap">
+              <ps-input v-model="privateKey" :placeholder="$t('paste_key')"></ps-input>
+            </div>
+            <div class="btn-wrap">
+              <el-button
+                class="w200"
+                type="primary"
+                @click="unlockWalletFromPrivateKey"
+                :loading="isLoading"
+              >{{$t('unlock')}}</el-button>
+            </div>
           </div>
-          <div class="btn-wrap">
-            <el-button
-              class="w200"
-              type="primary"
-              @click="unlockWalletFromPrivateKey"
-              :loading="isLoading"
-            >{{$t('unlock')}}</el-button>
-          </div>
-        </div>
 
-        <el-alert
-          class="mt20"
-          v-if="errText.length > 0"
-          type="error"
-          :description="errText"
-          show-icon
-          :closable="false"
-          @close="closeAlert"
-        ></el-alert>
-      </el-form>
+          <el-alert
+            class="mt20"
+            v-if="errText.length > 0"
+            type="error"
+            :description="errText"
+            show-icon
+            :closable="false"
+            @close="closeAlert"
+          ></el-alert>
+        </el-form>
+      </div>
     </div>
+    <Footer v-if="this.$store.state.webtype" />
   </div>
 </template>
 
@@ -89,6 +97,8 @@
 import PsInput from "@/components/wallet/inputPassword";
 import { mapActions, mapState } from "vuex";
 import { wallet } from "@cityofzion/neon-js";
+import Header from "@/congTuCloud/components/header/SubHeader.vue";
+import Footer from "@/congTuCloud/components/footer/Footer.vue";
 
 export default {
   name: "index",
@@ -102,20 +112,24 @@ export default {
       disableBtn: false,
       errText: "",
       canInputPassword: "",
-      isLoading: false
+      isLoading: false,
+      underlineStyle: {
+        width: "65px",
+        left: "343px",
+      },
     };
   },
   methods: {
     ...mapActions([
       "createAccountFromPrivateKey",
-      "createAccountFromEncryptedKey"
+      "createAccountFromEncryptedKey",
     ]),
     unlockWalletFromEncryptedKey() {
       this.isLoading = true;
       if (this.password.length > 0) {
         this.createAccountFromEncryptedKey({
           encryptedKey: this.encryptedKey,
-          password: this.password
+          password: this.password,
         })
           .then(() => {
             this.pushToMyWalletUnlock();
@@ -134,7 +148,7 @@ export default {
         .then(() => {
           this.pushToMyWalletUnlock();
         })
-        .catch(err => {
+        .catch((err) => {
           this.errText = this.$t("msg.wallet_4");
         })
         .finally(() => {
@@ -152,7 +166,7 @@ export default {
     },
     keyFileChange(file) {
       const fileReader = new FileReader();
-      fileReader.onload = event => {
+      fileReader.onload = (event) => {
         const encryptedKey = event.target.result;
         /*this.createAccountFromEncryptedKey(encryptedKey).then(account => {
               this.encryptedKey = account.encrypted
@@ -179,7 +193,7 @@ export default {
         if (this.$isSupportFileApi() === false) {
           this.$message({
             message: this.$t("open_wallet_cannot_read"),
-            type: "warning"
+            type: "warning",
           });
           this.disableBtn = true;
         }
@@ -189,14 +203,16 @@ export default {
       // const type = this.$route.params.type;
       this.$router.push(`/mywallet/myWalletUnlock`);
     },
-    closeAlert() {}
+    closeAlert() {},
   },
   computed: {
-    ...mapState(["account"])
+    ...mapState(["account"]),
   },
   components: {
-    PsInput
-  }
+    PsInput,
+    Header,
+    Footer,
+  },
 };
 </script>
 

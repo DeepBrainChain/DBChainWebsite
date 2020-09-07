@@ -1,5 +1,6 @@
 <template>
   <div class="gpu">
+    <Header v-if="this.$store.state.webtype" :underlineStyle="underlineStyle" />
     <div class="box">
       <el-container>
         <el-aside class="left-wrap">
@@ -12,11 +13,14 @@
         </el-main>
       </el-container>
     </div>
+    <Footer v-if="this.$store.state.webtype" />
   </div>
 </template>
 
 <script>
 import Navi from "@/components/naviMenu";
+import Header from "@/congTuCloud/components/header/SubHeader.vue";
+import Footer from "@/congTuCloud/components/footer/Footer.vue";
 
 export default {
   name: "gpu",
@@ -28,7 +32,7 @@ export default {
         "highStabilityAITrain",
         "aiInference",
         "hashCompute",
-        "superNodeCompute"
+        "superNodeCompute",
       ],
       curNavIndex: 1,
       menus: [
@@ -36,33 +40,37 @@ export default {
           title: undefined, //this.$t("gpu.myWallet"),
           to: "list",
           index: 0,
-          iconClass: "iconwallet"
+          iconClass: "iconwallet",
         },
         {
           title: undefined, //this.$t("gpu.myMachine"),
           to: "highStabilityAITrain",
           index: 1,
-          iconClass: "iconmachine"
+          iconClass: "iconmachine",
         },
         {
           title: undefined, //this.$t("gpu.machineList"),
           to: "aiInference",
           index: 2,
-          iconClass: "iconmachine"
+          iconClass: "iconmachine",
         },
         {
           title: undefined, //this.$t("gpu.machineList"),
           to: "hashCompute",
           index: 3,
-          iconClass: "iconmachine"
+          iconClass: "iconmachine",
         },
         {
           title: undefined, //this.$t("gpu.machineList"),
           to: "superNodeCompute",
           index: 4,
-          iconClass: "iconlist"
-        }
-      ]
+          iconClass: "iconlist",
+        },
+      ],
+      underlineStyle: {
+        width: "65px",
+        left: "92px",
+      },
     };
   },
   beforeRouteUpdate(to, from, next) {
@@ -78,7 +86,7 @@ export default {
   watch: {
     "$i18n.locale"() {
       this.inti_menus();
-    }
+    },
   },
   computed: {
     inti_menus() {
@@ -89,11 +97,13 @@ export default {
       this.menus[2].title = this.$t("gpu.aiInference");
       this.menus[3].title = this.$t("gpu.hashCompute");
       this.menus[4].title = this.$t("gpu.superNodeCompute");
-    }
+    },
   },
   components: {
-    Navi
-  }
+    Navi,
+    Header,
+    Footer,
+  },
 };
 </script>
 
