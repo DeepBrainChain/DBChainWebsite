@@ -186,7 +186,7 @@ export default {
         document.querySelector("link[rel*='icon']") ||
         document.createElement("link");
       if (this.$t("website_name") == "congTuCloud") {
-        this.link.href = "./congTuCloudIco.svg";
+        this.link.href = "../../congTuCloudIco.png";
       } else if (this.$t("website_name") == "yousanai") {
         this.link.href = "./yousanai.ico";
       }
@@ -203,7 +203,8 @@ export default {
     },
     set_logo() {
       if (this.$t("website_name") == "congTuCloud") {
-        this.logo = require("../../assets/imgs/header/WechatIMG19@0x.svg");
+        this.logo = require("../../assets/imgs/header/logo.svg");
+        // this.logo = require("../../assets/imgs/header/logo.png");
       } else if (this.$t("website_name") == "yousanai") {
         this.logo = require("../../../assets/imgs/yousanai@1x.png");
       }
