@@ -553,7 +553,7 @@ export default {
 <style lang="scss" scoped>
 .header {
   width: 100%;
-  height: 100px;
+  height: 66px;
   position: relative;
 }
 .mask {
@@ -561,7 +561,7 @@ export default {
   height: 100%;
   background: rgba(6, 23, 101, 1);
   box-shadow: 0px 2px 10px 0px rgba(102, 102, 102, 0.12);
-  opacity: 0.7;
+  opacity: 0.9;
   position: absolute;
 }
 .wrap {
