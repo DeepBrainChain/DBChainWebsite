@@ -186,7 +186,7 @@ export default {
         document.querySelector("link[rel*='icon']") ||
         document.createElement("link");
       if (this.$t("website_name") == "congTuCloud") {
-        this.link.href = "./WechatIMG19@0x.svg";
+        this.link.href = "./congTuCloudIco.svg";
       } else if (this.$t("website_name") == "yousanai") {
         this.link.href = "./yousanai.ico";
       }
