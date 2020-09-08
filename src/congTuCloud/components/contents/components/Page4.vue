@@ -128,22 +128,22 @@ export default {
       switch (optionIndex) {
         case indexMap.index0: {
           width = "92px";
-          left = "351px";
+          left = "347px";
           break;
         }
         case indexMap.index1: {
           width = "162px";
-          left = "543px";
+          left = "539px";
           break;
         }
         case indexMap.index2: {
           width = "74px";
-          left = "803px";
+          left = "799px";
           break;
         }
         case indexMap.index3: {
           width = "45px";
-          left = "970px";
+          left = "966px";
           break;
         }
         default: {
@@ -250,7 +250,7 @@ export default {
   position: relative;
 }
 .options {
-  width: 662px;
+  width: 670px;
   height: 26px;
   margin: 0 auto;
 }
@@ -265,7 +265,7 @@ export default {
   cursor: pointer;
 }
 .options div:nth-child(2) {
-  width: 162px;
+  // width: 162px;
   color: rgba(176, 209, 255, 1);
 }
 .options div:last-child {
@@ -278,7 +278,7 @@ export default {
   border-radius: 2px;
   position: absolute;
   top: 39px;
-  left: 543px;
+  left: 539px;
 }
 .dividing-line {
   width: 100%;
