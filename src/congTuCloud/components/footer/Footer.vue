@@ -5,7 +5,7 @@
         <div class="title">{{$t("congTuCloud.footer.aboutUs")}}</div>
         <div class="text">{{$t("congTuCloud.footer.company")}}</div>
         <div class="text">{{$t("congTuCloud.footer.copyright")}}</div>
-        <!-- <div class="text record">{{$t("congTuCloud.footer.record")}}</div> -->
+        <div class="text record">{{$t("congTuCloud.footer.record")}}</div>
       </div>
       <div class="col-2">
         <div class="title">{{$t("congTuCloud.footer.recruit")}}</div>

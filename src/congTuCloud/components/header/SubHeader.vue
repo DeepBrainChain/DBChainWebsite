@@ -186,329 +186,27 @@ export default {
       this.link =
         document.querySelector("link[rel*='icon']") ||
         document.createElement("link");
-      if (this.$t("website_name") == "dbchain") {
+      if (this.$t("website_name") == "congTuCloud") {
         this.link.href = "./dbchain.ico";
       } else if (this.$t("website_name") == "yousanai") {
         this.link.href = "./yousanai.ico";
-      } else if (this.$t("website_name") == "aionego") {
-        this.link.href = "./aionego.ico";
-      } else if (this.$t("website_name") == "deepshare") {
-        this.link.href = "./deepshare.ico";
-      } else if (this.$t("website_name") == "panchuangai") {
-        this.link.href = "./panchuangai.ico";
-      } else if (this.$t("website_name") == "sharegpu") {
-        this.link.href = "./sharegpu.ico";
-      } else if (this.$t("website_name") == "yalecloud") {
-        this.link.href = "./yalecloud.ico";
-      } else if (this.$t("website_name") == "52lm") {
-        // this.link.href = "./panchuangai.ico";
-      } else if (this.$t("website_name") == "dimi") {
-        this.link.href = "./dimi.ico";
-      } else if (this.$t("website_name") == "mayi") {
-        this.link.href = "./mayi.ico";
-      } else if (this.$t("website_name") == "windywinter") {
-        this.link.href = "./windywinter.ico";
-      } else if (this.$t("website_name") == "1024lab") {
-        this.link.href = "./1024lab.ico";
-      } else if (this.$t("website_name") == "litaai") {
-        this.link.href = "./litaai.ico";
-      } else if (this.$t("website_name") == "ainlp") {
-        this.link.href = "./ainlp.ico";
-      } else if (this.$t("website_name") == "52cv") {
-        this.link.href = "./52cv.ico";
-      } else if (this.$t("website_name") == "redstonewill") {
-        this.link.href = "./redstonewill.ico";
-      } else if (this.$t("website_name") == "alpha-dbchain") {
-        this.link.href = "./alpha-dbchain.ico";
-      } else if (this.$t("website_name") == "xyzlab") {
-        this.link.href = "./xyzlab.ico";
-      } else if (this.$t("website_name") == "gpgpu") {
-        this.link.href = "./gpgpu.ico";
-      } else if (this.$t("website_name") == "rocketai") {
-        this.link.href = "./rocketai.ico";
-      } else if (this.$t("website_name") == "deepbit") {
-        this.link.href = "./deepbit.ico";
-      } else if (this.$t("website_name") == "aichriscloud") {
-        this.link.href = "./aichriscloud.ico";
-      } else if (this.$t("website_name") == "vnxmart") {
-        this.link.href = "./vnxmart.ico";
-      } else if (this.$t("website_name") == "aiaicloud") {
-        this.link.href = "./aiaicloud.ico";
-      } else if (this.$t("website_name") == "snbt") {
-        this.link.href = "./snbt.ico";
-      } else if (this.$t("website_name") == "heekmind") {
-        this.link.href = "./heekmind.ico";
-      } else if (this.$t("website_name") == "aicv") {
-        this.link.href = "./aicv.ico";
-      } else if (this.$t("website_name") == "freegpu") {
-        this.link.href = "./freegpu.ico";
-      } else if (this.$t("website_name") == "boincplanet") {
-        this.link.href = "./boincplanet.ico";
-      } else if (this.$t("website_name") == "shareaiot") {
-        this.link.href = "./shareaiot.ico";
-      } else if (this.$t("website_name") == "topgpu") {
-        this.link.href = "./topgpu.ico";
-      } else if (this.$t("website_name") == "thinkotech") {
-        this.link.href = "./thinkotech.ico";
-      } else if (this.$t("website_name") == "coolgpu") {
-        this.link.href = "./coolgpu.ico";
-      } else if (this.$t("website_name") == "scclouds") {
-        // this.link.href = "./scclouds.ico";
-      } else if (this.$t("website_name") == "nvidiaai") {
-        // this.link.href = "./nvidiaai.ico";
-      } else if (this.$t("website_name") == "deligpu") {
-        // this.link.href = "./deligpu.ico";
-      } else if (this.$t("website_name") == "longway") {
-        this.link.href = "./longway.ico";
-      } else if (this.$t("website_name") == "sharedgpu") {
-        this.link.href = "./sharedgpu.ico";
-      } else if (this.$t("website_name") == "aipower") {
-        this.link.href = "./aipower.ico";
-      } else if (this.$t("website_name") == "cvstudy") {
-        this.link.href = "./cvstudy.ico";
-      } else if (this.$t("website_name") == "gpuhub") {
-        this.link.href = "./gpuhub.ico";
-      } else if (this.$t("website_name") == "district51") {
-        this.link.href = "./district51.ico";
-      } else if (this.$t("website_name") == "deepmind") {
-        this.link.href = "./deepmind.ico";
-      } else if (this.$t("website_name") == "transportation") {
-        this.link.href = "./transportation.ico";
-      } else if (this.$t("website_name") == "planetc") {
-        this.link.href = "./planetc.ico";
-      } else if (this.$t("website_name") == "sdnu") {
-        this.link.href = "./sdnu.ico";
-      } else if (this.$t("website_name") == "freegputop") {
-        this.link.href = "./freegputop.ico";
-      } else if (this.$t("website_name") == "tensorgpu") {
-        this.link.href = "./tensorgpu.ico";
-      } else if (this.$t("website_name") == "opengpu") {
-        this.link.href = "./opengpu.ico";
-      } else if (this.$t("website_name") == "aiyanxishe") {
-        this.link.href = "./aiyanxishe.ico";
-      } else if (this.$t("website_name") == "codefate") {
-        this.link.href = "./codefate.ico";
-      } else if (this.$t("website_name") == "changhe") {
-        this.link.href = "./changhe.ico";
       }
 
       document.getElementsByTagName("head")[0].appendChild(this.link);
     },
 
     set_title() {
-      if (this.$t("website_name") == "dbchain") {
-        document.title = "DBChain";
+      if (this.$t("website_name") == "congTuCloud") {
+        document.title = "congTuCloud";
       } else if (this.$t("website_name") == "yousanai") {
         document.title = "YouSanAI";
-      } else if (this.$t("website_name") == "aionego") {
-        document.title = "AIOnego";
-      } else if (this.$t("website_name") == "deepshare") {
-        document.title = "Deepshare";
-      } else if (this.$t("website_name") == "panchuangai") {
-        document.title = "PanChuangAI";
-      } else if (this.$t("website_name") == "sharegpu") {
-        document.title = "ShareGpu";
-      } else if (this.$t("website_name") == "yalecloud") {
-        document.title = "YaleCloud";
-      } else if (this.$t("website_name") == "52lm") {
-        document.title = "52LM";
-      } else if (this.$t("website_name") == "dimi") {
-        document.title = "DIMI";
-      } else if (this.$t("website_name") == "mayi") {
-        document.title = "MAYI";
-      } else if (this.$t("website_name") == "windywinter") {
-        document.title = "WindyWinter";
-      } else if (this.$t("website_name") == "1024lab") {
-        document.title = "1024LAB";
-      } else if (this.$t("website_name") == "litaai") {
-        document.title = "LITAAI";
-      } else if (this.$t("website_name") == "ainlp") {
-        document.title = "AINLP";
-      } else if (this.$t("website_name") == "52cv") {
-        document.title = "52CV";
-      } else if (this.$t("website_name") == "redstonewill") {
-        document.title = "redstonewill";
-      } else if (this.$t("website_name") == "alpha-dbchain") {
-        document.title = "alpha-dbchain";
-      } else if (this.$t("website_name") == "xyzlab") {
-        document.title = "xyzlab";
-      } else if (this.$t("website_name") == "gpgpu") {
-        document.title = "gpgpu";
-      } else if (this.$t("website_name") == "rocketai") {
-        document.title = "rocketai";
-      } else if (this.$t("website_name") == "deepbit") {
-        document.title = "deepbit";
-      } else if (this.$t("website_name") == "aichriscloud") {
-        document.title = "aichriscloud";
-      } else if (this.$t("website_name") == "vnxmart") {
-        document.title = "vnxmart";
-      } else if (this.$t("website_name") == "aiaicloud") {
-        document.title = "aiaicloud";
-      } else if (this.$t("website_name") == "snbt") {
-        document.title = "snbt";
-      } else if (this.$t("website_name") == "heekmind") {
-        document.title = "heekmind";
-      } else if (this.$t("website_name") == "aicv") {
-        document.title = "aicv";
-      } else if (this.$t("website_name") == "freegpu") {
-        document.title = "freegpu";
-      } else if (this.$t("website_name") == "boincplanet") {
-        document.title = "boincplanet";
-      } else if (this.$t("website_name") == "shareaiot") {
-        document.title = "shareaiot";
-      } else if (this.$t("website_name") == "topgpu") {
-        document.title = "topgpu";
-      } else if (this.$t("website_name") == "thinkotech") {
-        document.title = "thinkotech";
-      } else if (this.$t("website_name") == "coolgpu") {
-        document.title = "coolgpu";
-      } else if (this.$t("website_name") == "scclouds") {
-        document.title = "scclouds";
-      } else if (this.$t("website_name") == "nvidiaai") {
-        document.title = "nvidiaai";
-      } else if (this.$t("website_name") == "deligpu") {
-        document.title = "deligpu";
-      } else if (this.$t("website_name") == "longway") {
-        document.title = "longway";
-      } else if (this.$t("website_name") == "sharedgpu") {
-        document.title = "sharedgpu";
-      } else if (this.$t("website_name") == "aipower") {
-        document.title = "aipower";
-      } else if (this.$t("website_name") == "cvstudy") {
-        document.title = "cvstudy";
-      } else if (this.$t("website_name") == "gpuhub") {
-        document.title = "gpuhub";
-      } else if (this.$t("website_name") == "district51") {
-        document.title = "district51";
-      } else if (this.$t("website_name") == "deepmind") {
-        document.title = "deepmind";
-      } else if (this.$t("website_name") == "transportation") {
-        document.title = "transportation";
-      } else if (this.$t("website_name") == "planetc") {
-        document.title = "planetc";
-      } else if (this.$t("website_name") == "sdnu") {
-        document.title = "sdnu";
-      } else if (this.$t("website_name") == "freegputop") {
-        document.title = "freegputop";
-      } else if (this.$t("website_name") == "tensorgpu") {
-        document.title = "tensorgpu";
-      } else if (this.$t("website_name") == "opengpu") {
-        document.title = "opengpu";
-      } else if (this.$t("website_name") == "aiyanxishe") {
-        document.title = "aiyanxishe";
-      } else if (this.$t("website_name") == "codefate") {
-        document.title = "codefate";
-      } else if (this.$t("website_name") == "changhe") {
-        document.title = "changhe";
       }
     },
     set_logo() {
-      if (this.$t("website_name") == "dbchain") {
-        this.$t("webtype") == "0"
-          ? (this.logo = require("../../assets/imgs/header/WechatIMG19@0x.svg"))
-          : (this.logo = require("../../../assets/imgs/dbchain@1x.png"));
+      if (this.$t("website_name") == "congTuCloud") {
+        this.logo = require("../../assets/imgs/header/WechatIMG19@0x.svg");
       } else if (this.$t("website_name") == "yousanai") {
         this.logo = require("../../../assets/imgs/yousanai@1x.png");
-      } else if (this.$t("website_name") == "aionego") {
-        this.logo = require("../../../assets/imgs/aionego@1x.png");
-      } else if (this.$t("website_name") == "deepshare") {
-        this.logo = require("../../../assets/imgs/deepshare@1x.png");
-      } else if (this.$t("website_name") == "sharegpu") {
-        this.logo = require("../../../assets/imgs/sharegpu@1x.png");
-      } else if (this.$t("website_name") == "panchuangai") {
-        this.logo = require("../../../assets/imgs/panchuangai@1x.png");
-      } else if (this.$t("website_name") == "yalecloud") {
-        this.logo = require("../../../assets/imgs/yalecloud@1x.png");
-      } else if (this.$t("website_name") == "52lm") {
-        // this.logo = require("../../../assets/imgs/sharegpu@1x.png");
-      } else if (this.$t("website_name") == "dimi") {
-        this.logo = require("../../../assets/imgs/dimi@1x.png");
-      } else if (this.$t("website_name") == "mayi") {
-        this.logo = require("../../../assets/imgs/mayi@1x.png");
-      } else if (this.$t("website_name") == "windywinter") {
-        this.logo = require("../../../assets/imgs/windywinter@1x.png");
-      } else if (this.$t("website_name") == "1024lab") {
-        this.logo = require("../../../assets/imgs/1024lab@1x.png");
-      } else if (this.$t("website_name") == "litaai") {
-        this.logo = require("../../../assets/imgs/litaai@1x.png");
-      } else if (this.$t("website_name") == "ainlp") {
-        this.logo = require("../../../assets/imgs/ainlp@1x.png");
-      } else if (this.$t("website_name") == "52cv") {
-        this.logo = require("../../../assets/imgs/52cv@1x.png");
-      } else if (this.$t("website_name") == "redstonewill") {
-        this.logo = require("../../../assets/imgs/redstonewill@1x.png");
-      } else if (this.$t("website_name") == "alpha-dbchain") {
-        this.logo = require("../../../assets/imgs/alpha-dbchain@1x.png");
-      } else if (this.$t("website_name") == "xyzlab") {
-        this.logo = require("../../../assets/imgs/xyzlab@1x.png");
-      } else if (this.$t("website_name") == "gpgpu") {
-        this.logo = require("../../../assets/imgs/gpgpu@1x.png");
-      } else if (this.$t("website_name") == "rocketai") {
-        this.logo = require("../../../assets/imgs/rocketai@1x.png");
-      } else if (this.$t("website_name") == "deepbit") {
-        this.logo = require("../../../assets/imgs/deepbit@1x.png");
-      } else if (this.$t("website_name") == "aichriscloud") {
-        this.logo = require("../../../assets/imgs/aichriscloud@1x.png");
-      } else if (this.$t("website_name") == "vnxmart") {
-        this.logo = require("../../../assets/imgs/vnxmart@1x.png");
-      } else if (this.$t("website_name") == "aiaicloud") {
-        this.logo = require("../../../assets/imgs/aiaicloud@1x.png");
-      } else if (this.$t("website_name") == "snbt") {
-        this.logo = require("../../../assets/imgs/snbt@1x.png");
-      } else if (this.$t("website_name") == "heekmind") {
-        this.logo = require("../../../assets/imgs/heekmind@1x.png");
-      } else if (this.$t("website_name") == "aicv") {
-        this.logo = require("../../../assets/imgs/aicv@1x.png");
-      } else if (this.$t("website_name") == "freegpu") {
-        this.logo = require("../../../assets/imgs/freegpu@1x.png");
-      } else if (this.$t("website_name") == "boincplanet") {
-        this.logo = require("../../../assets/imgs/boincplanet@1x.png");
-      } else if (this.$t("website_name") == "shareaiot") {
-        this.logo = require("../../../assets/imgs/shareaiot@1x.png");
-      } else if (this.$t("website_name") == "topgpu") {
-        this.logo = require("../../../assets/imgs/topgpu@1x.png");
-      } else if (this.$t("website_name") == "thinkotech") {
-        this.logo = require("../../../assets/imgs/thinkotech@1x.png");
-      } else if (this.$t("website_name") == "coolgpu") {
-        this.logo = require("../../../assets/imgs/coolgpu@1x.png");
-      } else if (this.$t("website_name") == "scclouds") {
-        // this.logo = require("../../../assets/imgs/scclouds@1x.png");
-      } else if (this.$t("website_name") == "nvidiaai") {
-        //this.logo = require("../../../assets/imgs/nvidiaai@1x.png");
-      } else if (this.$t("website_name") == "deligpu") {
-        //this.logo = require("../../../assets/imgs/deligpu@1x.png");
-      } else if (this.$t("website_name") == "longway") {
-        this.logo = require("../../../assets/imgs/longway@1x.png");
-      } else if (this.$t("website_name") == "sharedgpu") {
-        this.logo = require("../../../assets/imgs/sharedgpu@1x.png");
-      } else if (this.$t("website_name") == "aipower") {
-        this.logo = require("../../../assets/imgs/aipower@1x.png");
-      } else if (this.$t("website_name") == "cvstudy") {
-        this.logo = require("../../../assets/imgs/cvstudy@1x.png");
-      } else if (this.$t("website_name") == "gpuhub") {
-        this.logo = require("../../../assets/imgs/gpuhub@1x.png");
-      } else if (this.$t("website_name") == "district51") {
-        this.logo = require("../../../assets/imgs/district51@1x.png");
-      } else if (this.$t("website_name") == "deepmind") {
-        this.logo = require("../../../assets/imgs/deepmind@1x.png");
-      } else if (this.$t("website_name") == "transportation") {
-        this.logo = require("../../../assets/imgs/transportation@1x.png");
-      } else if (this.$t("website_name") == "planetc") {
-        this.logo = require("../../../assets/imgs/planetc@1x.png");
-      } else if (this.$t("website_name") == "sdnu") {
-        this.logo = require("../../../assets/imgs/sdnu@1x.png");
-      } else if (this.$t("website_name") == "freegputop") {
-        this.logo = require("../../../assets/imgs/freegputop@1x.png");
-      } else if (this.$t("website_name") == "tensorgpu") {
-        this.logo = require("../../../assets/imgs/tensorgpu@1x.png");
-      } else if (this.$t("website_name") == "opengpu") {
-        this.logo = require("../../../assets/imgs/opengpu@1x.png");
-      } else if (this.$t("website_name") == "aiyanxishe") {
-        this.logo = require("../../../assets/imgs/aiyanxishe@1x.png");
-      } else if (this.$t("website_name") == "codefate") {
-        this.logo = require("../../../assets/imgs/codefate@1x.png");
-      } else if (this.$t("website_name") == "changhe") {
-        this.logo = require("../../../assets/imgs/changhe@1x.png");
       }
     },
     pushMenu(name) {
@@ -611,7 +309,7 @@ export default {
 .item:nth-child(2) {
   font-family: PingFangSC-Medium, PingFang SC;
   font-weight: 500;
-  color: rgba(255, 255, 255, 1);
+  // color: rgba(255, 255, 255, 1);
 }
 .item:last-child {
   margin: 0;
