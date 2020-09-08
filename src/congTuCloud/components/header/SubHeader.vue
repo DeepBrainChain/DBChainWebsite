@@ -404,7 +404,9 @@ export default {
     },
     set_logo() {
       if (this.$t("website_name") == "dbchain") {
-        this.logo = require("../../../assets/imgs/dbchain@1x.png");
+        this.$t("webtype") == "0"
+          ? (this.logo = require("../../assets/imgs/header/WechatIMG19@0x.svg"))
+          : (this.logo = require("../../../assets/imgs/dbchain@1x.png"));
       } else if (this.$t("website_name") == "yousanai") {
         this.logo = require("../../../assets/imgs/yousanai@1x.png");
       } else if (this.$t("website_name") == "aionego") {
@@ -507,8 +509,6 @@ export default {
         this.logo = require("../../../assets/imgs/codefate@1x.png");
       } else if (this.$t("website_name") == "changhe") {
         this.logo = require("../../../assets/imgs/changhe@1x.png");
-      } else if (this.$t("website_name") == "congTuCloud") {
-        this.logo = require("../../assets/imgs/header/WechatIMG19@0x.svg");
       }
     },
     pushMenu(name) {
