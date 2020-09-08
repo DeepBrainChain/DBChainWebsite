@@ -97,21 +97,21 @@ export default {
   position: absolute;
 }
 .banner1 {
-  background: url(../../../assets/imgs/page1/banner01@0x.svg) no-repeat center;
+  background: url(../../../assets/imgs/page1/banner01@2x.png) no-repeat center;
   background-size: cover;
   top: 0;
   left: 0;
   display: block;
 }
 .banner2 {
-  background: url(../../../assets/imgs/page1/banner02@0x.svg) no-repeat center;
+  background: url(../../../assets/imgs/page1/banner02@2x.png) no-repeat center;
   background-size: cover;
   top: 0;
   left: 0;
   display: none;
 }
 .banner3 {
-  background: url(../../../assets/imgs/page1/banner03@0x.svg) no-repeat center;
+  background: url(../../../assets/imgs/page1/banner03@2x.png) no-repeat center;
   background-size: cover;
   top: 0;
   left: 0;

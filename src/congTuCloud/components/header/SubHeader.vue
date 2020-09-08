@@ -196,15 +196,15 @@ export default {
 
     set_title() {
       if (this.$t("website_name") == "congTuCloud") {
-        document.title = "congTuCloud";
+        document.title = "聪图云";
       } else if (this.$t("website_name") == "yousanai") {
         document.title = "YouSanAI";
       }
     },
     set_logo() {
       if (this.$t("website_name") == "congTuCloud") {
-        this.logo = require("../../assets/imgs/header/logo.svg");
-        // this.logo = require("../../assets/imgs/header/logo.png");
+        // this.logo = require("../../assets/imgs/header/logo.svg");
+        this.logo = require("../../assets/imgs/header/logo2.png");
       } else if (this.$t("website_name") == "yousanai") {
         this.logo = require("../../../assets/imgs/yousanai@1x.png");
       }
@@ -282,11 +282,11 @@ export default {
   cursor: pointer;
 }
 .nav {
-  width: 530px;
+  width: 535px;
   height: 22px;
   position: absolute;
   top: 0;
-  right: 200px;
+  right: 150px;
   bottom: 0;
   left: auto;
   margin: auto 0;
