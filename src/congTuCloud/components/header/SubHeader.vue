@@ -3,7 +3,7 @@
     <div class="mask"></div>
     <div class="wrap content wrap1440">
       <img class="logo" :src="logo" />
-      <div class="nav" @click="handlerClickNav($event)">
+      <div class="nav">
         <div class="underline" ref="underline" :style="underlineStyle"></div>
         <a
           class="item"
@@ -108,7 +108,6 @@ export default {
         items[i].style.color = "rgba(255, 255, 255, .6)";
       }
       items[index].style.color = "rgba(255, 255, 255, 1)";
-      this.$refs.nav;
     },
     changeUnderlineWidthLeft: function (underline) {
       underline.style.width = this.underlineStyle.width;
@@ -306,10 +305,10 @@ export default {
   color: rgba(255, 255, 255, 1);
   cursor: pointer;
 }
-.item:nth-child(2) {
+.active {
   font-family: PingFangSC-Medium, PingFang SC;
   font-weight: 500;
-  // color: rgba(255, 255, 255, 1);
+  color: rgba(255, 255, 255, 1);
 }
 .item:last-child {
   margin: 0;

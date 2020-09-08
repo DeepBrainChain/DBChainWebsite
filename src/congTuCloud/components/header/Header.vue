@@ -3,7 +3,7 @@
     <div class="mask"></div>
     <div class="wrap content wrap1440">
       <img class="logo" :src="logo" />
-      <div class="nav" @click="handlerClickNav($event)">
+      <div class="nav">
         <div class="underline" ref="underline"></div>
         <a
           class="item"
