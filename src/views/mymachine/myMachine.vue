@@ -32,18 +32,18 @@ export default {
       }
     },
     openCreateWallet() {
-      this.$store.commit("setMenuName", "mywallet");
       const type = this.$route.path.search("gpu") !== -1 ? "gpu" : "miner";
+      this.$store.commit("setMenuName", "mywallet");
       this.$router.push(`/createWallet/${type}`);
     },
     openWallet() {
-      this.$store.commit("setMenuName", "mywallet");
       this.getAccountState()
         .then((data) => {
           this.$router.push("/gpu/myMachine_unlock");
         })
         .catch((err) => {
           const type = this.$route.path.search("gpu") !== -1 ? "gpu" : "miner";
+          this.$store.commit("setMenuName", "mywallet");
           this.$router.push(`/openWallet/${type}`);
         });
     },
