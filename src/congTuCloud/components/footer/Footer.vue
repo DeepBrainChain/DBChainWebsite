@@ -10,7 +10,6 @@
       <div class="col-2">
         <div class="title">{{$t("congTuCloud.footer.recruit")}}</div>
         <div class="text">{{$t("congTuCloud.footer.HREmail")}}</div>
-        <div class="text">{{$t("congTuCloud.footer.HRWechat")}}</div>
       </div>
       <div class="col-3">
         <div class="title">{{$t("congTuCloud.footer.contactUs")}}</div>
@@ -28,7 +27,7 @@
 export default {
   data() {
     return {};
-  },
+  }
 };
 </script>
 <style lang="scss" scoped>

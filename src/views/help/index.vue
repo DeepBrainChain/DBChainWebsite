@@ -34,25 +34,25 @@ export default {
           title: undefined, //this.$t("gpu.myWallet"),
           to: "aiHelp",
           index: 0,
-          iconClass: "iconwallet",
+          iconClass: "iconwallet"
         },
-        {
-          title: undefined, //this.$t("gpu.myMachine"),
-          to: "filecoinHelp",
-          index: 1,
-          iconClass: "iconmachine",
-        },
+        //  {
+        //   title: undefined, //this.$t("gpu.myMachine"),
+        //   to: "filecoinHelp",
+        //   index: 1,
+        //   iconClass: "iconmachine"
+        // },
         {
           title: undefined, //this.$t("gpu.machineList"),
           to: "supernodeHelp",
-          index: 2,
-          iconClass: "iconlist",
-        },
+          index: 1,
+          iconClass: "iconlist"
+        }
       ],
       underlineStyle: {
         width: "65px",
-        left: "467px",
-      },
+        left: "467px"
+      }
     };
   },
   beforeRouteUpdate(to, from, next) {
@@ -68,22 +68,22 @@ export default {
   watch: {
     "$i18n.locale"() {
       this.inti_menus();
-    },
+    }
   },
   computed: {
     inti_menus() {
       this.menus[0].title = this.$t("ai_help");
 
-      this.menus[1].title = this.$t("filecoin_help");
+      // this.menus[1].title = this.$t("filecoin_help");
 
-      this.menus[2].title = this.$t("supernode_help");
-    },
+      this.menus[1].title = this.$t("supernode_help");
+    }
   },
   components: {
     Navi,
     Header,
-    Footer,
-  },
+    Footer
+  }
 };
 </script>
 

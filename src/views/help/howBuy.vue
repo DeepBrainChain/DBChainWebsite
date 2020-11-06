@@ -11,13 +11,13 @@
         {{$t('help.2')}}，
         <a
           v-if="this.$i18n.locale==='cn' || this.$i18n.locale==='CN'"
-          href="https://www.huobi.me/zh-cn/exchange/dbc_btc/"
+          href="https://www.huobi.pro/zh-cn/exchange/dbc_btc/"
           target="_blank"
         >https://www.huobi.me/zh-cn/</a>
 
         <a
           v-else
-          href="https://www.huobi.me/en-us/exchange/dbc_btc/"
+          href="https://www.huobi.pro/en-us/exchange/dbc_btc/"
           target="_blank"
         >https://www.huobi.me/en-us/</a>
         .{{$t('help.reloadWallet')}}

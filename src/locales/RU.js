@@ -3,7 +3,7 @@ import enLocale from "element-ui/lib/locale/lang/en";
 export default {
 
   message: "hello i18n !!",
-  website_name: "dpool",
+  website_name: "deepshare",
   $: "$",
   send: "отправить",
   closeWallet: "закрыть кошелёк",
@@ -162,7 +162,7 @@ export default {
     common: "Обычная тренировочная зона ии",
     highStabilityAITrain: "Высокостабильная тренировочная зона ии",
     aiInference: "Область дедукции ии",
-    hashCompute: "Вычислительная зона FileCoin",
+    hashCompute: "Вычислительная зона high performance parallelism",
     superNodeCompute: "Суперузловая вычислительная зона"
   },
 
@@ -739,15 +739,15 @@ export default {
   whole_rent_machine_tip: '（当前机器只能整组）',
   disk_auto_machine_type: '分配的硬盘空间',
   miner_confirmPay_tip0: '质押DBC成功后，机器将会进入高稳定AI训练区',
-  miner_confirmPay_tip1: '质押DBC成功后，机器将会进入Filecoin计算区',
+  miner_confirmPay_tip1: '质押DBC成功后，机器将会进入 High performance parallelism 计算区',
   ai_help: 'AI训练和推理帮助文档',
-  filecoin_help: 'Filecoin计算帮助文档',
+  filecoin_help: 'High performance parallelism 计算帮助文档',
   supernode_help: '超级节点租用帮助文档',
   rent_machine_ai_help: '租用AI服务器帮助文档',
   use_machine_ai_help: 'AI服务器使用手册',
   question_machine_ai_help: '常见问题汇总',
-  rent_machine_filecoin_help: '租用Filecoin Snark计算服务器帮助文档',
-  use_machine_filecoin_help: 'Filecoin Snark计算API接口使用手册',
+  rent_machine_filecoin_help: '租用 High performance parallelism 计算服务器帮助文档',
+  use_machine_filecoin_help: 'High performance parallelism 计算API接口使用手册',
   rent_machine_dbc_help: 'DBC超级节点租用帮助文档',
   use_machine_dbc_help: '启用DBC超级节点帮助文档',
   myMachine_confirm_pay_tip: '如果已经支付，请点击继续支付后，在弹框中点击我已支付；如果没有支付，请点击继续支付后，在弹框中点击确认支付',

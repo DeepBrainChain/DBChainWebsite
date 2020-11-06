@@ -1,13 +1,12 @@
 import enLocale from "element-ui/lib/locale/lang/en";
 
 export default {
-
   /* 关于webtype:
    ** 修改数值时，要把router.js文件开头引入的Home组件切换与此类型一致
    */
-  webtype: "0", //0:表示法币支付网站,1:表示dbc支付网站
-  website_name: "congTuCloud", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab,congTuCloud
-  display_select_rent_platform: "1", //0：不显示机器出租的云平台选项，1:显示出租的云平台选项
+  webtype: "1", //0:表示法币支付网站,1:表示dbc支付网站
+  website_name: "deepshare", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab,congTuCloud
+  display_select_rent_platform: "0", //0：不显示机器出租的云平台选项，1:显示出租的云平台选项
   //alpha-dbchain/aichriscloud/deepbit/vnxmart/aiaicloud/snbt/heekmind/redstonewill/rocketai/aicv/\shareaiot\freegpu\boincplanet\topgpu\thinkotech
   //coolgpu\scclouds\nvidiaai\deligpu\longway\sharedgpu\aipower\cvstudy\gpuhub\district51\deepmind\transportation\planetc\sdnu\freegputop\tensorgpu
   //opengpu\aiyanxishe\codefate\changhe\dpool
@@ -306,7 +305,6 @@ export default {
   help: {
     title: "如何购买DBC",
     "1": "1.直接用支付宝购买DBC(此平台可以开发票)，进入",
-
     "2": "2.从火币购买DBC",
     "3": "3.从库币购买DBC",
     "4": "4.从Gate.io购买DBC",
@@ -698,7 +696,7 @@ export default {
   rentout_machine_tag: "支持单卡出租@仅支持整租",
   rentout_machine_whole: "仅支持整租",
   rentout_machine_one_gpu: "支持单卡出租",
-  rentout_machine_type_info: '如果希望机器可以同时在Filecoin计算区出租必须要选择"仅支持整租",同时需要质押DBC',
+  rentout_machine_type_info: '如果希望机器可以同时在高性能并行计算区出租必须要选择"仅支持整租",同时需要质押DBC',
   high_stability_conditions0: "机器进入高稳定AI训练区，需满足条件:",
   high_stability_conditions1: "1) 累计稳定运行超过144小时",
   high_stability_conditions2: "2) 历史上没有中断记录，如果机器有一次中断记录，将会被自动分配到普通AI训练区",
@@ -740,15 +738,15 @@ export default {
   whole_rent_machine_tip: "（当前机器只能整组）",
   disk_auto_machine_type: "分配的硬盘空间",
   miner_confirmPay_tip0: "质押DBC成功后，机器将会进入高稳定AI训练区",
-  miner_confirmPay_tip1: "质押DBC成功后，机器将会进入Filecoin计算区",
+  miner_confirmPay_tip1: "质押DBC成功后，机器将会进入高性能并行计算区",
   ai_help: "AI训练和推理帮助文档",
-  filecoin_help: "Filecoin计算帮助文档",
+  filecoin_help: "高性能并行计算帮助文档",
   supernode_help: "超级节点租用帮助文档",
   rent_machine_ai_help: "租用AI服务器帮助文档",
   use_machine_ai_help: "AI服务器使用手册",
   question_machine_ai_help: "常见问题汇总",
-  rent_machine_filecoin_help: "租用Filecoin Snark计算服务器帮助文档",
-  use_machine_filecoin_help: "Filecoin Snark计算API接口使用手册",
+  rent_machine_filecoin_help: "租用高性能并行计算服务器帮助文档",
+  use_machine_filecoin_help: "高性能并行计算API接口使用手册",
   rent_machine_dbc_help: "DBC超级节点租用帮助文档",
   use_machine_dbc_help: "启用DBC超级节点帮助文档",
   myMachine_confirm_pay_tip: "如果已经支付，请点击继续支付后，在弹框中点击我已支付；如果没有支付，请点击继续支付后，在弹框中点击确认支付",
@@ -764,7 +762,11 @@ export default {
     header: {},
     page1: {
       title: ["聪图云", "聪图云", "聪图云"],
-      describe: ["全球分布式GPU算力平台", "提供高性价比GPU算力", "安全、稳定、可靠、便捷、便宜"],
+      describe: [
+        "全球分布式GPU算力平台",
+        "提供高性价比GPU算力",
+        "安全、稳定、可靠、便捷、便宜"
+      ],
       buttonText: ["立即体验", "立即体验", "立即体验"]
     },
     page2: {
@@ -809,9 +811,13 @@ export default {
       },
       chart4: {
         title: "天池",
-        col1: ["ChnSentiCorp_htl_all", "weibo_senti_100k", "SIGHAN Bakeoff 2005"],
+        col1: [
+          "ChnSentiCorp_htl_all",
+          "weibo_senti_100k",
+          "SIGHAN Bakeoff 2005"
+        ],
         col2: ["ez_douban", "BERT", "ELMO"],
-        col3: ["NLTK Corpora", "NLTK Corpora"]
+        col3: ["NLTK Corpora", "ClueWeb11 FACC"]
       }
     },
     page5: {
