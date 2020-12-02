@@ -8,30 +8,35 @@
       <div class="university"></div>
 
       <ul class="company">
+        <!-- raw-1 -->
         <li class="com-icon-1"></li>
         <li class="com-icon-2"></li>
         <li class="com-icon-3"></li>
         <li class="com-icon-4"></li>
         <li class="com-icon-5"></li>
 
+        <!-- raw-2 -->
         <li class="com-icon-6"></li>
         <li class="com-icon-7"></li>
         <li class="com-icon-8"></li>
         <li class="com-icon-9"></li>
         <li class="com-icon-10"></li>
 
+        <!-- raw-3 -->
         <li class="com-icon-11"></li>
         <li class="com-icon-12"></li>
         <li class="com-icon-13"></li>
         <li class="com-icon-14"></li>
         <li class="com-icon-15"></li>
 
+        <!-- raw-4 -->
         <li class="com-icon-16"></li>
         <li class="com-icon-17"></li>
         <li class="com-icon-18"></li>
         <li class="com-icon-19"></li>
         <li class="com-icon-20"></li>
 
+        <!-- raw-5 -->
         <li class="com-icon-21"></li>
         <li class="com-icon-22"></li>
         <li class="com-icon-23"></li>
@@ -108,164 +113,126 @@ li {
   height: 50px;
   background: url(../../../assets/imgs/page7/com-1.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  left: 0px;
 }
 .com-icon-2 {
   width: 185px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-2.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  left: 233px;
 }
 .com-icon-3 {
   width: 205px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-3.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  left: 430px;
 }
-
 .com-icon-4 {
   width: 285px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-4.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  left: 100px;
 }
-
 .com-icon-5 {
   width: 185px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-5.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  left: 396px;
 }
+
+// raw-2
 .com-icon-6 {
   width: 140px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-6.png) no-repeat center;
   background-size: cover;
-  top: 0;
-  left: 645px;
 }
 .com-icon-7 {
   width: 185px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-7.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  right: 0px;
 }
 .com-icon-8 {
-  width: 295px;
+  width: 100px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-8.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  left: 125px;
 }
 .com-icon-9 {
-  width: 205px;
+  width: 375px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-9.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  left: 370px;
 }
 .com-icon-10 {
-  width: 265px;
+  width: 260px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-10.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  left: 647px;
 }
+
+// raw-3
 .com-icon-11 {
-  width: 210px;
+  width: 170px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-11.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  right: 0px;
 }
-
-// raw-4
 .com-icon-12 {
-  width: 185px;
+  width: 280px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-12.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  left: 0px;
 }
 .com-icon-13 {
-  width: 240px;
+  width: 170px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-13.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  left: 0px;
 }
 .com-icon-14 {
-  width: 215px;
+  width: 240px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-14.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  left: 0px;
 }
 .com-icon-15 {
-  width: 195px;
+  width: 220px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-15.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  left: 0px;
 }
+
+// raw-4
 .com-icon-16 {
-  width: 195px;
+  width: 165px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-16.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  left: 0px;
 }
 .com-icon-17 {
-  width: 195px;
+  width: 205px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-17.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  left: 325px;
 }
 .com-icon-18 {
-  width: 195px;
+  width: 192px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-18.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  left: 560px;
 }
 .com-icon-19 {
-  width: 195px;
+  width: 210px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-19.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  left: 770px;
 }
 .com-icon-20 {
   width: 195px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-20.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  right: 0px;
 }
 
 // raw-5
@@ -274,39 +241,29 @@ li {
   height: 50px;
   background: url(../../../assets/imgs/page7/com-21.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  left: 0px;
 }
 .com-icon-22 {
-  width: 195px;
+  width: 210px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-22.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  left: 25px;
 }
 .com-icon-23 {
-  width: 195px;
+  width: 160px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-23.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  left: 300px;
 }
 .com-icon-24 {
-  width: 195px;
+  width: 170px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-24.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  left: 647px;
 }
 .com-icon-25 {
-  width: 195px;
+  width: 220px;
   height: 50px;
   background: url(../../../assets/imgs/page7/com-25.png) no-repeat center;
   background-size: cover;
-  top: 0px;
-  right: 0;
 }
 </style>
