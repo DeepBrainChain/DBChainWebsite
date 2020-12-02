@@ -175,6 +175,14 @@ export default {
     },
     // click to send assets to input address
     send() {
+      if (this.gasbalance === 0) {
+        this.$message({
+          showClose: true,
+          message: this.$t("zerogas_wallet"),
+          type: "error"
+        });
+        return;
+      }
       if (!isAddress(this.transferAddress)) {
         this.$message({
           showClose: true,

@@ -26,6 +26,11 @@ import { getAccount } from "@/utlis";
 
 export default {
   name: "myWallet",
+  data() {
+    return {
+      gas_balance: 0
+    };
+  },
   created() {
     this.initData();
   },

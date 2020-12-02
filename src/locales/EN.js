@@ -507,7 +507,7 @@ export default {
   footer_service_dbchain: "support@dbchain.ai", //9.17 19:33
   footer_service_yousanai: "longpeng@yousanai.cn", //9.17 19:33
   footer_service_aionego: "aionego66@hotmail.com", //9.17 19:33
-  footer_service_deepshare: "yuanj@deepshare.net", //9.17 19:33
+  footer_service_deepshare: "service@deepshare.net", //9.17 19:33
   footer_service_panchuangai: "zhouas@panchuangai.cn", //9.17 19:33
   footer_service_sharegpu: "758655995@qq.com", //9.17 19:33
   footer_service_yalecloud: "yalesoft@163.com", //9.17 19:33
@@ -762,5 +762,8 @@ export default {
   gas_info: "GAS is a unit of transfer expense. For each DBC transfer or DBC purchase machine, 0.001 GAS is consumed. If the wallet GAS is 0, the payment for DBC purchase machine will fail",
   how_get_gas: "How to get GAS",
   how_get_gas_info: "If you buy the DBC through Alipay, you will automatically get a certain amount of GAS",
+  left_gasamount: "当前钱包GAS数量",
+  zerogas: "当前钱包GAS为0,无法支付，请在支付宝购买100个DBC，会免费获得0.005个gas",
+  zerogas_wallet: "当前钱包GAS为0,无法转账，请在支付宝购买100个DBC，会免费获得0.005个gas",
   ...enLocale
 }

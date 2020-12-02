@@ -501,7 +501,7 @@ export default {
   footer_service_dbchain: "support@dbchain.ai", //9.17 19:33
   footer_service_yousanai: "longpeng@yousanai.cn", //9.17 19:33
   footer_service_aionego: "aionego66@hotmail.com", //9.17 19:33
-  footer_service_deepshare: "yuanj@deepshare.net", //9.17 19:33
+  footer_service_deepshare: "service@deepshare.net", //9.17 19:33
   footer_service_panchuangai: "zhouas@panchuangai.cn", //9.17 19:33
   footer_service_sharegpu: "758655995@qq.com", //9.17 19:33
   footer_service_yalecloud: "yalesoft@163.com", //9.17 19:33
@@ -758,6 +758,7 @@ export default {
   how_get_gas_info: "通过支付宝购买DBC，会自动获得一定数量的GAS",
   left_gasamount: "当前钱包GAS数量",
   zerogas: "当前钱包GAS为0,无法支付，请在支付宝购买100个DBC，会免费获得0.005个gas",
+  zerogas_wallet: "当前钱包GAS为0,无法转账，请在支付宝购买100个DBC，会免费获得0.005个gas",
   congTuCloud: {
     header: {},
     page1: {
