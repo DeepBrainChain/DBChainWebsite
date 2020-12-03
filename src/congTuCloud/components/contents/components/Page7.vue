@@ -9,51 +9,60 @@
 
       <ul class="company">
         <!-- raw-1 -->
-        <li class="com-icon-1"></li>
+        <!-- 中国科学院自动化研究所 -->
+        <li class="com-icon-12"></li>
+        <!-- 方正集团 -->
+        <li class="com-icon-11"></li>
+        <!-- 浙江网新恒天软件有限公司 -->
         <li class="com-icon-2"></li>
-        <li class="com-icon-3"></li>
-        <!-- <li class="com-icon-4"></li> -->
-        <!-- <li class="com-icon-5"></li> -->
+        <!-- 中盛益华 -->
+        <li class="com-icon-13"></li>
+        <!-- 浙江康休汇科技有限公司 -->
+        <li class="com-icon-4"></li>
 
         <!-- raw-2 -->
-        <li class="com-icon-6"></li>
-        <!-- <li class="com-icon-7"></li> -->
-        <li class="com-icon-8"></li>
-        <li class="com-icon-9"></li>
+        <!-- StorSwift -->
+        <li class="com-icon-1"></li>
+        <!-- 思贤科技 -->
+        <li class="com-icon-3"></li>
+        <!-- 中国科学院空天信息创新研究院 -->
         <li class="com-icon-10"></li>
+        <!-- 上海秉拓智能科技有限公司 -->
+        <li class="com-icon-6"></li>
 
         <!-- raw-3 -->
-        <li class="com-icon-11"></li>
-        <li class="com-icon-12"></li>
-        <li class="com-icon-13"></li>
+        <!-- 杭州诚天科技发展有限公司 -->
+        <li class="com-icon-8"></li>
+        <!-- 杭州津禾生物科技有限公司 -->
+        <li class="com-icon-9"></li>
         <!-- 南加利福尼亚大学 -->
         <li class="com-icon-14"></li>
         <!-- 华中科技大学 -->
         <li class="com-icon-15"></li>
 
         <!-- raw-4 -->
-        <!-- 东南大学 -->
-        <li class="com-icon-16"></li>
-        <!-- 哈尔滨工程大学 -->
-        <li class="com-icon-17"></li>
         <!-- 武汉大学 -->
         <li class="com-icon-18"></li>
-        <!-- 北京航空航天大学 -->
-        <li class="com-icon-19"></li>
-        <!-- 南京航空航天大学 -->
-        <li class="com-icon-20"></li>
-
-        <!-- raw-5 -->
-        <!-- 西安交通大学 -->
-        <li class="com-icon-21"></li>
         <!-- 南开大学 -->
         <li class="com-icon-22"></li>
+        <!-- 西安交通大学 -->
+        <li class="com-icon-21"></li>
+        <!-- 东南大学 -->
+        <li class="com-icon-16"></li>
         <!-- 吉林大学 -->
         <li class="com-icon-23"></li>
+
+        <!-- raw-5 -->
+        <!-- 北京航空航天大学 -->
+        <li class="com-icon-19"></li>
         <!-- 中国农业大学 -->
         <li class="com-icon-24"></li>
         <!-- 西安电子科技大学 -->
         <li class="com-icon-25"></li>
+        <!-- 南京航空航天大学 -->
+        <li class="com-icon-20"></li>
+        <!-- 哈尔滨工程大学 -->
+        <li class="com-icon-17"></li>
       </ul>
     </div>
   </div>
@@ -122,16 +131,42 @@ li {
 }
 
 // raw-1
+.com-icon-12 {
+  width: 345px;
+  height: $logoHeight;
+  background: url(../../../assets/imgs/page7/com-12.png) no-repeat center;
+  background-size: cover;
+}
+.com-icon-11 {
+  width: 225px;
+  height: $logoHeight;
+  background: url(../../../assets/imgs/page7/com-11.png) no-repeat center;
+  background-size: cover;
+}
+.com-icon-2 {
+  width: 135px;
+  height: $logoHeight;
+  background: url(../../../assets/imgs/page7/com-2.png) no-repeat top;
+  background-size: cover;
+}
+.com-icon-13 {
+  width: 240px;
+  height: $logoHeight;
+  background: url(../../../assets/imgs/page7/com-13.png) no-repeat center;
+  background-size: cover;
+}
+.com-icon-4 {
+  width: 65px;
+  height: $logoHeight;
+  background: url(../../../assets/imgs/page7/com-4.png) no-repeat center;
+  background-size: cover;
+}
+
+// raw-2
 .com-icon-1 {
   width: 240px;
   height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-1.png) no-repeat center;
-  background-size: cover;
-}
-.com-icon-2 {
-  width: 220px;
-  height: $logoHeight;
-  background: url(../../../assets/imgs/page7/com-2.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-3 {
@@ -140,32 +175,20 @@ li {
   background: url(../../../assets/imgs/page7/com-3.png) no-repeat center;
   background-size: cover;
 }
-.com-icon-4 {
-  width: 320px;
+.com-icon-10 {
+  width: 420px;
   height: $logoHeight;
-  background: url(../../../assets/imgs/page7/com-4.png) no-repeat center;
+  background: url(../../../assets/imgs/page7/com-10.png) no-repeat center;
   background-size: cover;
 }
-.com-icon-5 {
-  width: 185px;
-  height: $logoHeight;
-  background: url(../../../assets/imgs/page7/com-5.png) no-repeat center;
-  background-size: cover;
-}
-
-// raw-2
 .com-icon-6 {
   width: 165px;
   height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-6.png) no-repeat center;
   background-size: cover;
 }
-.com-icon-7 {
-  width: 185px;
-  height: $logoHeight;
-  background: url(../../../assets/imgs/page7/com-7.png) no-repeat center;
-  background-size: cover;
-}
+
+// raw-3
 .com-icon-8 {
   width: 115px;
   height: $logoHeight;
@@ -176,32 +199,6 @@ li {
   width: 455px;
   height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-9.png) no-repeat center;
-  background-size: cover;
-}
-.com-icon-10 {
-  width: 420px;
-  height: $logoHeight;
-  background: url(../../../assets/imgs/page7/com-10.png) no-repeat center;
-  background-size: cover;
-}
-
-// raw-3
-.com-icon-11 {
-  width: 225px;
-  height: $logoHeight;
-  background: url(../../../assets/imgs/page7/com-11.png) no-repeat center;
-  background-size: cover;
-}
-.com-icon-12 {
-  width: 345px;
-  height: $logoHeight;
-  background: url(../../../assets/imgs/page7/com-12.png) no-repeat center;
-  background-size: cover;
-}
-.com-icon-13 {
-  width: 200px;
-  height: $logoHeight;
-  background: url(../../../assets/imgs/page7/com-13.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-14 {
@@ -218,48 +215,28 @@ li {
 }
 
 // raw-4
-.com-icon-16 {
-  width: 185px;
-  height: $logoHeight;
-  background: url(../../../assets/imgs/page7/com-16.png) no-repeat center;
-  background-size: cover;
-}
-.com-icon-17 {
-  width: 230px;
-  height: $logoHeight;
-  background: url(../../../assets/imgs/page7/com-17.png) no-repeat center;
-  background-size: cover;
-}
 .com-icon-18 {
-  width: 175px;
+  width: 180px;
   height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-18.png) no-repeat center;
   background-size: cover;
 }
-.com-icon-19 {
-  width: 235px;
+.com-icon-22 {
+  width: 250px;
   height: $logoHeight;
-  background: url(../../../assets/imgs/page7/com-19.png) no-repeat center;
+  background: url(../../../assets/imgs/page7/com-22.png) no-repeat center;
   background-size: cover;
 }
-.com-icon-20 {
-  width: 220px;
-  height: $logoHeight;
-  background: url(../../../assets/imgs/page7/com-20.png) no-repeat center;
-  background-size: cover;
-}
-
-// raw-5
 .com-icon-21 {
-  width: 215px;
+  width: 230px;
   height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-21.png) no-repeat center;
   background-size: cover;
 }
-.com-icon-22 {
-  width: 235px;
+.com-icon-16 {
+  width: 185px;
   height: $logoHeight;
-  background: url(../../../assets/imgs/page7/com-22.png) no-repeat center;
+  background: url(../../../assets/imgs/page7/com-16.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-23 {
@@ -268,16 +245,36 @@ li {
   background: url(../../../assets/imgs/page7/com-23.png) no-repeat center;
   background-size: cover;
 }
+
+// raw-5
+.com-icon-19 {
+  width: 230px;
+  height: $logoHeight;
+  background: url(../../../assets/imgs/page7/com-19.png) no-repeat center;
+  background-size: cover;
+}
 .com-icon-24 {
-  width: 185px;
+  width: 180px;
   height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-24.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-25 {
-  width: 245px;
+  width: 240px;
   height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-25.png) no-repeat center;
+  background-size: cover;
+}
+.com-icon-20 {
+  width: 215px;
+  height: $logoHeight;
+  background: url(../../../assets/imgs/page7/com-20.png) no-repeat center;
+  background-size: cover;
+}
+.com-icon-17 {
+  width: 225px;
+  height: $logoHeight;
+  background: url(../../../assets/imgs/page7/com-17.png) no-repeat center;
   background-size: cover;
 }
 </style>
