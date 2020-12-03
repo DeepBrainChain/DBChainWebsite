@@ -12,12 +12,12 @@
         <li class="com-icon-1"></li>
         <li class="com-icon-2"></li>
         <li class="com-icon-3"></li>
-        <li class="com-icon-4"></li>
-        <li class="com-icon-5"></li>
+        <!-- <li class="com-icon-4"></li> -->
+        <!-- <li class="com-icon-5"></li> -->
 
         <!-- raw-2 -->
         <li class="com-icon-6"></li>
-        <li class="com-icon-7"></li>
+        <!-- <li class="com-icon-7"></li> -->
         <li class="com-icon-8"></li>
         <li class="com-icon-9"></li>
         <li class="com-icon-10"></li>
@@ -26,21 +26,33 @@
         <li class="com-icon-11"></li>
         <li class="com-icon-12"></li>
         <li class="com-icon-13"></li>
+        <!-- 南加利福尼亚大学 -->
         <li class="com-icon-14"></li>
+        <!-- 华中科技大学 -->
         <li class="com-icon-15"></li>
 
         <!-- raw-4 -->
+        <!-- 东南大学 -->
         <li class="com-icon-16"></li>
+        <!-- 哈尔滨工程大学 -->
         <li class="com-icon-17"></li>
+        <!-- 武汉大学 -->
         <li class="com-icon-18"></li>
+        <!-- 北京航空航天大学 -->
         <li class="com-icon-19"></li>
+        <!-- 南京航空航天大学 -->
         <li class="com-icon-20"></li>
 
         <!-- raw-5 -->
+        <!-- 西安交通大学 -->
         <li class="com-icon-21"></li>
+        <!-- 南开大学 -->
         <li class="com-icon-22"></li>
+        <!-- 吉林大学 -->
         <li class="com-icon-23"></li>
+        <!-- 中国农业大学 -->
         <li class="com-icon-24"></li>
+        <!-- 西安电子科技大学 -->
         <li class="com-icon-25"></li>
       </ul>
     </div>
@@ -54,6 +66,8 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+$logoHeight: 55px;
+
 .wrap {
   width: 100%;
   height: 668px;
@@ -109,160 +123,160 @@ li {
 
 // raw-1
 .com-icon-1 {
-  width: 185px;
-  height: 50px;
+  width: 240px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-1.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-2 {
-  width: 185px;
-  height: 50px;
+  width: 220px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-2.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-3 {
-  width: 205px;
-  height: 50px;
+  width: 260px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-3.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-4 {
-  width: 285px;
-  height: 50px;
+  width: 320px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-4.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-5 {
   width: 185px;
-  height: 50px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-5.png) no-repeat center;
   background-size: cover;
 }
 
 // raw-2
 .com-icon-6 {
-  width: 140px;
-  height: 50px;
+  width: 165px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-6.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-7 {
   width: 185px;
-  height: 50px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-7.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-8 {
-  width: 100px;
-  height: 50px;
+  width: 115px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-8.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-9 {
-  width: 375px;
-  height: 50px;
+  width: 455px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-9.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-10 {
-  width: 260px;
-  height: 50px;
+  width: 420px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-10.png) no-repeat center;
   background-size: cover;
 }
 
 // raw-3
 .com-icon-11 {
-  width: 170px;
-  height: 50px;
+  width: 225px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-11.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-12 {
-  width: 280px;
-  height: 50px;
+  width: 345px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-12.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-13 {
-  width: 170px;
-  height: 50px;
+  width: 200px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-13.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-14 {
-  width: 240px;
-  height: 50px;
+  width: 260px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-14.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-15 {
-  width: 220px;
-  height: 50px;
+  width: 270px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-15.png) no-repeat center;
   background-size: cover;
 }
 
 // raw-4
 .com-icon-16 {
-  width: 165px;
-  height: 50px;
+  width: 185px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-16.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-17 {
-  width: 205px;
-  height: 50px;
+  width: 230px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-17.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-18 {
-  width: 192px;
-  height: 50px;
+  width: 175px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-18.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-19 {
-  width: 210px;
-  height: 50px;
+  width: 235px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-19.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-20 {
-  width: 195px;
-  height: 50px;
+  width: 220px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-20.png) no-repeat center;
   background-size: cover;
 }
 
 // raw-5
 .com-icon-21 {
-  width: 195px;
-  height: 50px;
+  width: 215px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-21.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-22 {
-  width: 210px;
-  height: 50px;
+  width: 235px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-22.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-23 {
-  width: 160px;
-  height: 50px;
+  width: 180px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-23.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-24 {
-  width: 170px;
-  height: 50px;
+  width: 185px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-24.png) no-repeat center;
   background-size: cover;
 }
 .com-icon-25 {
-  width: 220px;
-  height: 50px;
+  width: 245px;
+  height: $logoHeight;
   background: url(../../../assets/imgs/page7/com-25.png) no-repeat center;
   background-size: cover;
 }
