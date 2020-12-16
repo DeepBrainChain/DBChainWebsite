@@ -1,11 +1,11 @@
 <template>
   <div class="wrap">
     <div class="container">
-      <div class="left">{{$t("congTuCloud.page6.iconText")}}</div>
+      <div class="left">{{ $t("congTuCloud.page6.iconText") }}</div>
       <div class="right">
         <div class="content">
-          <div class="title">{{$t("congTuCloud.page6.title")}}</div>
-          <div class="text">{{$t("congTuCloud.page6.describe")}}</div>
+          <div class="title">{{ $t("congTuCloud.page6.title") }}</div>
+          <div class="text">{{ $t("congTuCloud.page6.describe") }}</div>
         </div>
       </div>
     </div>
@@ -38,7 +38,7 @@ export default {
 .container .left {
   width: 500px;
   height: 100%;
-  background: url(../../../assets/imgs/page6/编组-38@2x.png) no-repeat center;
+  background: url(../../../assets/imgs/page6/编组-38@1x.png) no-repeat center;
   background-size: cover;
   float: left;
   font-size: 32px;
