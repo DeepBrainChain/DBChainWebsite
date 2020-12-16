@@ -2,28 +2,34 @@
   <div class="wrap">
     <div class="banner1 banner" ref="banner1">
       <div class="container">
-        <div class="title">{{$t("congTuCloud.page1.title[0]")}}</div>
-        <div class="describe">{{$t("congTuCloud.page1.describe[0]")}}</div>
+        <div class="title">{{ $t("congTuCloud.page1.title[0]") }}</div>
+        <div class="describe">{{ $t("congTuCloud.page1.describe[0]") }}</div>
         <div class="button" @click="pushMenu('gpu')">
-          <div class="button-text">{{$t("congTuCloud.page1.buttonText[0]")}}</div>
+          <div class="button-text">
+            {{ $t("congTuCloud.page1.buttonText[0]") }}
+          </div>
         </div>
       </div>
     </div>
     <div class="banner2 banner" ref="banner2">
       <div class="container">
-        <div class="title">{{$t("congTuCloud.page1.title[1]")}}</div>
-        <div class="describe">{{$t("congTuCloud.page1.describe[1]")}}</div>
+        <div class="title">{{ $t("congTuCloud.page1.title[1]") }}</div>
+        <div class="describe">{{ $t("congTuCloud.page1.describe[1]") }}</div>
         <div class="button" @click="pushMenu('gpu')">
-          <div class="button-text">{{$t("congTuCloud.page1.buttonText[1]")}}</div>
+          <div class="button-text">
+            {{ $t("congTuCloud.page1.buttonText[1]") }}
+          </div>
         </div>
       </div>
     </div>
     <div class="banner3 banner" ref="banner3">
       <div class="container">
-        <div class="title">{{$t("congTuCloud.page1.title[2]")}}</div>
-        <div class="describe">{{$t("congTuCloud.page1.describe[2]")}}</div>
+        <div class="title">{{ $t("congTuCloud.page1.title[2]") }}</div>
+        <div class="describe">{{ $t("congTuCloud.page1.describe[2]") }}</div>
         <div class="button" @click="pushMenu('gpu')">
-          <div class="button-text">{{$t("congTuCloud.page1.buttonText[2]")}}</div>
+          <div class="button-text">
+            {{ $t("congTuCloud.page1.buttonText[2]") }}
+          </div>
         </div>
       </div>
     </div>
@@ -97,25 +103,23 @@ export default {
   position: absolute;
 }
 .banner1 {
-  background: url(../../../assets/imgs/page1/banner01@2x.png) no-repeat center;
+  background: url(../../../assets/imgs/page1/banner01@1x.png) no-repeat center;
   background-size: cover;
   top: 0;
   left: 0;
-  display: block;
+  z-index: 1;
 }
 .banner2 {
-  background: url(../../../assets/imgs/page1/banner02@2x.png) no-repeat center;
+  background: url(../../../assets/imgs/page1/banner02@1x.png) no-repeat center;
   background-size: cover;
   top: 0;
   left: 0;
-  display: none;
 }
 .banner3 {
-  background: url(../../../assets/imgs/page1/banner03@2x.png) no-repeat center;
+  background: url(../../../assets/imgs/page1/banner03@1x.png) no-repeat center;
   background-size: cover;
   top: 0;
   left: 0;
-  display: none;
 }
 .container {
   width: 400px;
