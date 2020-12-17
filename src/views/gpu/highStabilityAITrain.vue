@@ -248,7 +248,7 @@
               >
             </span>
           </div>
-          <div class="td4">
+          <div class="td4" :style="styleHidden">
             <span class="fs16">
               {{ $t("list_dbc_version") }}：
               <a class="cPrimaryColor">{{ item.dbc_version }}</a>
