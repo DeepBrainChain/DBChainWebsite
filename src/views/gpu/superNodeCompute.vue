@@ -9,14 +9,13 @@
         @selected="queryMc"
       ></drop-item>
       <!--      <drop-item class="machine-item" title="Image" :dropList="images"></drop-item>-->
-       <!--    <drop-item
+      <!--    <drop-item
         class="machine-item"
         :title="$t('dbc_version_title')"
         v-model="req_body.dbcVersion"
         :dropList="dbc_version"
         @selected="queryMc"
       ></drop-item>-->
-
 
       <drop-item
         class="machine-item"
@@ -33,7 +32,8 @@
         :max="100"
         :step="1"
         @change="queryMc"
-      >{{showlengthOfAvailableTime}}</slide-item>
+        >{{ showlengthOfAvailableTime }}</slide-item
+      >
       <slide-item
         class="machine-item"
         :title="$t('total_time')"
@@ -42,7 +42,8 @@
         :max="100"
         :step="1"
         @change="queryMc"
-      >{{showTotalTime}}</slide-item>
+        >{{ showTotalTime }}</slide-item
+      >
       <slide-item
         class="machine-item"
         :title="$t('disk_space')"
@@ -51,7 +52,8 @@
         :max="100"
         :step="1"
         @change="queryMc"
-      >{{showDiskSpace}}</slide-item>
+        >{{ showDiskSpace }}</slide-item
+      >
       <slide-item
         class="machine-item"
         :title="$t('gpu_price_dollar')"
@@ -60,7 +62,8 @@
         :max="100"
         :step="1"
         @change="queryMc"
-      >{{showGpuPrice}}</slide-item>
+        >{{ showGpuPrice }}</slide-item
+      >
       <slide-item
         class="machine-item"
         :title="$t('gpu_count')"
@@ -69,7 +72,8 @@
         :max="100"
         :step="1"
         @change="queryMc"
-      >{{showGpuCount}}</slide-item>
+        >{{ showGpuCount }}</slide-item
+      >
       <slide-item
         class="machine-item"
         :title="$t('total_rent_count')"
@@ -78,7 +82,8 @@
         :max="100"
         :step="1"
         @change="queryMc"
-      >{{show_total_rent_count}}</slide-item>
+        >{{ show_total_rent_count }}</slide-item
+      >
       <slide-item
         class="machine-item"
         :title="$t('error_rent_count')"
@@ -87,7 +92,8 @@
         :max="100"
         :step="1"
         @change="queryMc"
-      >{{show_error_rent_count}}</slide-item>
+        >{{ show_error_rent_count }}</slide-item
+      >
       <slide-item
         class="machine-item"
         :title="$t('tensor_cores')"
@@ -96,7 +102,8 @@
         :max="100"
         :step="1"
         @change="queryMc"
-      >{{show_tensor_cores_count}}</slide-item>
+        >{{ show_tensor_cores_count }}</slide-item
+      >
       <slide-item
         class="machine-item"
         :title="$t('half_precision_tflops')"
@@ -105,7 +112,8 @@
         :max="100"
         :step="1"
         @change="queryMc"
-      >{{half_showTflops}}</slide-item>
+        >{{ half_showTflops }}</slide-item
+      >
       <slide-item
         class="machine-item"
         :title="$t('single_precision_tflops')"
@@ -114,7 +122,8 @@
         :max="100"
         :step="1"
         @change="queryMc"
-      >{{single_showTflops}}</slide-item>
+        >{{ single_showTflops }}</slide-item
+      >
       <slide-item
         class="machine-item"
         :title="$t('double_precision_tflops')"
@@ -123,7 +132,8 @@
         :max="100"
         :step="1"
         @change="queryMc"
-      >{{double_showTflops}}</slide-item>
+        >{{ double_showTflops }}</slide-item
+      >
       <slide-item
         class="machine-item"
         :title="$t('gpu_ram_size')"
@@ -132,7 +142,8 @@
         :max="100"
         :step="1"
         @change="queryMc"
-      >{{showGpuRamSize}}</slide-item>
+        >{{ showGpuRamSize }}</slide-item
+      >
       <slide-item
         class="machine-item"
         :title="$t('gpu_ram_bandwidth')"
@@ -141,7 +152,8 @@
         :max="100"
         :step="1"
         @change="queryMc"
-      >{{showGpuRamBandwidth}}</slide-item>
+        >{{ showGpuRamBandwidth }}</slide-item
+      >
       <slide-item
         class="machine-item"
         :title="$t('pcie_bandwidth')"
@@ -150,7 +162,8 @@
         :max="100"
         :step="1"
         @change="queryMc"
-      >{{showPiceBandwidth}}</slide-item>
+        >{{ showPiceBandwidth }}</slide-item
+      >
       <slide-item
         class="machine-item"
         :title="$t('cpu_numbers')"
@@ -159,7 +172,8 @@
         :max="100"
         :step="1"
         @change="queryMc"
-      >{{showCpuCores}}</slide-item>
+        >{{ showCpuCores }}</slide-item
+      >
       <slide-item
         class="machine-item"
         :title="$t('ram_size')"
@@ -168,7 +182,8 @@
         :max="100"
         :step="1"
         @change="queryMc"
-      >{{showCpuRamSize}}</slide-item>
+        >{{ showCpuRamSize }}</slide-item
+      >
       <slide-item
         class="machine-item"
         :title="$t('disk_bandwidth')"
@@ -177,7 +192,8 @@
         :max="100"
         :step="1"
         @change="queryMc"
-      >{{showDiskBandwidth}}</slide-item>
+        >{{ showDiskBandwidth }}</slide-item
+      >
       <slide-item
         class="machine-item"
         :title="$t('inet_up')"
@@ -186,7 +202,8 @@
         :max="100"
         :step="1"
         @change="queryMc"
-      >{{showInetUp}}</slide-item>
+        >{{ showInetUp }}</slide-item
+      >
       <slide-item
         class="machine-item"
         :title="$t('inet_down')"
@@ -195,13 +212,18 @@
         :max="100"
         :step="1"
         @change="queryMc"
-      >{{showInetDown}}</slide-item>
+        >{{ showInetDown }}</slide-item
+      >
     </div>
     <ul>
-      <li v-for="(item, index) in res_body.content" v-if="item.online_status" class="info-wrap">
+      <li
+        v-for="(item, index) in res_body.content"
+        v-if="item.online_status"
+        class="info-wrap"
+      >
         <div v-if="item.evaluation_score_average > 0" class="flex vCenter">
-          <el-rate :value="item.evaluation_score_average/2"></el-rate>
-          <span>{{item.evaluation_score_average}}</span>
+          <el-rate :value="item.evaluation_score_average / 2"></el-rate>
+          <span>{{ item.evaluation_score_average }}</span>
         </div>
         <div class="flex status-title">
           <div>
@@ -209,89 +231,129 @@
               plain
               class="is-link"
               @click="pushDetail(item.machine_id)"
-            >{{item.machine_id}}</el-button>
+              >{{ item.machine_id }}</el-button
+            >
             <span class="fs28">
-              <span
-                class="cRedbig"
-              >&nbsp;&nbsp;$ {{item.gpu_price_dollar }}/{{$t('my_machine_hour')}}</span>
+              <span class="cRedbig"
+                >&nbsp;&nbsp;$ {{ item.gpu_price_dollar }}/{{
+                  $t("my_machine_hour")
+                }}</span
+              >
             </span>
           </div>
           <div class="td4">
             <span class="fs16">
-              {{$t('list_dbc_version')}}：
-              <a class="cPrimaryColor">{{item.dbc_version}}</a>
+              {{ $t("list_dbc_version") }}：
+              <a class="cPrimaryColor">{{ item.dbc_version }}</a>
             </span>
           </div>
           <div>
             <el-button
               style="width: 70px"
+              :style="styleHidden"
               plain
               size="mini"
-              @click="openTry(item,index)"
-              :disabled="!item.idle_status||item.can_rent_start_time_later<0"
-              :loading="try_rentLoading && try_rent_index===index "
-            >{{$t('list_try')}}</el-button>
+              @click="openTry(item, index)"
+              :disabled="
+                !item.idle_status || item.can_rent_start_time_later < 0
+              "
+              :loading="try_rentLoading && try_rent_index === index"
+              >{{ $t("list_try") }}</el-button
+            >
             <el-button
               style="width: 150px"
               type="primary"
               size="mini"
-              @click="openDlg_gpu(item,index)"
-              :disabled="!item.idle_status||item.can_rent_start_time_later<0"
-              :loading="rentLoading_gpu && rent_index===index"
-            >{{$t('list_rentout_gpu')}}</el-button>
+              @click="openDlg_gpu(item, index)"
+              :disabled="
+                !item.idle_status || item.can_rent_start_time_later < 0
+              "
+              :loading="rentLoading_gpu && rent_index === index"
+              >{{ $t("list_rentout_gpu") }}</el-button
+            >
             <el-button
               style="width: 150px"
               type="primary"
               size="mini"
-              v-if="item.dbc_version!=='0.3.7.2' && item.usage_type===0"
-              @click="openDlg_cpu_switch(item,index)"
-              :disabled="!item.can_create_cpu_container||item.can_rent_start_time_later<0"
-              :loading="rentLoading_cpu&& rent_index===index"
-            >{{$t('list_rentout_cpu')}}</el-button>
+              v-if="item.dbc_version !== '0.3.7.2' && item.usage_type === 0"
+              @click="openDlg_cpu_switch(item, index)"
+              :disabled="
+                !item.can_create_cpu_container ||
+                item.can_rent_start_time_later < 0
+              "
+              :loading="rentLoading_cpu && rent_index === index"
+              >{{ $t("list_rentout_cpu") }}</el-button
+            >
           </div>
         </div>
         <div class="flex">
           <div class="td2">
-            <el-tooltip class="item" effect="dark" :content="$t('list_gpu_count_tip')">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              :content="$t('list_gpu_count_tip')"
+            >
               <span class="fs28">
-                <a class="cPrimaryColor">{{item.gpu_type}}</a>
-                <a class="cRedbig">x{{item.gpu_count}} GPU</a>
+                <a class="cPrimaryColor">{{ item.gpu_type }}</a>
+                <a class="cRedbig">x{{ item.gpu_count }} GPU</a>
               </span>
             </el-tooltip>
           </div>
           <div class="td2">
             <span class="fs28">
-              <a class="cPrimaryColor">{{item.country}}</a>
+              <a class="cPrimaryColor">{{ item.country }}</a>
             </span>
           </div>
-          <div class="td" v-if="item.can_rent_start_time_later<0">
+          <div class="td" v-if="item.can_rent_start_time_later < 0">
             <span class="fs16">
-              <a class="cPrimaryColor">{{-item.can_rent_start_time_later}}</a>
-              {{$t('list_start_rentout')}}
+              <a class="cPrimaryColor">{{ -item.can_rent_start_time_later }}</a>
+              {{ $t("list_start_rentout") }}
             </span>
           </div>
         </div>
         <div class="flex">
           <div class="td5">
-            <el-tooltip class="item" effect="dark" :content="$t('month_discount_instruction')">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              :content="$t('month_discount_instruction')"
+            >
               <span class="fs28">
-                <a class="cPrimaryColor">{{$t('month_discount')}}:{{item.discount_month}}%&nbsp;&nbsp;</a>
+                <a class="cPrimaryColor"
+                  >{{ $t("month_discount") }}:{{
+                    item.discount_month
+                  }}%&nbsp;&nbsp;</a
+                >
               </span>
             </el-tooltip>
           </div>
           <div class="td5">
-            <el-tooltip class="item" effect="dark" :content="$t('quarter_discount_instruction')">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              :content="$t('quarter_discount_instruction')"
+            >
               <span class="fs28">
-                <a
-                  class="cPrimaryColor"
-                >{{$t('quarter_discount')}}:{{item.discount_quarter}}%&nbsp;&nbsp;</a>
+                <a class="cPrimaryColor"
+                  >{{ $t("quarter_discount") }}:{{
+                    item.discount_quarter
+                  }}%&nbsp;&nbsp;</a
+                >
               </span>
             </el-tooltip>
           </div>
           <div class="td5">
-            <el-tooltip class="item" effect="dark" :content="$t('year_discount_instruction')">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              :content="$t('year_discount_instruction')"
+            >
               <span class="fs28">
-                <a class="cPrimaryColor">{{$t('year_discount')}}:{{item.discount_year}}%&nbsp;&nbsp;</a>
+                <a class="cPrimaryColor"
+                  >{{ $t("year_discount") }}:{{
+                    item.discount_year
+                  }}%&nbsp;&nbsp;</a
+                >
               </span>
             </el-tooltip>
           </div>
@@ -303,7 +365,7 @@
               v-if="item.gpu_rentout_whole"
             >
               <span class="fs28">
-                <a class="cPrimaryColor">{{$t('rentout_machine_whole')}}</a>
+                <a class="cPrimaryColor">{{ $t("rentout_machine_whole") }}</a>
               </span>
             </el-tooltip>
             <el-tooltip
@@ -313,17 +375,23 @@
               v-else
             >
               <span class="fs28">
-                <a class="cPrimaryColor">{{$t('rentout_machine_one_gpu')}}</a>
+                <a class="cPrimaryColor">{{ $t("rentout_machine_one_gpu") }}</a>
               </span>
             </el-tooltip>
           </div>
-          <div class="td5">
+          <div class="td5" :style="styleHidden">
             <span class="fs28"></span>
-            <el-tooltip class="item" effect="dark" :content="$t('deposite_dbc_count_instruction')">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              :content="$t('deposite_dbc_count_instruction')"
+            >
               <span class="fs28">
-                <a
-                  class="cPrimaryColor"
-                >{{$t('compensation_dbc_count')}}:{{item.rentout_deposite_dbc_count/item.gpu_count}}</a>
+                <a class="cPrimaryColor"
+                  >{{ $t("compensation_dbc_count") }}:{{
+                    item.rentout_deposite_dbc_count / item.gpu_count
+                  }}</a
+                >
               </span>
             </el-tooltip>
           </div>
@@ -331,205 +399,216 @@
         <div class="flex">
           <div class="td">
             <span class="fs16">
-              {{$t('list_idle_gpus')}}:
-              <a
-                class="cPrimaryColor"
-              >{{item.gpu_count - item.gpu_be_used}}</a>
+              {{ $t("list_idle_gpus") }}:
+              <a class="cPrimaryColor">{{
+                item.gpu_count - item.gpu_be_used
+              }}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_length_of_available_time')}}：
-              <a
-                class="cPrimaryColor"
-              >{{Math.floor(item.length_of_available_time)}}{{$t('my_machine_hour')}}</a>
+              {{ $t("list_length_of_available_time") }}：
+              <a class="cPrimaryColor"
+                >{{ Math.floor(item.length_of_available_time)
+                }}{{ $t("my_machine_hour") }}</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_total_time_be_used')}}：
-              <a
-                class="cPrimaryColor"
-              >{{$minsToHourMins(item.total_time_be_used)}}</a>
+              {{ $t("list_total_time_be_used") }}：
+              <a class="cPrimaryColor">{{
+                $minsToHourMins(item.total_time_be_used)
+              }}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_total_rent_count')}}：
-              <a class="cPrimaryColor">{{item.total_rent_count}}</a>
+              {{ $t("list_total_rent_count") }}：
+              <a class="cPrimaryColor">{{ item.total_rent_count }}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_error_rent_count')}}：
-              <a class="cPrimaryColor">{{item.error_rent_count}}</a>
+              {{ $t("list_error_rent_count") }}：
+              <a class="cPrimaryColor">{{ item.error_rent_count }}</a>
             </span>
           </div>
         </div>
 
-        <div class="flex" v-if="item.dbc_version!=='0.3.7.2'">
+        <div class="flex" v-if="item.dbc_version !== '0.3.7.2'">
           <div class="td">
             <span class="fs16">
-              {{$t('cpu_containers_list')}}:
-              <a class="cPrimaryColor">{{item.cpu_containers}}</a>
+              {{ $t("cpu_containers_list") }}:
+              <a class="cPrimaryColor">{{ item.cpu_containers }}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('cpu_containers_can_use_memory_list')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.cpu_containers_can_use_memory/(1024*1024))}}G</a>
+              {{ $t("cpu_containers_can_use_memory_list") }}：
+              <a class="cPrimaryColor"
+                >{{
+                  parseInt(item.cpu_containers_can_use_memory / (1024 * 1024))
+                }}G</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('cpu_containers_can_use_disk_list')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.cpu_containers_can_use_disk/(1024*1024))}}G</a>
+              {{ $t("cpu_containers_can_use_disk_list") }}：
+              <a class="cPrimaryColor"
+                >{{
+                  parseInt(item.cpu_containers_can_use_disk / (1024 * 1024))
+                }}G</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('gpu_containers_can_use_memory_list')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.gpu_containers_can_use_memory/(1024*1024))}}G</a>
+              {{ $t("gpu_containers_can_use_memory_list") }}：
+              <a class="cPrimaryColor"
+                >{{
+                  parseInt(item.gpu_containers_can_use_memory / (1024 * 1024))
+                }}G</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('gpu_containers_can_use_disk_list')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.gpu_containers_can_use_disk/(1024*1024))}}G</a>
+              {{ $t("gpu_containers_can_use_disk_list") }}：
+              <a class="cPrimaryColor"
+                >{{
+                  parseInt(item.gpu_containers_can_use_disk / (1024 * 1024))
+                }}G</a
+              >
             </span>
           </div>
         </div>
 
         <div class="flex">
-          <div v-if="item.tensor_cores>0" class="td">
+          <div v-if="item.tensor_cores > 0" class="td">
             <span class="fs16">
               Tensor Cores：
-              <a class="cPrimaryColor">{{item.tensor_cores}}</a>
+              <a class="cPrimaryColor">{{ item.tensor_cores }}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_cuda_version')}}：
-              <a class="cPrimaryColor">{{item.cuda_version}}</a>
+              {{ $t("list_cuda_version") }}：
+              <a class="cPrimaryColor">{{ item.cuda_version }}</a>
             </span>
           </div>
           <div class="td">
             <span v-if="item.disk_space" class="fs16">
-              {{$t('list_disk_space')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.disk_space/(1024*1024))}}GB</a>
-              <a class="cPrimaryColor">&nbsp;&nbsp;{{item.disk_type}}</a>
+              {{ $t("list_disk_space") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.disk_space / (1024 * 1024)) }}GB</a
+              >
+              <a class="cPrimaryColor">&nbsp;&nbsp;{{ item.disk_type }}</a>
             </span>
           </div>
           <div class="td3">
             <span class="fs16">
-              {{$t('list_cpu_type')}}：
-              <a class="cPrimaryColor">{{item.cpu_type}}</a>
+              {{ $t("list_cpu_type") }}：
+              <a class="cPrimaryColor">{{ item.cpu_type }}</a>
             </span>
           </div>
         </div>
         <div class="flex">
           <div v-if="item.half_precision_tflops > 0" class="td">
             <span class="fs16">
-              {{$t('list_half_precision_tflops')}}：
-              <a
-                class="cPrimaryColor"
-              >{{item.half_precision_tflops}}TFLOPS</a>
+              {{ $t("list_half_precision_tflops") }}：
+              <a class="cPrimaryColor"
+                >{{ item.half_precision_tflops }}TFLOPS</a
+              >
             </span>
           </div>
           <div v-if="item.gpu_ram_size > 0" class="td">
             <span class="fs16">
-              {{$t('list_gpu_ram_size')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.gpu_ram_size/(1000*1000))}}GB</a>
+              {{ $t("list_gpu_ram_size") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.gpu_ram_size / (1000 * 1000)) }}GB</a
+              >
             </span>
           </div>
-          <div v-if="item.disk_bandwidth> 0" class="td">
+          <div v-if="item.disk_bandwidth > 0" class="td">
             <span class="fs16">
-              {{$t('list_disk_bandwidth')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.disk_bandwidth/1024)}}MB/s</a>
+              {{ $t("list_disk_bandwidth") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.disk_bandwidth / 1024) }}MB/s</a
+              >
             </span>
           </div>
-          <div v-if="item.cpu_numbers> 0" class="td">
+          <div v-if="item.cpu_numbers > 0" class="td">
             <span class="fs16">
-              {{$t('list_cpu_numbers')}}：
-              <a class="cPrimaryColor">{{item.cpu_numbers}}</a>
+              {{ $t("list_cpu_numbers") }}：
+              <a class="cPrimaryColor">{{ item.cpu_numbers }}</a>
             </span>
           </div>
         </div>
         <div class="flex">
           <div v-if="item.single_precision_tflops > 0" class="td">
             <span class="fs16">
-              {{$t('list_single_precision_tflops')}}：
-              <a
-                class="cPrimaryColor"
-              >{{item.single_precision_tflops}}TFLOPS</a>
+              {{ $t("list_single_precision_tflops") }}：
+              <a class="cPrimaryColor"
+                >{{ item.single_precision_tflops }}TFLOPS</a
+              >
             </span>
           </div>
           <div v-if="item.gpu_ram_bandwidth > 0" class="td">
             <span class="fs16">
-              {{$t('list_gpu_ram_bandwidth')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.gpu_ram_bandwidth/(1024*1024))}}GB/s</a>
+              {{ $t("list_gpu_ram_bandwidth") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.gpu_ram_bandwidth / (1024 * 1024)) }}GB/s</a
+              >
             </span>
           </div>
           <div v-if="item.inet_up > 0" class="td">
             <span class="fs16">
-              {{$t('list_inet_up')}}：
-              <a class="cPrimaryColor">{{parseInt(item.inet_up/1024)}}Mbps</a>
+              {{ $t("list_inet_up") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.inet_up / 1024) }}Mbps</a
+              >
             </span>
           </div>
           <div v-if="item.ram_size > 0" class="td">
             <span class="fs16">
-              {{$t('list_ram_size')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.ram_size/(1024*1024))}}GB</a>
+              {{ $t("list_ram_size") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.ram_size / (1024 * 1024)) }}GB</a
+              >
             </span>
           </div>
         </div>
         <div class="flex">
           <div v-if="item.double_precision_tflops > 0" class="td">
             <span class="fs16">
-              {{$t('list_double_precision_tflops')}}：
-              <a
-                class="cPrimaryColor"
-              >{{item.double_precision_tflops}}TFLOPS</a>
+              {{ $t("list_double_precision_tflops") }}：
+              <a class="cPrimaryColor"
+                >{{ item.double_precision_tflops }}TFLOPS</a
+              >
             </span>
           </div>
           <div v-if="item.pcie_bandwidth > 0" class="td">
             <span class="fs16">
-              {{$t('list_pcie_bandwidth')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.pcie_bandwidth/(1024*1024))}}GB/s</a>
+              {{ $t("list_pcie_bandwidth") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.pcie_bandwidth / (1024 * 1024)) }}GB/s</a
+              >
             </span>
           </div>
-          <div v-if="item.inet_down> 0" class="td">
+          <div v-if="item.inet_down > 0" class="td">
             <span class="fs16">
-              {{$t('list_inet_down')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.inet_down/1024)}}Mbps</a>
+              {{ $t("list_inet_down") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.inet_down / 1024) }}Mbps</a
+              >
             </span>
           </div>
           <div class="td3">
             <span class="fs16">
-              {{$t('list_os')}}：
-              <a class="cPrimaryColor">{{item.os}}</a>
+              {{ $t("list_os") }}：
+              <a class="cPrimaryColor">{{ item.os }}</a>
             </span>
           </div>
         </div>
@@ -575,7 +654,7 @@ import {
   place_order_gpu_new,
   place_order_cpu_new,
   create_order,
-  get_dbc_price
+  get_dbc_price,
 } from "@/api";
 import { getAccount } from "@/utlis";
 import { mapActions, mapState } from "vuex";
@@ -588,10 +667,11 @@ export default {
     DlgLeasecpupayment,
     DlgLeaseswitchcpu,
     DlgLeasegpu,
-    DlgTry
+    DlgTry,
   },
   data() {
     return {
+      styleHidden: {},
       rent_index: -1,
       rentLoading_cpu: false,
       rentLoading_gpu: false,
@@ -608,55 +688,55 @@ export default {
       countries: [
         {
           name: undefined, //this.$t("list_all"),
-          value: "all"
-        }
+          value: "all",
+        },
       ],
       //dbc version
       dbc_version: [
         {
           name: this.$t("gpu.dbc_version[0]"),
-          value: "0"
+          value: "0",
         },
         {
           name: this.$t("gpu.dbc_version[1]"),
-          value: this.$t("gpu.dbc_version[1]")
+          value: this.$t("gpu.dbc_version[1]"),
         },
         {
           name: this.$t("gpu.dbc_version[2]"),
-          value: this.$t("gpu.dbc_version[2]")
-        }
+          value: this.$t("gpu.dbc_version[2]"),
+        },
       ],
 
       // 是否有ip
       have_ip: [
         {
           name: undefined, //this.$t("gpu.have_ip[0]"),
-          value: 0
+          value: 0,
         },
         {
           name: undefined, //this.$t("gpu.have_ip[1]"),
-          value: 1
+          value: 1,
         },
         {
           name: undefined, //this.$t("gpu.have_ip[2]"),
-          value: 2
-        }
+          value: 2,
+        },
       ],
 
       // 机器状态下拉
       idle_status: [
         {
           name: undefined, //this.$t("gpu.idle_status[0]"),
-          value: 0
+          value: 0,
         },
         {
           name: undefined, // this.$t("gpu.idle_status[1]"),
-          value: 1
+          value: 1,
         },
         {
           name: undefined, //this.$t("gpu.idle_status[2]"),
-          value: 2
-        }
+          value: 2,
+        },
       ],
 
       totalTimeVal: 0, // 使用时长
@@ -684,12 +764,12 @@ export default {
       images: [
         {
           name: "TesorFlow",
-          value: 1
+          value: 1,
         },
         {
           name: "other",
-          value: 2
-        }
+          value: 2,
+        },
       ],
       req_body: {
         country: "all",
@@ -718,13 +798,13 @@ export default {
         tensor_cores: 0,
         half_precision_tflops: 0,
         single_precision_tflops: 0,
-        double_precision_tflops: 0
+        double_precision_tflops: 0,
       },
       res_body: {
-        content: []
+        content: [],
       },
       placeOrderData: undefined,
-      st: undefined
+      st: undefined,
     };
   },
   watch: {
@@ -732,12 +812,16 @@ export default {
       this.init_data();
       this.queryMc();
     },
-    curVal(newVal) {}
+    curVal(newVal) {},
   },
   created() {
     this.init_data();
   },
-
+  mounted() {
+    if (this.$t("website_name") === "congTuCloud") {
+      this.styleHidden.visibility = "hidden";
+    }
+  },
   activated() {
     this.queryMc();
   },
@@ -767,7 +851,7 @@ export default {
         this.$message({
           showClose: true,
           message: this.$t("pleae_create_wallet"),
-          type: "error"
+          type: "error",
         });
         return;
       }
@@ -781,27 +865,27 @@ export default {
         machine_id: item.machine_id,
         wallet_address_user: getAccount().address,
         user_name_platform,
-        language
+        language,
       })
-        .then(res_1 => {
+        .then((res_1) => {
           if (res_1.status === 1) {
             this.placeOrderData = res_1.content;
             this.placeOrderData.dbc_price = 0.0026;
             return get_dbc_price({
               order_id: this.placeOrderData.order_id,
               user_name_platform,
-              language
+              language,
             });
           } else {
             this.$message({
               showClose: true,
               message: res_1.msg,
-              type: "error"
+              type: "error",
             });
             return Promise.reject(res_1.msg);
           }
         })
-        .then(res_2 => {
+        .then((res_2) => {
           if (res_2.status === 1) {
             this.placeOrderData.dbc_price = res_2.content;
             this.dlg_opengpu = true;
@@ -809,12 +893,12 @@ export default {
             this.$message({
               showClose: true,
               message: res_2.msg,
-              type: "success"
+              type: "success",
             });
             return Promise.reject(res_2.msg);
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         })
         .finally(() => {
@@ -829,7 +913,7 @@ export default {
         this.$message({
           showClose: true,
           message: this.$t("pleae_create_wallet"),
-          type: "error"
+          type: "error",
         });
         return;
       }
@@ -857,7 +941,7 @@ export default {
         this.$message({
           showClose: true,
           message: this.$t("pleae_create_wallet"),
-          type: "error"
+          type: "error",
         });
         return;
       }
@@ -872,27 +956,27 @@ export default {
         wallet_address_user: getAccount().address,
         mode: "payment",
         user_name_platform,
-        language
+        language,
       })
-        .then(res_1 => {
+        .then((res_1) => {
           if (res_1.status === 1) {
             this.placeOrderData = res_1.content;
             this.placeOrderData.dbc_price = 0.0026;
             return get_dbc_price({
               order_id: this.placeOrderData.order_id,
               user_name_platform,
-              language
+              language,
             });
           } else {
             this.$message({
               showClose: true,
               message: res_1.msg,
-              type: "error"
+              type: "error",
             });
             return Promise.reject(res_1.msg);
           }
         })
-        .then(res_2 => {
+        .then((res_2) => {
           if (res_2.status === 1) {
             this.placeOrderData.dbc_price = res_2.content;
             this.dlg_opencpupayment = true;
@@ -900,12 +984,12 @@ export default {
             this.$message({
               showClose: true,
               message: res_2.msg,
-              type: "success"
+              type: "success",
             });
             return Promise.reject(res_2.msg);
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         })
         .finally(() => {
@@ -926,27 +1010,27 @@ export default {
         wallet_address_user: getAccount().address,
         user_name_platform,
         mode: "deposit",
-        language
+        language,
       })
-        .then(res_1 => {
+        .then((res_1) => {
           if (res_1.status === 1) {
             this.placeOrderData = res_1.content;
             this.placeOrderData.dbc_price = 0.0026;
             return get_dbc_price({
               order_id: this.placeOrderData.order_id,
               user_name_platform,
-              language
+              language,
             });
           } else {
             this.$message({
               showClose: true,
               message: res_1.msg,
-              type: "error"
+              type: "error",
             });
             return Promise.reject(res_1.msg);
           }
         })
-        .then(res_2 => {
+        .then((res_2) => {
           if (res_2.status === 1) {
             this.placeOrderData.dbc_price = res_2.content;
             this.dlg_opencpudeposit = true;
@@ -954,14 +1038,14 @@ export default {
             this.$message({
               showClose: true,
               message: res_2.msg,
-              type: "success"
+              type: "success",
             });
             return Promise.reject(res_2.msg);
           }
           this.rentLoading_cpu = false;
           this.rent_index = -1;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         })
         .finally(() => {});
@@ -973,7 +1057,7 @@ export default {
         this.$message({
           showClose: true,
           message: this.$t("pleae_create_wallet"),
-          type: "error"
+          type: "error",
         });
         return;
       }
@@ -987,27 +1071,27 @@ export default {
         machine_id: item.machine_id,
         wallet_address_user: getAccount().address,
         user_name_platform,
-        language
+        language,
       })
-        .then(res => {
+        .then((res) => {
           if (res.status === 1) {
             this.placeOrderData = res.content;
             this.placeOrderData.dbc_price = 0.0026;
             return get_dbc_price({
               order_id: this.placeOrderData.order_id,
               user_name_platform,
-              language
+              language,
             });
           } else {
             this.$message({
               showClose: true,
               message: res.msg,
-              type: "error"
+              type: "error",
             });
             return Promise.reject(res.msg);
           }
         })
-        .then(res => {
+        .then((res) => {
           if (res.status === 1) {
             this.placeOrderData.dbc_price = res.content;
             this.dlg_open_try = true;
@@ -1015,12 +1099,12 @@ export default {
             this.$message({
               showClose: true,
               message: res.msg,
-              type: "success"
+              type: "success",
             });
             return Promise.reject(res.msg);
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         })
         .finally(() => {
@@ -1032,12 +1116,12 @@ export default {
     createOrder(params) {
       const loading = this.$loading();
       create_order(params)
-        .then(res => {
+        .then((res) => {
           if (res.status === 1) {
             this.$message({
               showClose: true,
               message: this.$t("list_create_order_success"),
-              type: "success"
+              type: "success",
             });
             this.dlg_openswitchcpu = false;
             this.dlg_opengpu = false;
@@ -1054,7 +1138,7 @@ export default {
             this.$message({
               showClose: true,
               message: res.msg,
-              type: "error"
+              type: "error",
             });
           }
         })
@@ -1074,9 +1158,9 @@ export default {
         order_id: this.placeOrderData.order_id,
         dbc_total_count: 0,
         user_name_platform,
-        language
+        language,
       })
-        .then(res => {
+        .then((res) => {
           if (res.status === 1) {
             this.$message(res.msg);
             this.$router.push("/mymachine/myMachine_cpu");
@@ -1118,9 +1202,9 @@ export default {
         double_precision_tflops: this.req_body.double_precision_tflops,
         dbc_version: this.req_body.dbcVersion,
         user_name_platform: this.$t("website_name"),
-        language: this.language
+        language: this.language,
       };
-      query_machines_by_machine_type(params).then(res => {
+      query_machines_by_machine_type(params).then((res) => {
         this.res_body = res;
       });
       if (this.si) {
@@ -1132,7 +1216,7 @@ export default {
         if (timesRun === 10) {
           clearInterval(this.si);
         }
-        query_machines_by_machine_type(params).then(res => {
+        query_machines_by_machine_type(params).then((res) => {
           this.res_body = res;
         });
       }, 15000);
@@ -1144,7 +1228,7 @@ export default {
       //    this.res_body = res;
       // });
       //}, 5000);
-    }
+    },
   },
   computed: {
     showTotalTime() {
@@ -1194,24 +1278,24 @@ export default {
       const stepArray = [
         {
           valMax: 0.0001,
-          step: 0.00001
+          step: 0.00001,
         },
         {
           valMax: 0.001,
-          step: 0.0001
+          step: 0.0001,
         },
         {
           valMax: 0.01,
-          step: 0.001
+          step: 0.001,
         },
         {
           valMax: 0.1,
-          step: 0.01
+          step: 0.01,
         },
         {
           valMax: 1,
-          step: -1
-        }
+          step: -1,
+        },
       ];
       let val = this.$noLinearNumAdd(min, max, stepArray, this.diskPriceVal);
       const money = parseFloat(val.toFixed(5));
@@ -1250,24 +1334,24 @@ export default {
       const stepArray = [
         {
           valMax: 0.0001,
-          step: 0.00001
+          step: 0.00001,
         },
         {
           valMax: 0.001,
-          step: 0.0001
+          step: 0.0001,
         },
         {
           valMax: 0.01,
-          step: 0.001
+          step: 0.001,
         },
         {
           valMax: 0.1,
-          step: 0.01
+          step: 0.01,
         },
         {
           valMax: 1,
-          step: -1
-        }
+          step: -1,
+        },
       ];
       let val = this.$noLinearNumAdd(min, max, stepArray, this.gpuPriceVal);
       const money = parseFloat(val.toFixed(5));
@@ -1280,20 +1364,20 @@ export default {
       const stepArray = [
         {
           valMax: 10,
-          step: 1
+          step: 1,
         },
         {
           valMax: 500,
-          step: 10
+          step: 10,
         },
         {
           valMax: 800,
-          step: 20
+          step: 20,
         },
         {
           valMax: 1024,
-          step: -1
-        }
+          step: -1,
+        },
       ];
       let val = this.$noLinearNumAdd(min, max, stepArray, this.gpuCountVal);
       val = Math.floor(val);
@@ -1304,20 +1388,20 @@ export default {
       const stepArray = [
         {
           valMax: 100,
-          step: 5
+          step: 5,
         },
         {
           valMax: 1000,
-          step: 50
+          step: 50,
         },
         {
           valMax: 5000,
-          step: 200
+          step: 200,
         },
         {
           valMax: 10000,
-          step: -1
-        }
+          step: -1,
+        },
       ];
       let val = this.$noLinearNumAdd(0, 10000, stepArray, this.half_tflopsVal);
       val = Math.floor(val);
@@ -1331,20 +1415,20 @@ export default {
       const stepArray = [
         {
           valMax: 10,
-          step: 1
+          step: 1,
         },
         {
           valMax: 500,
-          step: 10
+          step: 10,
         },
         {
           valMax: 800,
-          step: 20
+          step: 20,
         },
         {
           valMax: 1024,
-          step: -1
-        }
+          step: -1,
+        },
       ];
       let val = this.$noLinearNumAdd(min, max, stepArray, this.gpuCountVal);
       val = Math.floor(val);
@@ -1358,20 +1442,20 @@ export default {
       const stepArray = [
         {
           valMax: 10,
-          step: 1
+          step: 1,
         },
         {
           valMax: 500,
-          step: 10
+          step: 10,
         },
         {
           valMax: 800,
-          step: 20
+          step: 20,
         },
         {
           valMax: 1024,
-          step: -1
-        }
+          step: -1,
+        },
       ];
       let val = this.$noLinearNumAdd(
         min,
@@ -1390,20 +1474,20 @@ export default {
       const stepArray = [
         {
           valMax: 10,
-          step: 1
+          step: 1,
         },
         {
           valMax: 500,
-          step: 10
+          step: 10,
         },
         {
           valMax: 800,
-          step: 20
+          step: 20,
         },
         {
           valMax: 1024,
-          step: -1
-        }
+          step: -1,
+        },
       ];
       let val = this.$noLinearNumAdd(
         min,
@@ -1422,20 +1506,20 @@ export default {
       const stepArray = [
         {
           valMax: 10,
-          step: 1
+          step: 1,
         },
         {
           valMax: 500,
-          step: 10
+          step: 10,
         },
         {
           valMax: 800,
-          step: 20
+          step: 20,
         },
         {
           valMax: 1024,
-          step: -1
-        }
+          step: -1,
+        },
       ];
       let val = this.$noLinearNumAdd(
         min,
@@ -1451,20 +1535,20 @@ export default {
       const stepArray = [
         {
           valMax: 100,
-          step: 5
+          step: 5,
         },
         {
           valMax: 1000,
-          step: 50
+          step: 50,
         },
         {
           valMax: 5000,
-          step: 200
+          step: 200,
         },
         {
           valMax: 10000,
-          step: -1
-        }
+          step: -1,
+        },
       ];
       let val = this.$noLinearNumAdd(
         0,
@@ -1480,20 +1564,20 @@ export default {
       const stepArray = [
         {
           valMax: 100,
-          step: 5
+          step: 5,
         },
         {
           valMax: 1000,
-          step: 50
+          step: 50,
         },
         {
           valMax: 5000,
-          step: 200
+          step: 200,
         },
         {
           valMax: 10000,
-          step: -1
-        }
+          step: -1,
+        },
       ];
       let val = this.$noLinearNumAdd(
         0,
@@ -1511,20 +1595,20 @@ export default {
       const stepArray = [
         {
           valMax: 10,
-          step: 1
+          step: 1,
         },
         {
           valMax: 500,
-          step: 10
+          step: 10,
         },
         {
           valMax: 800,
-          step: 20
+          step: 20,
         },
         {
           valMax: 1024,
-          step: -1
-        }
+          step: -1,
+        },
       ];
       let val = this.$noLinearNumAdd(min, max, stepArray, this.gpuRamSizeVal);
       val = Math.floor(val);
@@ -1537,16 +1621,16 @@ export default {
       const stepArray = [
         {
           valMax: 100,
-          step: 5
+          step: 5,
         },
         {
           valMax: 5000,
-          step: 100
+          step: 100,
         },
         {
           valMax: max,
-          step: -1
-        }
+          step: -1,
+        },
       ];
       let val = this.$noLinearNumAdd(
         min,
@@ -1564,24 +1648,24 @@ export default {
       const stepArray = [
         {
           valMax: 100,
-          step: 10
+          step: 10,
         },
         {
           valMax: 1000,
-          step: 100
+          step: 100,
         },
         {
           valMax: 10000,
-          step: 500
+          step: 500,
         },
         {
           valMax: 100000,
-          step: 2000
+          step: 2000,
         },
         {
           valMax: max,
-          step: -1
-        }
+          step: -1,
+        },
       ];
       let val = this.$noLinearNumAdd(
         min,
@@ -1599,32 +1683,32 @@ export default {
       const stepArray = [
         {
           valMax: 8,
-          step: 1
+          step: 1,
         },
         {
           valMax: 32,
-          step: 2
+          step: 2,
         },
         {
           valMax: 128,
-          step: 8
+          step: 8,
         },
         {
           valMax: 256,
-          step: 16
+          step: 16,
         },
         {
           valMax: 512,
-          step: 32
+          step: 32,
         },
         {
           valMax: 1024,
-          step: 64
+          step: 64,
         },
         {
           valMax: max,
-          step: -1
-        }
+          step: -1,
+        },
       ];
       let val = this.$noLinearNumAdd(min, max, stepArray, this.cpuCoresVal);
       val = Math.floor(val);
@@ -1637,32 +1721,32 @@ export default {
       const stepArray = [
         {
           valMax: 8,
-          step: 1
+          step: 1,
         },
         {
           valMax: 32,
-          step: 2
+          step: 2,
         },
         {
           valMax: 128,
-          step: 8
+          step: 8,
         },
         {
           valMax: 256,
-          step: 16
+          step: 16,
         },
         {
           valMax: 512,
-          step: 32
+          step: 32,
         },
         {
           valMax: 1024,
-          step: 64
+          step: 64,
         },
         {
           valMax: max,
-          step: -1
-        }
+          step: -1,
+        },
       ];
       let val = this.$noLinearNumAdd(min, max, stepArray, this.cpuRamSizeVal);
       val = Math.floor(val);
@@ -1675,20 +1759,20 @@ export default {
       const stepArray = [
         {
           valMax: 100,
-          step: 10
+          step: 10,
         },
         {
           valMax: 1000,
-          step: 50
+          step: 50,
         },
         {
           valMax: 10000,
-          step: 500
+          step: 500,
         },
         {
           valMax: max,
-          step: -1
-        }
+          step: -1,
+        },
       ];
       let val = this.$noLinearNumAdd(
         min,
@@ -1706,32 +1790,32 @@ export default {
       const stepArray = [
         {
           valMax: 8,
-          step: 0.5
+          step: 0.5,
         },
         {
           valMax: 64,
-          step: 4
+          step: 4,
         },
         {
           valMax: 128,
-          step: 8
+          step: 8,
         },
         {
           valMax: 256,
-          step: 16
+          step: 16,
         },
         {
           valMax: 512,
-          step: 32
+          step: 32,
         },
         {
           valMax: 1024,
-          step: 64
+          step: 64,
         },
         {
           valMax: max,
-          step: -1
-        }
+          step: -1,
+        },
       ];
       let val = this.$noLinearNumAdd(min, max, stepArray, this.inetUpVal);
       this.req_body.inetUp = val;
@@ -1743,38 +1827,38 @@ export default {
       const stepArray = [
         {
           valMax: 8,
-          step: 0.5
+          step: 0.5,
         },
         {
           valMax: 64,
-          step: 4
+          step: 4,
         },
         {
           valMax: 128,
-          step: 8
+          step: 8,
         },
         {
           valMax: 256,
-          step: 16
+          step: 16,
         },
         {
           valMax: 512,
-          step: 32
+          step: 32,
         },
         {
           valMax: 1024,
-          step: 64
+          step: 64,
         },
         {
           valMax: max,
-          step: -1
-        }
+          step: -1,
+        },
       ];
       let val = this.$noLinearNumAdd(min, max, stepArray, this.inetDownVal);
       this.req_body.inetDown = val;
       return val < 1000 ? val + "Mbps" : (val / 1000).toFixed(3) + "Gbps";
-    }
-  }
+    },
+  },
 };
 </script>
 
