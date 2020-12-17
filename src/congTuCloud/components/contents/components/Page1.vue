@@ -103,20 +103,20 @@ export default {
   position: absolute;
 }
 .banner1 {
-  background: url(../../../assets/imgs/page1/banner01@1x.png) no-repeat center;
+  background: url(../../../assets/imgs/page1/banner01@2x.png) no-repeat center;
   background-size: cover;
   top: 0;
   left: 0;
   z-index: 1;
 }
 .banner2 {
-  background: url(../../../assets/imgs/page1/banner02@1x.png) no-repeat center;
+  background: url(../../../assets/imgs/page1/banner02@2x.png) no-repeat center;
   background-size: cover;
   top: 0;
   left: 0;
 }
 .banner3 {
-  background: url(../../../assets/imgs/page1/banner03@1x.png) no-repeat center;
+  background: url(../../../assets/imgs/page1/banner03@2x.png) no-repeat center;
   background-size: cover;
   top: 0;
   left: 0;
