@@ -705,6 +705,7 @@
             class="tool-btn"
             size="mini"
             style="width: 86px"
+            :style="styleHidden"
             @click="openRateDlg(item)"
             >{{ $t("gpu.rate") }}</el-button
           >
