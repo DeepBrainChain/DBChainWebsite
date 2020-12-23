@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>guanbi @1x</title>
+    <defs>
+        <polygon id="path-1" points="0.00087804878 0.0140341463 11.9867415 0.0140341463 11.9867415 11.9999707 0.00087804878 11.9999707"></polygon>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="切图" transform="translate(-354.000000, -214.000000)">
+            <g id="guanbi-" transform="translate(354.000000, 214.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Clip-2"></g>
+                <path d="M10.8864293,0.0140341463 L11.9867415,1.11354146 L7.092,6.00703415 L11.9867415,10.900478 L10.8872341,11.9999707 L5.993,7.10603415 L1.1003122,11.9999707 L-6.65245636e-13,10.900478 L4.894,6.00603415 L-6.65245636e-13,1.11354146 L1.09950732,0.0140341463 L5.993,4.90703415 L10.8864293,0.0140341463 Z" id="合并形状" fill="#666666" mask="url(#mask-2)"></path>
+            </g>
+        </g>
+    </g>
+</svg>

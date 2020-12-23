@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 // import Home from './views/Home.vue'
 import Home from "./congTuCloud/pages/home.vue";
+import Login from "./congTuCloud/pages/login"
+import Register from "./congTuCloud/pages/register"
 import Preview from './views/preview'
 
 Vue.use(Router)
@@ -25,6 +27,16 @@ const router = new Router({
     path: '/home',
     name: 'home',
     component: Home
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: Register
   },
   {
     path: '/network',

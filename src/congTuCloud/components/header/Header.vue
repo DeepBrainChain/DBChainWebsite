@@ -7,39 +7,54 @@
         <div class="underline" ref="underline"></div>
         <a
           class="item"
-          :class="{active: this.$store.state.menuName === 'home'}"
+          :class="{ active: this.$store.state.menuName === 'home' }"
           @click="pushMenu('home')"
           index="0"
           ref="item0"
-        >{{$t('heads.home')}}</a>
+          >{{ $t("heads.home") }}</a
+        >
         <a
           class="item"
-          :class="{active: this.$store.state.menuName === 'gpu'}"
+          :class="{ active: this.$store.state.menuName === 'gpu' }"
           @click="pushMenu('gpu')"
           index="1"
           ref="item1"
-        >{{$t('heads.gpu')}}</a>
+          >{{ $t("heads.gpu") }}</a
+        >
         <a
           class="item"
-          :class="{active: this.$store.state.menuName === 'mymachine'}"
+          :class="{ active: this.$store.state.menuName === 'mymachine' }"
           @click="pushMenu('mymachine')"
           index="2"
           ref="item2"
-        >{{$t('heads.mymachine')}}</a>
+          >{{ $t("heads.mymachine") }}</a
+        >
         <a
+          v-if="false"
           class="item"
-          :class="{active: this.$store.state.menuName === 'mywallet'}"
-          @click="pushMenu('mywallet')"
+          :class="{ active: this.$store.state.menuName === 'login' }"
+          @click="pushMenu('login')"
           index="3"
           ref="item3"
-        >{{$t('heads.mywallet')}}</a>
+          >{{ $t("heads.myaccount") }}</a
+        >
+        <a
+          v-else
+          class="item"
+          :class="{ active: this.$store.state.menuName === 'register' }"
+          @click="pushMenu('register')"
+          index="3"
+          ref="item3"
+          >{{ $t("heads.myaccount") }}</a
+        >
         <a
           class="item"
-          :class="{active: this.$store.state.menuName === 'help'}"
+          :class="{ active: this.$store.state.menuName === 'help' }"
           @click="pushMenu('help')"
           index="4"
           ref="item4"
-        >{{$t('heads.help')}}</a>
+          >{{ $t("heads.help") }}</a
+        >
       </div>
     </div>
   </div>
