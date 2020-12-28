@@ -1201,7 +1201,7 @@ export default {
         language: this.language,
       };
       query_machines_by_machine_type(params).then((res) => {
-        this.res_body = res;
+        this.res_body = res.content;
       });
       if (this.si) {
         clearInterval(this.si);
@@ -1213,7 +1213,7 @@ export default {
           clearInterval(this.si);
         }
         query_machines_by_machine_type(params).then((res) => {
-          this.res_body = res;
+          this.res_body = res.content;
         });
       }, 15000);
       // if (this.st) {
