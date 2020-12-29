@@ -268,7 +268,20 @@
               >{{ $t("list_try") }}</el-button
             >
             <el-button
-              style="width: 150px"
+              v-if="$t('website_name') === 'congTuCloud'"
+              style="width: 120px"
+              type="primary"
+              size="mini"
+              @click="openDlg_gpu_congtu(item, index)"
+              :disabled="
+                !item.idle_status || item.can_rent_start_time_later < 0
+              "
+              :loading="rentLoading_gpu && rent_index === index"
+              >{{ $t("list_rentout_gpu") }}</el-button
+            >
+            <el-button
+              v-else
+              style="width: 120px"
               type="primary"
               size="mini"
               @click="openDlg_gpu(item, index)"
@@ -663,7 +676,7 @@ import {
   create_order,
   get_dbc_price,
 } from "@/api";
-import { getAccount } from "@/utlis";
+import { getAccount, getCookie } from "@/utlis";
 import { mapActions, mapState } from "vuex";
 export default {
   name: "highStabilityAITrain",
@@ -893,6 +906,77 @@ export default {
           }
         })
         .then((res_2) => {
+          if (res_2.status === 1) {
+            this.placeOrderData.dbc_price = res_2.content;
+            this.dlg_opengpu = true;
+          } else {
+            this.$message({
+              showClose: true,
+              message: res_2.msg,
+              type: "success",
+            });
+            return Promise.reject(res_2.msg);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          this.rentLoading_gpu = false;
+          this.rent_index = -1;
+        });
+    },
+
+    // 打开gpu弹窗（聪图云转发后台）
+    openDlg_gpu_congtu(item, index) {
+      console.log("awefewfawef");
+      // 判断是否登录
+      if (getCookie("login") != "login") {
+        this.$router.push("/login");
+        return;
+      }
+      this.rent_index = index;
+      this.rentLoading_gpu = true;
+      this.$forceUpdate();
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
+      place_order_gpu_new({
+        machine_type: 1,
+        machine_id: item.machine_id,
+        user_name_platform,
+        language,
+      })
+        .then((res_1) => {
+          console.log(
+            "-------------------------------------------------------------------   res_1"
+          );
+          console.log(res_1);
+          if (res_1.status === 1) {
+            this.placeOrderData = res_1.content;
+            this.placeOrderData.dbc_price = 0.0026;
+            console.log("info");
+            console.log(this.placeOrderData.order_id);
+            console.log(user_name_platform);
+            console.log(language);
+            return get_dbc_price({
+              order_id: this.placeOrderData.order_id,
+              user_name_platform,
+              language,
+            });
+          } else {
+            this.$message({
+              showClose: true,
+              message: res_1.msg,
+              type: "error",
+            });
+            return Promise.reject(res_1.msg);
+          }
+        })
+        .then((res_2) => {
+          console.log(
+            "-------------------------------------------------------------------   res_2"
+          );
+          console.log(res_2);
           if (res_2.status === 1) {
             this.placeOrderData.dbc_price = res_2.content;
             this.dlg_opengpu = true;
@@ -1212,7 +1296,7 @@ export default {
         language: this.language,
       };
       query_machines_by_machine_type(params).then((res) => {
-        this.res_body = res.content;
+        this.res_body = res;
       });
       if (this.si) {
         clearInterval(this.si);
@@ -1224,7 +1308,7 @@ export default {
           clearInterval(this.si);
         }
         query_machines_by_machine_type(params).then((res) => {
-          this.res_body = res.content;
+          this.res_body = res;
         });
       }, 15000);
       // if (this.st) {
