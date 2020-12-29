@@ -57,6 +57,7 @@
           >{{ $t("heads.help") }}</a
         >
       </div>
+      <div class="account">{{ getCookie("email") }}</div>
     </div>
   </div>
 </template>
@@ -355,5 +356,15 @@ export default {
   position: absolute;
   top: 32px;
   left: 0px;
+}
+.account {
+  height: 22px;
+  font-size: 16px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 1);
+  line-height: 62px;
+  float: right;
+  margin-right: 60px;
 }
 </style>

@@ -104,6 +104,7 @@ export default {
             );
             // 设置cookie，有效期1天
             setCookie("login", "login", 1);
+            setCookie("email", this.inputAccountBoxValue, 1);
             // 跳转到进入登录页面之前的页面
             this.$router.push("/" + this.$store.state.menuName);
           } else {
