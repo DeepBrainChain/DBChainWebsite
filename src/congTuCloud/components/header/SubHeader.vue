@@ -22,6 +22,7 @@
           >{{ $t("heads.gpu") }}</a
         >
         <a
+          v-if="getCookie('login') === 'login'"
           class="item"
           :class="{ active: this.$store.state.menuName === 'mymachine' }"
           @click="pushMenu('mymachine')"
@@ -30,22 +31,22 @@
           >{{ $t("heads.mymachine") }}</a
         >
         <a
-          v-if="false"
+          v-else-if="getCookie('login') === ''"
           class="item"
-          :class="{ active: this.$store.state.menuName === 'login' }"
-          @click="pushMenu('login')"
-          index="3"
-          ref="item3"
-          >{{ $t("heads.myaccount") }}</a
+          :class="{ active: this.$store.state.menuName === 'mymachine' }"
+          @click="setMenuInfo('mymachine', 'login')"
+          index="2"
+          ref="item2"
+          >{{ $t("heads.mymachine") }}</a
         >
         <a
           v-else
           class="item"
-          :class="{ active: this.$store.state.menuName === 'register' }"
-          @click="pushMenu('register')"
-          index="3"
-          ref="item3"
-          >{{ $t("heads.myaccount") }}</a
+          :class="{ active: this.$store.state.menuName === 'mymachine' }"
+          @click="setMenuInfo('mymachine', 'register')"
+          index="2"
+          ref="item2"
+          >{{ $t("heads.mymachine") }}</a
         >
         <a
           class="item"
@@ -61,6 +62,7 @@
 </template>
 <script>
 import { mapActions, mapState } from "vuex";
+import { getCookie } from "../../../utlis/index";
 export default {
   name: "SubHeader",
   props: ["underlineStyle"],
@@ -95,6 +97,9 @@ export default {
     },
   },
   methods: {
+    getCookie: function (name) {
+      return getCookie(name);
+    },
     handlerClickNav: function (e) {
       let items = [
         this.$refs.item0,
@@ -226,8 +231,14 @@ export default {
     },
     pushMenu(name) {
       //  this.menuName = name;
-      this.$store.commit("setMenuName", name);
+      if (name != "login" || name != "register") {
+        this.$store.commit("setMenuName", name);
+      }
       this.$router.push("/" + name);
+    },
+    setMenuInfo(currentName, pushToName) {
+      this.$store.commit("setMenuName", currentName);
+      this.$router.push("/" + pushToName);
     },
 
     pushToPreview() {

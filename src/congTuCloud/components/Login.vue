@@ -35,6 +35,7 @@ import MyTitle from "../components/funcComponents/Title";
 import InputBox from "../components/funcComponents/InputBox";
 import MyButton from "../components/funcComponents/Button";
 import { login } from "../../api/index";
+import { setCookie } from "../../utlis/index";
 export default {
   data() {
     return {
@@ -101,8 +102,10 @@ export default {
               "setCurrentAccountEmail",
               this.inputAccountBoxValue
             );
-            // 跳转到网盘首页
-            this.$router.push("/");
+            // 设置cookie，有效期1天
+            setCookie("login", "login", 1);
+            // 跳转到进入登录页面之前的页面
+            this.$router.push("/" + this.$store.state.menuName);
           } else {
             console.log(res.msg);
             this.tipsText = res.msg;
