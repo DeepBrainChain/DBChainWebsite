@@ -483,3 +483,8 @@ export function checkCookie(){
       }
   }
 }
+  // 获取美元兑人民币价格
+export function getUsdToRmb(){
+  // 暂时固定
+  return 6.6;
+}

@@ -235,7 +235,7 @@
             >
             <span class="fs28">
               <span class="cRedbig" v-if="$t('website_name') === 'congTuCloud'"
-                >&nbsp;&nbsp; {{ (item.gpu_price_dollar * 6.6).toFixed(2)
+                >&nbsp;&nbsp; {{ (item.gpu_price_dollar * usdToRmb).toFixed(2)
                 }}{{ $t("RMB") }}/{{ $t("my_machine_hour") }}</span
               >
               <span class="cRedbig" v-else
@@ -673,7 +673,7 @@ import {
   create_order,
   get_dbc_price,
 } from "@/api";
-import { getAccount, getCookie } from "@/utlis";
+import { getAccount, getCookie, getUsdToRmb } from "@/utlis";
 import { mapActions, mapState } from "vuex";
 export default {
   name: "aiInference",
@@ -688,6 +688,7 @@ export default {
   },
   data() {
     return {
+      usdToRmb: getUsdToRmb(),
       styleHidden: {},
       rent_index: -1,
       rentLoading_cpu: false,

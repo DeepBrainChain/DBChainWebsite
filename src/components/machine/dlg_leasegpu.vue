@@ -105,7 +105,7 @@
         <span
           v-if="$t('website_name') === 'congTuCloud'"
           class="fs12 cGray ml10"
-          >{{ (placeOrderData.gpu_price_dollar * 6.6).toFixed(2)
+          >{{ (placeOrderData.gpu_price_dollar * usdToRmb).toFixed(2)
           }}{{ $t("RMB") }}/{{ $t("my_machine_hour") }}</span
         >
         <span v-else class="fs12 cGray ml10"
@@ -156,7 +156,7 @@
         <span
           v-if="$t('website_name') === 'congTuCloud'"
           class="fs12 cGray ml10"
-          >{{ (placeOrderData.disk_GB_perhour_dollar * 6.6).toFixed(3)
+          >{{ (placeOrderData.disk_GB_perhour_dollar * usdToRmb).toFixed(3)
           }}{{ $t("RMB") }}/{{ $t("disk_hour") }}</span
         >
         <span v-else class="fs12 cGray ml10"
@@ -259,7 +259,7 @@
 
 <script>
 import { get_pay_dbc_count, can_rent_this_machine } from "@/api";
-import { getBalance, getGasBalance } from "@/utlis";
+import { getBalance, getGasBalance, getUsdToRmb } from "@/utlis";
 
 export default {
   name: "popup_reload",
@@ -293,6 +293,7 @@ export default {
   },
   data() {
     return {
+      usdToRmb: getUsdToRmb(),
       isOpen: this.open,
       timeSelect: 1,
       timeOptions: [
