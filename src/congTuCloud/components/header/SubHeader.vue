@@ -235,7 +235,11 @@ export default {
       if (name != "login" || name != "register") {
         this.$store.commit("setMenuName", name);
       }
-      this.$router.push("/" + name);
+      if (name === "mymachine") {
+        this.$router.push("/" + "myMachine/myMachineUnlock");
+      } else {
+        this.$router.push("/" + name);
+      }
     },
     setMenuInfo(currentName, pushToName) {
       this.$store.commit("setMenuName", currentName);
