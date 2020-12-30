@@ -102,7 +102,13 @@
             :value="item.value"
           ></el-option>
         </el-select>
-        <span class="fs12 cGray ml10"
+        <span
+          v-if="$t('website_name') === 'congTuCloud'"
+          class="fs12 cGray ml10"
+          >{{ (placeOrderData.gpu_price_dollar * 6.6).toFixed(2)
+          }}{{ $t("RMB") }}/{{ $t("my_machine_hour") }}</span
+        >
+        <span v-else class="fs12 cGray ml10"
           >{{ placeOrderData.gpu_price_dollar }}$/{{
             $t("my_machine_hour")
           }}</span
@@ -147,7 +153,13 @@
           @input="computeTotalDBC"
         />
         <span class="fs12 cGray ml10">G</span>
-        <span class="fs12 cGray ml10"
+        <span
+          v-if="$t('website_name') === 'congTuCloud'"
+          class="fs12 cGray ml10"
+          >{{ (placeOrderData.disk_GB_perhour_dollar * 6.6).toFixed(3)
+          }}{{ $t("RMB") }}/{{ $t("disk_hour") }}</span
+        >
+        <span v-else class="fs12 cGray ml10"
           >{{ placeOrderData.disk_GB_perhour_dollar }}$/{{
             $t("disk_hour")
           }}</span
@@ -197,7 +209,12 @@
       </div>
       <div class="computer-dbc mt30">
         <!--          <span>{{$t('gpu.DBCRemaining')}}：349</span>-->
-        <span>{{ $t("total") }}：{{ totalPrice.toFixed(4) }}{{ $t("$") }}</span>
+        <span v-if="$t('website_name') === 'congTuCloud'"
+          >{{ $t("total") }}：{{ totalPrice.toFixed(2) }}{{ $t("RMB") }}</span
+        >
+        <span v-else
+          >{{ $t("total") }}：{{ totalPrice.toFixed(4) }}{{ $t("$") }}</span
+        >
         <span v-if="$t('website_name') != 'congTuCloud'" class="ml20"
           >{{ $t("gpu.exchangeDBC") }}：{{ total_price }}</span
         >
@@ -216,6 +233,16 @@
     </div>
     <div class="dlg-bottom">
       <el-button
+        v-if="$t('website_name') === 'congTuCloud'"
+        class="dlg-btn"
+        type="primary"
+        size="small"
+        @click="confirmCongTu"
+        :disabled="!isCanCreateOrder"
+        >{{ $t("dlg_lease_create_order") }}</el-button
+      >
+      <el-button
+        v-else
         class="dlg-btn"
         type="primary"
         size="small"
@@ -617,6 +644,43 @@ export default {
         user_name_platform: this.$t("website_name"),
         language: this.$i18n.locale,
       };
+      this.$emit("confirm", params);
+      pocMachine(this.placeOrderData.order_id);
+    },
+    confirmCongTu() {
+      let rent_type = 0;
+      if (this.discount === "1") {
+        rent_type = 1;
+      } else if (this.discount === "2") {
+        rent_type = 2;
+      } else if (this.discount === "3") {
+        rent_type = 3;
+      } else if (this.discount === "4") {
+        rent_type = 4;
+      }
+      if (this.gpu_rentout_whole) {
+        this.gpuCount = this.placeOrderData.gpu_count_max;
+      }
+      if (this.machine_type === 3) {
+        this.disk_buy = this.disk_max;
+      }
+      const params = {
+        rent_time_length: this.time * this.timeSelect * 60,
+        order_is_over: this.placeOrderData.order_is_over,
+        dbc_price: this.placeOrderData.dbc_price,
+        gpu_count: this.gpuCount,
+        image_tag: this.images,
+        diskspace: this.disk_buy * 1024 * 1024,
+        order_type: "training",
+        order_id: this.placeOrderData.order_id,
+        dbc_total_count: this.total_price,
+        rent_type: rent_type,
+        machine_type: this.machine_type,
+        user_name_platform: this.$t("website_name"),
+        language: this.$i18n.locale,
+      };
+      console.log("-------------params--------------");
+      console.log(params);
       this.$emit("confirm", params);
       pocMachine(this.placeOrderData.order_id);
     },

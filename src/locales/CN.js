@@ -14,6 +14,7 @@ export default {
   message: "hello i18n !!",
 
   $: "$",
+  RMB:"元",
   send: "发送",
   closeWallet: "关闭钱包",
   toAddress: "目标地址",
