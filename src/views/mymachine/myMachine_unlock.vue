@@ -1001,6 +1001,7 @@ export default {
   },
   data() {
     return {
+      dlgRestart_open: false,
       styleHidden: {},
       rateValue: undefined,
       dlgReload_open: false,
@@ -1926,7 +1927,10 @@ export default {
           return;
         }
       }
-      const wallet_address_user = getAccount().address;
+      let wallet_address_user = "tmp";
+      if (this.$t("website_name") != "congTuCloud") {
+        wallet_address_user = getAccount().address;
+      }
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       const promiseList = [
@@ -2005,7 +2009,10 @@ export default {
     //
     queryMail() {
       this.bindMail = cookie.get("mail");
-      const address = getAccount().address;
+      let address = "tmp";
+      if (this.$t("website_name") != "congTuCloud") {
+        address = getAccount().address;
+      }
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       queryBindMail_rent({
