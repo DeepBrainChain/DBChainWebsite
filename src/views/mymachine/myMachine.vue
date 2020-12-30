@@ -5,11 +5,14 @@
       <el-button
         type="primary"
         v-on:click="openCreateWallet('/createWallet')"
-      >{{$t('gpu.createWallet')}}</el-button>
-      <el-button type="primary" v-on:click="openWallet">{{$t('gpu.openWallet')}}</el-button>
+        >{{ $t("gpu.createWallet") }}</el-button
+      >
+      <el-button type="primary" v-on:click="openWallet">{{
+        $t("gpu.openWallet")
+      }}</el-button>
     </div>
     <div class="center-box">
-      <div>{{$t('gpu.rentMachine')}}</div>
+      <div>{{ $t("gpu.rentMachine") }}</div>
     </div>
   </div>
 </template>
@@ -27,8 +30,12 @@ export default {
   methods: {
     ...mapActions(["getAccountState", "getTransferList"]),
     initData() {
-      if (getAccount()) {
+      if (this.$t("website_name") == "congTuCloud") {
         this.$router.replace("myMachineUnlock");
+      } else {
+        if (getAccount()) {
+          this.$router.replace("myMachineUnlock");
+        }
       }
     },
     openCreateWallet() {

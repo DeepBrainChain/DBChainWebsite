@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-08-24 14:49:16
+ * @LastEditTime: 2020-12-30 20:25:09
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \DBChainWebsite\src\views\mymachine\myMachine_cpu.vue
+-->
 <template>
   <div class="my-wallet">
     <h3></h3>
@@ -5,11 +13,14 @@
       <el-button
         type="primary"
         v-on:click="openCreateWallet('/createWallet')"
-      >{{$t('gpu.createWallet')}}</el-button>
-      <el-button type="primary" v-on:click="openWallet">{{$t('gpu.openWallet')}}</el-button>
+        >{{ $t("gpu.createWallet") }}</el-button
+      >
+      <el-button type="primary" v-on:click="openWallet">{{
+        $t("gpu.openWallet")
+      }}</el-button>
     </div>
     <div class="center-box">
-      <div>{{$t('gpu.rentMachine')}}</div>
+      <div>{{ $t("gpu.rentMachine") }}</div>
     </div>
   </div>
 </template>
@@ -27,8 +38,12 @@ export default {
   methods: {
     ...mapActions(["getAccountState", "getTransferList"]),
     initData() {
-      if (getAccount()) {
+      if (this.$t("website_name") == "congTuCloud") {
         this.$router.replace("myMachineUnlockCPU");
+      } else {
+        if (getAccount()) {
+          this.$router.replace("myMachineUnlockCPU");
+        }
       }
     },
     openCreateWallet() {
