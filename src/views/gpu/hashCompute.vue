@@ -241,7 +241,11 @@
               >{{ item.machine_id }}</el-button
             >
             <span class="fs28">
-              <span class="cRedbig"
+              <span class="cRedbig" v-if="$t('website_name') === 'congTuCloud'"
+                >&nbsp;&nbsp; {{ (item.gpu_price_dollar * 6.6).toFixed(2)
+                }}{{ $t("RMB") }}/{{ $t("my_machine_hour") }}</span
+              >
+              <span class="cRedbig" v-else
                 >&nbsp;&nbsp;$ {{ item.gpu_price_dollar }}/{{
                   $t("my_machine_hour")
                 }}</span
