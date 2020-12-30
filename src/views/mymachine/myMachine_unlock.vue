@@ -11,7 +11,10 @@
           $t("gpu.modifyMail")
         }}</el-button>
       </div>
-      <div v-else-if="!isBinding" class="bind">
+      <div
+        v-else-if="!isBinding && this.$t('website_name') != 'congTuCloud'"
+        class="bind"
+      >
         <el-button size="small" plain @click="openDlgMail(true)">{{
           $t("gpu.bindMail")
         }}</el-button>
@@ -1917,9 +1920,11 @@ export default {
     },
     // get Order List
     queryOrderList() {
-      if (!getAccount()) {
-        // this.$router.push(`/openWallet/${type}`);
-        return;
+      if (this.$t("website_name") != "congTuCloud") {
+        if (!getAccount()) {
+          // this.$router.push(`/openWallet/${type}`);
+          return;
+        }
       }
       const wallet_address_user = getAccount().address;
       const user_name_platform = this.$t("website_name");
