@@ -646,7 +646,7 @@ export default {
         language: this.$i18n.locale,
       };
       this.$emit("confirm", params);
-      pocMachine(this.placeOrderData.order_id);
+      this.pocMachine(this.placeOrderData.order_id);
     },
     confirmCongTu() {
       let rent_type = 0;
@@ -683,7 +683,7 @@ export default {
       console.log("-------------params--------------");
       console.log(params);
       this.$emit("confirm", params);
-      pocMachine(this.placeOrderData.order_id);
+      this.pocMachine(this.placeOrderData.order_id);
     },
     cancel() {
       this.closed();
