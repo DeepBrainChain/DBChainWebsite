@@ -115,7 +115,7 @@
           >
         </div>
       </div>
-      <div class="pay-wrap">
+      <div class="pay-wrap" v-if="$t('website_name') != 'congTuCloud'">
         <div class="rate-head" v-if="item.mcData.evaluation_score_average > 0">
           <div class="flex right vCenter">
             <el-rate
