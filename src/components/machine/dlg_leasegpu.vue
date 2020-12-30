@@ -1,7 +1,11 @@
 <template>
   <el-dialog :visible.sync="isOpen" @closed="closed" width="580px">
-    <div slot="title" v-if="!placeOrderData.from_stop_to_open">{{$t('lease_gpu')}}</div>
-    <div slot="title" v-if="placeOrderData.from_stop_to_open">{{$t('stop_to_gpu_container')}}</div>
+    <div slot="title" v-if="!placeOrderData.from_stop_to_open">
+      {{ $t("lease_gpu") }}
+    </div>
+    <div slot="title" v-if="placeOrderData.from_stop_to_open">
+      {{ $t("stop_to_gpu_container") }}
+    </div>
     <div class="dlg-content">
       <!--<h3 class="content-head">
         {{$t('gpu.needHD')}}：66GB $ 22/{{$t('hour')}}
@@ -9,14 +13,23 @@
 
       <div
         class="cRed"
-        v-if="!placeOrderData.from_stop_to_open&&!placeOrderData.dbc_version!=='0.3.7.2'&&machine_type!==3"
+        v-if="
+          !placeOrderData.from_stop_to_open &&
+          !placeOrderData.dbc_version !== '0.3.7.2' &&
+          machine_type !== 3
+        "
       >
-        <label>{{$t('cpu_container_instruaction')}}</label>
+        <label>{{ $t("cpu_container_instruaction") }}</label>
       </div>
 
       <div class="form" v-if="!placeOrderData.from_stop_to_open">
-        <label>{{$t('choseImages')}}：</label>
-        <el-select class="time-select ml10" v-model="images" style="width: 360px" size="small">
+        <label>{{ $t("choseImages") }}：</label>
+        <el-select
+          class="time-select ml10"
+          v-model="images"
+          style="width: 360px"
+          size="small"
+        >
           <el-option
             v-for="item in imagesOptions"
             :key="item.value"
@@ -26,7 +39,7 @@
         </el-select>
       </div>
       <div class="form mt20">
-        <label>{{$t('gpu.choseGpuCount')}}：</label>
+        <label>{{ $t("gpu.choseGpuCount") }}：</label>
         <el-select
           v-if="!gpu_rentout_whole"
           class="time-select ml10"
@@ -41,26 +54,34 @@
             :value="item.value"
           ></el-option>
         </el-select>
-        <label
-          v-if="gpu_rentout_whole"
-        >{{placeOrderData.gpu_count_max}}&nbsp;&nbsp;&nbsp;&nbsp;{{$t('whole_rent_machine_tip')}}</label>
+        <label v-if="gpu_rentout_whole"
+          >{{ placeOrderData.gpu_count_max }}&nbsp;&nbsp;&nbsp;&nbsp;{{
+            $t("whole_rent_machine_tip")
+          }}</label
+        >
       </div>
       <div class="form mt20">
         <el-radio-group v-model="discount" @change="computeTotalDBC">
-          <el-radio label="0">{{$t('leaseback_anytime')}}</el-radio>
+          <el-radio label="0">{{ $t("leaseback_anytime") }}</el-radio>
 
-          <el-radio label="2">{{$t('monthly')}}</el-radio>
-          <el-radio label="3">{{$t('quarterly')}}</el-radio>
-          <el-radio label="4">{{$t('yearly')}}</el-radio>
+          <el-radio label="2">{{ $t("monthly") }}</el-radio>
+          <el-radio label="3">{{ $t("quarterly") }}</el-radio>
+          <el-radio label="4">{{ $t("yearly") }}</el-radio>
         </el-radio-group>
       </div>
       <div class="form mt20">
-        <label class="cRed" v-if="discount==='2'">{{$t('month_discount_instruction')}}</label>
-        <label class="cRed" v-else-if="discount==='3'">{{$t('quarter_discount_instruction')}}</label>
-        <label class="cRed" v-else-if="discount==='4'">{{$t('year_discount_instruction')}}</label>
+        <label class="cRed" v-if="discount === '2'">{{
+          $t("month_discount_instruction")
+        }}</label>
+        <label class="cRed" v-else-if="discount === '3'">{{
+          $t("quarter_discount_instruction")
+        }}</label>
+        <label class="cRed" v-else-if="discount === '4'">{{
+          $t("year_discount_instruction")
+        }}</label>
       </div>
-      <div class="form mt20" v-if="discount==='0'">
-        <label>{{$t('dlg_lease_time')}}：</label>
+      <div class="form mt20" v-if="discount === '0'">
+        <label>{{ $t("dlg_lease_time") }}：</label>
         <el-input
           style="width: 180px"
           size="small"
@@ -81,27 +102,43 @@
             :value="item.value"
           ></el-option>
         </el-select>
-        <span
-          class="fs12 cGray ml10"
-        >{{(placeOrderData.gpu_price_dollar)}}$/{{$t('my_machine_hour')}}</span>
+        <span class="fs12 cGray ml10"
+          >{{ placeOrderData.gpu_price_dollar }}$/{{
+            $t("my_machine_hour")
+          }}</span
+        >
       </div>
 
-      <div class="form mt20" v-if="!placeOrderData.from_stop_to_open&&machine_type!==3">
-        <label>{{$t('diskspace_dlg')}}：</label>
-        <label>{{$t('diskspace_giving')}}{{disk_giving}}G</label>
-        <label>({{$t('diskspace_giving_gpu')}}{{disk_giving_every_gpu}}G)</label>
+      <div
+        class="form mt20"
+        v-if="!placeOrderData.from_stop_to_open && machine_type !== 3"
+      >
+        <label>{{ $t("diskspace_dlg") }}：</label>
+        <label>{{ $t("diskspace_giving") }}{{ disk_giving }}G</label>
+        <label
+          >({{ $t("diskspace_giving_gpu") }}{{ disk_giving_every_gpu }}G)</label
+        >
       </div>
-      <div class="form mt20" v-if="placeOrderData.order_id_pre!==null">
-        <label
-          v-if="placeOrderData.from_stop_to_open"
-        >{{$t('diskspace_data_stop')}}{{(placeOrderData.diskspace_image_data / (1024 * 1024)).toFixed(2)}}G</label>
-        <label
-          v-if="!placeOrderData.from_stop_to_open"
-        >{{$t('diskspace_gpu_data')}}{{(placeOrderData.diskspace_image_data / (1024 * 1024)).toFixed(2)}}G</label>
+      <div class="form mt20" v-if="placeOrderData.order_id_pre !== null">
+        <label v-if="placeOrderData.from_stop_to_open"
+          >{{ $t("diskspace_data_stop")
+          }}{{
+            (placeOrderData.diskspace_image_data / (1024 * 1024)).toFixed(2)
+          }}G</label
+        >
+        <label v-if="!placeOrderData.from_stop_to_open"
+          >{{ $t("diskspace_gpu_data")
+          }}{{
+            (placeOrderData.diskspace_image_data / (1024 * 1024)).toFixed(2)
+          }}G</label
+        >
       </div>
 
-      <div class="form mt20" v-if="!placeOrderData.from_stop_to_open&&machine_type!==3">
-        <label>{{$t('buy_diskspace')}}：</label>
+      <div
+        class="form mt20"
+        v-if="!placeOrderData.from_stop_to_open && machine_type !== 3"
+      >
+        <label>{{ $t("buy_diskspace") }}：</label>
         <el-input
           style="width: 120px"
           size="small"
@@ -110,43 +147,72 @@
           @input="computeTotalDBC"
         />
         <span class="fs12 cGray ml10">G</span>
-        <span
-          class="fs12 cGray ml10"
-        >{{(placeOrderData.disk_GB_perhour_dollar)}}$/{{$t('disk_hour')}}</span>
+        <span class="fs12 cGray ml10"
+          >{{ placeOrderData.disk_GB_perhour_dollar }}$/{{
+            $t("disk_hour")
+          }}</span
+        >
 
-        <span class="fs12 cGray ml10">{{$t('disk_max')}}{{(disk_max)}}G</span>
+        <span class="fs12 cGray ml10">{{ $t("disk_max") }}{{ disk_max }}G</span>
       </div>
-      <div class="form mt20" v-if="placeOrderData.order_id_pre!==null">
-        <label
-          v-if="!placeOrderData.from_stop_to_open"
-        >({{$t('diskspace_new_cpu')}}:{{(disk_buy+disk_giving-placeOrderData.diskspace_image_data / (1024 * 1024)).toFixed(2)}}G)</label>
-        <label
-          v-if="placeOrderData.from_stop_to_open"
-        >({{$t('diskspace_new_cpu_stop')}}:{{(disk_buy-placeOrderData.diskspace_image_data / (1024 * 1024)).toFixed(2)}}G)</label>
-        <span
-          class="fs12 cGray ml10"
-          v-if="!gpu_rentout_whole"
-        >{{(placeOrderData.disk_GB_perhour_dollar)}}$/{{$t('disk_hour')}}</span>
+      <div class="form mt20" v-if="placeOrderData.order_id_pre !== null">
+        <label v-if="!placeOrderData.from_stop_to_open"
+          >({{ $t("diskspace_new_cpu") }}:{{
+            (
+              disk_buy +
+              disk_giving -
+              placeOrderData.diskspace_image_data / (1024 * 1024)
+            ).toFixed(2)
+          }}G)</label
+        >
+        <label v-if="placeOrderData.from_stop_to_open"
+          >({{ $t("diskspace_new_cpu_stop") }}:{{
+            (
+              disk_buy -
+              placeOrderData.diskspace_image_data / (1024 * 1024)
+            ).toFixed(2)
+          }}G)</label
+        >
+        <span class="fs12 cGray ml10" v-if="!gpu_rentout_whole"
+          >{{ placeOrderData.disk_GB_perhour_dollar }}$/{{
+            $t("disk_hour")
+          }}</span
+        >
       </div>
-      <div class="form mt20" v-if="machine_type===3&&!placeOrderData.from_stop_to_open">
-        <label>{{$t('disk_auto_machine_type')}}：</label>
-        <label>{{disk_giving+disk_max}}G</label>
+      <div
+        class="form mt20"
+        v-if="machine_type === 3 && !placeOrderData.from_stop_to_open"
+      >
+        <label>{{ $t("disk_auto_machine_type") }}：</label>
+        <label>{{ disk_giving + disk_max }}G</label>
       </div>
       <div class="form mt20">
-        <label>{{$t('memory_dlg')}}：</label>
-        <label>{{memory}}G</label>
-        <label>({{$t('memory_every_gpu')}}{{memory_every_gpu}}G)</label>
+        <label>{{ $t("memory_dlg") }}：</label>
+        <label>{{ memory }}G</label>
+        <label>({{ $t("memory_every_gpu") }}{{ memory_every_gpu }}G)</label>
       </div>
 
-      <div class="cRed">{{$t('tips')}}：{{$t('msg.dlg_0',{time: outDayTime})}}</div>
+      <div class="cRed" v-if="$t('website_name') != 'congTuCloud'">
+        {{ $t("tips") }}：{{ $t("msg.dlg_0", { time: outDayTime }) }}
+      </div>
       <div class="computer-dbc mt30">
         <!--          <span>{{$t('gpu.DBCRemaining')}}：349</span>-->
-        <span>{{$t('total')}}：{{ totalPrice.toFixed(4) }}{{$t('$')}}</span>
-        <span class="ml20">{{$t('gpu.exchangeDBC')}}：{{total_price}}</span>
+        <span>{{ $t("total") }}：{{ totalPrice.toFixed(4) }}{{ $t("$") }}</span>
+        <span v-if="$t('website_name') != 'congTuCloud'" class="ml20"
+          >{{ $t("gpu.exchangeDBC") }}：{{ total_price }}</span
+        >
       </div>
-      <div class="form-notice">{{$t('dlg_lease_wallet_balance')}}: {{balance}}</div>
-      <div class="form-notice">{{$t('left_gasamount')}}: {{gas_balance.toFixed(3)}}</div>
-      <div class="desc-box" v-html="$t('msg.dlg_5')"></div>
+      <div class="form-notice" v-if="$t('website_name') != 'congTuCloud'">
+        {{ $t("dlg_lease_wallet_balance") }}: {{ balance }}
+      </div>
+      <div class="form-notice" v-if="$t('website_name') != 'congTuCloud'">
+        {{ $t("left_gasamount") }}: {{ gas_balance.toFixed(3) }}
+      </div>
+      <div
+        class="desc-box"
+        v-if="$t('website_name') != 'congTuCloud'"
+        v-html="$t('msg.dlg_5')"
+      ></div>
     </div>
     <div class="dlg-bottom">
       <el-button
@@ -155,8 +221,11 @@
         size="small"
         @click="confirm"
         :disabled="!isCanCreateOrder"
-      >{{$t('dlg_lease_create_order')}}</el-button>
-      <el-button class="dlg-btn" plain size="small" @click="cancel">{{$t('cancel')}}</el-button>
+        >{{ $t("dlg_lease_create_order") }}</el-button
+      >
+      <el-button class="dlg-btn" plain size="small" @click="cancel">{{
+        $t("cancel")
+      }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -190,10 +259,10 @@ export default {
           diskspace_image_data: 0,
           disk_space: 60,
           gpu_rentout_whole: false,
-          machine_type: 0
+          machine_type: 0,
         };
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -202,12 +271,12 @@ export default {
       timeOptions: [
         {
           name: this.$t("hour"),
-          value: 1
+          value: 1,
         },
         {
           name: this.$t("day"),
-          value: 24
-        }
+          value: 24,
+        },
       ],
       gpuCount: 1,
       images: "",
@@ -226,7 +295,7 @@ export default {
       memory_every_gpu: 0,
       discount: "0",
       gpu_rentout_whole: false,
-      machine_type: 0
+      machine_type: 0,
     };
   },
   watch: {
@@ -249,7 +318,7 @@ export default {
       } else {
         this.isCanCreateOrder = false;
       }
-    }
+    },
   },
   computed: {
     outDayTime() {
@@ -263,7 +332,7 @@ export default {
       for (let i = 1; i <= this.placeOrderData.gpu_count_max; i++) {
         opts.push({
           name: i,
-          value: i
+          value: i,
         });
       }
       return opts;
@@ -295,7 +364,7 @@ export default {
 
         opts.push({
           name: tags[i],
-          value: tags[i]
+          value: tags[i],
         });
       }
       if (
@@ -304,7 +373,7 @@ export default {
       ) {
         opts.push({
           name: this.$t("user_defined"),
-          value: "tensorflow114andpytorch12"
+          value: "tensorflow114andpytorch12",
         });
       }
 
@@ -345,17 +414,17 @@ export default {
     },
     dbcNum() {
       return Math.floor(this.totalPrice / this.placeOrderData.dbc_price);
-    }
+    },
   },
   methods: {
     updateChecked() {},
     getBalance() {
-      getBalance().then(res => {
+      getBalance().then((res) => {
         this.balance = res.balance;
       });
     },
     getGasBalance() {
-      getGasBalance().then(res => {
+      getGasBalance().then((res) => {
         this.gas_balance = res.gas_balance;
       });
     },
@@ -406,7 +475,7 @@ export default {
               this.$message({
                 showClose: true,
                 message: this.$t("over_max_disk"),
-                type: "error"
+                type: "error",
               });
               this.disk_buy = this.disk_max;
             }
@@ -462,7 +531,7 @@ export default {
           this.$message({
             showClose: true,
             message: this.$t("diskspace_less_zero"),
-            type: "error"
+            type: "error",
           });
         }
       }
@@ -474,15 +543,15 @@ export default {
         order_id: this.placeOrderData.order_id,
         rent_type: rent_type,
         user_name_platform,
-        language
-      }).then(res => {
+        language,
+      }).then((res) => {
         if (res.status === 1) {
           this.total_price = res.content;
         } else {
           this.$message({
             showClose: true,
             message: res.msg,
-            type: "error"
+            type: "error",
           });
         }
       });
@@ -495,7 +564,7 @@ export default {
       can_rent_this_machine({
         order_id_new: order_id,
         user_name_platform,
-        language
+        language,
       });
     },
     confirm() {
@@ -503,7 +572,7 @@ export default {
         this.$message({
           showClose: true,
           message: this.$t("lessdbc"),
-          type: "error"
+          type: "error",
         });
         return;
       }
@@ -512,7 +581,7 @@ export default {
         this.$message({
           showClose: true,
           message: this.$t("zerogas"),
-          type: "error"
+          type: "error",
         });
         return;
       }
@@ -546,7 +615,7 @@ export default {
         rent_type: rent_type,
         machine_type: this.machine_type,
         user_name_platform: this.$t("website_name"),
-        language: this.$i18n.locale
+        language: this.$i18n.locale,
       };
       this.$emit("confirm", params);
       pocMachine(this.placeOrderData.order_id);
@@ -558,8 +627,8 @@ export default {
     closed() {
       this.isOpen = false;
       this.$emit("update:open", false);
-    }
-  }
+    },
+  },
 };
 </script>
 
