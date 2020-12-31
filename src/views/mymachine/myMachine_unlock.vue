@@ -978,6 +978,7 @@ import {
   place_order_gpu_to_cpu_new,
   get_dbc_price,
   create_order,
+  create_order_congtu,
   send_email_repeat,
 } from "@/api";
 
@@ -1126,6 +1127,7 @@ export default {
   },
   methods: {
     openPay(item) {
+      console.log("openpay------------------");
       this.dlg_leaseconfirmpay = true;
       this.placeOrderData = item;
     },
@@ -1133,7 +1135,11 @@ export default {
     switch_pay(item) {
       this.dlg_leaseconfirmpay = false;
       if (item.switch_pay_mode === "confirm_pay") {
-        this.payOrder(item);
+        if (this.$t("website_name") === "congTuCloud") {
+          this.payOrder_congtu(item);
+        } else {
+          this.payOrder(item);
+        }
       } else if (item.switch_pay_mode === "paid") {
         this.paid(item);
       }
@@ -1851,6 +1857,145 @@ export default {
       // pay
 
       //  }, 5000);
+    },
+    payOrder_congtu(item) {
+      clearInterval(this.si);
+      this.ispayPocing = false;
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
+      get_dbchain_address({
+        order_id: item.orderData.order_id,
+        user_name_platform,
+        language,
+      }).then((res) => {
+        console.log("-=-=-=-=get_dbchain_address==============");
+        console.log(res);
+        if (res.status === 1 && res.content) {
+          this.isPaying = true;
+          this.local_pay_error = false;
+          create_order_congtu({
+            response: {},
+            order_id: "congtu",
+            count: 0.01,
+          })
+            .then((res) => {
+              console.log("-=-=-=-=-create_order_congtu==========");
+              console.log(res);
+              let alipay = window.open();
+              alipay.document.body.innerHTML = res.slice(
+                0,
+                res.search("<script>")
+              );
+              alipay.document.body.getElementsByTagName("form")[0].submit();
+              // todo 定时 从后台数据库获取支付宝支付状态（包含dbc转账参数）
+              // todo 如果支付成功，返回参数， 为pay（）预备参数
+              if (res.status === 1) {
+                const txid = res.response.txid;
+
+                // pay after
+                this.isPaying = false;
+                item.orderData.vocing_pay = true;
+                const user_name_platform = this.$t("website_name");
+                const language = this.$i18n.locale;
+                this.ispayPocing = true;
+                this.times = 10; //此时重新设置为10
+                // 支付后确认
+
+                if (item.orderData.order_id_pre === null) {
+                  this.si = setInterval(() => {
+                    return pay({
+                      order_id: item.orderData.order_id,
+                      dbc_hash: txid,
+                      user_name_platform,
+                      language,
+                    })
+                      .then((res) => {
+                        this.queryOrderList();
+                        if (res.status === 1) {
+                          clearInterval(this.si);
+
+                          this.ispayPocing = false;
+                          item.orderData.vocing_pay = false;
+                          this.queryOrderList();
+                        } else if (res.status === 2) {
+                          this.queryOrderList();
+                        } else if (res.status === -1) {
+                          this.queryOrderList();
+                          this.ispayPocing = false;
+                          item.orderData.vocing_pay = false;
+                          clearInterval(this.si);
+                          this.$message({
+                            showClose: true,
+                            message: res.msg,
+                            type: "error",
+                          });
+                        }
+                      })
+                      .catch((err) => {
+                        //   this.ispayPocing = false;
+                        //   clearInterval(this.si);
+                      });
+                  }, 8000);
+                } else {
+                  this.si = setInterval(() => {
+                    return pay_update({
+                      order_id: item.orderData.order_id,
+                      dbc_hash: txid,
+                      user_name_platform,
+                      language,
+                    })
+                      .then((res) => {
+                        // this.queryOrderList();
+                        if (res.status === 1) {
+                          clearInterval(this.si);
+                          this.ispayPocing = false;
+                          this.creating_container = true;
+                          item.orderData.vocing_pay = false;
+                          this.queryOrderList();
+                          this.forceToPocMachineUpdate();
+                        } else if (res.status === -1) {
+                          clearInterval(this.si);
+                          this.ispayPocing = false;
+                          item.orderData.vocing_pay = false;
+                          this.queryOrderList();
+                          this.$message({
+                            showClose: true,
+                            message: res.msg,
+                            type: "error",
+                          });
+                        } else if (res.status === 2) {
+                          // item.orderData.creating_container = true;
+                          this.queryOrderList();
+                        }
+                      })
+                      .catch((err) => {
+                        //   this.ispayPocing = false;
+                        //   clearInterval(this.si);
+                      });
+                  }, 8000);
+                }
+              } else {
+                this.isPaying = false;
+                this.$message({
+                  showClose: true,
+                  message: this.$t("transfer_error"),
+                  type: "error",
+                });
+                clearInterval(this.si);
+                this.local_pay_error = true;
+                console.log("转账失败");
+              }
+            })
+            .catch((err) => {
+              if (err) {
+                console.log(err);
+              }
+            })
+            .finally(() => {
+              console.log("一定会执行的语句");
+            });
+        }
+      });
     },
 
     // cancel

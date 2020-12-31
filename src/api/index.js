@@ -1,5 +1,6 @@
 import axios from "@/utlis/axios";
-const host = "http://localhost:8080"
+// const host = "http://localhost:8080";
+const host = "http://111.44.254.181:8032";
 //const host = 'http://13.124.237.200:8031'
 //const host = "https://otherinfo.dbchain.ai";
 // const host = "https://info.dbchain.ai";
@@ -874,10 +875,10 @@ export const retrieve_pwd = params => {
 * @description 添加支付宝支付订单
 * @param {object} params {response,order_id,count}
 */
-export const create_alipay_order = params => {
+export const create_order_congtu = params => {
   return axios({
-    method: "get",
-    url: 'http://111.44.254.181:8031' + "/pay/create_order", //临时
+    method: "post",
+    url: host + "/pay/create_order_congtu", //临时
     params
   });
 };
