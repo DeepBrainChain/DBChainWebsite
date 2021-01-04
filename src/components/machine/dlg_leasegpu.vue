@@ -210,7 +210,8 @@
       <div class="computer-dbc mt30">
         <!--          <span>{{$t('gpu.DBCRemaining')}}：349</span>-->
         <span v-if="$t('website_name') === 'congTuCloud'"
-          >{{ $t("total") }}：{{ totalPrice.toFixed(2) }}{{ $t("RMB") }}</span
+          >{{ $t("total") }}：{{ (totalPrice * usdToRmb).toFixed(2)
+          }}{{ $t("RMB") }}</span
         >
         <span v-else
           >{{ $t("total") }}：{{ totalPrice.toFixed(4) }}{{ $t("$") }}</span
