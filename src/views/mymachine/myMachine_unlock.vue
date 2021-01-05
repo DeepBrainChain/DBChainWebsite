@@ -980,6 +980,8 @@ import {
   create_order,
   create_order_congtu,
   send_email_repeat,
+  get_pay_status,
+  get_dbc_res_code,
 } from "@/api";
 
 import { getAccount, transfer, getBalance } from "@/utlis";
@@ -1043,6 +1045,8 @@ export default {
       send_email_repeat_index: -1,
       continue_pay_index: -1,
       times: 20,
+      getAlipayStatusTimer: "",
+      getDbcResCodeTimer: "",
     };
   },
 
@@ -1128,6 +1132,7 @@ export default {
   methods: {
     openPay(item) {
       console.log("openpay------------------");
+      console.log(item);
       this.dlg_leaseconfirmpay = true;
       this.placeOrderData = item;
     },
@@ -1875,11 +1880,13 @@ export default {
           this.local_pay_error = false;
           create_order_congtu({
             response: {},
-            order_id: "congtu",
+            orderData: item.orderData.order_id,
+            dbcCode: item.orderData.code,
+            tradeNoPre: "congtu",
             count: 0.01,
           })
             .then((res) => {
-              console.log("-=-=-=-=-create_order_congtu==========");
+              console.log("-=-=-=-=-create_aliPay_order_congtu==========");
               console.log(res);
               let alipay = window.open();
               alipay.document.body.innerHTML = res.slice(
@@ -1888,103 +1895,129 @@ export default {
               );
               alipay.document.body.getElementsByTagName("form")[0].submit();
               // todo 定时 从后台数据库获取支付宝支付状态（包含dbc转账参数）
-              // todo 如果支付成功，返回参数， 为pay（）预备参数
-              if (res.status === 1) {
-                const txid = res.response.txid;
+              // todo 如果支付成功，返回参数， 为pay（）预备参数:txid
+              this.getAlipayStatusTimer = setInterval(() => {
+                get_pay_status({
+                  order_id: item.orderData.order_id,
+                  language,
+                }).then((res) => {
+                  console.log("get_pay_status-------");
+                  console.log(res);
+                  if (res.content === "ok") {
+                    clearInterval(this.getAlipayStatusTimer);
+                    this.getDbcResCodeTimer = setInterval(() => {
+                      get_dbc_res_code({
+                        order_id: item.orderData.order_id,
+                        language,
+                      }).then((res) => {
+                        console.log("get_dbc_res_code-------");
+                        console.log(res);
+                        if (
+                          res.content != null ||
+                          res.content != undefined ||
+                          res.content != ""
+                        ) {
+                          clearInterval(this.getDbcResCodeTimer);
+                          const txid = res.content;
 
-                // pay after
-                this.isPaying = false;
-                item.orderData.vocing_pay = true;
-                const user_name_platform = this.$t("website_name");
-                const language = this.$i18n.locale;
-                this.ispayPocing = true;
-                this.times = 10; //此时重新设置为10
-                // 支付后确认
+                          // pay after
+                          this.isPaying = false;
+                          item.orderData.vocing_pay = true;
+                          const user_name_platform = this.$t("website_name");
+                          const language = this.$i18n.locale;
+                          this.ispayPocing = true;
+                          this.times = 10; //此时重新设置为10
+                          // 支付后确认
 
-                if (item.orderData.order_id_pre === null) {
-                  this.si = setInterval(() => {
-                    return pay({
-                      order_id: item.orderData.order_id,
-                      dbc_hash: txid,
-                      user_name_platform,
-                      language,
-                    })
-                      .then((res) => {
-                        this.queryOrderList();
-                        if (res.status === 1) {
-                          clearInterval(this.si);
+                          if (item.orderData.order_id_pre === null) {
+                            this.si = setInterval(() => {
+                              return pay({
+                                order_id: item.orderData.order_id,
+                                dbc_hash: txid,
+                                user_name_platform,
+                                language,
+                              })
+                                .then((res) => {
+                                  this.queryOrderList();
+                                  if (res.status === 1) {
+                                    clearInterval(this.si);
 
-                          this.ispayPocing = false;
-                          item.orderData.vocing_pay = false;
-                          this.queryOrderList();
-                        } else if (res.status === 2) {
-                          this.queryOrderList();
-                        } else if (res.status === -1) {
-                          this.queryOrderList();
-                          this.ispayPocing = false;
-                          item.orderData.vocing_pay = false;
-                          clearInterval(this.si);
+                                    this.ispayPocing = false;
+                                    item.orderData.vocing_pay = false;
+                                    this.queryOrderList();
+                                  } else if (res.status === 2) {
+                                    this.queryOrderList();
+                                  } else if (res.status === -1) {
+                                    this.queryOrderList();
+                                    this.ispayPocing = false;
+                                    item.orderData.vocing_pay = false;
+                                    clearInterval(this.si);
+                                    this.$message({
+                                      showClose: true,
+                                      message: res.msg,
+                                      type: "error",
+                                    });
+                                  }
+                                })
+                                .catch((err) => {
+                                  //   this.ispayPocing = false;
+                                  //   clearInterval(this.si);
+                                });
+                            }, 8000);
+                          } else {
+                            this.si = setInterval(() => {
+                              return pay_update({
+                                order_id: item.orderData.order_id,
+                                dbc_hash: txid,
+                                user_name_platform,
+                                language,
+                              })
+                                .then((res) => {
+                                  // this.queryOrderList();
+                                  if (res.status === 1) {
+                                    clearInterval(this.si);
+                                    this.ispayPocing = false;
+                                    this.creating_container = true;
+                                    item.orderData.vocing_pay = false;
+                                    this.queryOrderList();
+                                    this.forceToPocMachineUpdate();
+                                  } else if (res.status === -1) {
+                                    clearInterval(this.si);
+                                    this.ispayPocing = false;
+                                    item.orderData.vocing_pay = false;
+                                    this.queryOrderList();
+                                    this.$message({
+                                      showClose: true,
+                                      message: res.msg,
+                                      type: "error",
+                                    });
+                                  } else if (res.status === 2) {
+                                    // item.orderData.creating_container = true;
+                                    this.queryOrderList();
+                                  }
+                                })
+                                .catch((err) => {
+                                  //   this.ispayPocing = false;
+                                  //   clearInterval(this.si);
+                                });
+                            }, 8000);
+                          }
+                        } else {
+                          this.isPaying = false;
                           this.$message({
                             showClose: true,
-                            message: res.msg,
+                            message: this.$t("transfer_error"),
                             type: "error",
                           });
-                        }
-                      })
-                      .catch((err) => {
-                        //   this.ispayPocing = false;
-                        //   clearInterval(this.si);
-                      });
-                  }, 8000);
-                } else {
-                  this.si = setInterval(() => {
-                    return pay_update({
-                      order_id: item.orderData.order_id,
-                      dbc_hash: txid,
-                      user_name_platform,
-                      language,
-                    })
-                      .then((res) => {
-                        // this.queryOrderList();
-                        if (res.status === 1) {
                           clearInterval(this.si);
-                          this.ispayPocing = false;
-                          this.creating_container = true;
-                          item.orderData.vocing_pay = false;
-                          this.queryOrderList();
-                          this.forceToPocMachineUpdate();
-                        } else if (res.status === -1) {
-                          clearInterval(this.si);
-                          this.ispayPocing = false;
-                          item.orderData.vocing_pay = false;
-                          this.queryOrderList();
-                          this.$message({
-                            showClose: true,
-                            message: res.msg,
-                            type: "error",
-                          });
-                        } else if (res.status === 2) {
-                          // item.orderData.creating_container = true;
-                          this.queryOrderList();
+                          this.local_pay_error = true;
+                          console.log("转账失败");
                         }
-                      })
-                      .catch((err) => {
-                        //   this.ispayPocing = false;
-                        //   clearInterval(this.si);
                       });
-                  }, 8000);
-                }
-              } else {
-                this.isPaying = false;
-                this.$message({
-                  showClose: true,
-                  message: this.$t("transfer_error"),
-                  type: "error",
+                    }, 1000);
+                  }
                 });
-                clearInterval(this.si);
-                this.local_pay_error = true;
-                console.log("转账失败");
-              }
+              }, 1000);
             })
             .catch((err) => {
               if (err) {
