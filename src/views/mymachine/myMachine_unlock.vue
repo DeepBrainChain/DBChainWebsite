@@ -1,7 +1,10 @@
 <template>
   <div>
     <div class="title">
-      <span>{{ $t("gpu.myMachineTitle") }}：{{ rentNumber }}</span>
+      <span v-if="$t('website_name') === 'congTuCloud'"
+        >{{ $t("gpu.myMachineTitle") }}：{{ orderCount }}</span
+      >
+      <span v-else>{{ $t("gpu.myMachineTitle") }}：{{ rentNumber }}</span>
 
       <div v-if="!isBinding && bindMail" class="binding">
         <span class="bindingInfo"
@@ -1006,9 +1009,10 @@ import {
   send_email_repeat,
   get_pay_status,
   get_dbc_res_code,
+  get_order_id_list,
 } from "@/api";
 
-import { getAccount, transfer, getBalance } from "@/utlis";
+import { getAccount, transfer, getBalance, getCookie } from "@/utlis";
 
 export default {
   name: "myMachine_unlock",
@@ -1071,6 +1075,7 @@ export default {
       times: 20,
       getAlipayStatusTimer: "",
       getDbcResCodeTimer: "",
+      orderCount: 0,
     };
   },
 
@@ -2156,13 +2161,43 @@ export default {
               const mcItem = res_1.content.find(
                 (mc) => item.machine_id === mc.machine_id
               );
+              console.log("item================");
+              console.log(item);
+              console.log("mcItem================");
+              console.log(mcItem);
               if (mcItem) {
-                this.res_body.content.push({
-                  verifing: false,
-                  notice: "",
-                  orderData: item,
-                  mcData: mcItem,
-                });
+                if (this.$t("website_name") === "congTuCloud") {
+                  //  获取数据库中当前用户邮箱的 order_id
+                  if (!getCookie("email")) {
+                    this.$router.push("/" + "login");
+                  }
+                  get_order_id_list({
+                    email: getCookie("email"),
+                    language,
+                  }).then((res) => {
+                    console.log("get_order_id_list====");
+                    console.log(res);
+                    this.orderCount = res.content.length;
+                    for (let i of res.content) {
+                      if (i.order_id === item.order_id) {
+                        this.res_body.content.push({
+                          verifing: false,
+                          notice: "",
+                          orderData: item,
+                          mcData: mcItem,
+                        });
+                      }
+                    }
+                  });
+                } else {
+                  this.res_body.content.push({
+                    verifing: false,
+                    notice: "",
+                    orderData: item,
+                    mcData: mcItem,
+                  });
+                }
+
                 if (
                   item.order_id_pre === null &&
                   item.container_is_exist === true &&

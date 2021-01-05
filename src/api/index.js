@@ -908,3 +908,16 @@ export const get_dbc_res_code = params => {
     params
   });
 };
+
+/**
+* 获取订单号列表
+* @description 获取订单号列表
+* @param {object} params {email,language}
+*/
+export const get_order_id_list = params => {
+  return axios({
+    method: "post",
+    url: host + "/gpu_order/get_order_id_list",
+    params
+  });
+};
