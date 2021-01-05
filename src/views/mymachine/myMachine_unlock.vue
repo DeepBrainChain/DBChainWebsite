@@ -747,10 +747,31 @@
               class="item"
               v-if="
                 item.mcData.dbc_version !== '0.3.7.2' &&
-                item.orderData.try_rent === false
+                item.orderData.try_rent === false &&
+                $t('website_name') != 'congTuCloud'
               "
               effect="dark"
               :content="$t('stoprent_tip_mymachine')"
+            >
+              <el-button
+                plain
+                v-if="item.orderData.try_rent === false"
+                class="tool-btn"
+                style="width: 90px"
+                size="mini"
+                @click="stopRent(item)"
+                >{{ $t("unsubscribe") }}</el-button
+              >
+            </el-tooltip>
+            <el-tooltip
+              class="item"
+              v-if="
+                item.mcData.dbc_version !== '0.3.7.2' &&
+                item.orderData.try_rent === false &&
+                $t('website_name') === 'congTuCloud'
+              "
+              effect="dark"
+              :content="null"
             >
               <el-button
                 plain
@@ -778,7 +799,10 @@
 
             <el-tooltip
               class="item"
-              v-if="item.orderData.try_rent === false"
+              v-if="
+                item.orderData.try_rent === false &&
+                $t('website_name') != 'congTuCloud'
+              "
               effect="dark"
               :content="$t('stopgpu_tip_mymachine')"
             >

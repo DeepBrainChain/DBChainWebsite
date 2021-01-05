@@ -28,6 +28,9 @@
       <my-button class="my-button" :text="buttonText" />
     </div>
     <div class="forget-pwd">{{ $t("login.forgetPwd") }}</div>
+    <div class="click-register" @click="pushToRegister()">
+      {{ $t("register.clickRegister") }}
+    </div>
   </div>
 </template>
 <script>
@@ -121,6 +124,9 @@ export default {
           console.log("一定会执行的语句");
         });
     },
+    pushToRegister: function () {
+      this.$router.push("/" + "register");
+    },
   },
 };
 </script>
@@ -187,6 +193,17 @@ export default {
   margin: 16px 0 0 60px;
 }
 .forget-pwd:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+.click-register {
+  float: right;
+  width: 80px;
+  color: #061267;
+  text-align: right;
+  margin: -20px 60px 0 0px;
+}
+.click-register:hover {
   cursor: pointer;
   text-decoration: underline;
 }

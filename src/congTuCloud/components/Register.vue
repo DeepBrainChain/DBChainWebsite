@@ -72,6 +72,7 @@ import MyTitle from "../components/funcComponents/Title";
 import InputBox from "../components/funcComponents/InputBox";
 import MyButton from "../components/funcComponents/Button";
 import { get_register_code, register } from "../../api/index";
+import { setCookie } from "../../utlis/index";
 export default {
   data() {
     return {
@@ -223,12 +224,15 @@ export default {
               console.log(res.msg);
               this.tipsText = res.msg + this.$t("register.tipsText.signingIn");
               // 保存当前的账号到公共状态里
-              this.$store.commit(
-                "setCurrentAccountEmail",
-                this.inputAccountBoxValue
-              );
-              // 跳转到网盘首页
-              this.$router.push("/");
+              // this.$store.commit(
+              //   "setCurrentAccountEmail",
+              //   this.inputAccountBoxValue
+              // );
+              // 设置cookie，有效期1天
+              setCookie("login", "login", 1);
+              setCookie("email", this.inputAccountBoxValue, 1);
+              // 跳转到我的机器页面
+              this.$router.push("/" + "myMachine/myMachineUnlock");
             } else {
               console.log(res.msg);
               this.tipsText = res.msg;

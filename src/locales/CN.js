@@ -874,6 +874,7 @@ export default {
     inputPwdTips: "设置新密码",
     inputPwdAgainTips: "再次输入密码",
     tipsText: { registering: "正在注册，请稍后…", signingIn: "正在登录…", pwdError: "密码不一致，请检查密码后重试！", registerCodeError: "验证码不能为空！", sendingCode: "正在发送验证码…" },
+    clickRegister:"点击注册"
   },
   // 登录页面文本
   login: {
