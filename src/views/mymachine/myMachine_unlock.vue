@@ -1883,7 +1883,6 @@ export default {
             orderData: item.orderData.order_id,
             dbcCode: item.orderData.code,
             tradeNoPre: "congtu",
-            count: 0.01,
           })
             .then((res) => {
               console.log("-=-=-=-=-create_aliPay_order_congtu==========");

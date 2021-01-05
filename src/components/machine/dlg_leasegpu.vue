@@ -680,6 +680,7 @@ export default {
         machine_type: this.machine_type,
         user_name_platform: this.$t("website_name"),
         language: this.$i18n.locale,
+        r_count: `${(this.totalPrice * this.usdToRmb).toFixed(2)}`,
       };
       console.log("-------------params--------------");
       console.log(params);
