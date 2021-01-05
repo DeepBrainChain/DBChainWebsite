@@ -939,6 +939,7 @@ export default {
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       place_order_gpu_new({
+        email: getCookie("email"),
         machine_type: 4,
         machine_id: item.machine_id,
         user_name_platform,

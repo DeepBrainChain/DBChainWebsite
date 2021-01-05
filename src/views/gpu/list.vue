@@ -941,6 +941,7 @@ export default {
       console.log(user_name_platform);
       console.log(language);
       place_order({
+        email: getCookie("email"),
         machine_id: item.machine_id,
         user_name_platform,
         language,

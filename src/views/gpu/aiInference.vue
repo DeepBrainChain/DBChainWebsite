@@ -937,7 +937,11 @@ export default {
       this.$forceUpdate();
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
+      console.log("email----------------------");
+      let email = getCookie("email");
+      console.log(email);
       place_order_gpu_new({
+        email:getCookie("email"),
         machine_type: 2,
         machine_id: item.machine_id,
         user_name_platform,
