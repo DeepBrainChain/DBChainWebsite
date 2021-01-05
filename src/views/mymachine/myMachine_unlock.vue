@@ -1938,16 +1938,18 @@ export default {
                                 language,
                               })
                                 .then((res) => {
+                                  console.log("pay-------");
+                                  console.log(res);
                                   this.queryOrderList();
-                                  if (res.status === 1) {
+                                  if (res.content.status === 1) {
                                     clearInterval(this.si);
 
                                     this.ispayPocing = false;
                                     item.orderData.vocing_pay = false;
                                     this.queryOrderList();
-                                  } else if (res.status === 2) {
+                                  } else if (res.content.status === 2) {
                                     this.queryOrderList();
-                                  } else if (res.status === -1) {
+                                  } else if (res.content.status === -1) {
                                     this.queryOrderList();
                                     this.ispayPocing = false;
                                     item.orderData.vocing_pay = false;
