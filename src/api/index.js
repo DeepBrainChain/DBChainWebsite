@@ -878,7 +878,33 @@ export const retrieve_pwd = params => {
 export const create_order_congtu = params => {
   return axios({
     method: "post",
-    url: host + "/pay/create_order_congtu", //临时
+    url: host + "/pay/create_order_congtu",
+    params
+  });
+};
+
+/**
+* 获取支付宝支付状态
+* @description 获取支付宝支付状态
+* @param {object} params {order_id,language}
+*/
+export const get_pay_status = params => {
+  return axios({
+    method: "post",
+    url: host + "/gpu_order/get_pay_status",
+    params
+  });
+};
+
+/**
+* 获取dbc转账后返回的验证码
+* @description 获取dbc转账后返回的验证码
+* @param {object} params {order_id,language}
+*/
+export const get_dbc_res_code = params => {
+  return axios({
+    method: "post",
+    url: host + "/gpu_order/get_dbc_res_code",
     params
   });
 };
