@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-//import Home from './views/Home.vue'
+// import Home from './views/Home.vue'
 import Home from "./congTuCloud/pages/home.vue";
 import Login from "./congTuCloud/pages/login"
 import Register from "./congTuCloud/pages/register"
@@ -15,7 +15,6 @@ const router = new Router({
 
   mode: 'history',
   routes: [{
-<<<<<<< HEAD
       path: '/preview',
       name: ' preview',
       component: Preview
@@ -23,55 +22,21 @@ const router = new Router({
     {
       path: '/',
       redirect: '/home'
-=======
-    path: '/preview',
-    name: ' preview',
-    component: Preview
-  },
-  {
-    path: '/',
-    redirect: '/home'
-  },
-  {
-    path: '/home',
-    name: 'home',
-    component: Home
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: Login
-  },
-  {
-    path: '/register',
-    name: 'register',
-    component: Register
-  },
-  {
-    path: '/network',
-    name: 'network',
-    component: () => import('./views/network')
-  },
-  {
-    path: '/gpu',
-    name: 'gpu',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import('./views/gpu'),
-    redirect: '/gpu/highStabilityAITrain',
-    children: [{
-      meta: {
-        menuIndex: 0
-      },
-      path: 'list',
-      component: () => import('./views/gpu/list')
->>>>>>> 3d79735e5eb9e30ac5251c07b32bfefeef1b4710
     },
     {
       path: '/home',
       name: 'home',
       component: Home
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: Register
     },
     {
       path: '/network',
@@ -334,7 +299,6 @@ const router = new Router({
 })
 
 /*router.beforeEach((to, from, next) => {
-
 })*/
 
 export default router

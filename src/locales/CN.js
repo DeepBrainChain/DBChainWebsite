@@ -14,7 +14,7 @@ export default {
   message: "hello i18n !!",
 
   $: "$",
-  RMB:"元",
+  RMB: "元",
   send: "发送",
   closeWallet: "关闭钱包",
   toAddress: "目标地址",
@@ -777,7 +777,7 @@ export default {
       describe: "拥有多维度全方位的支持",
       iconText: [
         "高性价比GPU资源",
-        "免费100G高速网盘",
+        "高密度低延时",
         "在线编程调试",
         "丰富的训练数据支持",
         "安全稳定可靠"
@@ -870,19 +870,32 @@ export default {
     buttonText: "注册",
     inputAccountTips: "请输入邮箱号",
     inputCodeTips: "验证码",
-    codeTextTips: { sendCode: "发送验证码", sendCodeAgainPre: "再次发送(", sendCodeAgainNext: "s)" },
+    codeTextTips: {
+      sendCode: "发送验证码",
+      sendCodeAgainPre: "再次发送(",
+      sendCodeAgainNext: "s)"
+    },
     inputPwdTips: "设置新密码",
     inputPwdAgainTips: "再次输入密码",
-    tipsText: { registering: "正在注册，请稍后…", signingIn: "正在登录…", pwdError: "密码不一致，请检查密码后重试！", registerCodeError: "验证码不能为空！", sendingCode: "正在发送验证码…" },
-    clickRegister:"点击注册"
+    tipsText: {
+      registering: "正在注册，请稍后…",
+      signingIn: "正在登录…",
+      pwdError: "密码不一致，请检查密码后重试！",
+      registerCodeError: "验证码不能为空！",
+      sendingCode: "正在发送验证码…"
+    },
+    clickRegister: "点击注册"
   },
   // 登录页面文本
   login: {
-    title: "DBChain",
+    title: "聪图云",
     inputAccountTips: "请输入邮箱号",
     inputPwdTips: "请输入密码",
     buttonText: "登录",
-    tipsText: { signingIn: "正在登录…", jumping: "，正在跳转到网盘首页…" },
+    tipsText: {
+      signingIn: "正在登录…",
+      jumping: "，正在跳转到网盘首页…"
+    },
     forgetPwd: "忘记密码?",
   },
   ...enLocale
