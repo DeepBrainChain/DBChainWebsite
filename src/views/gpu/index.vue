@@ -1,9 +1,16 @@
 <template>
-  <div class="gpu">
+  <div class="gpu" ref="gpuBox">
     <Header v-if="this.$store.state.webtype" :underlineStyle="underlineStyle" />
     <div class="box">
       <el-container>
-        <el-aside class="left-wrap">
+        <el-aside
+          v-if="$t('website_name') === 'congTuCloud'"
+          class="left-wrap"
+          style="min-height: 100vh"
+        >
+          <navi :menus="menus" :index="curNavIndex"></navi>
+        </el-aside>
+        <el-aside v-else class="left-wrap">
           <navi :menus="menus" :index="curNavIndex"></navi>
         </el-aside>
         <el-main class="right-wrap">
@@ -13,7 +20,7 @@
         </el-main>
       </el-container>
     </div>
-    <Footer v-if="this.$store.state.webtype" />
+    <Footer class="footer" v-if="this.$store.state.webtype" />
   </div>
 </template>
 
@@ -82,6 +89,11 @@ export default {
     // const curRoute = this.$route.matched.find(item => item.path === this.$route.path)
     this.curNavIndex = this.$route.meta.menuIndex;
     this.inti_menus();
+  },
+  mounted() {
+    if (this.$t("website_name") === "congTuCloud") {
+      this.$refs.gpuBox.style.marginBottom = "0px";
+    }
   },
   watch: {
     "$i18n.locale"() {

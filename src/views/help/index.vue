@@ -1,19 +1,26 @@
 <!--
  * @Author: your name
  * @Date: 2020-08-24 14:49:16
- * @LastEditTime: 2020-12-30 14:22:52
- * @LastEditors: your name
+ * @LastEditTime: 2021-01-06 16:05:09
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \DBChainWebsite\src\views\help\index.vue
 -->
 <template>
-  <div class="gpu">
+  <div class="gpu" ref="gpuBox">
     <Header v-if="this.$store.state.webtype" :underlineStyle="underlineStyle" />
     <div class="box">
       <el-container>
-        <el-aside class="left-wrap">
-          <navi :menus="menus_chain" :index="curNavIndex" v-if="$t('website_name')!=='congTuCloud'"></navi>
-          <navi :menus="menus" :index="curNavIndex" v-if="$t('website_name')==='congTuCloud'"></navi>
+        <el-aside
+          v-if="$t('website_name') === 'congTuCloud'"
+          class="left-wrap"
+          style="min-height: 100vh"
+        >
+          <navi :menus="menus" :index="curNavIndex"></navi>
+        </el-aside>
+        <el-aside v-else class="left-wrap">
+          <navi :menus="menus_chain" :index="curNavIndex"></navi>
+          <navi :menus="menus" :index="curNavIndex"></navi>
         </el-aside>
         <el-main class="right-wrap">
           <keep-alive :include="cacheList">
@@ -22,7 +29,7 @@
         </el-main>
       </el-container>
     </div>
-    <Footer v-if="this.$store.state.webtype" />
+    <Footer class="footer" v-if="this.$store.state.webtype" />
   </div>
 </template>
 
@@ -44,8 +51,8 @@ export default {
           to: "aiHelp",
           index: 0,
 
-          iconClass: "iconwallet"
-        }
+          iconClass: "iconwallet",
+        },
       ],
 
       menus_chain: [
@@ -54,7 +61,7 @@ export default {
           to: "aiHelp",
           index: 0,
 
-          iconClass: "iconwallet"
+          iconClass: "iconwallet",
         },
         //  {
         //   title: undefined, //this.$t("gpu.myMachine"),
@@ -66,13 +73,13 @@ export default {
           title: undefined, //this.$t("gpu.machineList"),
           to: "supernodeHelp",
           index: 1,
-          iconClass: "iconlist"
-        }
+          iconClass: "iconlist",
+        },
       ],
       underlineStyle: {
         width: "65px",
-        left: "343px"
-      }
+        left: "343px",
+      },
     };
   },
   beforeRouteUpdate(to, from, next) {
@@ -85,10 +92,15 @@ export default {
     this.curNavIndex = this.$route.meta.menuIndex;
     this.inti_menus();
   },
+  mounted() {
+    if (this.$t("website_name") === "congTuCloud") {
+      this.$refs.gpuBox.style.marginBottom = "0px";
+    }
+  },
   watch: {
     "$i18n.locale"() {
       this.inti_menus();
-    }
+    },
   },
   computed: {
     inti_menus() {
@@ -101,13 +113,13 @@ export default {
       } else {
         this.menus[0].title = this.$t("ai_help");
       }
-    }
+    },
   },
   components: {
     Navi,
     Header,
-    Footer
-  }
+    Footer,
+  },
 };
 </script>
 
