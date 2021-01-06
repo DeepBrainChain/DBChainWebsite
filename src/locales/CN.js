@@ -847,8 +847,8 @@ export default {
     footer: {
       aboutUs: "关于我们",
       company: "聪图人工智能科技（上海）有限公司",
-      copyright: "2018-2020 © All Rights Reserved",
-      record: "沪ICP备 85895278-1号",
+      copyright: "2019-2021 © All Rights Reserved",
+      record: "",
 
       recruit: "人才招募",
       HREmail: "HR邮箱: hr@congtu.cloud",
