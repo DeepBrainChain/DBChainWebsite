@@ -100,11 +100,6 @@ export default {
           if (res.status === 1) {
             console.log(res.msg);
             this.tipsText = res.msg + this.$t("login.tipsText.jumping");
-            // // 保存当前的账号到公共状态里
-            // this.$store.commit(
-            //   "setCurrentAccountEmail",
-            //   this.inputAccountBoxValue
-            // );
             // 设置cookie，有效期1天
             setCookie("login", "login", 1);
             setCookie("email", this.inputAccountBoxValue, 1);

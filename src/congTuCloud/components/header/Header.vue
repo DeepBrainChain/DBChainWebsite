@@ -31,19 +31,10 @@
           >{{ $t("heads.mymachine") }}</a
         >
         <a
-          v-else-if="getCookie('login') === ''"
-          class="item"
-          :class="{ active: this.$store.state.menuName === 'mymachine' }"
-          @click="setMenuInfo('mymachine', 'login')"
-          index="2"
-          ref="item2"
-          >{{ $t("heads.mymachine") }}</a
-        >
-        <a
           v-else
           class="item"
           :class="{ active: this.$store.state.menuName === 'mymachine' }"
-          @click="setMenuInfo('mymachine', 'register')"
+          @click="setMenuInfo('mymachine', 'login')"
           index="2"
           ref="item2"
           >{{ $t("heads.mymachine") }}</a
@@ -110,8 +101,7 @@ export default {
       ];
 
       let itemIndex = parseInt(e.target.getAttribute("index"));
-      let underline = this.$refs.underline;
-      let width, left;
+      let width, left; //没有实际作用，仅用来做索引位置参考
       if (itemIndex == 0) {
         width = "32px";
         left = "0px";
@@ -130,7 +120,6 @@ export default {
       } else {
         return;
       }
-      // this.changeUnderlineWidthLeft(underline, width, left);
       this.changeItemcolor(items, itemIndex);
     },
     changeItemcolor: function (items, index) {
@@ -138,10 +127,6 @@ export default {
         items[i].style.color = "rgba(255, 255, 255, .6)";
       }
       items[index].style.color = "rgba(255, 255, 255, 1)";
-    },
-    changeUnderlineWidthLeft: function (underline, width, left) {
-      underline.style.width = width;
-      underline.style.left = left;
     },
     ...mapActions([
       "getAccountState",

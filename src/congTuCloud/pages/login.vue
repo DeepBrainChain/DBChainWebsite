@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-01-05 20:00:12
+ * @LastEditTime: 2021-01-06 14:34:44
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \DBChainWebsite\src\congTuCloud\pages\login.vue
+-->
 <template>
   <div class="wrap">
     <Header class="header" :underlineStyle="underlineStyle" />
@@ -15,9 +23,15 @@ export default {
       msg: "login",
       underlineStyle: {
         width: "65px",
-        left: "343px",
+        left: "218px",
       },
     };
+  },
+  mounted() {
+    if (this.$store.state.menuName === "gpu") {
+      this.underlineStyle.width = "65px";
+      this.underlineStyle.left = "92px";
+    }
   },
   components: {
     Header,

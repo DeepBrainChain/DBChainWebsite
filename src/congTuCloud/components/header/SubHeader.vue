@@ -31,19 +31,10 @@
           >{{ $t("heads.mymachine") }}</a
         >
         <a
-          v-else-if="getCookie('login') === ''"
-          class="item"
-          :class="{ active: this.$store.state.menuName === 'mymachine' }"
-          @click="setMenuInfo('mymachine', 'login')"
-          index="2"
-          ref="item2"
-          >{{ $t("heads.mymachine") }}</a
-        >
-        <a
           v-else
           class="item"
           :class="{ active: this.$store.state.menuName === 'mymachine' }"
-          @click="setMenuInfo('mymachine', 'register')"
+          @click="setMenuInfo('mymachine', 'login')"
           index="2"
           ref="item2"
           >{{ $t("heads.mymachine") }}</a
@@ -111,17 +102,16 @@ export default {
       ];
 
       let itemIndex = parseInt(e.target.getAttribute("index"));
-      let underline = this.$refs.underline;
-      let width, left;
-      if (itemIndex == 0) {
-      } else if (itemIndex == 1) {
-      } else if (itemIndex == 2) {
-      } else if (itemIndex == 3) {
-      } else if (itemIndex == 4) {
+      if (
+        itemIndex == 0 ||
+        itemIndex == 1 ||
+        itemIndex == 2 ||
+        itemIndex == 3 ||
+        itemIndex == 4
+      ) {
       } else {
         return;
       }
-      this.changeUnderlineWidthLeft(underline);
       this.changeItemcolor(items, itemIndex);
     },
     changeItemcolor: function (items, index) {
@@ -129,10 +119,6 @@ export default {
         items[i].style.color = "rgba(255, 255, 255, .6)";
       }
       items[index].style.color = "rgba(255, 255, 255, 1)";
-    },
-    changeUnderlineWidthLeft: function (underline) {
-      underline.style.width = this.underlineStyle.width;
-      underline.style.left = this.underlineStyle.left;
     },
     ...mapActions([
       "getAccountState",
