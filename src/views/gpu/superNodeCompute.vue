@@ -221,7 +221,13 @@
         v-if="item.online_status"
         class="info-wrap"
       >
-        <div v-if="item.evaluation_score_average > 0" class="flex vCenter">
+        <div
+          v-if="
+            item.evaluation_score_average > 0 &&
+            $t('website_name') != 'congTuCloud'
+          "
+          class="flex vCenter"
+        >
           <el-rate :value="item.evaluation_score_average / 2"></el-rate>
           <span>{{ item.evaluation_score_average }}</span>
         </div>

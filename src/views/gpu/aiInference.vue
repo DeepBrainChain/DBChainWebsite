@@ -221,7 +221,13 @@
         v-if="item.online_status"
         class="info-wrap"
       >
-        <div v-if="item.evaluation_score_average > 0" class="flex vCenter">
+        <div
+          v-if="
+            item.evaluation_score_average > 0 &&
+            $t('website_name') != 'congTuCloud'
+          "
+          class="flex vCenter"
+        >
           <el-rate :value="item.evaluation_score_average / 2"></el-rate>
           <span>{{ item.evaluation_score_average }}</span>
         </div>
@@ -941,7 +947,7 @@ export default {
       let email = getCookie("email");
       console.log(email);
       place_order_gpu_new({
-        email:getCookie("email"),
+        email: getCookie("email"),
         machine_type: 2,
         machine_id: item.machine_id,
         user_name_platform,
