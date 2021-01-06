@@ -2,7 +2,8 @@ import axios from "@/utlis/axios";
 // 本地环境
 // const host = "http://localhost:8080";
 // 聪图云转发后台（prod）
-const host = "http://111.44.254.181:8032";
+const host = "https://info.congtu.cloud";
+// const host = "http://111.44.254.181:8032";
 // 聪图云转发后台（test）
 // const host = "http://111.44.254.181:8033";
 //const host = 'http://13.124.237.200:8031'
@@ -823,10 +824,10 @@ export const get_register_code = params => {
 };
 
 /**
-* 注册账号
-* @description 注册账号
-* @param {object} params {email, pwd, code, language}
-*/
+ * 注册账号
+ * @description 注册账号
+ * @param {object} params {email, pwd, code, language}
+ */
 export const register = params => {
   return axios({
     method: "post",
@@ -836,10 +837,10 @@ export const register = params => {
 };
 
 /**
-* 登录账号
-* @description 登录账号
-* @param {object} params {email, pwd, language}
-*/
+ * 登录账号
+ * @description 登录账号
+ * @param {object} params {email, pwd, language}
+ */
 export const login = params => {
   return axios({
     method: "post",
@@ -849,10 +850,10 @@ export const login = params => {
 };
 
 /**
-* 找回密码
-* @description 找回密码
-* @param {object} params {email, language}
-*/
+ * 找回密码
+ * @description 找回密码
+ * @param {object} params {email, language}
+ */
 export const retrieve_pwd = params => {
   return axios({
     method: "post",
@@ -862,10 +863,10 @@ export const retrieve_pwd = params => {
 };
 
 /**
-* 重置密码
-* @description 重置密码
-* @param {object} params {email, pwd, cid, language}
-*/
+ * 重置密码
+ * @description 重置密码
+ * @param {object} params {email, pwd, cid, language}
+ */
 // export const reset_pwd = params => {
 //     return axios({
 //         method: "post",
@@ -875,10 +876,10 @@ export const retrieve_pwd = params => {
 // };
 
 /**
-* 添加支付宝支付订单
-* @description 添加支付宝支付订单
-* @param {object} params {response,order_id,count}
-*/
+ * 添加支付宝支付订单
+ * @description 添加支付宝支付订单
+ * @param {object} params {response,order_id,count}
+ */
 export const create_order_congtu = params => {
   return axios({
     method: "post",
@@ -888,10 +889,10 @@ export const create_order_congtu = params => {
 };
 
 /**
-* 获取支付宝支付状态
-* @description 获取支付宝支付状态
-* @param {object} params {order_id,language}
-*/
+ * 获取支付宝支付状态
+ * @description 获取支付宝支付状态
+ * @param {object} params {order_id,language}
+ */
 export const get_pay_status = params => {
   return axios({
     method: "post",
@@ -901,10 +902,10 @@ export const get_pay_status = params => {
 };
 
 /**
-* 获取dbc转账后返回的验证码
-* @description 获取dbc转账后返回的验证码
-* @param {object} params {order_id,language}
-*/
+ * 获取dbc转账后返回的验证码
+ * @description 获取dbc转账后返回的验证码
+ * @param {object} params {order_id,language}
+ */
 export const get_dbc_res_code = params => {
   return axios({
     method: "post",
@@ -914,10 +915,10 @@ export const get_dbc_res_code = params => {
 };
 
 /**
-* 获取订单号列表
-* @description 获取订单号列表
-* @param {object} params {email,language}
-*/
+ * 获取订单号列表
+ * @description 获取订单号列表
+ * @param {object} params {email,language}
+ */
 export const get_order_id_list = params => {
   return axios({
     method: "post",
