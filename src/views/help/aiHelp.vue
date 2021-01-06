@@ -1,7 +1,7 @@
 <template>
   <div class="wrap1200 bg-box mb100">
     <div class="border-box">
-      <h3>
+      <h3 v-if="$t('website_name')!=='congTuCloud'">
         {{$t('rent_machine_ai_help')}}：
         <a
           v-if="this.$i18n.locale==='cn' || this.$i18n.locale==='CN'"

@@ -513,7 +513,7 @@ export default {
   footer_service_1024lab: "2413810931@qq.com", //9.17 19:33
   footer_service_litaai: "ranran@litaai.xyz", //9.17 19:33
   footer_service_ainlp: "textminer@foxmail.com", //9.17 19:33
-  footer_service_52cv: "amos@52cv.net", //9.17 19:33
+  footer_service_52cv: "微信号 xiao-ma-baoli，请注明“GPU”", //9.17 19:33
   footer_service_alpha_dbchain: "1123622944@qq.com", //9.17 19:33
   footer_service_redstonewill: "redstonewill@hotmail.com", //9.17 19:33
   footer_service_xyzlab: "gpu@xyzlab.ai", //9.17 19:33
@@ -764,9 +764,9 @@ export default {
     page1: {
       title: ["聪图云", "聪图云", "聪图云"],
       describe: [
-        "全球分布式GPU算力平台",
+        "全球分布式GPU算力网络",
         "提供高性价比GPU算力",
-        "安全、稳定、可靠、便捷、便宜"
+        "高性能、高密度、低延时、低成本、全覆盖"
       ],
       buttonText: ["立即体验", "立即体验", "立即体验"]
     },
@@ -849,12 +849,12 @@ export default {
       record: "沪ICP备 85895278-1号",
 
       recruit: "人才招募",
-      HREmail: "HR邮箱: hr@dbchain.ai",
-      HRWechat: "HR微信: DCloud2019",
+      HREmail: "HR邮箱: hr@congtu.cloud",
+      HRWechat: "",
 
       contactUs: "联系我们",
       comEmail: "技术支持邮箱: support@congtu.cloud",
-      comWechat: "公司微信: DCloud2019",
+      comWechat: "公司微信: CongTuCloud",
 
       wechat: "微信公众号"
     }

@@ -4,7 +4,8 @@
     <div class="box">
       <el-container>
         <el-aside class="left-wrap">
-          <navi :menus="menus" :index="curNavIndex"></navi>
+          <navi :menus="menus_chain" :index="curNavIndex" v-if="$t('website_name')!=='congTuCloud'"></navi>
+          <navi :menus="menus" :index="curNavIndex" v-if="$t('website_name')==='congTuCloud'"></navi>
         </el-aside>
         <el-main class="right-wrap">
           <keep-alive :include="cacheList">
@@ -30,6 +31,15 @@ export default {
       cacheList: ["aiHelp", "filecoinHelp", "supernodeHelp"],
       curNavIndex: 0,
       menus: [
+        {
+          title: undefined, //this.$t("gpu.myWallet"),
+          to: "aiHelp",
+          index: 0,
+          iconClass: "iconwallet"
+        }
+      ],
+
+      menus_chain: [
         {
           title: undefined, //this.$t("gpu.myWallet"),
           to: "aiHelp",
@@ -72,11 +82,15 @@ export default {
   },
   computed: {
     inti_menus() {
-      this.menus[0].title = this.$t("ai_help");
+      if (this.$t("website_name") !== "congTuCloud") {
+        this.menus_chain[0].title = this.$t("ai_help");
 
-      // this.menus[1].title = this.$t("filecoin_help");
+        // this.menus[1].title = this.$t("filecoin_help");
 
-      this.menus[1].title = this.$t("supernode_help");
+        this.menus_chain[1].title = this.$t("supernode_help");
+      } else {
+        this.menus[0].title = this.$t("ai_help");
+      }
     }
   },
   components: {
