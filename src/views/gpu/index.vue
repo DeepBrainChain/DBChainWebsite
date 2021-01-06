@@ -97,6 +97,11 @@ export default {
       this.menus[2].title = this.$t("gpu.aiInference");
       this.menus[3].title = this.$t("gpu.hashCompute");
       this.menus[4].title = this.$t("gpu.superNodeCompute");
+
+      // 在聪图云官网模式下，不显示超级节点算力区
+      if (this.$t("website_name") === "congTuCloud") {
+        this.menus = this.menus.slice(0, 4);
+      }
     },
   },
   components: {
