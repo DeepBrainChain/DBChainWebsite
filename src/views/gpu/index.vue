@@ -88,7 +88,7 @@ export default {
       this.inti_menus();
     },
   },
-  computed: {
+  methods: {
     inti_menus() {
       this.menus[0].title = this.$t("gpu.common");
 

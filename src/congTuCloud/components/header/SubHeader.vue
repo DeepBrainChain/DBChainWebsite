@@ -7,47 +7,65 @@
         <div class="underline" ref="underline" :style="underlineStyle"></div>
         <a
           class="item"
-          :class="{active: this.$store.state.menuName === 'home'}"
+          :class="{ active: this.$store.state.menuName === 'home' }"
           @click="pushMenu('home')"
           index="0"
           ref="item0"
-        >{{$t('heads.home')}}</a>
+          >{{ $t("heads.home") }}</a
+        >
         <a
           class="item"
-          :class="{active: this.$store.state.menuName === 'gpu'}"
+          :class="{ active: this.$store.state.menuName === 'gpu' }"
           @click="pushMenu('gpu')"
           index="1"
           ref="item1"
-        >{{$t('heads.gpu')}}</a>
+          >{{ $t("heads.gpu") }}</a
+        >
         <a
+          v-if="getCookie('login') === 'login'"
           class="item"
-          :class="{active: this.$store.state.menuName === 'mymachine'}"
+          :class="{ active: this.$store.state.menuName === 'mymachine' }"
           @click="pushMenu('mymachine')"
           index="2"
           ref="item2"
-        >{{$t('heads.mymachine')}}</a>
+          >{{ $t("heads.mymachine") }}</a
+        >
+        <a
+          v-else-if="getCookie('login') === ''"
+          class="item"
+          :class="{ active: this.$store.state.menuName === 'mymachine' }"
+          @click="setMenuInfo('mymachine', 'login')"
+          index="2"
+          ref="item2"
+          >{{ $t("heads.mymachine") }}</a
+        >
+        <a
+          v-else
+          class="item"
+          :class="{ active: this.$store.state.menuName === 'mymachine' }"
+          @click="setMenuInfo('mymachine', 'register')"
+          index="2"
+          ref="item2"
+          >{{ $t("heads.mymachine") }}</a
+        >
         <a
           class="item"
-          :class="{active: this.$store.state.menuName === 'mywallet'}"
-          @click="pushMenu('mywallet')"
-          index="3"
-          ref="item3"
-        >{{$t('heads.mywallet')}}</a>
-        <a
-          class="item"
-          :class="{active: this.$store.state.menuName === 'help'}"
+          :class="{ active: this.$store.state.menuName === 'help' }"
           @click="pushMenu('help')"
           index="4"
           ref="item4"
-        >{{$t('heads.help')}}</a>
+          >{{ $t("heads.help") }}</a
+        >
       </div>
+      <div class="account">{{ getCookie("email") }}</div>
     </div>
   </div>
 </template>
 <script>
 import { mapActions, mapState } from "vuex";
+import { getCookie } from "../../../utlis/index";
 export default {
-  name: "Header",
+  name: "SubHeader",
   props: ["underlineStyle"],
   data() {
     return {
@@ -80,6 +98,9 @@ export default {
     },
   },
   methods: {
+    getCookie: function (name) {
+      return getCookie(name);
+    },
     handlerClickNav: function (e) {
       let items = [
         this.$refs.item0,
@@ -211,8 +232,18 @@ export default {
     },
     pushMenu(name) {
       //  this.menuName = name;
-      this.$store.commit("setMenuName", name);
-      this.$router.push("/" + name);
+      if (name != "login" || name != "register") {
+        this.$store.commit("setMenuName", name);
+      }
+      if (name === "mymachine") {
+        this.$router.push("/" + "myMachine/myMachineUnlock");
+      } else {
+        this.$router.push("/" + name);
+      }
+    },
+    setMenuInfo(currentName, pushToName) {
+      this.$store.commit("setMenuName", currentName);
+      this.$router.push("/" + pushToName);
     },
 
     pushToPreview() {
@@ -322,5 +353,15 @@ export default {
   position: absolute;
   top: 32px;
   // left: 0px;
+}
+.account {
+  height: 100%;
+  font-size: 16px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 1);
+  line-height: 62px;
+  float: right;
+  margin-right: 60px;
 }
 </style>

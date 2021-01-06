@@ -14,6 +14,7 @@ export default {
   message: "hello i18n !!",
 
   $: "$",
+  RMB:"元",
   send: "发送",
   closeWallet: "关闭钱包",
   toAddress: "目标地址",
@@ -70,6 +71,7 @@ export default {
     miner: "出租GPU",
     mymachine: "我的机器",
     mywallet: "我的钱包",
+    myaccount: "我的账户",
     help: "帮助文档",
     talk: "AI开发者论坛"
   },
@@ -862,5 +864,26 @@ export default {
   rentout_machine_ai_platform_select: "请选择在哪些云平台出租此机器",
   rentout_machine_platform_tag: "在所有云平台出租机器@只在本平台出租机器",
   rentout_machine_ai_platform_select_info: "基于DBC网络的云平台全球有数十家，如果选择在所有云平台出租机器，则这些云平台的用户都可以看到您的机器并且能够租用，如果选择只在本云平台出租机器，则只有本平台的用户可以看到和租用",
+  // 注册页面文本
+  register: {
+    title: "注册账号",
+    buttonText: "注册",
+    inputAccountTips: "请输入邮箱号",
+    inputCodeTips: "验证码",
+    codeTextTips: { sendCode: "发送验证码", sendCodeAgainPre: "再次发送(", sendCodeAgainNext: "s)" },
+    inputPwdTips: "设置新密码",
+    inputPwdAgainTips: "再次输入密码",
+    tipsText: { registering: "正在注册，请稍后…", signingIn: "正在登录…", pwdError: "密码不一致，请检查密码后重试！", registerCodeError: "验证码不能为空！", sendingCode: "正在发送验证码…" },
+    clickRegister:"点击注册"
+  },
+  // 登录页面文本
+  login: {
+    title: "DBChain",
+    inputAccountTips: "请输入邮箱号",
+    inputPwdTips: "请输入密码",
+    buttonText: "登录",
+    tipsText: { signingIn: "正在登录…", jumping: "，正在跳转到网盘首页…" },
+    forgetPwd: "忘记密码?",
+  },
   ...enLocale
 };

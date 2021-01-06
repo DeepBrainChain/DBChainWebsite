@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="title">
-      <span>{{$t('stop_containers_number')}}：{{rentNumber}}</span>
-      <span>{{$t('stop_instruaction')}}</span>
+      <span>{{ $t("stop_containers_number") }}：{{ rentNumber }}</span>
+      <span :style="styleHidden">{{ $t("stop_instruaction") }}</span>
       <!--    <div v-if="!isBinding && bindMail" class="binding">
         <span class="bindingInfo">{{$t('my_machine_binding_email')}}:{{bindMail}}</span>
         <el-button
@@ -28,20 +28,24 @@
       <div class="tools-head">
         <div class="l-wrap">
           <!--          <span class="tools-title">{{$t('gpu.mcStatusTitle')}}：<b>{{$t('gpu.machineOnLine')}}</b></span>-->
-          <span class="tools-title">{{$t('container_id')}}:{{(item.orderData.task_id)}}</span>
+          <span class="tools-title"
+            >{{ $t("container_id") }}:{{ item.orderData.task_id }}</span
+          >
 
+          <span v-if="item.orderData.have_continue_pay" class="tools-title"
+            >&nbsp; &nbsp; &nbsp; &nbsp;</span
+          >
           <span
-            v-if="item.orderData.have_continue_pay"
-            class="tools-title"
-          >&nbsp; &nbsp; &nbsp; &nbsp;</span>
-          <span
-            v-if="item.orderData.order_is_cancer ||item.orderData.order_is_over"
+            v-if="
+              item.orderData.order_is_cancer || item.orderData.order_is_over
+            "
             class="tools-title"
           ></span>
-          <span
-            v-else
-            class="tools-title"
-          >{{$t('gpu.remainingTime')}}：{{$secToDate(item.orderData.rest_time_rent*60, 'DHM')}}</span>
+          <span v-else class="tools-title"
+            >{{ $t("gpu.remainingTime") }}：{{
+              $secToDate(item.orderData.rest_time_rent * 60, "DHM")
+            }}</span
+          >
         </div>
         <div class="r-wrap">
           <!--<span v-if="item.rent_success">正在使用中</span>
@@ -55,163 +59,207 @@
             }}分钟
           </span>-->
           <span
-            v-if="item.orderData.order_is_over && item.orderData.order_isnormal_over"
-          >{{$t('container_isnormal_over')}}</span>
+            v-if="
+              item.orderData.order_is_over && item.orderData.order_isnormal_over
+            "
+            >{{ $t("container_isnormal_over") }}</span
+          >
           <span
-            v-else-if="item.orderData.order_is_over && item.orderData.order_isnormal_over===false"
-          >{{$t('my_machine_nonormal_over')}}</span>
-          <span v-else-if="item.orderData.order_is_cancer">{{$t('my_machine_order_cancer')}}</span>
-          <span v-else-if="item.orderData.rent_success">{{$t('my_machine_order_rent_success')}}</span>
+            v-else-if="
+              item.orderData.order_is_over &&
+              item.orderData.order_isnormal_over === false
+            "
+            >{{ $t("my_machine_nonormal_over") }}</span
+          >
+          <span v-else-if="item.orderData.order_is_cancer">{{
+            $t("my_machine_order_cancer")
+          }}</span>
+          <span v-else-if="item.orderData.rent_success">{{
+            $t("my_machine_order_rent_success")
+          }}</span>
 
           <!--   <span v-else-if="item.orderData.vocing_pay">{{$t('my_machine_order_vocing_pay')}}</span>  -->
           <span
-            v-else-if="item.orderData.pay_error && item.orderData.return_dbc===false"
-          >{{$t('my_machine_order_pay_error')}}</span>
+            v-else-if="
+              item.orderData.pay_error && item.orderData.return_dbc === false
+            "
+            >{{ $t("my_machine_order_pay_error") }}</span
+          >
           <span
             v-else-if="item.orderData.pay_error && item.orderData.return_dbc"
-          >{{$t('my_machine_order_return_dbc')}}</span>
+            >{{ $t("my_machine_order_return_dbc") }}</span
+          >
           <span
-            v-else-if="item.orderData.container_is_exist && !item.orderData.vocing_pay"
-          >{{$t('my_machine_order_vocing_machine_success')}}</span>
+            v-else-if="
+              item.orderData.container_is_exist && !item.orderData.vocing_pay
+            "
+            >{{ $t("my_machine_order_vocing_machine_success") }}</span
+          >
         </div>
       </div>
       <div class="pay-wrap">
-        <div class="rate-head" v-if="item.mcData.evaluation_score_average>0">
+        <div class="rate-head" v-if="item.mcData.evaluation_score_average > 0">
           <div class="flex right vCenter">
-            <el-rate :value="item.mcData.evaluation_score_average/2"></el-rate>
+            <el-rate
+              :value="item.mcData.evaluation_score_average / 2"
+            ></el-rate>
             <!--     <span>{{item.mcData.evaluation_score_average}}{{$t('scores')}}</span> -->
           </div>
         </div>
         <div>
-          <span
-            class="tdred"
-          >{{$t('remaining_time_length')}}:{{$secToDate(item.orderData.remaining_time_length*60, 'DHM')}}</span>
+          <span class="tdred"
+            >{{ $t("remaining_time_length") }}:{{
+              $secToDate(item.orderData.remaining_time_length * 60, "DHM")
+            }}</span
+          >
 
-          <span
-            class="td"
-          >{{$t('stopped_time_length')}}:{{$secToDate(item.orderData.stopped_time_length*60, 'DHM')}}</span>
-          <span
-            class="td"
-          >{{$t('image_data_stopped')}}：{{parseInt(item.orderData.diskspace_image_data/(1024*1024))}}G</span>
+          <span class="td"
+            >{{ $t("stopped_time_length") }}:{{
+              $secToDate(item.orderData.stopped_time_length * 60, "DHM")
+            }}</span
+          >
+          <span class="td"
+            >{{ $t("image_data_stopped") }}：{{
+              parseInt(item.orderData.diskspace_image_data / (1024 * 1024))
+            }}G</span
+          >
         </div>
       </div>
       <div class="status-wrap">
         <div class="flex status-title">
           <div>
-            <span>{{item.mcData.machine_id}}</span>
+            <span>{{ item.mcData.machine_id }}</span>
             <span class="fs28">
-              <span
-                class="cPrimaryColor"
-              >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$ {{item.mcData.gpu_price_dollar }}/{{$t('my_machine_hour')}}</span>
+              <span class="cPrimaryColor"
+                >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$
+                {{ item.mcData.gpu_price_dollar }}/{{
+                  $t("my_machine_hour")
+                }}</span
+              >
             </span>
           </div>
-          <div class="td">
+          <div class="td" :style="styleHidden">
             <span class="fs16">
-              {{$t('my_machine_dbc_version')}}：
-              <a class="cPrimaryColor">{{item.mcData.dbc_version}}</a>
+              {{ $t("my_machine_dbc_version") }}：
+              <a class="cPrimaryColor">{{ item.mcData.dbc_version }}</a>
             </span>
           </div>
         </div>
         <div class="flex">
           <div class="td2">
             <span class="fs28">
-              <a class="cPrimaryColor">{{item.mcData.gpu_type}}</a>
-              <a class="cPrimaryColor">x{{item.mcData.gpu_count}}</a>
+              <a class="cPrimaryColor">{{ item.mcData.gpu_type }}</a>
+              <a class="cPrimaryColor">x{{ item.mcData.gpu_count }}</a>
             </span>
           </div>
           <div class="td2">
             <span class="fs28">
-              <a class="cPrimaryColor">{{item.mcData.country}}</a>
+              <a class="cPrimaryColor">{{ item.mcData.country }}</a>
             </span>
           </div>
-          <div class="td" v-if="item.mcData.can_rent_start_time_later<0">
+          <div class="td" v-if="item.mcData.can_rent_start_time_later < 0">
             <span class="fs16">
-              <a class="cPrimaryColor">{{-item.mcData.can_rent_start_time_later}}</a>
-              {{$t('list_start_rentout')}}
+              <a class="cPrimaryColor">{{
+                -item.mcData.can_rent_start_time_later
+              }}</a>
+              {{ $t("list_start_rentout") }}
             </span>
           </div>
         </div>
         <div class="flex">
           <div class="td">
             <span class="fs16">
-              {{$t('list_idle_gpus')}}:
-              <a
-                class="cPrimaryColor"
-              >{{item.mcData.gpu_count - item.mcData.gpu_be_used}}</a>
+              {{ $t("list_idle_gpus") }}:
+              <a class="cPrimaryColor">{{
+                item.mcData.gpu_count - item.mcData.gpu_be_used
+              }}</a>
             </span>
           </div>
 
           <div class="td">
             <span class="fs16">
-              {{$t('list_length_of_available_time')}}：
-              <a
-                class="cPrimaryColor"
-              >{{Math.floor(item.mcData.length_of_available_time+8*24)}}{{$t('my_machine_hour')}}</a>
+              {{ $t("list_length_of_available_time") }}：
+              <a class="cPrimaryColor"
+                >{{ Math.floor(item.mcData.length_of_available_time + 8 * 24)
+                }}{{ $t("my_machine_hour") }}</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_total_time_be_used')}}：
-              <a
-                class="cPrimaryColor"
-              >{{$minsToHourMins(item.mcData.total_time_be_used)}}</a>
+              {{ $t("list_total_time_be_used") }}：
+              <a class="cPrimaryColor">{{
+                $minsToHourMins(item.mcData.total_time_be_used)
+              }}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_total_rent_count')}}：
-              <a
-                class="cPrimaryColor"
-              >{{item.mcData.total_rent_count}}</a>
+              {{ $t("list_total_rent_count") }}：
+              <a class="cPrimaryColor">{{ item.mcData.total_rent_count }}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_error_rent_count')}}：
-              <a
-                class="cPrimaryColor"
-              >{{item.mcData.error_rent_count}}</a>
+              {{ $t("list_error_rent_count") }}：
+              <a class="cPrimaryColor">{{ item.mcData.error_rent_count }}</a>
             </span>
           </div>
         </div>
 
-        <div class="flex" v-if="item.mcData.dbc_version!=='0.3.7.2'">
+        <div class="flex" v-if="item.mcData.dbc_version !== '0.3.7.2'">
           <div class="td">
             <span class="fs16">
-              {{$t('cpu_containers_list')}}:
-              <a class="cPrimaryColor">{{item.mcData.cpu_containers}}</a>
+              {{ $t("cpu_containers_list") }}:
+              <a class="cPrimaryColor">{{ item.mcData.cpu_containers }}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('cpu_containers_can_use_memory_list')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.mcData.cpu_containers_can_use_memory/(1024*1024))}}G</a>
+              {{ $t("cpu_containers_can_use_memory_list") }}：
+              <a class="cPrimaryColor"
+                >{{
+                  parseInt(
+                    item.mcData.cpu_containers_can_use_memory / (1024 * 1024)
+                  )
+                }}G</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('cpu_containers_can_use_disk_list')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.mcData.cpu_containers_can_use_disk/(1024*1024))}}G</a>
+              {{ $t("cpu_containers_can_use_disk_list") }}：
+              <a class="cPrimaryColor"
+                >{{
+                  parseInt(
+                    item.mcData.cpu_containers_can_use_disk / (1024 * 1024)
+                  )
+                }}G</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('gpu_containers_can_use_memory_list')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.mcData.gpu_containers_can_use_memory/(1024*1024))}}G</a>
+              {{ $t("gpu_containers_can_use_memory_list") }}：
+              <a class="cPrimaryColor"
+                >{{
+                  parseInt(
+                    item.mcData.gpu_containers_can_use_memory / (1024 * 1024)
+                  )
+                }}G</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('gpu_containers_can_use_disk_list')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.mcData.gpu_containers_can_use_disk/(1024*1024))}}G</a>
+              {{ $t("gpu_containers_can_use_disk_list") }}：
+              <a class="cPrimaryColor"
+                >{{
+                  parseInt(
+                    item.mcData.gpu_containers_can_use_disk / (1024 * 1024)
+                  )
+                }}G</a
+              >
             </span>
           </div>
         </div>
@@ -220,157 +268,174 @@
           <div v-if="item.mcData.tensor_cores" class="td">
             <span class="fs16">
               Tensor Cores：
-              <a class="cPrimaryColor">{{item.mcData.tensor_cores}}</a>
+              <a class="cPrimaryColor">{{ item.mcData.tensor_cores }}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_cuda_version')}}：
-              <a class="cPrimaryColor">{{item.mcData.cuda_version}}</a>
+              {{ $t("list_cuda_version") }}：
+              <a class="cPrimaryColor">{{ item.mcData.cuda_version }}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_disk_space')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.mcData.disk_space/(1024*1024))}}GB</a>
-              <a class="cPrimaryColor">&nbsp;&nbsp;{{item.mcData.disk_type}}</a>
+              {{ $t("list_disk_space") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.mcData.disk_space / (1024 * 1024)) }}GB</a
+              >
+              <a class="cPrimaryColor"
+                >&nbsp;&nbsp;{{ item.mcData.disk_type }}</a
+              >
             </span>
           </div>
           <div class="td3">
             <span class="fs16">
-              {{$t('list_cpu_type')}}：
-              <a class="cPrimaryColor">{{item.mcData.cpu_type}}</a>
+              {{ $t("list_cpu_type") }}：
+              <a class="cPrimaryColor">{{ item.mcData.cpu_type }}</a>
             </span>
           </div>
         </div>
         <div class="flex">
           <div v-if="item.mcData.half_precision_tflops > 0" class="td">
             <span class="fs16">
-              {{$t('list_half_precision_tflops')}}：
-              <a
-                class="cPrimaryColor"
-              >{{item.mcData.half_precision_tflops}}TFLOPS</a>
+              {{ $t("list_half_precision_tflops") }}：
+              <a class="cPrimaryColor"
+                >{{ item.mcData.half_precision_tflops }}TFLOPS</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_gpu_ram_size')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.mcData.gpu_ram_size/(1000*1000))}}GB</a>
+              {{ $t("list_gpu_ram_size") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.mcData.gpu_ram_size / (1000 * 1000)) }}GB</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_disk_bandwidth')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.mcData.disk_bandwidth/1024)}}MB/s</a>
+              {{ $t("list_disk_bandwidth") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.mcData.disk_bandwidth / 1024) }}MB/s</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_cpu_numbers')}}：
-              <a class="cPrimaryColor">{{item.mcData.cpu_numbers}}</a>
+              {{ $t("list_cpu_numbers") }}：
+              <a class="cPrimaryColor">{{ item.mcData.cpu_numbers }}</a>
             </span>
           </div>
         </div>
         <div class="flex">
           <div v-if="item.mcData.single_precision_tflops > 0" class="td">
             <span class="fs16">
-              {{$t('list_single_precision_tflops')}}：
-              <a
-                class="cPrimaryColor"
-              >{{item.mcData.single_precision_tflops}}TFLOPS</a>
+              {{ $t("list_single_precision_tflops") }}：
+              <a class="cPrimaryColor"
+                >{{ item.mcData.single_precision_tflops }}TFLOPS</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_gpu_ram_bandwidth')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.mcData.gpu_ram_bandwidth/(1024*1024))}}GB/s</a>
+              {{ $t("list_gpu_ram_bandwidth") }}：
+              <a class="cPrimaryColor"
+                >{{
+                  parseInt(item.mcData.gpu_ram_bandwidth / (1024 * 1024))
+                }}GB/s</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_inet_up')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.mcData.inet_up/1024)}}Mbps</a>
+              {{ $t("list_inet_up") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.mcData.inet_up / 1024) }}Mbps</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_ram_size')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.mcData.ram_size/(1024*1024))}}GB</a>
+              {{ $t("list_ram_size") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.mcData.ram_size / (1024 * 1024)) }}GB</a
+              >
             </span>
           </div>
         </div>
         <div class="flex">
           <div v-if="item.mcData.double_precision_tflops > 0" class="td">
             <span class="fs16">
-              {{$t('list_double_precision_tflops')}}：
-              <a
-                class="cPrimaryColor"
-              >{{item.mcData.double_precision_tflops}}TFLOPS</a>
+              {{ $t("list_double_precision_tflops") }}：
+              <a class="cPrimaryColor"
+                >{{ item.mcData.double_precision_tflops }}TFLOPS</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_pcie_bandwidth')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.mcData.pcie_bandwidth/(1024*1024))}}GB/s</a>
+              {{ $t("list_pcie_bandwidth") }}：
+              <a class="cPrimaryColor"
+                >{{
+                  parseInt(item.mcData.pcie_bandwidth / (1024 * 1024))
+                }}GB/s</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_inet_down')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.mcData.inet_down/1024)}}Mbps</a>
+              {{ $t("list_inet_down") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.mcData.inet_down / 1024) }}Mbps</a
+              >
             </span>
           </div>
           <div class="td3">
             <span class="fs16">
-              {{$t('list_os')}}：
-              <a class="cPrimaryColor">{{item.mcData.os}}</a>
+              {{ $t("list_os") }}：
+              <a class="cPrimaryColor">{{ item.mcData.os }}</a>
             </span>
           </div>
         </div>
       </div>
 
       <div class="tools-head">
-        <div class="l-wrap" v-if="item.mcData.dbc_version==='0.3.7.2'">
-          <span class="cRed">{{$t('dbc_vesion_error')}}</span>
+        <div class="l-wrap" v-if="item.mcData.dbc_version === '0.3.7.2'">
+          <span class="cRed">{{ $t("dbc_vesion_error") }}</span>
         </div>
         <div class="l-wrap" v-else>
-          <span class="cRed" v-if="!item.mcData.idle_status">{{$t('no_idle_gpus')}}</span>
-          <span class="cRed" v-if="!item.mcData.can_create_cpu_container">{{$t('no_container')}}</span>
+          <span class="cRed" v-if="!item.mcData.idle_status">{{
+            $t("no_idle_gpus")
+          }}</span>
+          <span class="cRed" v-if="!item.mcData.can_create_cpu_container">{{
+            $t("no_container")
+          }}</span>
         </div>
         <div class="r-wrap">
           <el-button
             style="width: 140px"
             type="primary"
             size="mini"
-            @click="openDlg_stop_to_gpu(item,index)"
-            :loading="rentLoading_gpu&&rentLoading_index===index"
-            :disabled="item.mcData.dbc_version==='0.3.7.2'||!item.mcData.idle_status"
-          >{{$t('open_gpu_stopped')}}</el-button>
+            @click="openDlg_stop_to_gpu(item, index)"
+            :loading="rentLoading_gpu && rentLoading_index === index"
+            :disabled="
+              item.mcData.dbc_version === '0.3.7.2' || !item.mcData.idle_status
+            "
+            >{{ $t("open_gpu_stopped") }}</el-button
+          >
           <el-button
-            v-if="item.mcData.usage_type===0"
+            v-if="item.mcData.usage_type === 0"
             style="width: 140px"
             type="primary"
             size="mini"
-            :disabled="item.mcData.dbc_version==='0.3.7.2'||!item.mcData.can_create_cpu_container"
-            @click="openDlg_stop_to_cpu_switch(item,index)"
-            :loading="rentLoading_cpu&&rentLoading_index===index"
-          >{{$t('open_cpu_stopped')}}</el-button>
+            :disabled="
+              item.mcData.dbc_version === '0.3.7.2' ||
+              !item.mcData.can_create_cpu_container
+            "
+            @click="openDlg_stop_to_cpu_switch(item, index)"
+            :loading="rentLoading_cpu && rentLoading_index === index"
+            >{{ $t("open_cpu_stopped") }}</el-button
+          >
         </div>
       </div>
     </div>
@@ -437,7 +502,7 @@ import {
   pay_update,
   update_container_is_ok,
   place_order_stop_to_gpu_new,
-  place_order_stop_to_cpu_new
+  place_order_stop_to_cpu_new,
 } from "@/api";
 
 import { getAccount, transfer, getBalance } from "@/utlis";
@@ -457,10 +522,11 @@ export default {
     DlgLeasecpudeposit,
     DlgLeasecpupayment,
     DlgLeaseswitchcpu,
-    DlgLeasegpu
+    DlgLeasegpu,
   },
   data() {
     return {
+      styleHidden: {},
       rentLoading_index: -1,
       rateValue: undefined,
       dlgReload_open: false,
@@ -479,7 +545,7 @@ export default {
       bindMail: "",
 
       res_body: {
-        content: []
+        content: [],
       },
       isPaying: false,
       local_pay_error: false,
@@ -495,12 +561,12 @@ export default {
       dlg_opencpupayment: false,
       dlg_opencpudeposit: false,
       rentLoading_cpu: false,
-      rentLoading_gpu: false
+      rentLoading_gpu: false,
     };
   },
   watch: {
     "$i18n.locale"() {
-      this.queryOrderList().then(res => {
+      this.queryOrderList().then((res) => {
         if (res.status === 1) {
           this.forceToPocMachineUpdate();
         }
@@ -520,13 +586,18 @@ export default {
           this.forceToPocMachineUpdate();
         }
       }, 15000);
+    },
+  },
+  mounted() {
+    if (this.$t("website_name") === "congTuCloud") {
+      this.styleHidden.visibility = "hidden";
     }
   },
   activated() {
     // this.binding(isNewMail);
 
     this.queryMail();
-    this.queryOrderList().then(res => {
+    this.queryOrderList().then((res) => {
       if (res.status === 1) {
         this.forceToPocMachineUpdate();
       }
@@ -557,10 +628,10 @@ export default {
   },
   computed: {
     rentNumber() {
-      return this.res_body.content.filter(item => {
+      return this.res_body.content.filter((item) => {
         return item.orderData.rent_success;
       }).length;
-    }
+    },
   },
   methods: {
     // 打开gpu弹窗
@@ -569,7 +640,7 @@ export default {
         this.$message({
           showClose: true,
           message: this.$t("pleae_create_wallet"),
-          type: "error"
+          type: "error",
         });
         return;
       }
@@ -585,27 +656,27 @@ export default {
         wallet_address_user: getAccount().address,
         order_id_pre: item.orderData.order_id,
         user_name_platform,
-        language
+        language,
       })
-        .then(res_1 => {
+        .then((res_1) => {
           if (res_1.status === 1) {
             this.placeOrderData = res_1.content;
             this.placeOrderData.dbc_price = 0.0026;
             return get_dbc_price({
               order_id: this.placeOrderData.order_id,
               user_name_platform,
-              language
+              language,
             });
           } else {
             this.$message({
               showClose: true,
               message: res_1.msg,
-              type: "error"
+              type: "error",
             });
             return Promise.reject(res_1.msg);
           }
         })
-        .then(res_2 => {
+        .then((res_2) => {
           if (res_2.status === 1) {
             this.placeOrderData.dbc_price = res_2.content;
             this.dlg_opengpu = true;
@@ -613,12 +684,12 @@ export default {
             this.$message({
               showClose: true,
               message: res_2.msg,
-              type: "success"
+              type: "success",
             });
             return Promise.reject(res_2.msg);
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         })
         .finally(() => {
@@ -633,7 +704,7 @@ export default {
         this.$message({
           showClose: true,
           message: this.$t("pleae_create_wallet"),
-          type: "error"
+          type: "error",
         });
         return;
       }
@@ -661,7 +732,7 @@ export default {
         this.$message({
           showClose: true,
           message: this.$t("pleae_create_wallet"),
-          type: "error"
+          type: "error",
         });
         return;
       }
@@ -676,27 +747,27 @@ export default {
         mode: "payment",
         order_id_pre: item.order_id,
         user_name_platform,
-        language
+        language,
       })
-        .then(res_1 => {
+        .then((res_1) => {
           if (res_1.status === 1) {
             this.placeOrderData = res_1.content;
             this.placeOrderData.dbc_price = 0.0026;
             return get_dbc_price({
               order_id: this.placeOrderData.order_id,
               user_name_platform,
-              language
+              language,
             });
           } else {
             this.$message({
               showClose: true,
               message: res_1.msg,
-              type: "error"
+              type: "error",
             });
             return Promise.reject(res_1.msg);
           }
         })
-        .then(res_2 => {
+        .then((res_2) => {
           if (res_2.status === 1) {
             this.placeOrderData.dbc_price = res_2.content;
             this.dlg_opencpupayment = true;
@@ -704,12 +775,12 @@ export default {
             this.$message({
               showClose: true,
               message: res_2.msg,
-              type: "success"
+              type: "success",
             });
             return Promise.reject(res_2.msg);
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         })
         .finally(() => {
@@ -730,27 +801,27 @@ export default {
         order_id_pre: item.order_id,
         user_name_platform,
         mode: "deposit",
-        language
+        language,
       })
-        .then(res_1 => {
+        .then((res_1) => {
           if (res_1.status === 1) {
             this.placeOrderData = res_1.content;
             this.placeOrderData.dbc_price = 0.0026;
             return get_dbc_price({
               order_id: this.placeOrderData.order_id,
               user_name_platform,
-              language
+              language,
             });
           } else {
             this.$message({
               showClose: true,
               message: res_1.msg,
-              type: "error"
+              type: "error",
             });
             return Promise.reject(res_1.msg);
           }
         })
-        .then(res_2 => {
+        .then((res_2) => {
           if (res_2.status === 1) {
             this.placeOrderData.dbc_price = res_2.content;
             this.dlg_opencpudeposit = true;
@@ -758,12 +829,12 @@ export default {
             this.$message({
               showClose: true,
               message: res_2.msg,
-              type: "success"
+              type: "success",
             });
             return Promise.reject(res_2.msg);
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         })
         .finally(() => {
@@ -785,12 +856,12 @@ export default {
     createOrder(params) {
       const loading = this.$loading();
       create_order(params)
-        .then(res => {
+        .then((res) => {
           if (res.status === 1) {
             this.$message({
               showClose: true,
               message: this.$t("list_create_order_success"),
-              type: "success"
+              type: "success",
             });
             this.dlg_openswitchcpu = false;
             this.dlg_opengpu = false;
@@ -805,7 +876,7 @@ export default {
             this.$message({
               showClose: true,
               message: res.msg,
-              type: "error"
+              type: "error",
             });
           }
         })
@@ -875,8 +946,8 @@ export default {
         return update_container_is_ok({
           order_id: item.orderData.order_id,
           user_name_platform,
-          language
-        }).then(res => {
+          language,
+        }).then((res) => {
           if (res.status === 1 && res.content) {
             console.log(res.msg);
             item.notice = "";
@@ -897,7 +968,7 @@ export default {
 
             return Promise.reject({
               status: -1,
-              msg: res.msg
+              msg: res.msg,
             });
           }
 
@@ -940,8 +1011,8 @@ export default {
         return can_rent_this_machine({
           order_id: item.orderData.order_id,
           user_name_platform,
-          language
-        }).then(res => {
+          language,
+        }).then((res) => {
           if (res.status === 1 && res.content) {
             console.log(res.msg);
             item.notice = "";
@@ -952,21 +1023,21 @@ export default {
             this.queryOrderList();
             return Promise.reject({
               status: 2,
-              msg: "正在验证机器环境是否可用，请耐心等待，大概需要1-3分钟"
+              msg: "正在验证机器环境是否可用，请耐心等待，大概需要1-3分钟",
             });
           } else if (!res.content) {
             this.queryOrderList();
             clearInterval(this.si);
             return Promise.reject({
               status: -1,
-              msg: "机器可能已经被租用，请取消订单，重新租用其他机器"
+              msg: "机器可能已经被租用，请取消订单，重新租用其他机器",
             });
           } else {
             this.queryOrderList();
             clearInterval(this.si);
             return Promise.reject({
               status: -1,
-              msg: res.msg
+              msg: res.msg,
             });
           }
 
@@ -989,8 +1060,8 @@ export default {
         return can_rent_this_machine({
           order_id: item.orderData.order_id,
           user_name_platform,
-          language
-        }).then(res => {
+          language,
+        }).then((res) => {
           if (res.status === 1 && res.content) {
             console.log(res.msg);
             item.notice = "";
@@ -1001,7 +1072,7 @@ export default {
             this.queryOrderList();
             return Promise.reject({
               status: 2,
-              msg: "正在验证机器环境是否可用，请耐心等待，大概需要3分钟"
+              msg: "正在验证机器环境是否可用，请耐心等待，大概需要3分钟",
             });
           } else if (res.status == -1 && res.code == 10303) {
             this.container_tips = res.msg;
@@ -1011,7 +1082,7 @@ export default {
             clearInterval(this.si);
             return Promise.reject({
               status: -1,
-              msg: "机器可能已经被租用，请取消订单，重新租用其他机器"
+              msg: "机器可能已经被租用，请取消订单，重新租用其他机器",
             });
           } else {
             this.queryOrderList();
@@ -1019,7 +1090,7 @@ export default {
 
             return Promise.reject({
               status: -1,
-              msg: res.msg
+              msg: res.msg,
             });
           }
 
@@ -1043,9 +1114,9 @@ export default {
           order_id: item.orderData.order_id,
           //  dbc_hash: txid,
           user_name_platform,
-          language
+          language,
         })
-          .then(res => {
+          .then((res) => {
             this.queryOrderList();
             if (res.status === 1) {
               clearInterval(this.si);
@@ -1054,13 +1125,13 @@ export default {
               this.queryOrderList();
             }
           })
-          .catch(err => {
+          .catch((err) => {
             if (err && err.status === -1) {
               console.log(err.msg);
               this.$message({
                 showClose: true,
                 message: err.msg,
-                type: "error"
+                type: "error",
               });
               clearInterval(this.si);
             } else if (err && err.status === -2) {
@@ -1084,8 +1155,8 @@ export default {
       get_dbchain_address({
         order_id: item.orderData.order_id,
         user_name_platform,
-        language
-      }).then(res => {
+        language,
+      }).then((res) => {
         if (res.status === 1 && res.content) {
           const amount =
             item.orderData.dbc_total_count + item.orderData.code * 1;
@@ -1095,7 +1166,7 @@ export default {
             {
               confirmButtonText: this.$t("myMachine_confirm"),
 
-              cancelButtonText: this.$t("myMachine_cancer")
+              cancelButtonText: this.$t("myMachine_cancer"),
             }
           )
             .then(({ value }) => {
@@ -1103,10 +1174,10 @@ export default {
               this.local_pay_error = false;
               return transfer({
                 toAddress: res.content,
-                amount
+                amount,
               });
             })
-            .then(res => {
+            .then((res) => {
               if (res.status === 1) {
                 console.log("转账成功");
                 const txid = res.response.txid;
@@ -1124,9 +1195,9 @@ export default {
                       order_id: item.orderData.order_id,
                       dbc_hash: txid,
                       user_name_platform,
-                      language
+                      language,
                     })
-                      .then(res => {
+                      .then((res) => {
                         this.queryOrderList();
                         if (res.status === 1) {
                           clearInterval(this.si);
@@ -1135,13 +1206,13 @@ export default {
                           this.queryOrderList();
                         }
                       })
-                      .catch(err => {
+                      .catch((err) => {
                         if (err && err.status === -1) {
                           console.log(err.msg);
                           this.$message({
                             showClose: true,
                             message: err.msg,
-                            type: "error"
+                            type: "error",
                           });
                           clearInterval(this.si);
                         } else if (err && err.status === -2) {
@@ -1160,9 +1231,9 @@ export default {
                       order_id: item.orderData.order_id,
                       dbc_hash: txid,
                       user_name_platform,
-                      language
+                      language,
                     })
-                      .then(res => {
+                      .then((res) => {
                         this.queryOrderList();
                         if (res.status === 1) {
                           clearInterval(this.si);
@@ -1178,13 +1249,13 @@ export default {
                           }, 10000);
                         }
                       })
-                      .catch(err => {
+                      .catch((err) => {
                         if (err && err.status === -1) {
                           console.log(err.msg);
                           this.$message({
                             showClose: true,
                             message: err.msg,
-                            type: "error"
+                            type: "error",
                           });
                           clearInterval(this.si);
                         } else if (err && err.status === -2) {
@@ -1218,7 +1289,7 @@ export default {
         } else {
           return Promise.reject({
             status: -1,
-            msg: "机器可能已经被租用，请取消订单，重新租用其他机器"
+            msg: "机器可能已经被租用，请取消订单，重新租用其他机器",
           });
         }
       });
@@ -1239,37 +1310,37 @@ export default {
         query_machine_by_wallet({
           wallet_address_user,
           user_name_platform,
-          language
+          language,
         }),
         get_all_order_be_stopped({
           wallet_address_user,
           user_name_platform,
-          language
-        })
+          language,
+        }),
       ];
       return Promise.all(promiseList)
         .then(([res_1, res_2]) => {
           this.res_body.content = [];
           if (res_2.content) {
-            res_2.content.forEach(item => {
+            res_2.content.forEach((item) => {
               const mcItem = res_1.content.find(
-                mc => item.machine_id === mc.machine_id
+                (mc) => item.machine_id === mc.machine_id
               );
               if (mcItem) {
                 this.res_body.content.push({
                   verifing: false,
                   notice: "",
                   orderData: item,
-                  mcData: mcItem
+                  mcData: mcItem,
                 });
               }
             });
           }
           return Promise.resolve({
-            status: 1
+            status: 1,
           });
         })
-        .catch(err => {
+        .catch((err) => {
           if (err) {
             console.log(err);
           }
@@ -1279,13 +1350,13 @@ export default {
       this.$router.push("/machineDetail?machine_id=" + machine_id);
     },
     openDlgMail(isNewMail) {
-      getBalance().then(res => {
+      getBalance().then((res) => {
         this.balance = res.balance;
         if (this.balance < 1) {
           this.$message({
             showClose: true,
             message: this.$t("dlg_bindMail_no_dbc"),
-            type: "error"
+            type: "error",
           });
         } else {
           this.isNewMail = isNewMail;
@@ -1302,8 +1373,8 @@ export default {
       queryBindMail_rent({
         wallet_address: address,
         user_name_platform,
-        language
-      }).then(res => {
+        language,
+      }).then((res) => {
         if (res.status === 1) {
           this.bindMail = res.content;
           cookie.set("mail", res.content);
@@ -1311,8 +1382,8 @@ export default {
           binding_is_ok({
             wallet_address: address,
             user_name_platform,
-            language
-          }).then(ren => {
+            language,
+          }).then((ren) => {
             if (ren.status === 2) {
               this.isBinding = true;
             }
@@ -1320,8 +1391,8 @@ export default {
           binding_is_ok_modify({
             wallet_address: address,
             user_name_platform,
-            language
-          }).then(ren => {
+            language,
+          }).then((ren) => {
             if (ren.status === 2) {
               this.isBinding = true;
             }
@@ -1341,7 +1412,7 @@ export default {
             const res = await binding_is_ok({
               wallet_address: getAccount().address,
               user_name_platform,
-              language
+              language,
             });
             if (res.status === 1) {
               clearInterval(si);
@@ -1352,7 +1423,7 @@ export default {
             const res = await binding_is_ok_modify({
               wallet_address: getAccount().address,
               user_name_platform,
-              language
+              language,
             });
             if (res.status === 1) {
               clearInterval(si);
@@ -1382,8 +1453,8 @@ export default {
 
     returnSuccess() {
       this.queryOrderList();
-    }
-  }
+    },
+  },
 };
 </script>
 

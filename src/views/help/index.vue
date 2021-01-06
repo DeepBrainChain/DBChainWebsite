@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-08-24 14:49:16
+ * @LastEditTime: 2020-12-30 14:22:52
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \DBChainWebsite\src\views\help\index.vue
+-->
 <template>
   <div class="gpu">
     <Header v-if="this.$store.state.webtype" :underlineStyle="underlineStyle" />
@@ -35,6 +43,7 @@ export default {
           title: undefined, //this.$t("gpu.myWallet"),
           to: "aiHelp",
           index: 0,
+<<<<<<< HEAD
           iconClass: "iconwallet"
         }
       ],
@@ -45,6 +54,9 @@ export default {
           to: "aiHelp",
           index: 0,
           iconClass: "iconwallet"
+=======
+          iconClass: "iconwallet",
+>>>>>>> 3d79735e5eb9e30ac5251c07b32bfefeef1b4710
         },
         //  {
         //   title: undefined, //this.$t("gpu.myMachine"),
@@ -56,13 +68,13 @@ export default {
           title: undefined, //this.$t("gpu.machineList"),
           to: "supernodeHelp",
           index: 1,
-          iconClass: "iconlist"
-        }
+          iconClass: "iconlist",
+        },
       ],
       underlineStyle: {
         width: "65px",
-        left: "467px"
-      }
+        left: "343px",
+      },
     };
   },
   beforeRouteUpdate(to, from, next) {
@@ -78,7 +90,7 @@ export default {
   watch: {
     "$i18n.locale"() {
       this.inti_menus();
-    }
+    },
   },
   computed: {
     inti_menus() {
@@ -87,17 +99,22 @@ export default {
 
         // this.menus[1].title = this.$t("filecoin_help");
 
+<<<<<<< HEAD
         this.menus_chain[1].title = this.$t("supernode_help");
       } else {
         this.menus[0].title = this.$t("ai_help");
       }
     }
+=======
+      this.menus[1].title = this.$t("supernode_help");
+    },
+>>>>>>> 3d79735e5eb9e30ac5251c07b32bfefeef1b4710
   },
   components: {
     Navi,
     Header,
-    Footer
-  }
+    Footer,
+  },
 };
 </script>
 

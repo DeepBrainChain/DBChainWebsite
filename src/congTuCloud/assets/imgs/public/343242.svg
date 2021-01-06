@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>343242@1x</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="注册登录00" transform="translate(-816.000000, -532.000000)">
+            <g id="343242" transform="translate(816.000000, 532.000000)">
+                <polygon id="路径" fill-opacity="0.01" fill="#FFFFFF" fill-rule="nonzero" points="0 0 24 0 24 24 0 24"></polygon>
+                <g id="编组">
+                    <rect id="矩形" fill-opacity="0.01" fill="#FFFFFF" fill-rule="nonzero" x="0" y="0" width="24" height="24"></rect>
+                    <path d="M4.92893,9 C3.11929,10.5 2,12 2,12 C2,12 6.47715,18 12,18 C12.68495,18 13.3538,17.9077 14,17.74605 M10.0159,6.25 C10.6572,6.0908 11.3207,6 12,6 C17.52285,6 22,12 22,12 C22,12 20.8807,13.5 19.07105,15" id="形状" stroke="#061267" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M10.1571,10.31055 C9.74905,10.75545 9.5,11.3486 9.5,11.9999 C9.5,13.3806 10.6193,14.4999 12,14.4999 C12.68135,14.4999 13.29905,14.2273 13.75,13.78525" id="路径" stroke="#061267" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <line x1="21" y1="21" x2="3" y2="3" id="路径" stroke="#061267" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></line>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
