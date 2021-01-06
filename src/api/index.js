@@ -1,6 +1,10 @@
 import axios from "@/utlis/axios";
+// 本地环境
 // const host = "http://localhost:8080";
+// 聪图云转发后台（prod）
 const host = "http://111.44.254.181:8032";
+// 聪图云转发后台（test）
+// const host = "http://111.44.254.181:8033";
 //const host = 'http://13.124.237.200:8031'
 //const host = "https://otherinfo.dbchain.ai";
 // const host = "https://info.dbchain.ai";
