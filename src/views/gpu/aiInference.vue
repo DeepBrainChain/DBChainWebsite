@@ -234,11 +234,15 @@
         <div class="flex status-title">
           <div>
             <el-button
+              v-if="$t('website_name') != 'congTuCloud'"
               plain
               class="is-link"
               @click="pushDetail(item.machine_id)"
               >{{ item.machine_id }}</el-button
             >
+            <div v-else class="machineIdBox">
+              {{ item.machine_id }}
+            </div>
             <span class="fs28">
               <span class="cRedbig" v-if="$t('website_name') === 'congTuCloud'"
                 >&nbsp;&nbsp; {{ (item.gpu_price_dollar * usdToRmb).toFixed(2)
@@ -2080,6 +2084,25 @@ export default {
           font-size: 18px;
         }
       }
+    }
+    .machineIdBox {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 396.67px;
+      height: 50px;
+      border: 1px solid #195d91;
+      border-radius: 2px;
+      color: #195d91;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: "Helvetica Neue", Helvetica, "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    }
+    .machineIdBox:hover {
+      background: #195d91;
+      color: #ffffff;
+      opacity: 0.7;
     }
   }
 }
