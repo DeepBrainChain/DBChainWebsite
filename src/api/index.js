@@ -1,7 +1,8 @@
 import axios from "@/utlis/axios";
 // const host = "http://localhost:8080";
-const host = "https://info.congtu.cloud";
+const host = "https://congtucloud.dbchain.ai";
 //const host = "http://111.44.254.181:8032";
+//const host = "http://111.44.254.139:8033";
 //const host = 'http://13.124.237.200:8031'
 //const host = "https://otherinfo.dbchain.ai";
 // const host = "https://info.dbchain.ai";
