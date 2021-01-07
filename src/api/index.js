@@ -3,7 +3,7 @@ import axios from "@/utlis/axios";
 // const host = "http://localhost:8080";
 
 // 聪图云转发后台（prod）
-const host = "ttps://congtucloud.dbchain.ai";
+const host = "https://congtucloud.dbchain.ai";
 // const host = "http://111.44.254.181:8032";
 // 聪图云转发后台（test）
 // const host = "http://111.44.254.181:8033";
