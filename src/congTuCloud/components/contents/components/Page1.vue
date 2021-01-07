@@ -48,6 +48,7 @@ export default {
       bannerIndex: 0,
       underlines: [],
       timerFlag: {},
+      bannersChangeTime: 3500,
     };
   },
   mounted: function () {
@@ -57,7 +58,7 @@ export default {
       this.$refs.underline2,
       this.$refs.underline3,
     ];
-    this.timerFlag = setInterval(this.bannerSwitching, 2500);
+    this.timerFlag = setInterval(this.bannerSwitching, this.bannersChangeTime);
   },
   methods: {
     bannerSwitching: function () {
@@ -83,7 +84,10 @@ export default {
       clearInterval(this.timerFlag);
       this.bannerIndex = underlineIndex - 1;
       this.bannerSwitching();
-      this.timerFlag = setInterval(this.bannerSwitching, 2500);
+      this.timerFlag = setInterval(
+        this.bannerSwitching,
+        this.bannersChangeTime
+      );
     },
     pushMenu(name) {
       //  this.menuName = name;
@@ -182,6 +186,7 @@ export default {
   bottom: 0;
   left: 0;
   margin: auto auto 30px;
+  z-index: 10;
 }
 .underline > div {
   width: 20px;
