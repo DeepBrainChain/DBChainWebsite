@@ -1911,7 +1911,7 @@ export default {
             response: {},
             orderData: item.orderData.order_id,
             dbcCode: item.orderData.code,
-            tradeNoPre: "congtu",
+            tradeNoPre: "21712",
           })
             .then((res) => {
               console.log("-=-=-=-=-create_aliPay_order_congtu==========");
@@ -2129,7 +2129,13 @@ export default {
     },
     // get Order List
     queryOrderList() {
-      if (this.$t("website_name") != "congTuCloud") {
+      if (this.$t("website_name") === "congTuCloud") {
+        //  获取数据库中当前用户邮箱的 order_id
+        if (!getCookie("email")) {
+          this.$router.push("/" + "login");
+          return;
+        }
+      } else {
         if (!getAccount()) {
           // this.$router.push(`/openWallet/${type}`);
           return;
@@ -2152,43 +2158,38 @@ export default {
           user_name_platform,
           language,
         }),
+        get_order_id_list({
+          email: getCookie("email"),
+          language,
+        }),
       ];
       return Promise.all(promiseList)
-        .then(([res_1, res_2]) => {
+        .then(([res_1, res_2, res_3]) => {
           this.res_body.content = [];
+          // console.log(
+          //   "Promise>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+          // );
+          // console.log(res_1);
+          // console.log(res_2);
+          // console.log(res_3);
           if (res_2.content) {
             res_2.content.forEach((item) => {
               const mcItem = res_1.content.find(
                 (mc) => item.machine_id === mc.machine_id
               );
-              console.log("item================");
-              console.log(item);
-              console.log("mcItem================");
-              console.log(mcItem);
               if (mcItem) {
                 if (this.$t("website_name") === "congTuCloud") {
-                  //  获取数据库中当前用户邮箱的 order_id
-                  if (!getCookie("email")) {
-                    this.$router.push("/" + "login");
-                  }
-                  get_order_id_list({
-                    email: getCookie("email"),
-                    language,
-                  }).then((res) => {
-                    console.log("get_order_id_list====");
-                    console.log(res);
-                    this.orderCount = res.content.length;
-                    for (let i of res.content) {
-                      if (i.order_id === item.order_id) {
-                        this.res_body.content.push({
-                          verifing: false,
-                          notice: "",
-                          orderData: item,
-                          mcData: mcItem,
-                        });
-                      }
+                  for (let i of res_3.content) {
+                    if (i.order_id === item.order_id) {
+                      this.res_body.content.push({
+                        verifing: false,
+                        notice: "",
+                        orderData: item,
+                        mcData: mcItem,
+                      });
+                      this.orderCount = this.res_body.content.length;
                     }
-                  });
+                  }
                 } else {
                   this.res_body.content.push({
                     verifing: false,
