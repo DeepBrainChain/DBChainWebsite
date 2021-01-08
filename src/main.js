@@ -1,36 +1,16 @@
+// The Vue build version to load with the `import` command
+// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import App from './App.vue'
+import App from './App'
 import router from './router'
-import store from './store/index'
-import {
-  i18n
-} from './setup'
-import plugins from './plugins'
-import './assets/css/normalize.scss'
-import './assets/css/common.scss'
-import './assets/css/main.scss'
-// import {sync} from "vuex-router-sync"
-// import i18n from './i18n'
+import './assets/css/common.css'
 
 Vue.config.productionTip = false
-Vue.use(plugins)
 
-import VueWechatTitle from 'vue-wechat-title'
-Vue.use(VueWechatTitle)
-// const unsync = sync(store, router)
-
-// unsync()
-router.beforeEach((to, from, next) => {
-    if (to.meta.title) {
-      document.title = to.meta.title
-    }
-    next()
-  }
-
-)
+/* eslint-disable no-new */
 new Vue({
+  el: '#app',
   router,
-  store,
-  i18n,
-  render: h => h(App)
-}).$mount('#app')
+  components: { App },
+  template: '<App/>'
+})
