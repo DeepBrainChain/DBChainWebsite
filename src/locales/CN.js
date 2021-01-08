@@ -3,6 +3,7 @@ import enLocale from "element-ui/lib/locale/lang/en";
 export default {
   /* 关于webtype:
    ** 修改数值时，要把router.js文件开头引入的Home组件切换与此类型一致
+   ** 如果是法币聪图云模式，要把根目录下public/index.html 中脚本的 websiteNameIsCongtuCloud变量 修改为true
    */
   webtype: "0", //0:表示法币支付网站,1:表示dbc支付网站
   website_name: "congTuCloud", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab,congTuCloud
