@@ -1,5 +1,5 @@
 import axios from "@/utlis/axios";
-// 本地环境
+// 聪图云转发后台本地环境
 // const host = "http://localhost:8080";
 // 聪图云转发后台（prod）
 const host = "https://info.congtu.cloud";
