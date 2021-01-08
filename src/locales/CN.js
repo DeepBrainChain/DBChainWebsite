@@ -396,6 +396,7 @@ export default {
   myMachine_maybe_is_used: "机器可能已经被租用，请取消订单，重新租用其他机器",
   myMachine_is_vocing_machine: "正在验证机器环境是否可用，大概需要1-3分钟(若等待时间超过5分钟,请切换手机热点后刷新页面且关闭VPN)",
   myMachine_is_dbc_transfering: "正在DBC转账中(若20s后仍然正在转账中，请切换到手机热点后刷新页面且关闭VPN)",
+  myMachine_is_paying: "正在支付中(若20s后仍然正在转账中，请切换到手机热点后刷新页面且关闭VPN)",
   myMachine_is_transfer_error: "DBC转账失败，请重新支付",
   myMachine_return_dbc: "退币",
   myMachine_confirm_pay: "继续支付",

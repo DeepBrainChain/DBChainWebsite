@@ -635,6 +635,19 @@
               !item.orderData.pay_success &&
               !item.orderData.order_is_over &&
               !item.orderData.rent_success &&
+              !item.orderData.pay_error &&
+              $t('website_name') === 'congTuCloud'
+            "
+            >{{ $t("myMachine_is_paying") }}</span
+          >
+          <span
+            class="cRed"
+            v-else-if="
+              isPaying &&
+              !item.orderData.order_is_cancer &&
+              !item.orderData.pay_success &&
+              !item.orderData.order_is_over &&
+              !item.orderData.rent_success &&
               !item.orderData.pay_error
             "
             >{{ $t("myMachine_is_dbc_transfering") }}</span
