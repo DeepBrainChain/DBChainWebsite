@@ -112,7 +112,7 @@
           >
         </div>
       </div>
-      <div class="pay-wrap">
+      <div class="pay-wrap" v-if="$t('website_name') != 'congTuCloud'">
         <div class="rate-head" v-if="item.mcData.evaluation_score_average > 0">
           <div class="flex right vCenter">
             <el-rate
@@ -205,11 +205,18 @@
           <div>
             <span>{{ item.mcData.machine_id }}</span>
             <span class="fs28">
-              <span class="cPrimaryColor"
+              <span
+                class="cPrimaryColor"
+                v-if="$t('website_name') != 'congTuCloud'"
                 >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$
                 {{ item.mcData.gpu_price_dollar }}/{{
                   $t("my_machine_hour")
                 }}</span
+              >
+              <span class="cPrimaryColor" v-else
+                >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                {{ (item.mcData.gpu_price_dollar * usdToRmb).toFixed(2)
+                }}{{ $t("RMB") }}/{{ $t("my_machine_hour") }}</span
               >
             </span>
           </div>
@@ -849,14 +856,24 @@ import {
   request_return_dbc,
   get_dbc_price,
   create_order,
+  create_order_congtu,
   pay_update,
   update_container_is_ok,
   send_email_repeat,
   continue_pay_deposit,
   continue_pay_deposit_get_time_max,
+  get_cpu_order_id_list,
+  get_pay_status,
+  get_dbc_res_code,
 } from "@/api";
 
-import { getAccount, transfer, getBalance } from "@/utlis";
+import {
+  getAccount,
+  transfer,
+  getBalance,
+  getCookie,
+  getUsdToRmb,
+} from "@/utlis";
 
 export default {
   name: "myMachine_unlock_cpu",
@@ -875,6 +892,8 @@ export default {
   },
   data() {
     return {
+      usdToRmb: getUsdToRmb(),
+      dlgRestart_open: false,
       styleHidden: {},
       rateValue: undefined,
       dlgReload_open: false,
@@ -997,7 +1016,11 @@ export default {
     switch_pay(item) {
       this.dlg_leaseconfirmpay = false;
       if (item.switch_pay_mode === "confirm_pay") {
-        this.payOrder(item);
+        if (this.$t("website_name") === "congTuCloud") {
+          this.payOrder_congtu(item);
+        } else {
+          this.payOrder(item);
+        }
       } else if (item.switch_pay_mode === "paid") {
         this.paid(item);
       }
@@ -1757,6 +1780,175 @@ export default {
 
       //  }, 5000);
     },
+    // pay
+    payOrder_congtu(item) {
+      clearInterval(this.si);
+      this.ispayPocing = false;
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
+      get_dbchain_address({
+        order_id: item.orderData.order_id,
+        user_name_platform,
+        language,
+      }).then((res) => {
+        console.log("-=-=-=-=get_dbchain_address==============");
+        console.log(res);
+        if (res.status === 1 && res.content) {
+          this.isPaying = true;
+          this.local_pay_error = false;
+          create_order_congtu({
+            response: {},
+            orderData: item.orderData.order_id,
+            dbcCode: item.orderData.code,
+            tradeNoPre: "21712",
+          })
+            .then((res) => {
+              console.log("-=-=-=-=-create_aliPay_order_congtu==========");
+              console.log(res);
+              let alipay = window.open();
+              alipay.document.body.innerHTML = res.slice(
+                0,
+                res.search("<script>")
+              );
+              alipay.document.body.getElementsByTagName("form")[0].submit();
+              // todo 定时 从后台数据库获取支付宝支付状态（包含dbc转账参数）
+              // todo 如果支付成功，返回参数， 为pay（）预备参数:txid
+              this.getAlipayStatusTimer = setInterval(() => {
+                get_pay_status({
+                  order_id: item.orderData.order_id,
+                  language,
+                }).then((res) => {
+                  console.log("get_pay_status-------");
+                  console.log(res);
+                  if (res.content === "ok") {
+                    clearInterval(this.getAlipayStatusTimer);
+                    this.getDbcResCodeTimer = setInterval(() => {
+                      get_dbc_res_code({
+                        order_id: item.orderData.order_id,
+                        language,
+                      }).then((res) => {
+                        console.log("get_dbc_res_code-------");
+                        console.log(res);
+                        if (
+                          res.content != null ||
+                          res.content != undefined ||
+                          res.content != ""
+                        ) {
+                          clearInterval(this.getDbcResCodeTimer);
+                          const txid = res.content;
+
+                          // pay after
+                          this.isPaying = false;
+                          item.orderData.vocing_pay = true;
+                          const user_name_platform = this.$t("website_name");
+                          const language = this.$i18n.locale;
+                          this.ispayPocing = true;
+                          this.times = 10; //此时重新设置为10
+                          // 支付后确认
+
+                          if (item.orderData.order_id_pre === null) {
+                            this.si = setInterval(() => {
+                              return pay({
+                                order_id: item.orderData.order_id,
+                                dbc_hash: txid,
+                                user_name_platform,
+                                language,
+                              })
+                                .then((res) => {
+                                  console.log("pay-------");
+                                  console.log(res);
+                                  this.queryOrderList();
+                                  if (res.content.status === 1) {
+                                    clearInterval(this.si);
+
+                                    this.ispayPocing = false;
+                                    item.orderData.vocing_pay = false;
+                                    this.queryOrderList();
+                                  } else if (res.content.status === 2) {
+                                    this.queryOrderList();
+                                  } else if (res.content.status === -1) {
+                                    this.queryOrderList();
+                                    this.ispayPocing = false;
+                                    item.orderData.vocing_pay = false;
+                                    clearInterval(this.si);
+                                    this.$message({
+                                      showClose: true,
+                                      message: res.msg,
+                                      type: "error",
+                                    });
+                                  }
+                                })
+                                .catch((err) => {
+                                  //   this.ispayPocing = false;
+                                  //   clearInterval(this.si);
+                                });
+                            }, 8000);
+                          } else {
+                            this.si = setInterval(() => {
+                              return pay_update({
+                                order_id: item.orderData.order_id,
+                                dbc_hash: txid,
+                                user_name_platform,
+                                language,
+                              })
+                                .then((res) => {
+                                  // this.queryOrderList();
+                                  if (res.status === 1) {
+                                    clearInterval(this.si);
+                                    this.ispayPocing = false;
+                                    this.creating_container = true;
+                                    item.orderData.vocing_pay = false;
+                                    this.queryOrderList();
+                                    this.forceToPocMachineUpdate();
+                                  } else if (res.status === -1) {
+                                    clearInterval(this.si);
+                                    this.ispayPocing = false;
+                                    item.orderData.vocing_pay = false;
+                                    this.queryOrderList();
+                                    this.$message({
+                                      showClose: true,
+                                      message: res.msg,
+                                      type: "error",
+                                    });
+                                  } else if (res.status === 2) {
+                                    // item.orderData.creating_container = true;
+                                    this.queryOrderList();
+                                  }
+                                })
+                                .catch((err) => {
+                                  //   this.ispayPocing = false;
+                                  //   clearInterval(this.si);
+                                });
+                            }, 8000);
+                          }
+                        } else {
+                          this.isPaying = false;
+                          this.$message({
+                            showClose: true,
+                            message: this.$t("transfer_error"),
+                            type: "error",
+                          });
+                          clearInterval(this.si);
+                          this.local_pay_error = true;
+                          console.log("转账失败");
+                        }
+                      });
+                    }, 1000);
+                  }
+                });
+              }, 1000);
+            })
+            .catch((err) => {
+              if (err) {
+                console.log(err);
+              }
+            })
+            .finally(() => {
+              console.log("一定会执行的语句");
+            });
+        }
+      });
+    },
     // cancel
     cancelOrder(item) {
       this.cancelLoading = true;
@@ -1825,11 +2017,22 @@ export default {
     },
     // get Order List
     queryOrderList() {
-      if (!getAccount()) {
-        // this.$router.push(`/openWallet/${type}`);
-        return;
+      if (this.$t("website_name") === "congTuCloud") {
+        //  获取数据库中当前用户邮箱的 order_id
+        if (!getCookie("email")) {
+          this.$router.push("/" + "login");
+          return;
+        }
+      } else {
+        if (!getAccount()) {
+          // this.$router.push(`/openWallet/${type}`);
+          return;
+        }
       }
-      const wallet_address_user = getAccount().address;
+      let wallet_address_user = "tmp";
+      if (this.$t("website_name") != "congTuCloud") {
+        wallet_address_user = getAccount().address;
+      }
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       const promiseList = [
@@ -1843,9 +2046,19 @@ export default {
           user_name_platform,
           language,
         }),
+        get_cpu_order_id_list({
+          email: getCookie("email"),
+          language,
+        }),
       ];
       return Promise.all(promiseList)
-        .then(([res_1, res_2]) => {
+        .then(([res_1, res_2, res_3]) => {
+          // console.log(
+          //   "Promise>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+          // );
+          // console.log(res_1);
+          // console.log(res_2);
+          // console.log(res_3);
           this.res_body.content = [];
           if (res_2.content) {
             res_2.content.forEach((item) => {
@@ -1853,12 +2066,27 @@ export default {
                 (mc) => item.machine_id === mc.machine_id
               );
               if (mcItem) {
-                this.res_body.content.push({
-                  verifing: false,
-                  notice: "",
-                  orderData: item,
-                  mcData: mcItem,
-                });
+                if (this.$t("website_name") === "congTuCloud") {
+                  for (let i of res_3.content) {
+                    if (i.order_id === item.order_id) {
+                      this.res_body.content.push({
+                        verifing: false,
+                        notice: "",
+                        orderData: item,
+                        mcData: mcItem,
+                      });
+                      this.orderCount = this.res_body.content.length;
+                    }
+                  }
+                } else {
+                  this.res_body.content.push({
+                    verifing: false,
+                    notice: "",
+                    orderData: item,
+                    mcData: mcItem,
+                  });
+                }
+
                 if (
                   item.order_id_pre === null &&
                   item.container_is_exist === true &&
@@ -1908,7 +2136,10 @@ export default {
     //
     queryMail() {
       this.bindMail = cookie.get("mail");
-      const address = getAccount().address;
+      let address = "tmp";
+      if (this.$t("website_name") != "congTuCloud") {
+        address = getAccount().address;
+      }
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       queryBindMail_rent({

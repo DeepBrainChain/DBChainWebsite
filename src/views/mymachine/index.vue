@@ -94,9 +94,9 @@ export default {
       this.menus[1].title = this.$t("gpu.myMachine_cpu");
       this.menus[2].title = this.$t("gpu.myMachine_stopped");
 
-      if (this.$t("website_name") === "congTuCloud") {
-        this.menus.splice(2, 1);
-      }
+      // if (this.$t("website_name") === "congTuCloud") {
+      //   this.menus.splice(2, 1);
+      // }
     },
   },
   components: {

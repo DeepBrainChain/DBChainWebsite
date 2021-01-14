@@ -302,8 +302,29 @@
               style="width: 120px"
               type="primary"
               size="mini"
-              v-if="item.dbc_version !== '0.3.7.2' && item.usage_type === 0"
+              v-if="
+                item.dbc_version !== '0.3.7.2' &&
+                item.usage_type === 0 &&
+                $t('website_name') !== 'congTuCloud'
+              "
               @click="openDlg_cpu_switch(item, index)"
+              :disabled="
+                !item.can_create_cpu_container ||
+                item.can_rent_start_time_later < 0
+              "
+              :loading="rentLoading_cpu && rent_index === index"
+              >{{ $t("list_rentout_cpu") }}</el-button
+            >
+            <el-button
+              style="width: 120px"
+              type="primary"
+              size="mini"
+              v-else-if="
+                item.dbc_version !== '0.3.7.2' &&
+                item.usage_type === 0 &&
+                $t('website_name') === 'congTuCloud'
+              "
+              @click="openDlg_congtu_cpu_switch(item, index)"
               :disabled="
                 !item.can_create_cpu_container ||
                 item.can_rent_start_time_later < 0
@@ -1027,11 +1048,29 @@ export default {
       //    this.confirm_new("xxx", this.$t("cpu_mode_switch"), item);
     },
 
+    openDlg_congtu_cpu_switch(item, index) {
+      if (getCookie("login") != "login") {
+        this.$router.push("/login");
+        return;
+      }
+      console.log("item-=0=0=00-0-");
+      console.log(item);
+      this.dlg_openswitchcpu = false;
+      this.placeOrderData = item;
+      this.placeOrderData.index = index;
+      item.switch_cpu_mode = "payment";
+      this.switch_cpu_mode(item);
+    },
+
     switch_cpu_mode(item) {
       this.dlg_openswitchcpu = false;
       this.$forceUpdate();
       if (item.switch_cpu_mode === "payment") {
-        this.to_payment(item, item.index);
+        if (this.$t("website_name") === "congTuCloud") {
+          this.to_payment_congtu(item, item.index);
+        } else {
+          this.to_payment(item, item.index);
+        }
       } else if (item.switch_cpu_mode === "deposit") {
         this.to_deposit(item, item.index);
       }
@@ -1061,6 +1100,62 @@ export default {
         language,
       })
         .then((res_1) => {
+          if (res_1.status === 1) {
+            this.placeOrderData = res_1.content;
+            this.placeOrderData.dbc_price = 0.0026;
+            return get_dbc_price({
+              order_id: this.placeOrderData.order_id,
+              user_name_platform,
+              language,
+            });
+          } else {
+            this.$message({
+              showClose: true,
+              message: res_1.msg,
+              type: "error",
+            });
+            return Promise.reject(res_1.msg);
+          }
+        })
+        .then((res_2) => {
+          if (res_2.status === 1) {
+            this.placeOrderData.dbc_price = res_2.content;
+            this.dlg_opencpupayment = true;
+          } else {
+            this.$message({
+              showClose: true,
+              message: res_2.msg,
+              type: "success",
+            });
+            return Promise.reject(res_2.msg);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          this.rentLoading_cpu = false;
+          this.rent_index = -1;
+        });
+    },
+
+    to_payment_congtu(item, index) {
+      this.rent_index = index;
+      this.rentLoading_cpu = true;
+      this.$forceUpdate();
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
+      place_order_cpu_new({
+        machine_type: 2,
+        email: getCookie("email"),
+        machine_id: item.machine_id,
+        mode: "payment",
+        user_name_platform,
+        language,
+      })
+        .then((res_1) => {
+          console.log("res_1---------");
+          console.log(res_1);
           if (res_1.status === 1) {
             this.placeOrderData = res_1.content;
             this.placeOrderData.dbc_price = 0.0026;

@@ -1022,10 +1022,16 @@ import {
   send_email_repeat,
   get_pay_status,
   get_dbc_res_code,
-  get_order_id_list,
+  get_gpu_order_id_list,
 } from "@/api";
 
-import { getAccount, transfer, getBalance, getCookie } from "@/utlis";
+import {
+  getAccount,
+  transfer,
+  getBalance,
+  getCookie,
+  getUsdToRmb,
+} from "@/utlis";
 
 export default {
   name: "myMachine_unlock",
@@ -1045,6 +1051,7 @@ export default {
   },
   data() {
     return {
+      usdToRmb: getUsdToRmb(),
       dlgRestart_open: false,
       styleHidden: {},
       rateValue: undefined,
@@ -1404,6 +1411,8 @@ export default {
         language,
       })
         .then((res_1) => {
+          console.log("continue_pay_place_order--res*****");
+          console.log(res_1);
           if (res_1.status === 1) {
             this.placeOrderData = res_1.content;
             // this.placeOrderData.dbc_price = -1;
@@ -1422,6 +1431,8 @@ export default {
           }
         })
         .then((res_2) => {
+          console.log("continue_pay_get_dbc_price--res*****");
+          console.log(res_2);
           if (res_2.status === 1) {
             this.placeOrderData.dbc_price = res_2.content;
             this.openContinueDlg = true;
@@ -2171,7 +2182,7 @@ export default {
           user_name_platform,
           language,
         }),
-        get_order_id_list({
+        get_gpu_order_id_list({
           email: getCookie("email"),
           language,
         }),

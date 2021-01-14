@@ -917,11 +917,24 @@ export const get_dbc_res_code = params => {
 };
 
 /**
- * 获取订单号列表
- * @description 获取订单号列表
+ * 获取GPU订单号列表
+ * @description 获取订GPU单号列表
  * @param {object} params {email,language}
  */
-export const get_order_id_list = params => {
+export const get_gpu_order_id_list = params => {
+  return axios({
+    method: "post",
+    url: host + "/gpu_order/get_order_id_list",
+    params
+  });
+};
+
+/**
+ * 获取CPU订单号列表
+ * @description 获取订CPU单号列表
+ * @param {object} params {email,language}
+ */
+export const get_cpu_order_id_list = params => {
   return axios({
     method: "post",
     url: host + "/gpu_order/get_order_id_list",
