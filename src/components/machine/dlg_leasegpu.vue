@@ -260,7 +260,12 @@
 
 <script>
 import { get_pay_dbc_count, can_rent_this_machine } from "@/api";
-import { getBalance, getGasBalance, getUsdToRmb } from "@/utlis";
+import {
+  getBalance,
+  getGasBalance,
+  getUsdToRmb,
+  getCongtuGpuOrderIdPrefix,
+} from "@/utlis";
 
 export default {
   name: "popup_reload",
@@ -681,6 +686,7 @@ export default {
         user_name_platform: this.$t("website_name"),
         language: this.$i18n.locale,
         r_count: `${(this.totalPrice * this.usdToRmb).toFixed(2)}`,
+        congtu_order_id_prefix: getCongtuGpuOrderIdPrefix(),
       };
       console.log("-------------params--------------");
       console.log(params);

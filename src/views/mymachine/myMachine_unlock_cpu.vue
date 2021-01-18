@@ -1,7 +1,10 @@
 <template>
   <div>
     <div class="title">
-      <span>{{ $t("gpu.myMachineTitle") }}：{{ rentNumber }}</span>
+      <span v-if="$t('website_name') === 'congTuCloud'"
+        >{{ $t("gpu.myMachineTitle") }}：{{ orderCount }}</span
+      >
+      <span v-else>{{ $t("gpu.myMachineTitle") }}：{{ rentNumber }}</span>
       <span>{{ $t("cpu_container_instruaction") }}</span>
       <!--    <div v-if="!isBinding && bindMail" class="binding">
         <span class="bindingInfo">{{$t('my_machine_binding_email')}}:{{bindMail}}</span>
@@ -856,15 +859,15 @@ import {
   request_return_dbc,
   get_dbc_price,
   create_order,
-  create_order_congtu,
+  create_alipay_order_congtu,
   pay_update,
   update_container_is_ok,
   send_email_repeat,
   continue_pay_deposit,
   continue_pay_deposit_get_time_max,
   get_cpu_order_id_list,
-  get_pay_status,
-  get_dbc_res_code,
+  get_cpu_order_alipay_pay_status,
+  get_cpu_order_dbc_res_code,
 } from "@/api";
 
 import {
@@ -873,6 +876,8 @@ import {
   getBalance,
   getCookie,
   getUsdToRmb,
+  getCongtuCpuOrderIdPrefix,
+  getCongtuCpuTradeNoPrefix,
 } from "@/utlis";
 
 export default {
@@ -892,6 +897,7 @@ export default {
   },
   data() {
     return {
+      orderCount: 0,
       usdToRmb: getUsdToRmb(),
       dlgRestart_open: false,
       styleHidden: {},
@@ -1787,6 +1793,7 @@ export default {
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       get_dbchain_address({
+        order_id_prefix: getCongtuCpuOrderIdPrefix(),
         order_id: item.orderData.order_id,
         user_name_platform,
         language,
@@ -1796,11 +1803,11 @@ export default {
         if (res.status === 1 && res.content) {
           this.isPaying = true;
           this.local_pay_error = false;
-          create_order_congtu({
+          create_alipay_order_congtu({
             response: {},
             orderData: item.orderData.order_id,
             dbcCode: item.orderData.code,
-            tradeNoPre: "21712",
+            tradeNoPre: getCongtuCpuTradeNoPrefix(),
           })
             .then((res) => {
               console.log("-=-=-=-=-create_aliPay_order_congtu==========");
@@ -1814,20 +1821,20 @@ export default {
               // todo 定时 从后台数据库获取支付宝支付状态（包含dbc转账参数）
               // todo 如果支付成功，返回参数， 为pay（）预备参数:txid
               this.getAlipayStatusTimer = setInterval(() => {
-                get_pay_status({
+                get_cpu_order_alipay_pay_status({
                   order_id: item.orderData.order_id,
                   language,
                 }).then((res) => {
-                  console.log("get_pay_status-------");
+                  console.log("get_cpu_order_alipay_pay_status-------");
                   console.log(res);
                   if (res.content === "ok") {
                     clearInterval(this.getAlipayStatusTimer);
                     this.getDbcResCodeTimer = setInterval(() => {
-                      get_dbc_res_code({
+                      get_cpu_order_dbc_res_code({
                         order_id: item.orderData.order_id,
                         language,
                       }).then((res) => {
-                        console.log("get_dbc_res_code-------");
+                        console.log("get_cpu_order_dbc_res_code-------");
                         console.log(res);
                         if (
                           res.content != null ||

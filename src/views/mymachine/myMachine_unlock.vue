@@ -1018,10 +1018,10 @@ import {
   place_order_gpu_to_cpu_new,
   get_dbc_price,
   create_order,
-  create_order_congtu,
+  create_alipay_order_congtu,
   send_email_repeat,
-  get_pay_status,
-  get_dbc_res_code,
+  get_gpu_order_alipay_pay_status,
+  get_gpu_order_dbc_res_code,
   get_gpu_order_id_list,
 } from "@/api";
 
@@ -1031,6 +1031,8 @@ import {
   getBalance,
   getCookie,
   getUsdToRmb,
+  getCongtuGpuOrderIdPrefix,
+  getCongtuGpuTradeNoPrefix,
 } from "@/utlis";
 
 export default {
@@ -1922,6 +1924,7 @@ export default {
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       get_dbchain_address({
+        order_id_prefix: getCongtuGpuOrderIdPrefix(),
         order_id: item.orderData.order_id,
         user_name_platform,
         language,
@@ -1931,11 +1934,11 @@ export default {
         if (res.status === 1 && res.content) {
           this.isPaying = true;
           this.local_pay_error = false;
-          create_order_congtu({
+          create_alipay_order_congtu({
             response: {},
             orderData: item.orderData.order_id,
             dbcCode: item.orderData.code,
-            tradeNoPre: "21712",
+            tradeNoPre: getCongtuGpuTradeNoPrefix(),
           })
             .then((res) => {
               console.log("-=-=-=-=-create_aliPay_order_congtu==========");
@@ -1949,20 +1952,20 @@ export default {
               // todo 定时 从后台数据库获取支付宝支付状态（包含dbc转账参数）
               // todo 如果支付成功，返回参数， 为pay（）预备参数:txid
               this.getAlipayStatusTimer = setInterval(() => {
-                get_pay_status({
+                get_gpu_order_alipay_pay_status({
                   order_id: item.orderData.order_id,
                   language,
                 }).then((res) => {
-                  console.log("get_pay_status-------");
+                  console.log("get_gpu_order_alipay_pay_status-------");
                   console.log(res);
                   if (res.content === "ok") {
                     clearInterval(this.getAlipayStatusTimer);
                     this.getDbcResCodeTimer = setInterval(() => {
-                      get_dbc_res_code({
+                      get_gpu_order_dbc_res_code({
                         order_id: item.orderData.order_id,
                         language,
                       }).then((res) => {
-                        console.log("get_dbc_res_code-------");
+                        console.log("get_gpu_order_dbc_res_code-------");
                         console.log(res);
                         if (
                           res.content != null ||

@@ -183,6 +183,16 @@
     </div>
     <div class="dlg-bottom">
       <el-button
+        v-if="$t('website_name') === 'congTuCloud'"
+        class="dlg-btn"
+        type="primary"
+        size="small"
+        @click="confirmCongtu"
+        :disabled="!isCanCreateOrder"
+        >{{ $t("dlg_lease_create_order") }}</el-button
+      >
+      <el-button
+        v-else
         class="dlg-btn"
         type="primary"
         size="small"
@@ -204,7 +214,12 @@ import {
   get_memory_cpu_payment,
   get_max_disk_can_use,
 } from "@/api";
-import { getBalance, getGasBalance, getUsdToRmb } from "@/utlis";
+import {
+  getBalance,
+  getGasBalance,
+  getUsdToRmb,
+  getCongtuCpuOrderIdPrefix,
+} from "@/utlis";
 
 export default {
   name: "popup_reload",
@@ -279,6 +294,9 @@ export default {
         // this.get_memory_cpu_payment(placeOrderData.machine_id, this.disk_buy);
         this.computeTotalDBC();
         //  this.getPayDbcCount();
+        if (this.$t("website_name") === "congTuCloud") {
+          return;
+        }
         this.getBalance();
         this.getGasBalance();
       }
@@ -524,23 +542,21 @@ export default {
     },
     confirm() {
       let params;
-      if (this.$t("website_name") !== "congTuCloud") {
-        if (parseInt(this.dbc_count) > parseInt(this.balance)) {
-          this.$message({
-            showClose: true,
-            message: this.$t("lessdbc"),
-            type: "error",
-          });
-          return;
-        }
-        if (this.gas_balance === 0) {
-          this.$message({
-            showClose: true,
-            message: this.$t("zerogas"),
-            type: "error",
-          });
-          return;
-        }
+      if (parseInt(this.dbc_count) > parseInt(this.balance)) {
+        this.$message({
+          showClose: true,
+          message: this.$t("lessdbc"),
+          type: "error",
+        });
+        return;
+      }
+      if (this.gas_balance === 0) {
+        this.$message({
+          showClose: true,
+          message: this.$t("zerogas"),
+          type: "error",
+        });
+        return;
       }
 
       if (this.placeOrderData.order_id_pre !== null) {
@@ -568,7 +584,46 @@ export default {
 
           user_name_platform: this.$t("website_name"),
           language: this.$i18n.locale,
+        };
+      }
+      this.$emit("confirm", params);
+
+      if (this.placeOrderData.order_id_pre === null) {
+        this.pocMachine(this.placeOrderData.order_id);
+      }
+    },
+    confirmCongtu() {
+      let params;
+
+      if (this.placeOrderData.order_id_pre !== null) {
+        params = {
+          rent_time_length: this.time * this.timeSelect * 60,
+
+          gpu_count: 0,
+
+          diskspace: this.disk_buy * 1024 * 1024,
+          order_type: "training",
+          order_id: this.placeOrderData.order_id,
+
+          user_name_platform: this.$t("website_name"),
+          language: this.$i18n.locale,
           r_count: `${(this.totalPrice * this.usdToRmb).toFixed(2)}`,
+          congtu_order_id_prefix: getCongtuCpuOrderIdPrefix(),
+        };
+      } else {
+        params = {
+          rent_time_length: this.time * this.timeSelect * 60,
+
+          gpu_count: 0,
+          image_tag: this.images,
+          diskspace: this.disk_buy * 1024 * 1024,
+          order_type: "training",
+          order_id: this.placeOrderData.order_id,
+
+          user_name_platform: this.$t("website_name"),
+          language: this.$i18n.locale,
+          r_count: `${(this.totalPrice * this.usdToRmb).toFixed(2)}`,
+          congtu_order_id_prefix: getCongtuCpuOrderIdPrefix(),
         };
       }
       console.log("-------------cpu params--------------");

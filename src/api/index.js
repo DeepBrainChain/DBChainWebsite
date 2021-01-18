@@ -882,7 +882,7 @@ export const retrieve_pwd = params => {
  * @description 添加支付宝支付订单
  * @param {object} params {response,order_id,count}
  */
-export const create_order_congtu = params => {
+export const create_alipay_order_congtu = params => {
   return axios({
     method: "post",
     url: host + "/pay/create_order_congtu",
@@ -891,27 +891,51 @@ export const create_order_congtu = params => {
 };
 
 /**
- * 获取支付宝支付状态
+ * 获取gpu订单支付宝支付状态
  * @description 获取支付宝支付状态
  * @param {object} params {order_id,language}
  */
-export const get_pay_status = params => {
+export const get_gpu_order_alipay_pay_status = params => {
   return axios({
     method: "post",
     url: host + "/gpu_order/get_pay_status",
     params
   });
 };
+/**
+ * 获取cpu订单支付宝支付状态
+ * @description 获取支付宝支付状态
+ * @param {object} params {order_id,language}
+ */
+export const get_cpu_order_alipay_pay_status = params => {
+  return axios({
+    method: "post",
+    url: host + "/cpu_order/get_pay_status",
+    params
+  });
+};
 
 /**
- * 获取dbc转账后返回的验证码
+ * 获取gpu dbc转账后返回的验证码
  * @description 获取dbc转账后返回的验证码
  * @param {object} params {order_id,language}
  */
-export const get_dbc_res_code = params => {
+export const get_gpu_order_dbc_res_code = params => {
   return axios({
     method: "post",
     url: host + "/gpu_order/get_dbc_res_code",
+    params
+  });
+};
+/**
+ * 获取cpu dbc转账后返回的验证码
+ * @description 获取dbc转账后返回的验证码
+ * @param {object} params {order_id,language}
+ */
+export const get_cpu_order_dbc_res_code = params => {
+  return axios({
+    method: "post",
+    url: host + "/cpu_order/get_dbc_res_code",
     params
   });
 };
@@ -937,7 +961,7 @@ export const get_gpu_order_id_list = params => {
 export const get_cpu_order_id_list = params => {
   return axios({
     method: "post",
-    url: host + "/gpu_order/get_order_id_list",
+    url: host + "/cpu_order/get_order_id_list",
     params
   });
 };

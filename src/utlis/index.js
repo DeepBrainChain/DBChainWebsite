@@ -483,8 +483,26 @@ export function checkCookie(){
       }
   }
 }
-  // 获取美元兑人民币价格
+// 获取美元兑人民币价格
 export function getUsdToRmb(){
   // 暂时固定
   return 6.6;
+}
+// 获取GPU订单前缀
+export function getCongtuGpuOrderIdPrefix(){
+  return "gpu";
+}
+// 获取CPU订单前缀
+export function getCongtuCpuOrderIdPrefix(){
+  return "cpu";
+}
+// 获取GPU支付宝商户订单号前缀
+export function getCongtuGpuTradeNoPrefix(){
+  // 5位数
+  return "21101";
+}
+// 获取CPU支付宝商户订单号前缀
+export function getCongtuCpuTradeNoPrefix(){
+  // 5位数
+  return "21102";
 }
