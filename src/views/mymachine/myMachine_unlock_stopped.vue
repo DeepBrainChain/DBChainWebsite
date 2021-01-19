@@ -102,7 +102,10 @@
       </div>
       <div class="pay-wrap">
         <div class="rate-head" v-if="item.mcData.evaluation_score_average > 0">
-          <div class="flex right vCenter">
+          <div
+            class="flex right vCenter"
+            v-if="$t('website_name') !== 'congTuCloud'"
+          >
             <el-rate
               :value="item.mcData.evaluation_score_average / 2"
             ></el-rate>
@@ -133,7 +136,14 @@
           <div>
             <span>{{ item.mcData.machine_id }}</span>
             <span class="fs28">
-              <span class="cPrimaryColor"
+              <span
+                class="cPrimaryColor"
+                v-if="$t('website_name') === 'congTuCloud'"
+                >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                {{ (item.mcData.gpu_price_dollar * usdToRmb).toFixed(2)
+                }}{{ $t("RMB") }}/{{ $t("my_machine_hour") }}</span
+              >
+              <span class="cPrimaryColor" v-else
                 >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$
                 {{ item.mcData.gpu_price_dollar }}/{{
                   $t("my_machine_hour")
@@ -510,7 +520,13 @@ import {
   get_cpu_order_id_list,
 } from "@/api";
 
-import { getAccount, transfer, getBalance, getCookie } from "@/utlis";
+import {
+  getAccount,
+  transfer,
+  getBalance,
+  getCookie,
+  getUsdToRmb,
+} from "@/utlis";
 
 export default {
   name: "myMachine_unlock_stopped",
@@ -532,6 +548,7 @@ export default {
   data() {
     return {
       orderCount: 0,
+      usdToRmb: getUsdToRmb(),
       styleHidden: {},
       rentLoading_index: -1,
       rateValue: undefined,
