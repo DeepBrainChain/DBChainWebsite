@@ -143,7 +143,13 @@
             ).toFixed(2)
           }}G)</label
         >
-        <span class="fs12 cGray ml10"
+        <span
+          class="fs12 cGray ml10"
+          v-if="$t('website_name') === 'congTuCloud'"
+          >{{ (placeOrderData.disk_GB_perhour_dollar * usdToRmb).toFixed(3)
+          }}{{ $t("RMB") }}/{{ $t("disk_hour") }}</span
+        >
+        <span class="fs12 cGray ml10" v-else
           >{{ placeOrderData.disk_GB_perhour_dollar }}$/{{
             $t("disk_hour")
           }}</span
@@ -600,6 +606,7 @@ export default {
           rent_time_length: this.time * this.timeSelect * 60,
 
           gpu_count: 0,
+          image_tag: this.images,
 
           diskspace: this.disk_buy * 1024 * 1024,
           order_type: "training",
