@@ -1,7 +1,10 @@
 <template>
   <div>
     <div class="title">
-      <span>{{ $t("stop_containers_number") }}：{{ rentNumber }}</span>
+      <span v-if="$t('website_name') === 'congTuCloud'"
+        >{{ $t("gpu.myMachineTitle") }}：{{ orderCount }}</span
+      >
+      <span v-else>{{ $t("stop_containers_number") }}：{{ rentNumber }}</span>
       <span :style="styleHidden">{{ $t("stop_instruaction") }}</span>
       <!--    <div v-if="!isBinding && bindMail" class="binding">
         <span class="bindingInfo">{{$t('my_machine_binding_email')}}:{{bindMail}}</span>
@@ -526,6 +529,7 @@ export default {
   },
   data() {
     return {
+      orderCount: 0,
       styleHidden: {},
       rentLoading_index: -1,
       rateValue: undefined,
@@ -588,7 +592,7 @@ export default {
       }, 15000);
     },
   },
-  mounted() {
+  beforeMount() {
     if (this.$t("website_name") === "congTuCloud") {
       this.styleHidden.visibility = "hidden";
     }
