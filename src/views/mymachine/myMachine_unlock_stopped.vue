@@ -508,7 +508,7 @@ import {
   place_order_stop_to_cpu_new,
 } from "@/api";
 
-import { getAccount, transfer, getBalance } from "@/utlis";
+import { getAccount, transfer, getBalance, getCookie } from "@/utlis";
 
 export default {
   name: "myMachine_unlock_stopped",
@@ -1303,11 +1303,22 @@ export default {
     },
 
     queryOrderList() {
-      if (!getAccount()) {
-        this.$router.push(`/openWallet/${type}`);
-        return;
+      if (this.$t("website_name") === "congTuCloud") {
+        //  获取数据库中当前用户邮箱的 order_id
+        if (!getCookie("email")) {
+          this.$router.push("/" + "login");
+          return;
+        }
+      } else {
+        if (!getAccount()) {
+          this.$router.push(`/openWallet/${type}`);
+          return;
+        }
       }
-      const wallet_address_user = getAccount().address;
+      let wallet_address_user = "tmp";
+      if (this.$t("website_name") != "congTuCloud") {
+        wallet_address_user = getAccount().address;
+      }
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       const promiseList = [
@@ -1324,6 +1335,11 @@ export default {
       ];
       return Promise.all(promiseList)
         .then(([res_1, res_2]) => {
+          console.log(
+            "Promise>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+          );
+          console.log(res_1);
+          console.log(res_2);
           this.res_body.content = [];
           if (res_2.content) {
             res_2.content.forEach((item) => {
@@ -1371,7 +1387,10 @@ export default {
     //
     queryMail() {
       this.bindMail = cookie.get("mail");
-      const address = getAccount().address;
+      let address = "tmp";
+      if (this.$t("website_name") != "congTuCloud") {
+        address = getAccount().address;
+      }
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       queryBindMail_rent({
