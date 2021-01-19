@@ -506,6 +506,8 @@ import {
   update_container_is_ok,
   place_order_stop_to_gpu_new,
   place_order_stop_to_cpu_new,
+  get_gpu_order_id_list,
+  get_cpu_order_id_list,
 } from "@/api";
 
 import { getAccount, transfer, getBalance, getCookie } from "@/utlis";
@@ -1303,68 +1305,141 @@ export default {
     },
 
     queryOrderList() {
+      // 聪图云模式下
       if (this.$t("website_name") === "congTuCloud") {
         //  获取数据库中当前用户邮箱的 order_id
         if (!getCookie("email")) {
           this.$router.push("/" + "login");
           return;
         }
+        let wallet_address_user = "tmp";
+        const user_name_platform = this.$t("website_name");
+        const language = this.$i18n.locale;
+        const promiseList = [
+          query_machine_by_wallet({
+            wallet_address_user,
+            user_name_platform,
+            language,
+          }),
+          get_all_order_be_stopped({
+            wallet_address_user,
+            user_name_platform,
+            language,
+          }),
+          get_gpu_order_id_list({
+            email: getCookie("email"),
+            language,
+          }),
+          get_cpu_order_id_list({
+            email: getCookie("email"),
+            language,
+          }),
+        ];
+        return Promise.all(promiseList)
+          .then(([res_1, res_2, res_3, res_4]) => {
+            console.log(
+              "Promise>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+            );
+            console.log(res_1);
+            console.log(res_2);
+            console.log(res_3);
+            console.log(res_4);
+            this.res_body.content = [];
+            if (res_2.content) {
+              res_2.content.forEach((item) => {
+                const mcItem = res_1.content.find(
+                  (mc) => item.machine_id === mc.machine_id
+                );
+                if (mcItem) {
+                  // 显示GPU订单
+                  for (let i of res_3.content) {
+                    if (i.order_id === item.order_id) {
+                      this.res_body.content.push({
+                        verifing: false,
+                        notice: "",
+                        orderData: item,
+                        mcData: mcItem,
+                      });
+                      this.orderCount = this.res_body.content.length;
+                    }
+                  }
+                  // 显示CPU订单
+                  for (let i of res_4.content) {
+                    if (i.order_id === item.order_id) {
+                      this.res_body.content.push({
+                        verifing: false,
+                        notice: "",
+                        orderData: item,
+                        mcData: mcItem,
+                      });
+                      this.orderCount = this.res_body.content.length;
+                    }
+                  }
+                }
+              });
+            }
+            return Promise.resolve({
+              status: 1,
+            });
+          })
+          .catch((err) => {
+            if (err) {
+              console.log(err);
+            }
+          });
       } else {
         if (!getAccount()) {
           this.$router.push(`/openWallet/${type}`);
           return;
         }
-      }
-      let wallet_address_user = "tmp";
-      if (this.$t("website_name") != "congTuCloud") {
-        wallet_address_user = getAccount().address;
-      }
-      const user_name_platform = this.$t("website_name");
-      const language = this.$i18n.locale;
-      const promiseList = [
-        query_machine_by_wallet({
-          wallet_address_user,
-          user_name_platform,
-          language,
-        }),
-        get_all_order_be_stopped({
-          wallet_address_user,
-          user_name_platform,
-          language,
-        }),
-      ];
-      return Promise.all(promiseList)
-        .then(([res_1, res_2]) => {
-          console.log(
-            "Promise>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-          );
-          console.log(res_1);
-          console.log(res_2);
-          this.res_body.content = [];
-          if (res_2.content) {
-            res_2.content.forEach((item) => {
-              const mcItem = res_1.content.find(
-                (mc) => item.machine_id === mc.machine_id
-              );
-              if (mcItem) {
-                this.res_body.content.push({
-                  verifing: false,
-                  notice: "",
-                  orderData: item,
-                  mcData: mcItem,
-                });
-              }
+        let wallet_address_user = getAccount().address;
+        const user_name_platform = this.$t("website_name");
+        const language = this.$i18n.locale;
+        const promiseList = [
+          query_machine_by_wallet({
+            wallet_address_user,
+            user_name_platform,
+            language,
+          }),
+          get_all_order_be_stopped({
+            wallet_address_user,
+            user_name_platform,
+            language,
+          }),
+        ];
+        return Promise.all(promiseList)
+          .then(([res_1, res_2]) => {
+            // console.log(
+            //   "Promise>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+            // );
+            // console.log(res_1);
+            // console.log(res_2);
+            this.res_body.content = [];
+            if (res_2.content) {
+              res_2.content.forEach((item) => {
+                const mcItem = res_1.content.find(
+                  (mc) => item.machine_id === mc.machine_id
+                );
+                if (mcItem) {
+                  this.res_body.content.push({
+                    verifing: false,
+                    notice: "",
+                    orderData: item,
+                    mcData: mcItem,
+                  });
+                }
+              });
+            }
+            return Promise.resolve({
+              status: 1,
             });
-          }
-          return Promise.resolve({
-            status: 1,
+          })
+          .catch((err) => {
+            if (err) {
+              console.log(err);
+            }
           });
-        })
-        .catch((err) => {
-          if (err) {
-            console.log(err);
-          }
-        });
+      }
     },
     pushDetail(machine_id) {
       this.$router.push("/machineDetail?machine_id=" + machine_id);
