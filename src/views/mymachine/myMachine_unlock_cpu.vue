@@ -967,7 +967,7 @@ export default {
       }, 15000);
     },
   },
-  mounted() {
+  beforeMount() {
     if (this.$t("website_name") === "congTuCloud") {
       this.styleHidden.visibility = "hidden";
     }

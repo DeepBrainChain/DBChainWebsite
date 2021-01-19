@@ -866,7 +866,7 @@ export default {
   created() {
     this.init_data();
   },
-  mounted() {
+  beforeMount() {
     if (this.$t("website_name") === "congTuCloud") {
       this.styleHidden.visibility = "hidden";
     }
