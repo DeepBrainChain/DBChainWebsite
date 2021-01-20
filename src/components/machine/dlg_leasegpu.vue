@@ -185,10 +185,18 @@
             ).toFixed(2)
           }}G)</label
         >
-        <span class="fs12 cGray ml10" v-if="!gpu_rentout_whole"
+        <span
+          class="fs12 cGray ml10"
+          v-if="$t('website_name') !== 'congTuCloud' && !gpu_rentout_whole"
           >{{ placeOrderData.disk_GB_perhour_dollar }}$/{{
             $t("disk_hour")
           }}</span
+        >
+        <span
+          class="fs12 cGray ml10"
+          v-else-if="$t('website_name') === 'congTuCloud' && !gpu_rentout_whole"
+          >{{ (placeOrderData.disk_GB_perhour_dollar * usdToRmb).toFixed(3)
+          }}{{ $t("RMB") }}/{{ $t("disk_hour") }}</span
         >
       </div>
       <div
