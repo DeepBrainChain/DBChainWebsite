@@ -1,6 +1,6 @@
 <template>
   <el-dialog :visible.sync="isOpen" @closed="closed" width="580px">
-    <div slot="title">{{$t('continue_pay')}}</div>
+    <div slot="title">{{ $t("continue_pay") }}</div>
     <div class="dlg-content">
       <!--<h3 class="content-head">
         {{$t('gpu.needHD')}}：66GB $ 22/{{$t('hour')}}
@@ -13,7 +13,7 @@
         <span class="fs12 cGray ml10">$xxx/{{$t('hour')}}</span>
       </div>-->
       <div class="form mt20">
-        <label>{{$t('continue_pay_time')}}：</label>
+        <label>{{ $t("continue_pay_time") }}：</label>
         <el-input
           style="width: 180px"
           size="small"
@@ -36,22 +36,84 @@
         </el-select>
         <span
           class="fs12 cGray ml10"
-          v-if="placeOrderData.gpu_count!==0"
-        >{{(placeOrderData.gpu_price_dollar*placeOrderData.gpu_count +placeOrderData.disk_dollar).toFixed(4) }}$/{{$t('my_machine_hour')}}</span>
+          v-if="
+            $t('website_name') !== 'congTuCloud' &&
+            placeOrderData.gpu_count !== 0
+          "
+          >{{
+            (
+              placeOrderData.gpu_price_dollar * placeOrderData.gpu_count +
+              placeOrderData.disk_dollar
+            ).toFixed(4)
+          }}$/{{ $t("my_machine_hour") }}</span
+        >
         <span
           class="fs12 cGray ml10"
-          v-if="placeOrderData.gpu_count===0"
-        >{{(placeOrderData.gpu_price_dollar +placeOrderData.disk_dollar).toFixed(4) }}$/{{$t('my_machine_hour')}}</span>
+          v-if="
+            $t('website_name') === 'congTuCloud' &&
+            placeOrderData.gpu_count !== 0
+          "
+          >{{
+            (
+              (placeOrderData.gpu_price_dollar * placeOrderData.gpu_count +
+                placeOrderData.disk_dollar) *
+              usdToRmb
+            ).toFixed(2)
+          }}{{ $t("RMB") }}/{{ $t("my_machine_hour") }}</span
+        >
+        <span
+          class="fs12 cGray ml10"
+          v-if="
+            $t('website_name') !== 'congTuCloud' &&
+            placeOrderData.gpu_count === 0
+          "
+          >{{
+            (
+              placeOrderData.gpu_price_dollar + placeOrderData.disk_dollar
+            ).toFixed(4)
+          }}$/{{ $t("my_machine_hour") }}</span
+        >
+        <span
+          class="fs12 cGray ml10"
+          v-if="
+            $t('website_name') === 'congTuCloud' &&
+            placeOrderData.gpu_count === 0
+          "
+          >{{
+            (
+              (placeOrderData.gpu_price_dollar + placeOrderData.disk_dollar) *
+              usdToRmb
+            ).toFixed(2)
+          }}{{ $t("RMB") }}/{{ $t("my_machine_hour") }}</span
+        >
       </div>
-      <div class="form-notice">{{$t('tips')}}：{{$t('msg.dlg_0',{time: outDayTime})}}</div>
+      <div class="form-notice" v-if="$t('website_name') !== 'congTuCloud'">
+        {{ $t("tips") }}：{{ $t("msg.dlg_0", { time: outDayTime }) }}
+      </div>
       <div class="computer-dbc mt30">
         <!--          <span>{{$t('gpu.DBCRemaining')}}：349</span>-->
-        <span>{{$t('total')}}：{{ totalPrice.toFixed(4) }}{{$t('$')}}</span>
-        <span class="ml20">{{$t('gpu.exchangeDBC')}}：{{total_price}}</span>
+        <span v-if="$t('website_name') !== 'congTuCloud'"
+          >{{ $t("total") }}：{{ totalPrice.toFixed(4) }}{{ $t("$") }}</span
+        >
+        <span v-else
+          >{{ $t("total") }}：{{ (totalPrice * usdToRmb).toFixed(2)
+          }}{{ $t("RMB") }}</span
+        >
+        <span class="ml20" v-if="$t('website_name') !== 'congTuCloud'"
+          >{{ $t("gpu.exchangeDBC") }}：{{ total_price }}</span
+        >
       </div>
-      <div class="form-notice">{{$t('dlg_lease_wallet_balance')}}: {{balance}}</div>
-      <div class="form-notice">{{$t('left_gasamount')}}: {{gas_balance.toFixed(3)}}</div>
-      <div class="desc-box" v-html="$t('msg.dlg_5')"></div>
+      <div class="form-notice" v-if="$t('website_name') !== 'congTuCloud'">
+        {{ $t("dlg_lease_wallet_balance") }}: {{ balance }}
+      </div>
+      <div class="form-notice" v-if="$t('website_name') !== 'congTuCloud'">
+        {{ $t("left_gasamount") }}: {{ gas_balance.toFixed(3) }}
+      </div>
+      <div
+        class="desc-box"
+        v-if="$t('website_name') !== 'congTuCloud'"
+        v-html="$t('msg.dlg_5')"
+      ></div>
     </div>
     <div class="dlg-bottom">
       <el-button
@@ -60,15 +122,18 @@
         size="small"
         @click="confirm"
         :disabled="!isCanCreateOrder"
-      >{{$t('dlg_lease_create_order')}}</el-button>
-      <el-button class="dlg-btn" plain size="small" @click="cancel">{{$t('cancel')}}</el-button>
+        >{{ $t("dlg_lease_create_order") }}</el-button
+      >
+      <el-button class="dlg-btn" plain size="small" @click="cancel">{{
+        $t("cancel")
+      }}</el-button>
     </div>
   </el-dialog>
 </template>
 
 <script>
 import { continue_pay_get_pay_dbc_count, can_rent_this_machine } from "@/api";
-import { getBalance, getGasBalance } from "@/utlis";
+import { getBalance, getGasBalance, getUsdToRmb } from "@/utlis";
 
 export default {
   name: "popup_continuepay",
@@ -85,24 +150,25 @@ export default {
           time_max: 1500,
           order_id: "",
           gpu_count: 1,
-          dbc_price: 0.0026
+          dbc_price: 0.0026,
         };
-      }
-    }
+      },
+    },
   },
   data() {
     return {
+      usdToRmb: getUsdToRmb(),
       isOpen: this.open,
       timeSelect: 1,
       timeOptions: [
         {
           name: this.$t("hour"),
-          value: 1
+          value: 1,
         },
         {
           name: this.$t("day"),
-          value: 24
-        }
+          value: 24,
+        },
       ],
       gpuCount: 1,
       time: 1,
@@ -111,7 +177,7 @@ export default {
       reqSt: undefined,
       isCanCreateOrder: true,
       balance: "0",
-      gas_balance: 0
+      gas_balance: 0,
     };
   },
   watch: {
@@ -131,7 +197,7 @@ export default {
       } else {
         this.isCanCreateOrder = false;
       }
-    }
+    },
   },
   computed: {
     outDayTime() {
@@ -145,7 +211,7 @@ export default {
       for (let i = 1; i <= this.placeOrderData.gpu_count_max; i *= 2) {
         opts.push({
           name: i,
-          value: i
+          value: i,
         });
       }
       return opts;
@@ -165,20 +231,20 @@ export default {
           this.placeOrderData.disk_dollar * this.time * this.timeSelect
         );
       }
-    }
+    },
     //dbcNum() {
     // return Math.floor(this.totalPrice / this.placeOrderData.dbc_price);
     //}
   },
   methods: {
     getBalance() {
-      getBalance().then(res => {
+      getBalance().then((res) => {
         this.balance = res.balance;
       });
     },
 
     getGasBalance() {
-      getGasBalance().then(res => {
+      getGasBalance().then((res) => {
         this.gas_balance = res.gas_balance;
       });
     },
@@ -199,15 +265,15 @@ export default {
 
         continue_pay_order_id: this.placeOrderData.continue_pay_order_id,
         user_name_platform,
-        language
-      }).then(res => {
+        language,
+      }).then((res) => {
         if (res.status === 1) {
           this.total_price = res.content;
         } else {
           this.$message({
             showClose: true,
             message: res.msg,
-            type: "error"
+            type: "error",
           });
         }
       });
@@ -220,7 +286,7 @@ export default {
       can_rent_this_machine({
         order_id_new: order_id,
         user_name_platform,
-        language
+        language,
       });
     },
     confirm() {
@@ -228,7 +294,7 @@ export default {
         this.$message({
           showClose: true,
           message: this.$t("lessdbc"),
-          type: "error"
+          type: "error",
         });
         return;
       }
@@ -236,7 +302,7 @@ export default {
         this.$message({
           showClose: true,
           message: this.$t("zerogas"),
-          type: "error"
+          type: "error",
         });
         return;
       }
@@ -247,7 +313,7 @@ export default {
         continue_pay_order_id: this.placeOrderData.continue_pay_order_id,
 
         user_name_platform: this.$t("website_name"),
-        language: this.$i18n.locale
+        language: this.$i18n.locale,
       };
       this.$emit("confirm", params);
       //pocMachine(this.placeOrderData.order_id);
@@ -259,8 +325,8 @@ export default {
     closed() {
       this.isOpen = false;
       this.$emit("update:open", false);
-    }
-  }
+    },
+  },
 };
 </script>
 
