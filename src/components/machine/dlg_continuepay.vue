@@ -154,6 +154,7 @@ export default {
         };
       },
     },
+    order_id_prefix: "",
   },
   data() {
     return {
@@ -258,25 +259,47 @@ export default {
       }
     },
     getPayDbcCount() {
-      const user_name_platform = this.$t("website_name");
-      const language = this.$i18n.locale;
-      continue_pay_get_pay_dbc_count({
-        rent_time_length: this.time * 60 * this.timeSelect,
+      if (this.$t("website_name") === "congTuCloud") {
+        const user_name_platform = this.$t("website_name");
+        const language = this.$i18n.locale;
+        continue_pay_get_pay_dbc_count({
+          rent_time_length: this.time * 60 * this.timeSelect,
+          order_id_prefix: this.order_id_prefix,
+          continue_pay_order_id: this.placeOrderData.continue_pay_order_id,
+          user_name_platform,
+          language,
+        }).then((res) => {
+          if (res.status === 1) {
+            this.total_price = res.content;
+          } else {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "error",
+            });
+          }
+        });
+      } else {
+        const user_name_platform = this.$t("website_name");
+        const language = this.$i18n.locale;
+        continue_pay_get_pay_dbc_count({
+          rent_time_length: this.time * 60 * this.timeSelect,
 
-        continue_pay_order_id: this.placeOrderData.continue_pay_order_id,
-        user_name_platform,
-        language,
-      }).then((res) => {
-        if (res.status === 1) {
-          this.total_price = res.content;
-        } else {
-          this.$message({
-            showClose: true,
-            message: res.msg,
-            type: "error",
-          });
-        }
-      });
+          continue_pay_order_id: this.placeOrderData.continue_pay_order_id,
+          user_name_platform,
+          language,
+        }).then((res) => {
+          if (res.status === 1) {
+            this.total_price = res.content;
+          } else {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "error",
+            });
+          }
+        });
+      }
     },
     // poc machine
     pocMachine(order_id) {
@@ -290,33 +313,47 @@ export default {
       });
     },
     confirm() {
-      if (parseInt(this.dbc_count) > parseInt(this.balance)) {
-        this.$message({
-          showClose: true,
-          message: this.$t("lessdbc"),
-          type: "error",
-        });
-        return;
-      }
-      if (this.gas_balance === 0) {
-        this.$message({
-          showClose: true,
-          message: this.$t("zerogas"),
-          type: "error",
-        });
-        return;
-      }
+      if (this.$t("website_name") === "congTuCloud") {
+        const params = {
+          rent_time_length: this.time * this.timeSelect * 60,
+          order_id: this.placeOrderData.order_id,
+          r_count: (this.totalPrice * this.usdToRmb).toFixed(2),
+          continue_pay_order_id: this.placeOrderData.continue_pay_order_id,
 
-      const params = {
-        rent_time_length: this.time * this.timeSelect * 60,
-        order_id: this.placeOrderData.order_id,
-        continue_pay_order_id: this.placeOrderData.continue_pay_order_id,
+          user_name_platform: this.$t("website_name"),
+          language: this.$i18n.locale,
+        };
+        this.$emit("confirm", params);
+        //pocMachine(this.placeOrderData.order_id);
+      } else {
+        if (parseInt(this.dbc_count) > parseInt(this.balance)) {
+          this.$message({
+            showClose: true,
+            message: this.$t("lessdbc"),
+            type: "error",
+          });
+          return;
+        }
+        if (this.gas_balance === 0) {
+          this.$message({
+            showClose: true,
+            message: this.$t("zerogas"),
+            type: "error",
+          });
+          return;
+        }
 
-        user_name_platform: this.$t("website_name"),
-        language: this.$i18n.locale,
-      };
-      this.$emit("confirm", params);
-      //pocMachine(this.placeOrderData.order_id);
+        const params = {
+          rent_time_length: this.time * this.timeSelect * 60,
+          order_id: this.placeOrderData.order_id,
+          continue_pay_order_id: this.placeOrderData.continue_pay_order_id,
+
+          user_name_platform: this.$t("website_name"),
+          language: this.$i18n.locale,
+        };
+        this.$emit("confirm", params);
+        //pocMachine(this.placeOrderData.order_id);
+      }
     },
     cancel() {
       this.closed();

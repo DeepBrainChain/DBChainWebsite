@@ -593,7 +593,7 @@
               !item.orderData.pay_error &&
               !item.orderData.from_stop_to_open
             "
-            >{{ $t("myMachine_is_vocing_machine_update")
+            >{{ tipsText
             }}{{
               parseInt(
                 item.orderData.diskspace_image_data / (1024 * 1024 * 16)
@@ -615,7 +615,7 @@
               !item.orderData.pay_error &&
               item.orderData.from_stop_to_open
             "
-            >{{ $t("myMachine_is_vocing_machine_update_stop_to_open")
+            >{{ tipsTextStopToOpen
             }}{{
               parseInt(
                 item.orderData.diskspace_image_data / (1024 * 1024 * 16)
@@ -953,6 +953,7 @@
     <dlg-continuepay
       :open.sync="openContinueDlg"
       :place-order-data="placeOrderData"
+      :order_id_prefix="renewal_order_id_prefix"
       @confirm="createOrder"
     ></dlg-continuepay>
     <dlg-leasestopgpu
@@ -1032,7 +1033,9 @@ import {
   getCookie,
   getUsdToRmb,
   getCongtuGpuOrderIdPrefix,
+  getCongtuGpuRenewalOrderIdPrefix,
   getCongtuGpuTradeNoPrefix,
+  getCongtuGpuRenewalTradeNoPrefix,
 } from "@/utlis";
 
 export default {
@@ -1053,6 +1056,8 @@ export default {
   },
   data() {
     return {
+      renewal_order_id_prefix: getCongtuGpuRenewalOrderIdPrefix(),
+      renewal_trade_no_pre: getCongtuGpuRenewalTradeNoPrefix(),
       usdToRmb: getUsdToRmb(),
       dlgRestart_open: false,
       styleHidden: {},
@@ -1178,6 +1183,18 @@ export default {
       return this.res_body.content.filter((item) => {
         return item.orderData.rent_success;
       }).length;
+    },
+    tipsText() {
+      return this.$t("website_name") === "congTuCloud"
+        ? this.$t("myMachine_is_vocing_machine_update_congtu_cloud")
+        : this.$t("myMachine_is_vocing_machine_update");
+    },
+    tipsTextStopToOpen() {
+      return this.$t("website_name") === "congTuCloud"
+        ? this.$t(
+            "myMachine_is_vocing_machine_update_stop_to_open_congtu_cloud"
+          )
+        : this.$t("myMachine_is_vocing_machine_update_stop_to_open");
     },
   },
   methods: {
@@ -1362,98 +1379,213 @@ export default {
     },
 
     pushContinuePayDetail(order_id, order_is_over) {
-      this.$router.push(
-        "/continuePayDetail?order_id=" +
-          order_id +
-          "&order_is_over=" +
-          order_is_over
-      );
+      if (this.$t("website_name") === "congTuCloud") {
+        this.$router.push(
+          "/continuePayDetail?order_id=" +
+            order_id +
+            "&order_is_over=" +
+            order_is_over +
+            "&order_id_prefix=" +
+            this.renewal_order_id_prefix +
+            "&tradeNoPre=" +
+            this.renewal_trade_no_pre
+        );
+      } else {
+        this.$router.push(
+          "/continuePayDetail?order_id=" +
+            order_id +
+            "&order_is_over=" +
+            order_is_over
+        );
+      }
     },
-    createOrder(params) {
-      const loading = this.$loading();
 
-      continue_pay_create_order(params)
-        .then((res) => {
-          if (res.status === 1) {
-            this.$message({
-              showClose: true,
-              message: this.$t("list_create_order_success"),
-              type: "success",
-            });
-            this.openContinueDlg = false;
-            this.$router.push(
-              "/continuePayDetail?order_id=" +
-                params.order_id +
-                "&order_is_over=" +
-                params.order_is_over
-            );
-          } else {
-            this.$message({
-              showClose: true,
-              message: res.msg,
-              type: "error",
-            });
-          }
-        })
-        .finally(() => {
-          loading.close();
-        });
+    // 在订单确认页面点击【生成订单】按钮，生成GPU订单，下一步跳转到订单详情页进行支付
+    createOrder(params) {
+      // 在聪图云模式下
+      if (this.$t("website_name") === "congTuCloud") {
+        const loading = this.$loading();
+        // 设置gpu订单前缀
+        params.order_id_prefix = this.renewal_order_id_prefix;
+        continue_pay_create_order(params)
+          .then((res) => {
+            if (res.status === 1) {
+              this.$message({
+                showClose: true,
+                message: this.$t("list_create_order_success"),
+                type: "success",
+              });
+              this.openContinueDlg = false;
+              this.$router.push(
+                "/continuePayDetail?order_id=" +
+                  params.order_id +
+                  "&order_is_over=" +
+                  params.order_is_over +
+                  "&order_id_prefix=" +
+                  this.renewal_order_id_prefix +
+                  "&tradeNoPre=" +
+                  this.renewal_trade_no_pre
+              );
+            } else {
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: "error",
+              });
+            }
+          })
+          .finally(() => {
+            loading.close();
+          });
+      } else {
+        const loading = this.$loading();
+        continue_pay_create_order(params)
+          .then((res) => {
+            if (res.status === 1) {
+              this.$message({
+                showClose: true,
+                message: this.$t("list_create_order_success"),
+                type: "success",
+              });
+              this.openContinueDlg = false;
+              this.$router.push(
+                "/continuePayDetail?order_id=" +
+                  params.order_id +
+                  "&order_is_over=" +
+                  params.order_is_over
+              );
+            } else {
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: "error",
+              });
+            }
+          })
+          .finally(() => {
+            loading.close();
+          });
+      }
     },
     // 打开弹窗
     openContinuePay(item, index) {
-      this.continue_payLoading = true;
-      this.continue_pay_index = index;
-      this.$forceUpdate();
-      const user_name_platform = this.$t("website_name");
-      const language = this.$i18n.locale;
-      continue_pay_place_order({
-        order_id: item.orderData.order_id,
+      if (this.$t("website_name") === "congTuCloud") {
+        this.continue_payLoading = true;
+        this.continue_pay_index = index;
+        this.$forceUpdate();
+        const user_name_platform = this.$t("website_name");
+        const language = this.$i18n.locale;
+        console.log("item >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        console.log(item);
+        continue_pay_place_order({
+          email: getCookie("email"),
+          machine_id: item.orderData.machine_id,
+          task_id: item.orderData.task_id,
+          order_id_prefix: this.renewal_order_id_prefix,
+          order_id: item.orderData.order_id,
 
-        user_name_platform,
-        language,
-      })
-        .then((res_1) => {
-          console.log("continue_pay_place_order--res*****");
-          console.log(res_1);
-          if (res_1.status === 1) {
-            this.placeOrderData = res_1.content;
-            // this.placeOrderData.dbc_price = -1;
-            return continue_pay_get_dbc_price({
-              continue_pay_order_id: this.placeOrderData.continue_pay_order_id,
-              user_name_platform,
-              language,
-            });
-          } else {
-            this.$message({
-              showClose: true,
-              message: res_1.msg,
-              type: "error",
-            });
-            return Promise.reject(res_1.msg);
-          }
+          user_name_platform,
+          language,
         })
-        .then((res_2) => {
-          console.log("continue_pay_get_dbc_price--res*****");
-          console.log(res_2);
-          if (res_2.status === 1) {
-            this.placeOrderData.dbc_price = res_2.content;
-            this.openContinueDlg = true;
-          } else {
-            this.$message({
-              showClose: true,
-              message: res_2.msg,
-              type: "success",
-            });
-            return Promise.reject(res_2.msg);
-          }
+          .then((res_1) => {
+            console.log("continue_pay_place_order--res*****");
+            console.log(res_1);
+            if (res_1.status === 1) {
+              this.placeOrderData = res_1.content;
+              // this.placeOrderData.dbc_price = -1;
+              return continue_pay_get_dbc_price({
+                continue_pay_order_id: this.placeOrderData
+                  .continue_pay_order_id,
+                user_name_platform,
+                language,
+              });
+            } else {
+              this.$message({
+                showClose: true,
+                message: res_1.msg,
+                type: "error",
+              });
+              return Promise.reject(res_1.msg);
+            }
+          })
+          .then((res_2) => {
+            console.log("continue_pay_get_dbc_price--res*****");
+            console.log(res_2);
+            if (res_2.status === 1) {
+              this.placeOrderData.dbc_price = res_2.content;
+              this.openContinueDlg = true;
+            } else {
+              this.$message({
+                showClose: true,
+                message: res_2.msg,
+                type: "success",
+              });
+              return Promise.reject(res_2.msg);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+          .finally(() => {
+            this.continue_payLoading = false;
+            this.continue_pay_index = -1;
+          });
+      } else {
+        this.continue_payLoading = true;
+        this.continue_pay_index = index;
+        this.$forceUpdate();
+        const user_name_platform = this.$t("website_name");
+        const language = this.$i18n.locale;
+        continue_pay_place_order({
+          order_id: item.orderData.order_id,
+
+          user_name_platform,
+          language,
         })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          this.continue_payLoading = false;
-          this.continue_pay_index = -1;
-        });
+          .then((res_1) => {
+            console.log("continue_pay_place_order--res*****");
+            console.log(res_1);
+            if (res_1.status === 1) {
+              this.placeOrderData = res_1.content;
+              // this.placeOrderData.dbc_price = -1;
+              return continue_pay_get_dbc_price({
+                continue_pay_order_id: this.placeOrderData
+                  .continue_pay_order_id,
+                user_name_platform,
+                language,
+              });
+            } else {
+              this.$message({
+                showClose: true,
+                message: res_1.msg,
+                type: "error",
+              });
+              return Promise.reject(res_1.msg);
+            }
+          })
+          .then((res_2) => {
+            console.log("continue_pay_get_dbc_price--res*****");
+            console.log(res_2);
+            if (res_2.status === 1) {
+              this.placeOrderData.dbc_price = res_2.content;
+              this.openContinueDlg = true;
+            } else {
+              this.$message({
+                showClose: true,
+                message: res_2.msg,
+                type: "success",
+              });
+              return Promise.reject(res_2.msg);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+          .finally(() => {
+            this.continue_payLoading = false;
+            this.continue_pay_index = -1;
+          });
+      }
     },
 
     forceToPocMachine() {

@@ -552,7 +552,7 @@
               !item.orderData.pay_error &&
               item.orderData.from_stop_to_open
             "
-            >{{ $t("myMachine_is_vocing_machine_update_stop_to_open")
+            >{{ tipsText
             }}{{
               parseInt(
                 item.orderData.diskspace_image_data / (1024 * 1024 * 16)
@@ -803,6 +803,7 @@
     <dlg-continuepay
       :open.sync="openContinueDlg"
       :place-order-data="placeOrderData"
+      :order_id_prefix="renewal_order_id_prefix"
       @confirm="createOrder"
     ></dlg-continuepay>
     <dlg-continuepaydeposit
@@ -878,7 +879,9 @@ import {
   getCookie,
   getUsdToRmb,
   getCongtuCpuOrderIdPrefix,
+  getCongtuCpuRenewalOrderIdPrefix,
   getCongtuCpuTradeNoPrefix,
+  getCongtuCpuRenewalTradeNoPrefix,
 } from "@/utlis";
 
 export default {
@@ -898,6 +901,9 @@ export default {
   },
   data() {
     return {
+      opengpuloading: "",
+      renewal_order_id_prefix: getCongtuCpuRenewalOrderIdPrefix(),
+      renewal_trade_no_pre: getCongtuCpuRenewalTradeNoPrefix(),
       orderCount: 0,
       usdToRmb: getUsdToRmb(),
       dlgRestart_open: false,
@@ -1012,6 +1018,13 @@ export default {
       return this.res_body.content.filter((item) => {
         return item.orderData.rent_success;
       }).length;
+    },
+    tipsText() {
+      return this.$t("website_name") === "congTuCloud"
+        ? this.$t(
+            "myMachine_is_vocing_machine_update_stop_to_open_congtu_cloud"
+          )
+        : this.$t("myMachine_is_vocing_machine_update_stop_to_open");
     },
   },
   methods: {
@@ -1173,42 +1186,92 @@ export default {
     },
 
     pushContinuePayDetail(order_id, order_is_over) {
-      this.$router.push(
-        "/continuePayDetail?order_id=" +
-          order_id +
-          "&order_is_over=" +
-          order_is_over
-      );
+      if (this.$t("website_name") === "congTuCloud") {
+        this.$router.push(
+          "/continuePayDetail?order_id=" +
+            order_id +
+            "&order_is_over=" +
+            order_is_over +
+            "&order_id_prefix=" +
+            this.renewal_order_id_prefix +
+            "&tradeNoPre=" +
+            this.renewal_trade_no_pre
+        );
+      } else {
+        this.$router.push(
+          "/continuePayDetail?order_id=" +
+            order_id +
+            "&order_is_over=" +
+            order_is_over
+        );
+      }
     },
+    // 在订单确认页面点击【生成订单】按钮，生成CPU订单，下一步跳转到订单详情页进行支付
     createOrder(params) {
-      const loading = this.$loading();
-
-      continue_pay_create_order(params)
-        .then((res) => {
-          if (res.status === 1) {
-            this.$message({
-              showClose: true,
-              message: this.$t("list_create_order_success"),
-              type: "success",
-            });
-            this.openContinueDlg = false;
-            this.$router.push(
-              "/continuePayDetail?order_id=" +
-                params.order_id +
-                "&order_is_over=" +
-                params.order_is_over
-            );
-          } else {
-            this.$message({
-              showClose: true,
-              message: res.msg,
-              type: "error",
-            });
-          }
-        })
-        .finally(() => {
-          loading.close();
-        });
+      // 在聪图云模式下
+      if (this.$t("website_name") === "congTuCloud") {
+        const loading = this.$loading();
+        // 设置cpu订单前缀
+        params.order_id_prefix = this.renewal_order_id_prefix;
+        continue_pay_create_order(params)
+          .then((res) => {
+            if (res.status === 1) {
+              this.$message({
+                showClose: true,
+                message: this.$t("list_create_order_success"),
+                type: "success",
+              });
+              this.openContinueDlg = false;
+              this.$router.push(
+                "/continuePayDetail?order_id=" +
+                  params.order_id +
+                  "&order_is_over=" +
+                  params.order_is_over +
+                  "&order_id_prefix=" +
+                  this.renewal_order_id_prefix +
+                  "&tradeNoPre=" +
+                  this.renewal_trade_no_pre
+              );
+            } else {
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: "error",
+              });
+            }
+          })
+          .finally(() => {
+            loading.close();
+          });
+      } else {
+        const loading = this.$loading();
+        continue_pay_create_order(params)
+          .then((res) => {
+            if (res.status === 1) {
+              this.$message({
+                showClose: true,
+                message: this.$t("list_create_order_success"),
+                type: "success",
+              });
+              this.openContinueDlg = false;
+              this.$router.push(
+                "/continuePayDetail?order_id=" +
+                  params.order_id +
+                  "&order_is_over=" +
+                  params.order_is_over
+              );
+            } else {
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: "error",
+              });
+            }
+          })
+          .finally(() => {
+            loading.close();
+          });
+      }
     },
 
     createOrder_continue_deposit(params) {
@@ -1267,71 +1330,35 @@ export default {
     },
     // 打开弹窗
     openContinuePay(item, index) {
-      this.continue_rentLoading = true;
-      this.continuepay_index = index;
-      const user_name_platform = this.$t("website_name");
-      const language = this.$i18n.locale;
-      continue_pay_place_order({
-        order_id: item.orderData.order_id,
-
-        user_name_platform,
-        language,
-      })
-        .then((res_1) => {
-          if (res_1.status === 1) {
-            this.placeOrderData = res_1.content;
-            // this.placeOrderData.dbc_price = -1;
-            return continue_pay_get_dbc_price({
-              continue_pay_order_id: this.placeOrderData.continue_pay_order_id,
-              user_name_platform,
-              language,
-            });
-          } else {
-            this.$message({
-              showClose: true,
-              message: res_1.msg,
-              type: "error",
-            });
-            return Promise.reject(res_1.msg);
-          }
-        })
-        .then((res_2) => {
-          if (res_2.status === 1) {
-            this.placeOrderData.dbc_price = res_2.content;
-            this.openContinueDlg = true;
-          } else {
-            this.$message({
-              showClose: true,
-              message: res_2.msg,
-              type: "success",
-            });
-            return Promise.reject(res_2.msg);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          this.continue_rentLoading = false;
-          this.continuepay_index = -1;
-        });
-    },
-    openContinuePay_switch(item, index) {
-      if (item.orderData.mode === "deposit") {
+      if (this.$t("website_name") === "congTuCloud") {
         this.continue_rentLoading = true;
         this.continuepay_index = index;
         const user_name_platform = this.$t("website_name");
         const language = this.$i18n.locale;
-        continue_pay_deposit_get_time_max({
-          order_id: item.orderData.order_id,
+        console.log(
+          "cpu item >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+        );
+        console.log(item);
+        continue_pay_place_order({
+          email: getCookie("email"),
           machine_id: item.orderData.machine_id,
+          task_id: item.orderData.task_id,
+          order_id_prefix: this.renewal_order_id_prefix,
+          order_id: item.orderData.order_id,
+
           user_name_platform,
           language,
         })
           .then((res_1) => {
             if (res_1.status === 1) {
               this.placeOrderData = res_1.content;
-              this.openContinueDlgdeposit = true;
+              // this.placeOrderData.dbc_price = -1;
+              return continue_pay_get_dbc_price({
+                continue_pay_order_id: this.placeOrderData
+                  .continue_pay_order_id,
+                user_name_platform,
+                language,
+              });
             } else {
               this.$message({
                 showClose: true,
@@ -1341,7 +1368,19 @@ export default {
               return Promise.reject(res_1.msg);
             }
           })
-
+          .then((res_2) => {
+            if (res_2.status === 1) {
+              this.placeOrderData.dbc_price = res_2.content;
+              this.openContinueDlg = true;
+            } else {
+              this.$message({
+                showClose: true,
+                message: res_2.msg,
+                type: "success",
+              });
+              return Promise.reject(res_2.msg);
+            }
+          })
           .catch((err) => {
             console.log(err);
           })
@@ -1399,6 +1438,151 @@ export default {
             this.continue_rentLoading = false;
             this.continuepay_index = -1;
           });
+      }
+    },
+    openContinuePay_switch(item, index) {
+      if (item.orderData.mode === "deposit") {
+        this.continue_rentLoading = true;
+        this.continuepay_index = index;
+        const user_name_platform = this.$t("website_name");
+        const language = this.$i18n.locale;
+        continue_pay_deposit_get_time_max({
+          order_id: item.orderData.order_id,
+          machine_id: item.orderData.machine_id,
+          user_name_platform,
+          language,
+        })
+          .then((res_1) => {
+            if (res_1.status === 1) {
+              this.placeOrderData = res_1.content;
+              this.openContinueDlgdeposit = true;
+            } else {
+              this.$message({
+                showClose: true,
+                message: res_1.msg,
+                type: "error",
+              });
+              return Promise.reject(res_1.msg);
+            }
+          })
+
+          .catch((err) => {
+            console.log(err);
+          })
+          .finally(() => {
+            this.continue_rentLoading = false;
+            this.continuepay_index = -1;
+          });
+      } else {
+        if (this.$t("website_name") === "congTuCloud") {
+          this.continue_rentLoading = true;
+          this.continuepay_index = index;
+          const user_name_platform = this.$t("website_name");
+          const language = this.$i18n.locale;
+          console.log(
+            "cpu item >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+          );
+          console.log(item);
+          continue_pay_place_order({
+            email: getCookie("email"),
+            machine_id: item.orderData.machine_id,
+            task_id: item.orderData.task_id,
+            order_id_prefix: this.renewal_order_id_prefix,
+            order_id: item.orderData.order_id,
+
+            user_name_platform,
+            language,
+          })
+            .then((res_1) => {
+              if (res_1.status === 1) {
+                this.placeOrderData = res_1.content;
+                // this.placeOrderData.dbc_price = -1;
+                return continue_pay_get_dbc_price({
+                  continue_pay_order_id: this.placeOrderData
+                    .continue_pay_order_id,
+                  user_name_platform,
+                  language,
+                });
+              } else {
+                this.$message({
+                  showClose: true,
+                  message: res_1.msg,
+                  type: "error",
+                });
+                return Promise.reject(res_1.msg);
+              }
+            })
+            .then((res_2) => {
+              if (res_2.status === 1) {
+                this.placeOrderData.dbc_price = res_2.content;
+                this.openContinueDlg = true;
+              } else {
+                this.$message({
+                  showClose: true,
+                  message: res_2.msg,
+                  type: "success",
+                });
+                return Promise.reject(res_2.msg);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            })
+            .finally(() => {
+              this.continue_rentLoading = false;
+              this.continuepay_index = -1;
+            });
+        } else {
+          this.continue_rentLoading = true;
+          this.continuepay_index = index;
+          const user_name_platform = this.$t("website_name");
+          const language = this.$i18n.locale;
+          continue_pay_place_order({
+            order_id: item.orderData.order_id,
+
+            user_name_platform,
+            language,
+          })
+            .then((res_1) => {
+              if (res_1.status === 1) {
+                this.placeOrderData = res_1.content;
+                // this.placeOrderData.dbc_price = -1;
+                return continue_pay_get_dbc_price({
+                  continue_pay_order_id: this.placeOrderData
+                    .continue_pay_order_id,
+                  user_name_platform,
+                  language,
+                });
+              } else {
+                this.$message({
+                  showClose: true,
+                  message: res_1.msg,
+                  type: "error",
+                });
+                return Promise.reject(res_1.msg);
+              }
+            })
+            .then((res_2) => {
+              if (res_2.status === 1) {
+                this.placeOrderData.dbc_price = res_2.content;
+                this.openContinueDlg = true;
+              } else {
+                this.$message({
+                  showClose: true,
+                  message: res_2.msg,
+                  type: "success",
+                });
+                return Promise.reject(res_2.msg);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            })
+            .finally(() => {
+              this.continue_rentLoading = false;
+              this.continuepay_index = -1;
+            });
+        }
       }
     },
 

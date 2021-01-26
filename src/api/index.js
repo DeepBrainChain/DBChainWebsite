@@ -4,8 +4,9 @@ import axios from "@/utlis/axios";
 
 // 聪图云转发后台（prod）
 const host = "https://congtucloud.dbchain.ai";
-// const host = "http://111.44.254.181:8032";
+
 // 聪图云转发后台（test）
+// const host = "http://111.44.254.181:8032";
 // const host = "http://111.44.254.181:8033";
 
 //const host = 'http://13.124.237.200:8031'
@@ -914,6 +915,30 @@ export const get_cpu_order_alipay_pay_status = params => {
     params
   });
 };
+/**
+ * 获取gpu续费订单支付宝支付状态
+ * @description 获取支付宝支付状态
+ * @param {object} params {order_id,language}
+ */
+export const get_gpu_renewal_order_alipay_pay_status = params => {
+  return axios({
+    method: "post",
+    url: host + "/gpu_renewal_order/get_pay_status",
+    params
+  });
+};
+/**
+ * 获取cpu续费订单支付宝支付状态
+ * @description 获取支付宝支付状态
+ * @param {object} params {order_id,language}
+ */
+export const get_cpu_renewal_order_alipay_pay_status = params => {
+  return axios({
+    method: "post",
+    url: host + "/cpu_renewal_order/get_pay_status",
+    params
+  });
+};
 
 /**
  * 获取gpu dbc转账后返回的验证码
@@ -939,7 +964,30 @@ export const get_cpu_order_dbc_res_code = params => {
     params
   });
 };
-
+/**
+ * 获取gpu续费 dbc转账后返回的验证码
+ * @description 获取dbc转账后返回的验证码
+ * @param {object} params {order_id,language}
+ */
+export const get_gpu_renewal_order_dbc_res_code = params => {
+  return axios({
+    method: "post",
+    url: host + "/gpu_renewal_order/get_dbc_res_code",
+    params
+  });
+};
+/**
+ * 获取cpu续费 dbc转账后返回的验证码
+ * @description 获取dbc转账后返回的验证码
+ * @param {object} params {order_id,language}
+ */
+export const get_cpu_renewal_order_dbc_res_code = params => {
+  return axios({
+    method: "post",
+    url: host + "/cpu_renewal_order/get_dbc_res_code",
+    params
+  });
+};
 /**
  * 获取GPU订单号列表
  * @description 获取订GPU单号列表

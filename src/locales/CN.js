@@ -597,6 +597,7 @@ export default {
   diskspace_new_gpu: "启动GPU后容器剩余空间为",
   diskspace_every_cpu_can_buy: "每个GPU最多可以购买",
   myMachine_is_vocing_machine_update: "正在启动GPU(如果无法启动，可以联系support@dbchain.ai)，根据您容器已存储的数据大小，大概需要",
+  myMachine_is_vocing_machine_update_congtu_cloud:"正在启动GPU(如果无法启动，可以联系support@congtu.cloud)，根据您容器已存储的数据大小，大概需要",
   container_is_closed_update: "在启动GPU的过程中,当前CPU容器会处于关闭状态,无法使用,启动完成后,可以重新登陆",
   rent_cpu_cotainer: "租用CPU容器",
   open_gpu_cpu_to_gpu: "启动GPU",
@@ -653,7 +654,7 @@ export default {
   no_container: "当前机器CPU容器已满",
   stop_to_cpu_container: "启动为CPU容器",
   myMachine_is_vocing_machine_update_stop_to_open: "正在启动容器(如果无法启动，可以联系support@dbchain.ai)，根据您容器已存储的数据大小，大概需要",
-
+  myMachine_is_vocing_machine_update_stop_to_open_congtu_cloud:"正在启动容器(如果无法启动，可以联系support@congtu.cloud)，根据您容器已存储的数据大小，大概需要",
   myMachine_rent_success_msg_update_stop_to_open: "容器启动成功，稍等3分钟，可以登陆使用",
   stop_to_gpu_container: "启动为GPU容器",
   user_defined: "自定义安装",

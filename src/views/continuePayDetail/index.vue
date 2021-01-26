@@ -185,8 +185,17 @@ import {
   continue_pay_cancer_order,
   continue_pay_return_dbc,
   continue_pay_return_dbc_code,
+  create_alipay_order_congtu,
+  get_gpu_renewal_order_alipay_pay_status,
+  get_gpu_renewal_order_dbc_res_code,
+  get_cpu_renewal_order_alipay_pay_status,
+  get_cpu_renewal_order_dbc_res_code,
 } from "@/api";
-import { transfer } from "@/utlis";
+import {
+  transfer,
+  getCongtuGpuRenewalTradeNoPrefix,
+  getCongtuCpuRenewalTradeNoPrefix,
+} from "@/utlis";
 import DlgReturnDbcContinue from "@/components/machine/dlg_returnDbcContinue";
 import Header from "@/congTuCloud/components/header/SubHeader.vue";
 import Footer from "@/congTuCloud/components/footer/Footer.vue";
@@ -202,6 +211,8 @@ export default {
       rateValue: 0,
       order_id: undefined, //: this.$route.query.order_id,
       order_is_over: undefined, //: this.$route.query.order_is_over,
+      order_id_prefix: undefined, //: this.$route.query.order_id_prefix,
+      tradeNoPre: undefined, //: this.$route.query.tradeNoPre,
       placeOrderData: undefined,
       content: [],
       isPaying: false,
@@ -321,116 +332,395 @@ export default {
     },
     // pay
     payOrder(item) {
-      //
+      // 聪图模式下
+      if (this.$t("website_name") === "congTuCloud") {
+        clearInterval(this.si);
 
-      clearInterval(this.si);
-
-      const user_name_platform = this.$t("website_name");
-      const language = this.$i18n.locale;
-      get_dbchain_address({
-        order_id: item.order_id,
-        user_name_platform,
-        language,
-      }).then((res) => {
-        if (res.status === 1 && res.content) {
-          const amount = item.dbc_total_count + item.code * 1;
-          this.$confirm(
-            this.$t("myMachine_no_double_pay"),
-            this.$t("myMachine_please_confirm_pay"),
-            {
-              confirmButtonText: this.$t("myMachine_confirm"),
-              cancelButtonText: this.$t("myMachine_cancer"),
-            }
-          )
-            .then(({ value }) => {
+        const user_name_platform = this.$t("website_name");
+        const language = this.$i18n.locale;
+        console.log("payOrder---");
+        console.log(item);
+        get_dbchain_address({
+          order_id: item.order_id,
+          continue_pay_order_id: item.continue_pay_order_id,
+          order_id_prefix: this.$route.query.order_id_prefix,
+          user_name_platform,
+          language,
+        }).then((res) => {
+          if (res.status === 1 && res.content) {
+            const amount = item.dbc_total_count + item.code * 1;
+            this.$confirm(
+              this.$t("myMachine_no_double_pay"),
+              this.$t("myMachine_please_confirm_pay"),
+              {
+                confirmButtonText: this.$t("myMachine_confirm"),
+                cancelButtonText: this.$t("myMachine_cancer"),
+              }
+            ).then(({ value }) => {
+              console.log("create_alipay_order_congtu pre ---");
+              console.log(item);
               this.isPaying = true;
               this.local_pay_error = false;
-              return transfer({
-                toAddress: res.content,
-                amount,
-              });
-            })
-            .then((res) => {
-              if (res.status === 1) {
-                console.log("转账成功");
-                const txid = res.response.txid;
+              create_alipay_order_congtu({
+                response: {},
+                orderData: item.order_id,
+                continue_pay_order_id: item.continue_pay_order_id,
+                dbcCode: item.code,
+                tradeNoPre: this.$route.query.tradeNoPre,
+              })
+                .then((res) => {
+                  console.log("-=-=-=-=-create_aliPay_order_congtu==========");
+                  console.log(res);
+                  let alipay = window.open();
+                  alipay.document.body.innerHTML = res.slice(
+                    0,
+                    res.search("<script>")
+                  );
+                  alipay.document.body.getElementsByTagName("form")[0].submit();
+                  // todo 定时 从后台数据库获取支付宝支付状态（包含dbc转账参数）
+                  // todo 如果支付成功，返回参数， 为pay（）预备参数:txid
+                  this.getAlipayStatusTimer = setInterval(() => {
+                    if (
+                      this.$route.query.tradeNoPre ===
+                      getCongtuGpuRenewalTradeNoPrefix()
+                    ) {
+                      get_gpu_renewal_order_alipay_pay_status({
+                        order_id: item.order_id,
+                        continue_pay_order_id: item.continue_pay_order_id,
+                        language,
+                      }).then((res) => {
+                        console.log(
+                          "get_gpu_renewal_order_alipay_pay_status-------"
+                        );
+                        console.log(res);
+                        if (res.content === "ok") {
+                          clearInterval(this.getAlipayStatusTimer);
+                          this.getDbcResCodeTimer = setInterval(() => {
+                            get_gpu_renewal_order_dbc_res_code({
+                              order_id: item.order_id,
+                              continue_pay_order_id: item.continue_pay_order_id,
+                              language,
+                            }).then((res) => {
+                              console.log(
+                                "get_gpu_renewal_order_dbc_res_code-------"
+                              );
+                              console.log(res);
+                              if (
+                                res.content != null ||
+                                res.content != undefined ||
+                                res.content != ""
+                              ) {
+                                clearInterval(this.getDbcResCodeTimer);
+                                const txid = res.content;
 
-                // pay after
-                this.isPaying = false;
-                item.vocing_pay = true;
-                const user_name_platform = this.$t("website_name");
-                const language = this.$i18n.locale;
-                // 支付后确认
-                continue_pay_voc_pay({
-                  continue_pay_order_id: item.continue_pay_order_id,
-                  dbc_hash: txid,
-                  user_name_platform,
-                  language,
-                }).then((res) => {
-                  item.vocing_pay = true;
-                  this.queryContinuePayDetail();
-                  if (res.status === 1) {
-                    clearInterval(this.si);
+                                // pay after
+                                this.isPaying = false;
+                                item.vocing_pay = true;
+                                const user_name_platform = this.$t(
+                                  "website_name"
+                                );
+                                const language = this.$i18n.locale;
+                                // 支付后确认
+                                continue_pay_voc_pay({
+                                  continue_pay_order_id:
+                                    item.continue_pay_order_id,
+                                  dbc_hash: txid,
+                                  user_name_platform,
+                                  language,
+                                }).then((res) => {
+                                  item.vocing_pay = true;
+                                  this.queryContinuePayDetail();
+                                  if (res.status === 1) {
+                                    clearInterval(this.si);
 
-                    item.vocing_pay = false;
+                                    item.vocing_pay = false;
+                                  }
+                                });
+                                //item.vocing_pay = true;
+                                // this.queryContinuePayDetail();
+                                //item.vocing_pay = true;
+                                this.si = setInterval(() => {
+                                  return continue_pay_voc_pay({
+                                    continue_pay_order_id:
+                                      item.continue_pay_order_id,
+                                    dbc_hash: txid,
+                                    user_name_platform,
+                                    language,
+                                  })
+                                    .then((res) => {
+                                      item.vocing_pay = true;
+                                      this.queryContinuePayDetail();
+                                      if (res.status === 1) {
+                                        clearInterval(this.si);
+
+                                        item.vocing_pay = false;
+                                      }
+                                    })
+                                    .catch((err) => {
+                                      if (err && err.status === -1) {
+                                        console.log(err.msg);
+                                        this.$message({
+                                          showClose: true,
+                                          message: err.msg,
+                                          type: "error",
+                                        });
+                                        clearInterval(this.si);
+                                      } else if (err && err.status === -2) {
+                                        console.log(err.msg);
+                                        // clearInterval(this.si)
+                                      } else if (err) {
+                                        console.log("其他报错");
+                                        console.log(err);
+                                        clearInterval(this.si);
+                                      }
+                                    });
+                                }, 5000);
+                              } else {
+                                this.isPaying = false;
+
+                                clearInterval(this.si);
+                                this.local_pay_error = true;
+                                console.log("转账失败");
+                              }
+                            });
+                          }, 1000);
+                        }
+                      });
+                    } else if (
+                      this.$route.query.tradeNoPre ===
+                      getCongtuCpuRenewalTradeNoPrefix()
+                    ) {
+                      get_cpu_renewal_order_alipay_pay_status({
+                        order_id: item.order_id,
+                        continue_pay_order_id: item.continue_pay_order_id,
+                        language,
+                      }).then((res) => {
+                        console.log(
+                          "get_cpu_renewal_order_alipay_pay_status-------"
+                        );
+                        console.log(res);
+                        if (res.content === "ok") {
+                          clearInterval(this.getAlipayStatusTimer);
+                          this.getDbcResCodeTimer = setInterval(() => {
+                            get_cpu_renewal_order_dbc_res_code({
+                              order_id: item.order_id,
+                              continue_pay_order_id: item.continue_pay_order_id,
+                              language,
+                            }).then((res) => {
+                              console.log(
+                                "get_cpu_renewal_order_dbc_res_code-------"
+                              );
+                              console.log(res);
+                              if (
+                                res.content != null ||
+                                res.content != undefined ||
+                                res.content != ""
+                              ) {
+                                clearInterval(this.getDbcResCodeTimer);
+                                const txid = res.content;
+
+                                // pay after
+                                this.isPaying = false;
+                                item.vocing_pay = true;
+                                const user_name_platform = this.$t(
+                                  "website_name"
+                                );
+                                const language = this.$i18n.locale;
+                                // 支付后确认
+                                continue_pay_voc_pay({
+                                  continue_pay_order_id:
+                                    item.continue_pay_order_id,
+                                  dbc_hash: txid,
+                                  user_name_platform,
+                                  language,
+                                }).then((res) => {
+                                  item.vocing_pay = true;
+                                  this.queryContinuePayDetail();
+                                  if (res.status === 1) {
+                                    clearInterval(this.si);
+
+                                    item.vocing_pay = false;
+                                  }
+                                });
+                                //item.vocing_pay = true;
+                                // this.queryContinuePayDetail();
+                                //item.vocing_pay = true;
+                                this.si = setInterval(() => {
+                                  return continue_pay_voc_pay({
+                                    continue_pay_order_id:
+                                      item.continue_pay_order_id,
+                                    dbc_hash: txid,
+                                    user_name_platform,
+                                    language,
+                                  })
+                                    .then((res) => {
+                                      item.vocing_pay = true;
+                                      this.queryContinuePayDetail();
+                                      if (res.status === 1) {
+                                        clearInterval(this.si);
+
+                                        item.vocing_pay = false;
+                                      }
+                                    })
+                                    .catch((err) => {
+                                      if (err && err.status === -1) {
+                                        console.log(err.msg);
+                                        this.$message({
+                                          showClose: true,
+                                          message: err.msg,
+                                          type: "error",
+                                        });
+                                        clearInterval(this.si);
+                                      } else if (err && err.status === -2) {
+                                        console.log(err.msg);
+                                        // clearInterval(this.si)
+                                      } else if (err) {
+                                        console.log("其他报错");
+                                        console.log(err);
+                                        clearInterval(this.si);
+                                      }
+                                    });
+                                }, 5000);
+                              } else {
+                                this.isPaying = false;
+
+                                clearInterval(this.si);
+                                this.local_pay_error = true;
+                                console.log("转账失败");
+                              }
+                            });
+                          }, 1000);
+                        }
+                      });
+                    }
+                  }, 1000);
+                })
+                .catch((err) => {
+                  if (err) {
+                    console.log(err);
                   }
+                })
+                .finally(() => {
+                  console.log("一定会执行的语句");
                 });
-                //item.vocing_pay = true;
-                // this.queryContinuePayDetail();
-                //item.vocing_pay = true;
-                this.si = setInterval(() => {
-                  return continue_pay_voc_pay({
+            });
+          } else {
+            return Promise.reject({
+              status: -1,
+              msg: "出现未知错误，无法续租",
+            });
+          }
+        });
+      } else {
+        clearInterval(this.si);
+
+        const user_name_platform = this.$t("website_name");
+        const language = this.$i18n.locale;
+        get_dbchain_address({
+          order_id: item.order_id,
+          user_name_platform,
+          language,
+        }).then((res) => {
+          if (res.status === 1 && res.content) {
+            const amount = item.dbc_total_count + item.code * 1;
+            this.$confirm(
+              this.$t("myMachine_no_double_pay"),
+              this.$t("myMachine_please_confirm_pay"),
+              {
+                confirmButtonText: this.$t("myMachine_confirm"),
+                cancelButtonText: this.$t("myMachine_cancer"),
+              }
+            )
+              .then(({ value }) => {
+                this.isPaying = true;
+                this.local_pay_error = false;
+                return transfer({
+                  toAddress: res.content,
+                  amount,
+                });
+              })
+              .then((res) => {
+                if (res.status === 1) {
+                  console.log("转账成功");
+                  const txid = res.response.txid;
+
+                  // pay after
+                  this.isPaying = false;
+                  item.vocing_pay = true;
+                  const user_name_platform = this.$t("website_name");
+                  const language = this.$i18n.locale;
+                  // 支付后确认
+                  continue_pay_voc_pay({
                     continue_pay_order_id: item.continue_pay_order_id,
                     dbc_hash: txid,
                     user_name_platform,
                     language,
-                  })
-                    .then((res) => {
-                      item.vocing_pay = true;
-                      this.queryContinuePayDetail();
-                      if (res.status === 1) {
-                        clearInterval(this.si);
+                  }).then((res) => {
+                    item.vocing_pay = true;
+                    this.queryContinuePayDetail();
+                    if (res.status === 1) {
+                      clearInterval(this.si);
 
-                        item.vocing_pay = false;
-                      }
+                      item.vocing_pay = false;
+                    }
+                  });
+                  //item.vocing_pay = true;
+                  // this.queryContinuePayDetail();
+                  //item.vocing_pay = true;
+                  this.si = setInterval(() => {
+                    return continue_pay_voc_pay({
+                      continue_pay_order_id: item.continue_pay_order_id,
+                      dbc_hash: txid,
+                      user_name_platform,
+                      language,
                     })
-                    .catch((err) => {
-                      if (err && err.status === -1) {
-                        console.log(err.msg);
-                        this.$message({
-                          showClose: true,
-                          message: err.msg,
-                          type: "error",
-                        });
-                        clearInterval(this.si);
-                      } else if (err && err.status === -2) {
-                        console.log(err.msg);
-                        // clearInterval(this.si)
-                      } else if (err) {
-                        console.log("其他报错");
-                        console.log(err);
-                        clearInterval(this.si);
-                      }
-                    });
-                }, 5000);
-              } else {
-                this.isPaying = false;
+                      .then((res) => {
+                        item.vocing_pay = true;
+                        this.queryContinuePayDetail();
+                        if (res.status === 1) {
+                          clearInterval(this.si);
 
-                clearInterval(this.si);
-                this.local_pay_error = true;
-                console.log("转账失败");
-              }
+                          item.vocing_pay = false;
+                        }
+                      })
+                      .catch((err) => {
+                        if (err && err.status === -1) {
+                          console.log(err.msg);
+                          this.$message({
+                            showClose: true,
+                            message: err.msg,
+                            type: "error",
+                          });
+                          clearInterval(this.si);
+                        } else if (err && err.status === -2) {
+                          console.log(err.msg);
+                          // clearInterval(this.si)
+                        } else if (err) {
+                          console.log("其他报错");
+                          console.log(err);
+                          clearInterval(this.si);
+                        }
+                      });
+                  }, 5000);
+                } else {
+                  this.isPaying = false;
+
+                  clearInterval(this.si);
+                  this.local_pay_error = true;
+                  console.log("转账失败");
+                }
+              });
+          } else {
+            return Promise.reject({
+              status: -1,
+              msg: "出现未知错误，无法续租",
             });
-        } else {
-          return Promise.reject({
-            status: -1,
-            msg: "出现未知错误，无法续租",
-          });
-        }
-      });
-      // pay
+          }
+        });
+        // pay
 
-      //  }, 5000);
+        //  }, 5000);
+      }
     },
     isShowRendSuccessMsg(milli_rent_success_time) {
       const minutes =

@@ -496,6 +496,14 @@ export function getCongtuGpuOrderIdPrefix(){
 export function getCongtuCpuOrderIdPrefix(){
   return "cpu";
 }
+// 获取续租GPU订单前缀
+export function getCongtuGpuRenewalOrderIdPrefix(){
+  return "renewalGpu";
+}
+// 获取续租CPU订单前缀
+export function getCongtuCpuRenewalOrderIdPrefix(){
+  return "renewalCpu";
+}
 // 获取GPU支付宝商户订单号前缀
 export function getCongtuGpuTradeNoPrefix(){
   // 5位数
@@ -505,4 +513,14 @@ export function getCongtuGpuTradeNoPrefix(){
 export function getCongtuCpuTradeNoPrefix(){
   // 5位数
   return "21102";
+}
+// 获取续租GPU支付宝商户订单号前缀
+export function getCongtuGpuRenewalTradeNoPrefix(){
+  // 5位数
+  return "21103";
+}
+// 获取续租CPU支付宝商户订单号前缀
+export function getCongtuCpuRenewalTradeNoPrefix(){
+  // 5位数
+  return "21104";
 }
