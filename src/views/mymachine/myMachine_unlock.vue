@@ -815,10 +815,7 @@
 
             <el-tooltip
               class="item"
-              v-if="
-                item.orderData.try_rent === false &&
-                $t('website_name') != 'congTuCloud'
-              "
+              v-if="item.orderData.try_rent === false"
               effect="dark"
               :content="$t('stopgpu_tip_mymachine')"
             >
@@ -1219,12 +1216,22 @@ export default {
     },
 
     stopGpu(item, index) {
-      // item.rentLoading_cpu = true;
-      this.dlg_stopgpu = true;
-      this.placeOrderData = item.orderData;
-      this.placeOrderData.index = index;
-      //   confirm_new("", this.$t("cpu_mode_switch"));
-      //    this.confirm_new("xxx", this.$t("cpu_mode_switch"), item);
+      // 聪图云模式下
+      if (this.$t("website_name") === "congTuCloud") {
+        this.dlg_stopgpu = false;
+        this.placeOrderData = item.orderData;
+        this.placeOrderData.index = index;
+        item = this.placeOrderData;
+        item.switch_cpu_mode = "payment";
+        this.switch_cpu_mode(item);
+      } else {
+        // item.rentLoading_cpu = true;
+        this.dlg_stopgpu = true;
+        this.placeOrderData = item.orderData;
+        this.placeOrderData.index = index;
+        //   confirm_new("", this.$t("cpu_mode_switch"));
+        //    this.confirm_new("xxx", this.$t("cpu_mode_switch"), item);
+      }
     },
 
     switch_cpu_mode(item) {
@@ -1237,58 +1244,114 @@ export default {
     },
 
     to_payment(item, index) {
-      this.rentLoading_cpu = true;
-      this.rent_cpu_index = index;
-      this.$forceUpdate();
-      const user_name_platform = this.$t("website_name");
-      const language = this.$i18n.locale;
-      place_order_gpu_to_cpu_new({
-        machine_type: item.machine_type,
-        machine_id: item.machine_id,
-        wallet_address_user: getAccount().address,
-        mode: "payment",
-        order_id_pre: item.order_id,
-        user_name_platform,
-        language,
-      })
-        .then((res_1) => {
-          if (res_1.status === 1) {
-            this.placeOrderData = res_1.content;
-            this.placeOrderData.dbc_price = 0.0026;
-            return get_dbc_price({
-              order_id: this.placeOrderData.order_id,
-              user_name_platform,
-              language,
-            });
-          } else {
-            this.$message({
-              showClose: true,
-              message: res_1.msg,
-              type: "error",
-            });
-            return Promise.reject(res_1.msg);
-          }
+      if (this.$t("website_name") === "congTuCloud") {
+        this.rentLoading_cpu = true;
+        this.rent_cpu_index = index;
+        this.$forceUpdate();
+        const user_name_platform = this.$t("website_name");
+        const language = this.$i18n.locale;
+        place_order_gpu_to_cpu_new({
+          email: getCookie("email"),
+          machine_type: item.machine_type,
+          machine_id: item.machine_id,
+          wallet_address_user: "",
+          mode: "payment",
+          order_id_pre: item.order_id,
+          user_name_platform,
+          language,
         })
-        .then((res_2) => {
-          if (res_2.status === 1) {
-            this.placeOrderData.dbc_price = res_2.content;
-            this.dlg_opencpupayment = true;
-          } else {
-            this.$message({
-              showClose: true,
-              message: res_2.msg,
-              type: "success",
-            });
-            return Promise.reject(res_2.msg);
-          }
+          .then((res_1) => {
+            if (res_1.status === 1) {
+              this.placeOrderData = res_1.content;
+              this.placeOrderData.dbc_price = 0.0026;
+              return get_dbc_price({
+                order_id: this.placeOrderData.order_id,
+                user_name_platform,
+                language,
+              });
+            } else {
+              this.$message({
+                showClose: true,
+                message: res_1.msg,
+                type: "error",
+              });
+              return Promise.reject(res_1.msg);
+            }
+          })
+          .then((res_2) => {
+            if (res_2.status === 1) {
+              this.placeOrderData.dbc_price = res_2.content;
+              this.dlg_opencpupayment = true;
+            } else {
+              this.$message({
+                showClose: true,
+                message: res_2.msg,
+                type: "success",
+              });
+              return Promise.reject(res_2.msg);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+          .finally(() => {
+            this.rentLoading_cpu = false;
+            this.rent_cpu_index = index;
+          });
+      } else {
+        this.rentLoading_cpu = true;
+        this.rent_cpu_index = index;
+        this.$forceUpdate();
+        const user_name_platform = this.$t("website_name");
+        const language = this.$i18n.locale;
+        place_order_gpu_to_cpu_new({
+          machine_type: item.machine_type,
+          machine_id: item.machine_id,
+          wallet_address_user: getAccount().address,
+          mode: "payment",
+          order_id_pre: item.order_id,
+          user_name_platform,
+          language,
         })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          this.rentLoading_cpu = false;
-          this.rent_cpu_index = index;
-        });
+          .then((res_1) => {
+            if (res_1.status === 1) {
+              this.placeOrderData = res_1.content;
+              this.placeOrderData.dbc_price = 0.0026;
+              return get_dbc_price({
+                order_id: this.placeOrderData.order_id,
+                user_name_platform,
+                language,
+              });
+            } else {
+              this.$message({
+                showClose: true,
+                message: res_1.msg,
+                type: "error",
+              });
+              return Promise.reject(res_1.msg);
+            }
+          })
+          .then((res_2) => {
+            if (res_2.status === 1) {
+              this.placeOrderData.dbc_price = res_2.content;
+              this.dlg_opencpupayment = true;
+            } else {
+              this.$message({
+                showClose: true,
+                message: res_2.msg,
+                type: "success",
+              });
+              return Promise.reject(res_2.msg);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+          .finally(() => {
+            this.rentLoading_cpu = false;
+            this.rent_cpu_index = index;
+          });
+      }
     },
 
     to_deposit(item, index) {
