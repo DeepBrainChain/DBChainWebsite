@@ -1,30 +1,40 @@
 <template>
   <div>
     <div class="title">
-      <span>{{$t('my_machine_miner_info')}}：{{res_body.content.length}}</span>
+      <span
+        >{{ $t("my_machine_miner_info") }}：{{ res_body.content.length }}</span
+      >
       <div v-if="!isBinding && bindMail" class="binding">
-        <span class="bindingInfo">{{$t('my_machine_binding_email')}}：{{bindMail}}</span>
-        <el-button
-          class="ml10"
-          size="mini"
-          plain
-          @click="openDlgMail(false)"
-        >{{$t('gpu.modifyMail')}}</el-button>
-        <el-tooltip class="item" effect="dark" :content="$t('my_machine_miner_tips')">
+        <span class="bindingInfo"
+          >{{ $t("my_machine_binding_email") }}：{{ bindMail }}</span
+        >
+        <el-button class="ml10" size="mini" plain @click="openDlgMail(false)">{{
+          $t("gpu.modifyMail")
+        }}</el-button>
+        <el-tooltip
+          class="item"
+          effect="dark"
+          :content="$t('my_machine_miner_tips')"
+        >
           <el-button
             type="primary"
             size="mini"
             class="ml10"
             @click="pushToMc"
-          >{{$t('my_machine_miner_rentout')}}</el-button>
+            >{{ $t("my_machine_miner_rentout") }}</el-button
+          >
         </el-tooltip>
       </div>
       <div v-else-if="!isBinding" class="bind">
-        <el-button size="small" plain @click="openDlgMail(true)">{{$t('gpu.bindMail')}}</el-button>
+        <el-button size="small" plain @click="openDlgMail(true)">{{
+          $t("gpu.bindMail")
+        }}</el-button>
         <span class="bindInfo ml10" v-html="$t('gpu.bindMailInfo')"></span>
       </div>
       <div v-else-if="isBinding">
-        <span v-if="isBinding" class="bindInfo">{{$t('my_machine_miner_vocing')}}</span>
+        <span v-if="isBinding" class="bindInfo">{{
+          $t("my_machine_miner_vocing")
+        }}</span>
       </div>
     </div>
     <div
@@ -35,53 +45,92 @@
       <div class="tools-head">
         <div class="l-wrap">
           <span
-            v-if="!item.mcData.dbc_open_status && item.mcData.time_dbc_close_status!=null &&!item.mcData.vocing_connectivity_verification"
-          >{{$t('my_machine_miner_status')}}：{{$t('my_machine_miner_close_status')}}</span>
+            v-if="
+              !item.mcData.dbc_open_status &&
+              item.mcData.time_dbc_close_status != null &&
+              !item.mcData.vocing_connectivity_verification
+            "
+            >{{ $t("my_machine_miner_status") }}：{{
+              $t("my_machine_miner_close_status")
+            }}</span
+          >
           <span
             v-else-if="item.mcData.online_status && item.mcData.dbc_open_status"
-          >{{$t('my_machine_miner_status')}}：{{$t('my_machine_miner_online')}}</span>
+            >{{ $t("my_machine_miner_status") }}：{{
+              $t("my_machine_miner_online")
+            }}</span
+          >
           <span
-            v-else-if="item.mcData.online_status && !item.mcData.dbc_open_status &&item.mcData.vocing_connectivity_verification"
-          >{{$t('my_machine_miner_status')}}：{{$t('my_machine_miner_vocing_rentout')}}</span>
-          <span
-            v-else-if="!item.mcData.online_status"
-          >{{$t('my_machine_miner_status')}}：{{$t('my_machine_miner_offline')}}</span>
-          <span
-            v-else-if="item.mcData.error_connectivity_verification"
-          >{{$t('my_machine_miner_status')}}：{{$t('my_machine_miner_vocing_error')}}</span>
+            v-else-if="
+              item.mcData.online_status &&
+              !item.mcData.dbc_open_status &&
+              item.mcData.vocing_connectivity_verification
+            "
+            >{{ $t("my_machine_miner_status") }}：{{
+              $t("my_machine_miner_vocing_rentout")
+            }}</span
+          >
+          <span v-else-if="!item.mcData.online_status"
+            >{{ $t("my_machine_miner_status") }}：{{
+              $t("my_machine_miner_offline")
+            }}</span
+          >
+          <span v-else-if="item.mcData.error_connectivity_verification"
+            >{{ $t("my_machine_miner_status") }}：{{
+              $t("my_machine_miner_vocing_error")
+            }}</span
+          >
           <span
             class="cRed"
-            v-if="!item.mcData.dbc_open_status && item.mcData.time_dbc_close_status!=null"
-          >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{$t('time_sold_out_machine')}}:{{$secToDate(item.mcData.min_time_dbc_close_status*60, 'DHM')}}</span>
+            v-if="
+              !item.mcData.dbc_open_status &&
+              item.mcData.time_dbc_close_status != null
+            "
+            >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{
+              $t("time_sold_out_machine")
+            }}:{{
+              $secToDate(item.mcData.min_time_dbc_close_status * 60, "DHM")
+            }}</span
+          >
         </div>
         <div class="r-wrap">
           <el-tooltip effect="light" placement="left">
             <div class="tooltip-content" slot="content">
-              <h3>{{$t('my_machine_miner_can_beused_time')}}:</h3>
-              {{Math.floor(item.mcData.can_rent_start_time_later>0?item.mcData.can_rent_start_time_later/60:-item.mcData.can_rent_start_time_later/60)}}{{$t('my_machine_hour')}}{{item.mcData.can_rent_start_time_later > 0 ? $t('my_machine_before'): $t('my_machine_after') }}{{$t('my_machine_start')}}
+              <h3>{{ $t("my_machine_miner_can_beused_time") }}:</h3>
+              {{
+                Math.floor(
+                  item.mcData.can_rent_start_time_later > 0
+                    ? item.mcData.can_rent_start_time_later / 60
+                    : -item.mcData.can_rent_start_time_later / 60
+                )
+              }}{{ $t("my_machine_hour")
+              }}{{
+                item.mcData.can_rent_start_time_later > 0
+                  ? $t("my_machine_before")
+                  : $t("my_machine_after")
+              }}{{ $t("my_machine_start") }}
               <br />
-              {{Math.floor(item.mcData.end_rent_out_time_later/60)}}{{$t('my_machine_end')}}
+              {{ Math.floor(item.mcData.end_rent_out_time_later / 60)
+              }}{{ $t("my_machine_end") }}
             </div>
-            <el-button
-              plain
-              class="tool-btn"
-              size="mini"
-              style="width: 86px"
-            >{{$t('my_machine_can_time')}}</el-button>
+            <el-button plain class="tool-btn" size="mini" style="width: 86px">{{
+              $t("my_machine_can_time")
+            }}</el-button>
           </el-tooltip>
         </div>
       </div>
       <div class="status-wrap">
         <div class="flex status-title">
-          <el-rate :value="item.mcData.evaluation_score_average/2"></el-rate>
+          <el-rate :value="item.mcData.evaluation_score_average / 2"></el-rate>
           <span class="fs28">
-            <span
-              v-if="item.mcData.dbc_open_status"
-            >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{$t('accounting_area_info')}}:</span>
-            <span
-              class="cPrimaryColor"
-              v-if="item.mcData.dbc_open_status"
-            >{{item.mcData.machine_mode_String }}</span>
+            <span v-if="item.mcData.dbc_open_status"
+              >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{
+                $t("accounting_area_info")
+              }}:</span
+            >
+            <span class="cPrimaryColor" v-if="item.mcData.dbc_open_status">{{
+              item.mcData.machine_mode_String
+            }}</span>
           </span>
           <!--   <span>{{item.mcData.evaluation_score_average}}{{$t('scores')}}</span> -->
         </div>
@@ -91,68 +140,86 @@
               plain
               class="is-link"
               @click="pushOrder(item.mcData.machine_id)"
-            >{{item.mcData.machine_id}}</el-button>
+              >{{ item.mcData.machine_id }}</el-button
+            >
             <span class="fs28">
-              <span
-                class="cPrimaryColor"
-              >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$ {{item.mcData.gpu_price_dollar }}/{{$t('my_machine_hour')}}</span>
+              <span class="cPrimaryColor"
+                >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$
+                {{ item.mcData.gpu_price_dollar }}/{{
+                  $t("my_machine_hour")
+                }}</span
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('my_machine_dbc_version')}}：
-              <a class="cPrimaryColor">{{item.mcData.dbc_version}}</a>
+              {{ $t("my_machine_dbc_version") }}：
+              <a class="cPrimaryColor">{{ item.mcData.dbc_version }}</a>
             </span>
           </div>
         </div>
         <div class="flex">
           <div class="td2">
             <span class="fs28">
-              <a class="cPrimaryColor">{{item.mcData.gpu_type}}</a>
-              <a class="cPrimaryColor">x{{item.mcData.gpu_count}}</a>
+              <a class="cPrimaryColor">{{ item.mcData.gpu_type }}</a>
+              <a class="cPrimaryColor">x{{ item.mcData.gpu_count }}</a>
             </span>
           </div>
           <div class="td2">
             <span class="fs28">
-              <a class="cPrimaryColor">{{item.mcData.country}}</a>
+              <a class="cPrimaryColor">{{ item.mcData.country }}</a>
             </span>
           </div>
           <div
             class="td"
-            v-if="item.mcData.can_rent_start_time_later<=0 && item.mcData.dbc_open_status"
+            v-if="
+              item.mcData.can_rent_start_time_later <= 0 &&
+              item.mcData.dbc_open_status
+            "
           >
             <span class="fs16">
-              <a class="cPrimaryColor">{{-item.mcData.can_rent_start_time_later}}</a>
-              {{$t('list_start_rentout')}}
+              <a class="cPrimaryColor">{{
+                -item.mcData.can_rent_start_time_later
+              }}</a>
+              {{ $t("list_start_rentout") }}
             </span>
           </div>
           <div
             class="td"
-            v-else-if="item.mcData.can_rent_start_time_later>0&& item.mcData.dbc_open_status"
+            v-else-if="
+              item.mcData.can_rent_start_time_later > 0 &&
+              item.mcData.dbc_open_status
+            "
           >
-            <span class="fs16">{{$t('list_can_rentout')}}</span>
+            <span class="fs16">{{ $t("list_can_rentout") }}</span>
           </div>
         </div>
         <div class="flex">
           <div class="td5">
             <span class="fs28">
-              <a
-                class="cPrimaryColor"
-              >{{$t('month_discount')}}:{{item.mcData.discount_month}}%&nbsp;&nbsp;</a>
+              <a class="cPrimaryColor"
+                >{{ $t("month_discount") }}:{{
+                  item.mcData.discount_month
+                }}%&nbsp;&nbsp;</a
+              >
             </span>
           </div>
           <div class="td5">
             <span class="fs28">
-              <a
-                class="cPrimaryColor"
-              >{{$t('quarter_discount')}}:{{item.mcData.discount_quarter}}%&nbsp;&nbsp;</a>
+              <a class="cPrimaryColor"
+                >{{ $t("quarter_discount") }}:{{
+                  item.mcData.discount_quarter
+                }}%&nbsp;&nbsp;</a
+              >
             </span>
           </div>
           <div class="td5">
             <span class="fs28">
-              <a
-                class="cPrimaryColor"
-              >{{$t('year_discount')}}:{{item.mcData.discount_year}}%&nbsp;&nbsp;</a>
+              <a class="cPrimaryColor"
+                >{{ $t("year_discount") }}:{{
+                  item.mcData.discount_year
+                }}%&nbsp;&nbsp;</a
+              >
             </span>
           </div>
           <div class="td5">
@@ -163,7 +230,7 @@
               v-if="item.mcData.gpu_rentout_whole"
             >
               <span class="fs28">
-                <a class="cPrimaryColor">{{$t('rentout_machine_whole')}}</a>
+                <a class="cPrimaryColor">{{ $t("rentout_machine_whole") }}</a>
               </span>
             </el-tooltip>
             <el-tooltip
@@ -173,17 +240,24 @@
               v-else
             >
               <span class="fs28">
-                <a class="cPrimaryColor">{{$t('rentout_machine_one_gpu')}}</a>
+                <a class="cPrimaryColor">{{ $t("rentout_machine_one_gpu") }}</a>
               </span>
             </el-tooltip>
           </div>
           <div class="td5">
             <span class="fs28"></span>
-            <el-tooltip class="item" effect="dark" :content="$t('high_stability_conditions4')">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              :content="$t('high_stability_conditions4')"
+            >
               <span class="fs28">
-                <a
-                  class="cPrimaryColor"
-                >{{$t('deposite_dbc_count')}}:{{item.mcData.rentout_deposite_dbc_count/item.mcData.gpu_count}}</a>
+                <a class="cPrimaryColor"
+                  >{{ $t("deposite_dbc_count") }}:{{
+                    item.mcData.rentout_deposite_dbc_count /
+                    item.mcData.gpu_count
+                  }}</a
+                >
               </span>
             </el-tooltip>
           </div>
@@ -191,42 +265,39 @@
         <div class="flex">
           <div class="td">
             <span class="fs16">
-              {{$t('list_idle_gpus')}}:
-              <a
-                class="cPrimaryColor"
-              >{{item.mcData.gpu_count - item.mcData.gpu_be_used}}</a>
+              {{ $t("list_idle_gpus") }}:
+              <a class="cPrimaryColor">{{
+                item.mcData.gpu_count - item.mcData.gpu_be_used
+              }}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_length_of_available_time')}}：
-              <a
-                class="cPrimaryColor"
-              >{{Math.floor(item.mcData.length_of_available_time)}}{{$t('my_machine_hour')}}</a>
+              {{ $t("list_length_of_available_time") }}：
+              <a class="cPrimaryColor"
+                >{{ Math.floor(item.mcData.length_of_available_time)
+                }}{{ $t("my_machine_hour") }}</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_total_time_be_used')}}：
-              <a
-                class="cPrimaryColor"
-              >{{$minsToHourMins(item.mcData.total_time_be_used)}}</a>
+              {{ $t("list_total_time_be_used") }}：
+              <a class="cPrimaryColor">{{
+                $minsToHourMins(item.mcData.total_time_be_used)
+              }}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_total_rent_count')}}：
-              <a
-                class="cPrimaryColor"
-              >{{item.mcData.total_rent_count}}</a>
+              {{ $t("list_total_rent_count") }}：
+              <a class="cPrimaryColor">{{ item.mcData.total_rent_count }}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_error_rent_count')}}：
-              <a
-                class="cPrimaryColor"
-              >{{item.mcData.error_rent_count}}</a>
+              {{ $t("list_error_rent_count") }}：
+              <a class="cPrimaryColor">{{ item.mcData.error_rent_count }}</a>
             </span>
           </div>
         </div>
@@ -234,126 +305,132 @@
           <div v-if="item.mcData.tensor_core" class="td">
             <span class="fs16">
               Tensor Cores：
-              <a class="cPrimaryColor">{{item.mcData.tensor_core}}</a>
+              <a class="cPrimaryColor">{{ item.mcData.tensor_core }}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_cuda_version')}}：
-              <a class="cPrimaryColor">{{item.mcData.cuda_version}}</a>
+              {{ $t("list_cuda_version") }}：
+              <a class="cPrimaryColor">{{ item.mcData.cuda_version }}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_disk_space')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.mcData.disk_space/(1024*1024))}}GB</a>
-              <a class="cPrimaryColor">&nbsp;&nbsp;{{item.mcData.disk_type}}</a>
+              {{ $t("list_disk_space") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.mcData.disk_space / (1024 * 1024)) }}GB</a
+              >
+              <a class="cPrimaryColor"
+                >&nbsp;&nbsp;{{ item.mcData.disk_type }}</a
+              >
             </span>
           </div>
           <div class="td3">
             <span class="fs16">
-              {{$t('list_cpu_type')}}：
-              <a class="cPrimaryColor">{{item.mcData.cpu_type}}</a>
+              {{ $t("list_cpu_type") }}：
+              <a class="cPrimaryColor">{{ item.mcData.cpu_type }}</a>
             </span>
           </div>
         </div>
         <div class="flex">
           <div v-if="item.mcData.half_precision_tflops" class="td">
             <span class="fs16">
-              {{$t('list_half_precision_tflops')}}：
-              <a
-                class="cPrimaryColor"
-              >{{item.mcData.half_precision_tflops}}TFLOPS</a>
+              {{ $t("list_half_precision_tflops") }}：
+              <a class="cPrimaryColor"
+                >{{ item.mcData.half_precision_tflops }}TFLOPS</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_gpu_ram_size')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.mcData.gpu_ram_size/(1000*1000))}}GB</a>
+              {{ $t("list_gpu_ram_size") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.mcData.gpu_ram_size / (1000 * 1000)) }}GB</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_disk_bandwidth')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.mcData.disk_bandwidth/1024)}}MB/s</a>
+              {{ $t("list_disk_bandwidth") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.mcData.disk_bandwidth / 1024) }}MB/s</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_cpu_numbers')}}：
-              <a class="cPrimaryColor">{{item.mcData.cpu_numbers}}</a>
+              {{ $t("list_cpu_numbers") }}：
+              <a class="cPrimaryColor">{{ item.mcData.cpu_numbers }}</a>
             </span>
           </div>
         </div>
         <div class="flex">
           <div v-if="item.mcData.single_precision_tflops" class="td">
             <span class="fs16">
-              {{$t('list_single_precision_tflops')}}：
-              <a
-                class="cPrimaryColor"
-              >{{item.mcData.single_precision_tflops}}TFLOPS</a>
+              {{ $t("list_single_precision_tflops") }}：
+              <a class="cPrimaryColor"
+                >{{ item.mcData.single_precision_tflops }}TFLOPS</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_gpu_ram_bandwidth')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.mcData.gpu_ram_bandwidth/(1024*1024))}}GB/s</a>
+              {{ $t("list_gpu_ram_bandwidth") }}：
+              <a class="cPrimaryColor"
+                >{{
+                  parseInt(item.mcData.gpu_ram_bandwidth / (1024 * 1024))
+                }}GB/s</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_inet_up')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.mcData.inet_up/1024)}}Mbps</a>
+              {{ $t("list_inet_up") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.mcData.inet_up / 1024) }}Mbps</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_ram_size')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.mcData.ram_size/(1024*1024))}}GB</a>
+              {{ $t("list_ram_size") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.mcData.ram_size / (1024 * 1024)) }}GB</a
+              >
             </span>
           </div>
         </div>
         <div class="flex">
           <div v-if="item.mcData.duoble_precision_tflops" class="td">
             <span class="fs16">
-              {{$t('list_double_precision_tflops')}}：
-              <a
-                class="cPrimaryColor"
-              >{{item.mcData.duoble_precision_tflops}}TFLOPS</a>
+              {{ $t("list_double_precision_tflops") }}：
+              <a class="cPrimaryColor"
+                >{{ item.mcData.duoble_precision_tflops }}TFLOPS</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_pcie_bandwidth')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.mcData.pcie_bandwidth/(1024*1024))}}GB/s</a>
+              {{ $t("list_pcie_bandwidth") }}：
+              <a class="cPrimaryColor"
+                >{{
+                  parseInt(item.mcData.pcie_bandwidth / (1024 * 1024))
+                }}GB/s</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{$t('list_inet_down')}}：
-              <a
-                class="cPrimaryColor"
-              >{{parseInt(item.mcData.inet_down/1024)}}Mbps</a>
+              {{ $t("list_inet_down") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.mcData.inet_down / 1024) }}Mbps</a
+              >
             </span>
           </div>
           <div class="td3">
             <span class="fs16">
-              {{$t('list_os')}}：
-              <a class="cPrimaryColor">{{item.mcData.os}}</a>
+              {{ $t("list_os") }}：
+              <a class="cPrimaryColor">{{ item.mcData.os }}</a>
             </span>
           </div>
         </div>
@@ -366,106 +443,193 @@
       <div class="tools-head">
         <div class="l-wrap">
           <span
-            v-if="isShowRendSuccessMsg(item.mcData.milli_time_dbc_open_status)&&item.mcData.dbc_open_status&&item.mcData.usage_type!==2"
-          >{{$t('myMachine_rentout_success_msg')}}</span>
+            v-if="
+              isShowRendSuccessMsg(item.mcData.milli_time_dbc_open_status) &&
+              item.mcData.dbc_open_status &&
+              item.mcData.usage_type !== 2
+            "
+            >{{ $t("myMachine_rentout_success_msg") }}</span
+          >
 
           <span
-            v-else-if="isShowRendSuccessMsg(item.mcData.milli_time_dbc_open_status)&&item.mcData.dbc_open_status&&item.mcData.usage_type===2"
-          >{{$t('myMachine_rentout_success_msg_mining')}}</span>
+            v-else-if="
+              isShowRendSuccessMsg(item.mcData.milli_time_dbc_open_status) &&
+              item.mcData.dbc_open_status &&
+              item.mcData.usage_type === 2
+            "
+            >{{ $t("myMachine_rentout_success_msg_mining") }}</span
+          >
 
           <!--   <span class="cRed" v-else-if="item.mcData.vocing_error">{{$t('myMachine_rentout_error')}}</span>-->
 
           <span
             class="cRed"
-            v-else-if="(ispayPocing||item.mcData.vocing_pay_deposite)&&pay_index===index"
-          >{{$t('my_machine_order_vocing_pay')}}</span>
+            v-else-if="
+              (ispayPocing || item.mcData.vocing_pay_deposite) &&
+              pay_index === index
+            "
+            >{{ $t("my_machine_order_vocing_pay") }}</span
+          >
 
           <span
             class="cRed"
-            v-else-if="item.mcData.error_pay_deposite&&!item.mcData.dbc_open_status"
-          >{{$t('my_machine_order_vocing_pay_error')}}</span>
+            v-else-if="
+              item.mcData.error_pay_deposite && !item.mcData.dbc_open_status
+            "
+            >{{ $t("my_machine_order_vocing_pay_error") }}</span
+          >
 
-          <span class="cRed" v-else-if="item.mcData.error_connectivity_verification">{{tip}}</span>
           <span
             class="cRed"
-            v-else-if="isPaying&&pay_index===index"
-          >{{$t('myMachine_is_dbc_transfering')}}</span>
+            v-else-if="item.mcData.error_connectivity_verification"
+            >{{ tip }}</span
+          >
+          <span class="cRed" v-else-if="isPaying && pay_index === index">{{
+            transferTips
+          }}</span>
 
           <span
             class="cRed"
             v-else-if="item.mcData.vocing_connectivity_verification"
-          >{{$t('myMachine_is_vocing_machine_rentout')}}</span>
+            >{{ $t("myMachine_is_vocing_machine_rentout") }}</span
+          >
           <span
             class="cRed"
-            v-else-if="item.mcData.success_connectivity_verification && !item.mcData.dbc_open_status"
-          >{{$t('success_connectivity_verification')}}</span>
+            v-else-if="
+              item.mcData.success_connectivity_verification &&
+              !item.mcData.dbc_open_status
+            "
+            >{{ $t("success_connectivity_verification") }}</span
+          >
           <span
             class="cRed"
-            v-else-if="!item.mcData.dbc_open_status && item.mcData.time_dbc_close_status!=null"
-          >{{$t('sold_out_machine_tip')}}</span>
+            v-else-if="
+              !item.mcData.dbc_open_status &&
+              item.mcData.time_dbc_close_status != null
+            "
+            >{{ $t("sold_out_machine_tip") }}</span
+          >
           <span
-            v-else-if="item.mcData.need_deposite_dbc && !item.mcData.success_pay_deposite&&
-            !item.mcData.error_pay_deposite&& !ispayPocing&&!item.mcData.vocing_pay_deposite&&item.mcData.success_connectivity_verification"
-          >{{$t('miner_confirmPay_tip3')}}</span>
+            v-else-if="
+              item.mcData.need_deposite_dbc &&
+              !item.mcData.success_pay_deposite &&
+              !item.mcData.error_pay_deposite &&
+              !ispayPocing &&
+              !item.mcData.vocing_pay_deposite &&
+              item.mcData.success_connectivity_verification
+            "
+            >{{ $t("miner_confirmPay_tip3") }}</span
+          >
         </div>
         <div class="r-wrap">
-          <el-tooltip class="item" effect="dark" :content="$t('miner_confirmPay_tip0')">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="$t('miner_confirmPay_tip0')"
+          >
             <el-button
-              v-if="item.mcData.need_deposite_dbc && !item.mcData.success_pay_deposite&&
-            !item.mcData.error_pay_deposite&& !ispayPocing&&!item.mcData.vocing_pay_deposite&&item.mcData.success_connectivity_verification&&!item.mcData.gpu_rentout_whole"
+              v-if="
+                item.mcData.need_deposite_dbc &&
+                !item.mcData.success_pay_deposite &&
+                !item.mcData.error_pay_deposite &&
+                !ispayPocing &&
+                !item.mcData.vocing_pay_deposite &&
+                item.mcData.success_connectivity_verification &&
+                !item.mcData.gpu_rentout_whole
+              "
               plain
               class="tool-btn"
               size="mini"
               style="width: 126px"
-              @click="openPay(item,index)"
-            >{{$t('miner_confirmPay')}}</el-button>
+              @click="openPay(item, index)"
+              >{{ $t("miner_confirmPay") }}</el-button
+            >
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" :content="$t('miner_confirmPay_tip1')">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="$t('miner_confirmPay_tip1')"
+          >
             <el-button
-              v-if="item.mcData.need_deposite_dbc && !item.mcData.success_pay_deposite&&
-            !item.mcData.error_pay_deposite&& !ispayPocing&&!item.mcData.vocing_pay_deposite&&item.mcData.success_connectivity_verification&&item.mcData.gpu_rentout_whole"
+              v-if="
+                item.mcData.need_deposite_dbc &&
+                !item.mcData.success_pay_deposite &&
+                !item.mcData.error_pay_deposite &&
+                !ispayPocing &&
+                !item.mcData.vocing_pay_deposite &&
+                item.mcData.success_connectivity_verification &&
+                item.mcData.gpu_rentout_whole
+              "
               plain
               class="tool-btn"
               size="mini"
               style="width: 126px"
-              @click="openPay(item,index)"
-            >{{$t('miner_confirmPay')}}</el-button>
+              @click="openPay(item, index)"
+              >{{ $t("miner_confirmPay") }}</el-button
+            >
           </el-tooltip>
           <el-button
-            v-if="item.mcData.error_pay_deposite && !ispayPocing&&!item.mcData.vocing_pay_deposite"
+            v-if="
+              item.mcData.error_pay_deposite &&
+              !ispayPocing &&
+              !item.mcData.vocing_pay_deposite
+            "
             plain
             class="tool-btn"
             size="mini"
             style="width: 126px"
-            @click="openPayRepeat(item,index)"
-          >{{$t('miner_confirmPay_repeat')}}</el-button>
-          <el-tooltip class="item" effect="dark" :content="$t('sold_out_machine_tip')">
+            @click="openPayRepeat(item, index)"
+            >{{ $t("miner_confirmPay_repeat") }}</el-button
+          >
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="$t('sold_out_machine_tip')"
+          >
             <el-button
               plain
               class="tool-btn"
               size="mini"
-              v-if="(!ispayPocing&&!item.mcData.vocing_pay_deposite)&& item.mcData.time_dbc_close_status==null"
+              v-if="
+                !ispayPocing &&
+                !item.mcData.vocing_pay_deposite &&
+                item.mcData.time_dbc_close_status == null
+              "
               style="width: 86px"
               @click="openSold_out_machine(item.mcData)"
-            >{{$t('my_machine_will_close')}}</el-button>
+              >{{ $t("my_machine_will_close") }}</el-button
+            >
           </el-tooltip>
 
           <el-button
             plain
             class="tool-btn"
             size="mini"
-            v-if="item.mcData.online_status&&!item.mcData.dbc_open_status&&item.mcData.time_dbc_close_status!=null&&!item.mcData.vocing_connectivity_verification"
+            v-if="
+              item.mcData.online_status &&
+              !item.mcData.dbc_open_status &&
+              item.mcData.time_dbc_close_status != null &&
+              !item.mcData.vocing_connectivity_verification
+            "
             style="width: 86px"
             @click="pushToEditMc(item.mcData)"
-          >{{$t('my_machine_will_putaway')}}</el-button>
+            >{{ $t("my_machine_will_putaway") }}</el-button
+          >
           <el-button
             plain
             class="tool-btn"
             size="mini"
-            v-else-if="item.mcData.online_status &&!item.mcData.error_pay_deposite&&!ispayPocing &&!item.mcData.vocing_pay_deposite&&!item.mcData.vocing_connectivity_verification"
+            v-else-if="
+              item.mcData.online_status &&
+              !item.mcData.error_pay_deposite &&
+              !ispayPocing &&
+              !item.mcData.vocing_pay_deposite &&
+              !item.mcData.vocing_connectivity_verification
+            "
             style="width: 86px"
             @click="pushToEditMc(item.mcData)"
-          >{{$t('my_machine_edit')}}</el-button>
+            >{{ $t("my_machine_edit") }}</el-button
+          >
         </div>
       </div>
     </div>
@@ -481,18 +645,34 @@
       @fail="bindFail"
     ></dlg-mail>
     <!--    Unsubscribe-->
-    <dlg-unsubscribe :item="curItem" :open.sync="dlgUnsubscribe_open" @success="stopRentSuccess"></dlg-unsubscribe>
+    <dlg-unsubscribe
+      :item="curItem"
+      :open.sync="dlgUnsubscribe_open"
+      @success="stopRentSuccess"
+    ></dlg-unsubscribe>
     <!--    rate-->
-    <dlg-rate :open.sync="dlgRate_open" :item="curItem" @success="successRate"></dlg-rate>
+    <dlg-rate
+      :open.sync="dlgRate_open"
+      :item="curItem"
+      @success="successRate"
+    ></dlg-rate>
     <!--    return dbc-->
-    <dlg-return-dbc :open.sync="dlgReturnDbc_open" :item="curItem" @success="returnSuccess"></dlg-return-dbc>
+    <dlg-return-dbc
+      :open.sync="dlgReturnDbc_open"
+      :item="curItem"
+      @success="returnSuccess"
+    ></dlg-return-dbc>
     <dlg-minerpaydeposite
       :open.sync="dlgMinerpaydeposite_open"
       :place-order-data="placeOrderData"
       @confirm="switch_pay"
     ></dlg-minerpaydeposite>
 
-    <dlg-soldoutmachine :open.sync="dlgsold_out_machine" :item="curItem" @success="soldOutSuccess"></dlg-soldoutmachine>
+    <dlg-soldoutmachine
+      :open.sync="dlgsold_out_machine"
+      :item="curItem"
+      @success="soldOutSuccess"
+    ></dlg-soldoutmachine>
   </div>
 </template>
 
@@ -514,7 +694,7 @@ import {
   vocing_deposite_dbc,
   voc_machine,
   vocing_deposite_dbc_repeat,
-  sold_out_machine
+  sold_out_machine,
 } from "@/api";
 import { getAccount, transfer } from "@/utlis";
 
@@ -528,7 +708,7 @@ export default {
     DlgRate,
     DlgReturnDbc,
     DlgMinerpaydeposite,
-    DlgSoldoutmachine
+    DlgSoldoutmachine,
   },
   data() {
     return {
@@ -546,7 +726,7 @@ export default {
       isBinded: false,
       bindMail: "",
       res_body: {
-        content: []
+        content: [],
       },
       isPaying: false,
       curItem: undefined,
@@ -555,7 +735,7 @@ export default {
       tip: "",
       ispayPocing: false,
       local_pay_error: false,
-      pay_index: -1
+      pay_index: -1,
     };
   },
   activated() {
@@ -579,6 +759,13 @@ export default {
       clearInterval(this.si);
     }
   },
+  computed: {
+    transferTips() {
+      return this.$t("website_name") === "congTuCloud"
+        ? this.$t("myMachine_is_dbc_transfering_congtu_cloud")
+        : this.$t("myMachine_is_dbc_transfering");
+    },
+  },
   methods: {
     soldOutSuccess() {
       this.queryMcList();
@@ -600,24 +787,24 @@ export default {
       return vocing_deposite_dbc_repeat({
         machine_id: item.mcData.machine_id,
 
-        language
+        language,
       })
-        .then(res => {
+        .then((res) => {
           if (res.status === 1) {
             this.dlgMinerpaydeposite_open = true;
           } else if (res.status === -1) {
             this.$message({
               showClose: true,
               message: res.msg,
-              type: "error"
+              type: "error",
             });
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             showClose: true,
             message: this.$t("unkown_error"),
-            type: "error"
+            type: "error",
           });
         });
     },
@@ -627,36 +814,36 @@ export default {
       return sold_out_machine({
         machine_id: item.machine_id,
 
-        language
+        language,
       })
-        .then(res => {
+        .then((res) => {
           if (res.status === 1) {
             this.$message({
               showClose: true,
               message: res.msg,
-              type: "success"
+              type: "success",
             });
             this.queryMcList();
           } else if (res.status === -1) {
             this.$message({
               showClose: true,
               message: res.msg,
-              type: "error"
+              type: "error",
             });
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.$message({
             showClose: true,
             message: this.$t("unkown_error"),
-            type: "error"
+            type: "error",
           });
         });
     },
 
     forceToPocMachine() {
       // pay before
-      let item = this.res_body.content.find(item => {
+      let item = this.res_body.content.find((item) => {
         // console.log(index)
         // console.log(item.orderData.creating_container)
         // console.log(item.orderData.container_is_exist)
@@ -688,15 +875,15 @@ export default {
       this.local_pay_error = false;
       transfer({
         toAddress: item.mcData.rentout_deposite_wallet_address,
-        amount
+        amount,
       })
-        .then(res => {
+        .then((res) => {
           if (res.status === 1) {
             console.log("转账成功");
             this.$message({
               showClose: true,
               message: this.$t("transfer_success"),
-              type: "success"
+              type: "success",
             });
 
             // pay after
@@ -710,9 +897,9 @@ export default {
               return vocing_deposite_dbc({
                 machine_id: item.mcData.machine_id,
 
-                language
+                language,
               })
-                .then(res => {
+                .then((res) => {
                   this.queryMcList();
                   if (res.status === 1) {
                     clearInterval(this.si);
@@ -725,7 +912,7 @@ export default {
                     this.$message({
                       showClose: true,
                       message: res.msg,
-                      type: "error"
+                      type: "error",
                     });
                   } else if (res.status === 2) {
                     this.ispayPocing = true;
@@ -733,11 +920,11 @@ export default {
                     this.queryMcList();
                   }
                 })
-                .catch(err => {
+                .catch((err) => {
                   this.$message({
                     showClose: true,
                     message: this.$t("unkown_error"),
-                    type: "error"
+                    type: "error",
                   });
                   this.ispayPocing = false;
                   this.pay_index = -1;
@@ -750,7 +937,7 @@ export default {
             this.$message({
               showClose: true,
               message: this.$t("dbc_lack_of_balance"),
-              type: "error"
+              type: "error",
             });
             clearInterval(this.si);
             this.local_pay_error = true;
@@ -760,20 +947,20 @@ export default {
             this.$message({
               showClose: true,
               message: this.$t("transfer_error"),
-              type: "error"
+              type: "error",
             });
             clearInterval(this.si);
             this.local_pay_error = true;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           this.isPaying = false;
           this.pay_index = -1;
           clearInterval(this.si);
           this.$message({
             showClose: true,
             message: this.$t("transfer_error"),
-            type: "error"
+            type: "error",
           });
         });
 
@@ -792,9 +979,9 @@ export default {
         return vocing_deposite_dbc({
           machine_id: item.mcData.machine_id,
 
-          language
+          language,
         })
-          .then(res => {
+          .then((res) => {
             this.queryMcList();
             if (res.status === 1) {
               clearInterval(this.si);
@@ -807,15 +994,15 @@ export default {
               this.$message({
                 showClose: true,
                 message: res.msg,
-                type: "error"
+                type: "error",
               });
             }
           })
-          .catch(err => {
+          .catch((err) => {
             this.$message({
               showClose: true,
               message: this.$t("unkown_error"),
-              type: "error"
+              type: "error",
             });
             this.ispayPocing = false;
             clearInterval(this.si);
@@ -828,8 +1015,8 @@ export default {
       return voc_machine({
         machine_id: item.machine_id,
         user_name_platform,
-        language
-      }).then(res => {
+        language,
+      }).then((res) => {
         if (res.status === 1 && res.content) {
           this.queryMcList();
         } else if (res.status === 2) {
@@ -862,8 +1049,8 @@ export default {
           gpu_rentout_whole: false,
           machine_mode: 0,
           gpu_count: 0,
-          rentout_deposite_dbc_count: 0
-        }
+          rentout_deposite_dbc_count: 0,
+        },
       });
     },
     pushToEditMc(item) {
@@ -887,8 +1074,8 @@ export default {
           machine_mode: item.machine_mode,
           gpu_count: item.gpu_count,
           rentout_deposite_dbc_count:
-            item.rentout_deposite_dbc_count / item.gpu_count
-        }
+            item.rentout_deposite_dbc_count / item.gpu_count,
+        },
       });
     },
     queryMcList() {
@@ -897,12 +1084,12 @@ export default {
       rentout_get_machines_list({
         wallet_address: getAccount().address,
         user_name_platform,
-        language
-      }).then(res => {
+        language,
+      }).then((res) => {
         if (res.status === 1) {
-          this.res_body.content = res.content.map(item => {
+          this.res_body.content = res.content.map((item) => {
             return {
-              mcData: item
+              mcData: item,
             };
           });
         }
@@ -925,16 +1112,16 @@ export default {
       queryBindMail_rent({
         wallet_address: address,
         user_name_platform,
-        language
-      }).then(res => {
+        language,
+      }).then((res) => {
         if (res.status === 1) {
           this.bindMail = res.content;
         } else {
           binding_is_ok({
             wallet_address: address,
             user_name_platform,
-            language
-          }).then(ren => {
+            language,
+          }).then((ren) => {
             if (ren.status === 2) {
               this.isBinding = true;
             }
@@ -942,8 +1129,8 @@ export default {
           binding_is_ok_modify({
             wallet_address: address,
             user_name_platform,
-            language
-          }).then(ren => {
+            language,
+          }).then((ren) => {
             if (ren.status === 2) {
               this.isBinding = true;
             }
@@ -963,7 +1150,7 @@ export default {
             const res = await binding_is_ok({
               wallet_address: getAccount().address,
               user_name_platform,
-              language
+              language,
             });
             if (res.status === 1) {
               clearInterval(si);
@@ -974,7 +1161,7 @@ export default {
             const res = await binding_is_ok_modify({
               wallet_address: getAccount().address,
               user_name_platform,
-              language
+              language,
             });
             if (res.status === 1) {
               clearInterval(si);
@@ -1021,8 +1208,8 @@ export default {
       const minutes =
         (new Date().getTime() - milli_rent_success_time) / 1000 / 60;
       return minutes < 1;
-    }
-  }
+    },
+  },
 };
 </script>
 

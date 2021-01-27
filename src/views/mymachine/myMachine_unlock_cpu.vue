@@ -530,7 +530,7 @@
               !item.orderData.pay_error &&
               !item.orderData.from_stop_to_open
             "
-            >{{ $t("myMachine_is_vocing_machine_update_stop_gpu")
+            >{{ stopGpuTips
             }}{{
               parseInt(
                 item.orderData.diskspace_image_data / (1024 * 1024 * 16)
@@ -574,7 +574,7 @@
               !item.orderData.rent_success &&
               !item.orderData.pay_error
             "
-            >{{ $t("myMachine_is_dbc_transfering") }}</span
+            >{{ transferTips }}</span
           >
           <span class="cRed" v-else-if="local_pay_error && !isPaying">{{
             $t("myMachine_is_transfer_error")
@@ -1025,6 +1025,16 @@ export default {
             "myMachine_is_vocing_machine_update_stop_to_open_congtu_cloud"
           )
         : this.$t("myMachine_is_vocing_machine_update_stop_to_open");
+    },
+    stopGpuTips() {
+      return this.$t("website_name") === "congTuCloud"
+        ? this.$t("myMachine_is_vocing_machine_update_stop_gpu_congtu_cloud")
+        : this.$t("myMachine_is_vocing_machine_update_stop_gpu");
+    },
+    transferTips() {
+      return this.$t("website_name") === "congTuCloud"
+        ? this.$t("myMachine_is_dbc_transfering_congtu_cloud")
+        : this.$t("myMachine_is_dbc_transfering");
     },
   },
   methods: {

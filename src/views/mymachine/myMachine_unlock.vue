@@ -650,7 +650,7 @@
               !item.orderData.rent_success &&
               !item.orderData.pay_error
             "
-            >{{ $t("myMachine_is_dbc_transfering") }}</span
+            >{{ transferTips }}</span
           >
           <span class="cRed" v-else-if="local_pay_error && !isPaying">{{
             $t("myMachine_is_transfer_error")
@@ -1192,6 +1192,11 @@ export default {
             "myMachine_is_vocing_machine_update_stop_to_open_congtu_cloud"
           )
         : this.$t("myMachine_is_vocing_machine_update_stop_to_open");
+    },
+    transferTips() {
+      return this.$t("website_name") === "congTuCloud"
+        ? this.$t("myMachine_is_dbc_transfering_congtu_cloud")
+        : this.$t("myMachine_is_dbc_transfering");
     },
   },
   methods: {

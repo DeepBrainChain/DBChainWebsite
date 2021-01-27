@@ -98,7 +98,7 @@
                   !item.pay_success &&
                   !item.pay_error
                 "
-                >{{ $t("myMachine_is_dbc_transfering") }}</span
+                >{{ transferTips }}</span
               >
               <span class="cRed" v-else-if="local_pay_error && !isPaying">{{
                 $t("myMachine_is_transfer_error")
@@ -257,6 +257,11 @@ export default {
     //      return {};
     //    });
     //   }
+    transferTips() {
+      return this.$t("website_name") === "congTuCloud"
+        ? this.$t("myMachine_is_dbc_transfering_congtu_cloud")
+        : this.$t("myMachine_is_dbc_transfering");
+    },
   },
   methods: {
     returnSuccess() {},
