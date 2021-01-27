@@ -578,25 +578,48 @@ export default {
         }
       }
 
-      get_pay_dbc_count({
-        rent_time_length: this.time * 60 * this.timeSelect,
-        gpu_count: this.gpuCount,
-        diskspace: this.disk_buy * 1024 * 1024,
-        order_id: this.placeOrderData.order_id,
-        rent_type: rent_type,
-        user_name_platform,
-        language,
-      }).then((res) => {
-        if (res.status === 1) {
-          this.total_price = res.content;
-        } else {
-          this.$message({
-            showClose: true,
-            message: res.msg,
-            type: "error",
-          });
-        }
-      });
+      if (this.$t("website_name") === "congTuCloud") {
+        get_pay_dbc_count({
+          rent_time_length: this.time * 60 * this.timeSelect,
+          gpu_count: this.gpuCount,
+          diskspace: this.disk_buy * 1024 * 1024,
+          order_id: this.placeOrderData.order_id,
+          order_id_prefix: getCongtuGpuOrderIdPrefix(),
+          rent_type: rent_type,
+          user_name_platform,
+          language,
+        }).then((res) => {
+          if (res.status === 1) {
+            this.total_price = res.content;
+          } else {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "error",
+            });
+          }
+        });
+      } else {
+        get_pay_dbc_count({
+          rent_time_length: this.time * 60 * this.timeSelect,
+          gpu_count: this.gpuCount,
+          diskspace: this.disk_buy * 1024 * 1024,
+          order_id: this.placeOrderData.order_id,
+          rent_type: rent_type,
+          user_name_platform,
+          language,
+        }).then((res) => {
+          if (res.status === 1) {
+            this.total_price = res.content;
+          } else {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "error",
+            });
+          }
+        });
+      }
     },
     // poc machine
     pocMachine(order_id) {

@@ -7,6 +7,8 @@ const host = "https://congtucloud.dbchain.ai";
 
 // 聪图云转发后台（test）
 // const host = "http://111.44.254.181:8032";
+
+// 聪图云转发后台（开发环境）
 // const host = "http://111.44.254.181:8033";
 
 //const host = 'http://13.124.237.200:8031'

@@ -474,30 +474,58 @@ export default {
       }
     },
     getPayDbcCount() {
-      const user_name_platform = this.$t("website_name");
-      const language = this.$i18n.locale;
-      this.disk_giving = parseInt(
-        this.placeOrderData.diskspace_giving / (1024 * 1024)
-      );
+      if (this.$t("website_name") === "congTuCloud") {
+        const user_name_platform = this.$t("website_name");
+        const language = this.$i18n.locale;
+        this.disk_giving = parseInt(
+          this.placeOrderData.diskspace_giving / (1024 * 1024)
+        );
 
-      get_pay_dbc_count({
-        rent_time_length: this.time * 60 * this.timeSelect,
-        gpu_count: 0,
-        diskspace: this.disk_buy * 1024 * 1024,
-        order_id: this.placeOrderData.order_id,
-        user_name_platform,
-        language,
-      }).then((res) => {
-        if (res.status === 1) {
-          this.dbc_count = res.content;
-        } else {
-          this.$message({
-            showClose: true,
-            message: res.msg,
-            type: "error",
-          });
-        }
-      });
+        get_pay_dbc_count({
+          rent_time_length: this.time * 60 * this.timeSelect,
+          gpu_count: 0,
+          diskspace: this.disk_buy * 1024 * 1024,
+          order_id: this.placeOrderData.order_id,
+          order_id_prefix: getCongtuCpuOrderIdPrefix(),
+          user_name_platform,
+          language,
+        }).then((res) => {
+          if (res.status === 1) {
+            this.dbc_count = res.content;
+          } else {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "error",
+            });
+          }
+        });
+      } else {
+        const user_name_platform = this.$t("website_name");
+        const language = this.$i18n.locale;
+        this.disk_giving = parseInt(
+          this.placeOrderData.diskspace_giving / (1024 * 1024)
+        );
+
+        get_pay_dbc_count({
+          rent_time_length: this.time * 60 * this.timeSelect,
+          gpu_count: 0,
+          diskspace: this.disk_buy * 1024 * 1024,
+          order_id: this.placeOrderData.order_id,
+          user_name_platform,
+          language,
+        }).then((res) => {
+          if (res.status === 1) {
+            this.dbc_count = res.content;
+          } else {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "error",
+            });
+          }
+        });
+      }
     },
 
     get_memory_cpu_payment(machine_id, disk_buy) {
