@@ -901,7 +901,7 @@ export default {
   },
   data() {
     return {
-      opengpuloading: "",
+      opengpuloading: undefined,
       renewal_order_id_prefix: getCongtuCpuRenewalOrderIdPrefix(),
       renewal_trade_no_pre: getCongtuCpuRenewalTradeNoPrefix(),
       orderCount: 0,
