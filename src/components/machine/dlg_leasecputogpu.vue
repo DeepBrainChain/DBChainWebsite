@@ -73,7 +73,13 @@
             :value="item.value"
           ></el-option>
         </el-select>
-        <span class="fs12 cGray ml10"
+        <span
+          class="fs12 cGray ml10"
+          v-if="$t('website_name') === 'congTuCloud'"
+          >{{ (placeOrderData.gpu_price_dollar * usdToRmb).toFixed(2)
+          }}{{ $t("RMB") }}/{{ $t("my_machine_hour") }}</span
+        >
+        <span class="fs12 cGray ml10" v-else
           >{{ placeOrderData.gpu_price_dollar }}$/{{
             $t("my_machine_hour")
           }}</span
@@ -87,7 +93,15 @@
         <label
           >({{ $t("diskspace_new_gpu") }}{{ disk_buy - disk_cpu_data }}G)</label
         >
-        <span class="fs12 cGray ml10" v-if="!gpu_rentout_whole"
+        <span
+          class="fs12 cGray ml10"
+          v-if="!gpu_rentout_whole && $t('website_name') === 'congTuCloud'"
+          >{{ (placeOrderData.disk_GB_perhour_dollar * usdToRmb).toFixed(3)
+          }}{{ $t("RMB") }}/{{ $t("disk_hour") }}</span
+        >
+        <span
+          class="fs12 cGray ml10"
+          v-if="!gpu_rentout_whole && $t('website_name') !== 'congTuCloud'"
           >{{ placeOrderData.disk_GB_perhour_dollar }}$/{{
             $t("disk_hour")
           }}</span
@@ -99,21 +113,33 @@
         <label>({{ $t("memory_every_gpu") }}{{ memory_every_gpu }}G)</label>
       </div>
 
-      <div class="cRed">
+      <div class="cRed" v-if="$t('website_name') !== 'congTuCloud'">
         {{ $t("tips") }}：{{ $t("msg.dlg_0", { time: outDayTime }) }}
       </div>
       <div class="computer-dbc mt30">
         <!--          <span>{{$t('gpu.DBCRemaining')}}：349</span>-->
-        <span>{{ $t("total") }}：{{ totalPrice.toFixed(4) }}{{ $t("$") }}</span>
-        <span class="ml20">{{ $t("gpu.exchangeDBC") }}：{{ total_price }}</span>
+        <span v-if="$t('website_name') === 'congTuCloud'"
+          >{{ $t("total") }}：{{ (totalPrice * usdToRmb).toFixed(2)
+          }}{{ $t("RMB") }}</span
+        >
+        <span v-else
+          >{{ $t("total") }}：{{ totalPrice.toFixed(4) }}{{ $t("$") }}</span
+        >
+        <span class="ml20" v-if="$t('website_name') !== 'congTuCloud'"
+          >{{ $t("gpu.exchangeDBC") }}：{{ total_price }}</span
+        >
       </div>
-      <div class="form-notice">
+      <div class="form-notice" v-if="$t('website_name') !== 'congTuCloud'">
         {{ $t("dlg_lease_wallet_balance") }}: {{ balance }}
       </div>
-      <div class="form-notice">
+      <div class="form-notice" v-if="$t('website_name') !== 'congTuCloud'">
         {{ $t("left_gasamount") }}: {{ gas_balance.toFixed(3) }}
       </div>
-      <div class="desc-box" v-html="$t('msg.dlg_5')"></div>
+      <div
+        class="desc-box"
+        v-if="$t('website_name') !== 'congTuCloud'"
+        v-html="$t('msg.dlg_5')"
+      ></div>
     </div>
     <div class="dlg-bottom">
       <el-button
@@ -133,7 +159,13 @@
 
 <script>
 import { get_pay_dbc_count, can_rent_this_machine } from "@/api";
-import { getBalance, getGasBalance, getCongtuGpuOrderIdPrefix } from "@/utlis";
+import {
+  getBalance,
+  getGasBalance,
+  getCookie,
+  getUsdToRmb,
+  getCongtuGpuOrderIdPrefix,
+} from "@/utlis";
 
 export default {
   name: "popup_reload",
@@ -167,6 +199,7 @@ export default {
   },
   data() {
     return {
+      usdToRmb: getUsdToRmb(),
       isOpen: this.open,
       timeSelect: 1,
       timeOptions: [
@@ -450,50 +483,89 @@ export default {
     },
 
     confirm() {
-      let rent_type = 0;
-      if (parseInt(this.dbc_count) > parseInt(this.balance)) {
-        this.$message({
-          showClose: true,
-          message: this.$t("lessdbc"),
-          type: "error",
-        });
-        return;
-      }
-      if (this.gas_balance === 0) {
-        this.$message({
-          showClose: true,
-          message: this.$t("zerogas"),
-          type: "error",
-        });
-        return;
-      }
-      if (this.discount === "1") {
-        rent_type = 1;
-      } else if (this.discount === "2") {
-        rent_type = 2;
-      } else if (this.discount === "3") {
-        rent_type = 3;
-      } else if (this.discount === "4") {
-        rent_type = 4;
-      }
-      if (this.gpu_rentout_whole) {
-        this.gpuCount = this.placeOrderData.gpu_count_max;
-      }
-      const params = {
-        rent_time_length: this.time * this.timeSelect * 60,
+      // 聪图云模式下
+      if (this.$t("website_name") === "congTuCloud") {
+        let rent_type = 0;
+        // 判断是否登录
+        if (getCookie("login") != "login") {
+          this.$router.push("/login");
+          return;
+        }
+        if (this.discount === "1") {
+          rent_type = 1;
+        } else if (this.discount === "2") {
+          rent_type = 2;
+        } else if (this.discount === "3") {
+          rent_type = 3;
+        } else if (this.discount === "4") {
+          rent_type = 4;
+        }
+        if (this.gpu_rentout_whole) {
+          this.gpuCount = this.placeOrderData.gpu_count_max;
+        }
+        const params = {
+          rent_time_length: this.time * this.timeSelect * 60,
 
-        gpu_count: this.gpuCount,
-        image_tag: this.images,
-        diskspace: this.disk_buy * 1024 * 1024,
-        order_type: "training",
-        order_id: this.placeOrderData.order_id,
-        rent_type: rent_type,
-        machine_type: this.machine_type,
-        user_name_platform: this.$t("website_name"),
-        language: this.$i18n.locale,
-      };
-      this.$emit("confirm", params);
-      // pocMachine(this.placeOrderData.order_id);
+          gpu_count: this.gpuCount,
+          image_tag: this.images,
+          diskspace: this.disk_buy * 1024 * 1024,
+          order_type: "training",
+          order_id: this.placeOrderData.order_id,
+          congtu_order_id_prefix: getCongtuGpuOrderIdPrefix(),
+          r_count: `${(this.totalPrice * this.usdToRmb).toFixed(2)}`,
+          rent_type: rent_type,
+          machine_type: this.machine_type,
+          user_name_platform: this.$t("website_name"),
+          language: this.$i18n.locale,
+        };
+        this.$emit("confirm", params);
+        // pocMachine(this.placeOrderData.order_id);
+      } else {
+        let rent_type = 0;
+        if (parseInt(this.dbc_count) > parseInt(this.balance)) {
+          this.$message({
+            showClose: true,
+            message: this.$t("lessdbc"),
+            type: "error",
+          });
+          return;
+        }
+        if (this.gas_balance === 0) {
+          this.$message({
+            showClose: true,
+            message: this.$t("zerogas"),
+            type: "error",
+          });
+          return;
+        }
+        if (this.discount === "1") {
+          rent_type = 1;
+        } else if (this.discount === "2") {
+          rent_type = 2;
+        } else if (this.discount === "3") {
+          rent_type = 3;
+        } else if (this.discount === "4") {
+          rent_type = 4;
+        }
+        if (this.gpu_rentout_whole) {
+          this.gpuCount = this.placeOrderData.gpu_count_max;
+        }
+        const params = {
+          rent_time_length: this.time * this.timeSelect * 60,
+
+          gpu_count: this.gpuCount,
+          image_tag: this.images,
+          diskspace: this.disk_buy * 1024 * 1024,
+          order_type: "training",
+          order_id: this.placeOrderData.order_id,
+          rent_type: rent_type,
+          machine_type: this.machine_type,
+          user_name_platform: this.$t("website_name"),
+          language: this.$i18n.locale,
+        };
+        this.$emit("confirm", params);
+        // pocMachine(this.placeOrderData.order_id);
+      }
     },
     cancel() {
       this.closed();

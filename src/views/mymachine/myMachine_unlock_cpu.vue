@@ -1124,65 +1124,129 @@ export default {
         }, 5000);
       }
     },
+    // 启用GPU按钮
     openDlg_cpu_to_gpu(item, index) {
-      this.opengpuloading = true;
-      this.opengpu_index = index;
-      //this.queryOrderList();
-      this.$forceUpdate();
-      const user_name_platform = this.$t("website_name");
-      const language = this.$i18n.locale;
-      place_order_cpu_to_gpu_new({
-        machine_type: item.orderData.machine_type,
-        machine_id: item.orderData.machine_id,
-        wallet_address_user: getAccount().address,
-        order_id_pre: item.orderData.order_id,
-        user_name_platform,
-        language,
-      })
-        .then((res_1) => {
-          if (res_1.status === 1) {
-            this.placeOrderData = res_1.content;
+      // 聪图云模式下
+      if (this.$t("website_name") === "congTuCloud") {
+        this.opengpuloading = true;
+        this.opengpu_index = index;
+        //this.queryOrderList();
+        this.$forceUpdate();
+        const user_name_platform = this.$t("website_name");
+        const language = this.$i18n.locale;
+        place_order_cpu_to_gpu_new({
+          email: getCookie("email"),
+          machine_type: item.orderData.machine_type,
+          machine_id: item.orderData.machine_id,
+          wallet_address_user: "",
+          order_id_pre: item.orderData.order_id,
+          user_name_platform,
+          language,
+        })
+          .then((res_1) => {
+            if (res_1.status === 1) {
+              this.placeOrderData = res_1.content;
 
-            return get_dbc_price({
-              order_id: this.placeOrderData.order_id,
-              user_name_platform,
-              language,
-            });
-          } else {
-            this.$message({
-              showClose: true,
-              message: res_1.msg,
-              type: "error",
-            });
-            return Promise.reject(res_1.msg);
-          }
-          //  this.opengpuloading = false;
-          //  this.opengpu_index = -1;
+              return get_dbc_price({
+                order_id: this.placeOrderData.order_id,
+                user_name_platform,
+                language,
+              });
+            } else {
+              this.$message({
+                showClose: true,
+                message: res_1.msg,
+                type: "error",
+              });
+              return Promise.reject(res_1.msg);
+            }
+            //  this.opengpuloading = false;
+            //  this.opengpu_index = -1;
+          })
+          .then((res_2) => {
+            if (res_2.status === 1) {
+              this.placeOrderData.dbc_price = res_2.content;
+              this.dlg_open_cpu_to_gpu = true;
+            } else {
+              this.$message({
+                showClose: true,
+                message: res_2.msg,
+                type: "success",
+              });
+              return Promise.reject(res_2.msg);
+            }
+            // this.opengpuloading = false;
+            // this.opengpu_index = -1;
+          })
+          .catch((err) => {
+            // this.opengpuloading = false;
+            // this.opengpu_index = -1;
+            console.log(err);
+          })
+          .finally(() => {
+            this.opengpuloading = false;
+            this.opengpu_index = -1;
+          });
+      } else {
+        this.opengpuloading = true;
+        this.opengpu_index = index;
+        //this.queryOrderList();
+        this.$forceUpdate();
+        const user_name_platform = this.$t("website_name");
+        const language = this.$i18n.locale;
+        place_order_cpu_to_gpu_new({
+          machine_type: item.orderData.machine_type,
+          machine_id: item.orderData.machine_id,
+          wallet_address_user: getAccount().address,
+          order_id_pre: item.orderData.order_id,
+          user_name_platform,
+          language,
         })
-        .then((res_2) => {
-          if (res_2.status === 1) {
-            this.placeOrderData.dbc_price = res_2.content;
-            this.dlg_open_cpu_to_gpu = true;
-          } else {
-            this.$message({
-              showClose: true,
-              message: res_2.msg,
-              type: "success",
-            });
-            return Promise.reject(res_2.msg);
-          }
-          // this.opengpuloading = false;
-          // this.opengpu_index = -1;
-        })
-        .catch((err) => {
-          // this.opengpuloading = false;
-          // this.opengpu_index = -1;
-          console.log(err);
-        })
-        .finally(() => {
-          this.opengpuloading = false;
-          this.opengpu_index = -1;
-        });
+          .then((res_1) => {
+            if (res_1.status === 1) {
+              this.placeOrderData = res_1.content;
+
+              return get_dbc_price({
+                order_id: this.placeOrderData.order_id,
+                user_name_platform,
+                language,
+              });
+            } else {
+              this.$message({
+                showClose: true,
+                message: res_1.msg,
+                type: "error",
+              });
+              return Promise.reject(res_1.msg);
+            }
+            //  this.opengpuloading = false;
+            //  this.opengpu_index = -1;
+          })
+          .then((res_2) => {
+            if (res_2.status === 1) {
+              this.placeOrderData.dbc_price = res_2.content;
+              this.dlg_open_cpu_to_gpu = true;
+            } else {
+              this.$message({
+                showClose: true,
+                message: res_2.msg,
+                type: "success",
+              });
+              return Promise.reject(res_2.msg);
+            }
+            // this.opengpuloading = false;
+            // this.opengpu_index = -1;
+          })
+          .catch((err) => {
+            // this.opengpuloading = false;
+            // this.opengpu_index = -1;
+            console.log(err);
+          })
+          .finally(() => {
+            this.opengpuloading = false;
+            this.opengpu_index = -1;
+          });
+      }
     },
 
     pushContinuePayDetail(order_id, order_is_over) {
