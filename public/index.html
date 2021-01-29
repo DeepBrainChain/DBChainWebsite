@@ -31,12 +31,12 @@
      var bIsAndroid = sUserAgent.match(/android/i) == 'android';
      var HuaWeiwow64 = sUserAgent.match(/wow64/i) == 'wow64';
      var windowswechat = sUserAgent.match(/windowswechat/i) == 'windowswechat';
-     if(bIsIpad || bIsIphone || bIsMidp || bIsUc7 || bIsUc || bIsCE || bIsWM || bIsAndroid||HuaWeiwow64){
-      // 临时的链接
+     if(bIsIpad || bIsIphone || bIsMidp || bIsUc7 || bIsUc || bIsCE || bIsWM || bIsAndroid){
+      // 手机端
       window.location.href = 'http://m.congtu.cloud/';
      }
      if(windowswechat){
-      // 临时的链接，此链接暂不可用
+      // 如果是微信，转到提示页面
       window.location.href = 'http://m.congtu.cloud/windows_wechat_tip';
      }
     })();
