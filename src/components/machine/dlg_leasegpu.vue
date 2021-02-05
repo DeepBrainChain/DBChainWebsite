@@ -385,7 +385,8 @@ export default {
       var tags = new Array();
       if (
         this.placeOrderData.images_tag === null ||
-        this.placeOrderData.images_tag === ""
+        this.placeOrderData.images_tag === "" ||
+        this.placeOrderData.images_tag === undefined
       ) {
         if (this.placeOrderData.machine_type !== 3) {
           this.placeOrderData.images_tag = "tensorflow1.14-pytorch1.2";

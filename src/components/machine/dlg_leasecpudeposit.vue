@@ -2,20 +2,37 @@
   <el-dialog :visible.sync="isOpen" @closed="closed" width="580px">
     <div
       slot="title"
-      v-if="placeOrderData.order_id_pre===null&&!placeOrderData.from_stop_to_open"
-    >{{$t('rent_cpu_cotainer')}}</div>
+      v-if="
+        placeOrderData.order_id_pre === null &&
+        !placeOrderData.from_stop_to_open
+      "
+    >
+      {{ $t("rent_cpu_cotainer") }}
+    </div>
     <div
       slot="title"
-      v-if="placeOrderData.order_id_pre!==null&&!placeOrderData.from_stop_to_open"
-    >{{$t('stopgpu_to_cpu_payment')}}</div>
-    <div slot="title" v-if="placeOrderData.from_stop_to_open">{{$t('stop_to_cpu_container')}}</div>
+      v-if="
+        placeOrderData.order_id_pre !== null &&
+        !placeOrderData.from_stop_to_open
+      "
+    >
+      {{ $t("stopgpu_to_cpu_payment") }}
+    </div>
+    <div slot="title" v-if="placeOrderData.from_stop_to_open">
+      {{ $t("stop_to_cpu_container") }}
+    </div>
     <div class="dlg-content">
       <!--<h3 class="content-head">
         {{$t('gpu.needHD')}}：66GB $ 22/{{$t('hour')}}
       </h3>-->
-      <div class="form" v-if="placeOrderData.order_id_pre===null">
-        <label>{{$t('choseImages')}}：</label>
-        <el-select class="time-select ml10" v-model="images" style="width: 360px" size="small">
+      <div class="form" v-if="placeOrderData.order_id_pre === null">
+        <label>{{ $t("choseImages") }}：</label>
+        <el-select
+          class="time-select ml10"
+          v-model="images"
+          style="width: 360px"
+          size="small"
+        >
           <el-option
             v-for="item in imagesOptions"
             :key="item.value"
@@ -25,7 +42,7 @@
         </el-select>
       </div>
       <div class="form mt20">
-        <label>{{$t('dlg_lease_time')}}：</label>
+        <label>{{ $t("dlg_lease_time") }}：</label>
         <el-input
           style="width: 180px"
           size="small"
@@ -47,20 +64,27 @@
           ></el-option>
         </el-select>
       </div>
-      <div
-        class="cRed"
-      >{{$t('tips')}}：{{$t('deposit_time_tip',{time: outDayTime})}}{{$t('stop_time_tip')}}</div>
-      <div class="form mt20" v-if="placeOrderData.order_id_pre!==null">
-        <label
-          v-if="placeOrderData.from_stop_to_open"
-        >{{$t('diskspace_data_stop')}}{{(placeOrderData.diskspace_image_data / (1024 * 1024)).toFixed(2)}}G</label>
-        <label
-          v-if="!placeOrderData.from_stop_to_open"
-        >{{$t('diskspace_gpu_data')}}{{(placeOrderData.diskspace_image_data / (1024 * 1024)).toFixed(2)}}G</label>
+      <div class="cRed">
+        {{ $t("tips") }}：{{ $t("deposit_time_tip", { time: outDayTime })
+        }}{{ $t("stop_time_tip") }}
+      </div>
+      <div class="form mt20" v-if="placeOrderData.order_id_pre !== null">
+        <label v-if="placeOrderData.from_stop_to_open"
+          >{{ $t("diskspace_data_stop")
+          }}{{
+            (placeOrderData.diskspace_image_data / (1024 * 1024)).toFixed(2)
+          }}G</label
+        >
+        <label v-if="!placeOrderData.from_stop_to_open"
+          >{{ $t("diskspace_gpu_data")
+          }}{{
+            (placeOrderData.diskspace_image_data / (1024 * 1024)).toFixed(2)
+          }}G</label
+        >
       </div>
 
-      <div class="form mt20" v-if="placeOrderData.order_id_pre===null">
-        <label>{{$t('switch_diskspace')}}：</label>
+      <div class="form mt20" v-if="placeOrderData.order_id_pre === null">
+        <label>{{ $t("switch_diskspace") }}：</label>
 
         <el-select
           class="time-select ml10"
@@ -77,11 +101,19 @@
         </el-select>
         <label>&nbsp;&nbsp;G</label>
       </div>
-      <div class="form mt20" v-if="placeOrderData.order_id_pre!==null">
-        <label>({{$t('diskspace_new_cpu')}}:{{((placeOrderData.disk_space-placeOrderData.diskspace_image_data )/ (1024 * 1024)).toFixed(2)}}G)</label>
+      <div class="form mt20" v-if="placeOrderData.order_id_pre !== null">
+        <label
+          >({{ $t("diskspace_new_cpu") }}:{{
+            (
+              (placeOrderData.disk_space -
+                placeOrderData.diskspace_image_data) /
+              (1024 * 1024)
+            ).toFixed(2)
+          }}G)</label
+        >
       </div>
       <div class="form mt20">
-        <label>{{$t('switch_memory')}}：</label>
+        <label>{{ $t("switch_memory") }}：</label>
 
         <el-select
           class="time-select ml10"
@@ -98,15 +130,19 @@
         </el-select>
         <label>&nbsp;&nbsp;G</label>
       </div>
-      <div class="form-notice">{{$t('deposit_tips1')}}</div>
-      <div class="form-notice">{{$t('deposit_tips2')}}</div>
-      <div class="form-notice">{{$t('deposit_tips3')}}</div>
+      <div class="form-notice">{{ $t("deposit_tips1") }}</div>
+      <div class="form-notice">{{ $t("deposit_tips2") }}</div>
+      <div class="form-notice">{{ $t("deposit_tips3") }}</div>
 
       <div class="computer-dbc mt30">
-        <span class="ml20">{{$t('deposit_dbc_count')}}：{{dbc_count}}</span>
+        <span class="ml20">{{ $t("deposit_dbc_count") }}：{{ dbc_count }}</span>
       </div>
-      <div class="form-notice">{{$t('dlg_lease_wallet_balance')}}: {{balance}}</div>
-      <div class="form-notice">{{$t('left_gasamount')}}: {{gas_balance.toFixed(3)}}</div>
+      <div class="form-notice">
+        {{ $t("dlg_lease_wallet_balance") }}: {{ balance }}
+      </div>
+      <div class="form-notice">
+        {{ $t("left_gasamount") }}: {{ gas_balance.toFixed(3) }}
+      </div>
       <div class="desc-box" v-html="$t('return_deposit_dbc')"></div>
     </div>
     <div class="dlg-bottom">
@@ -116,8 +152,11 @@
         size="small"
         @click="confirm"
         :disabled="!isCanCreateOrder"
-      >{{$t('dlg_lease_create_order')}}</el-button>
-      <el-button class="dlg-btn" plain size="small" @click="cancel">{{$t('cancel')}}</el-button>
+        >{{ $t("dlg_lease_create_order") }}</el-button
+      >
+      <el-button class="dlg-btn" plain size="small" @click="cancel">{{
+        $t("cancel")
+      }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -128,7 +167,7 @@ import {
   can_rent_this_machine,
   get_disk_deposit_list,
   get_memory_deposit_list,
-  get_deposit_dbc_count
+  get_deposit_dbc_count,
 } from "@/api";
 import { getBalance, getGasBalance } from "@/utlis";
 
@@ -157,10 +196,10 @@ export default {
           //      disk_GB_perhour_dollar: 3.3333334e-5,
           //      diskspace_image_data: 0
           machine_id: "",
-          disk_space: 60
+          disk_space: 60,
         };
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -173,12 +212,12 @@ export default {
       timeOptions: [
         {
           name: this.$t("hour"),
-          value: 1
+          value: 1,
         },
         {
           name: this.$t("day"),
-          value: 24
-        }
+          value: 24,
+        },
       ],
 
       images: "tensorflow1.14-pytorch1.2",
@@ -195,7 +234,7 @@ export default {
       balance: "0",
       gas_balance: 0,
       memory: 0,
-      memory_every_gpu: 0
+      memory_every_gpu: 0,
 
       //  disk_deposit_list: new Array(),
       //  memory_deposit_list: new Array()
@@ -210,7 +249,7 @@ export default {
         this.getBalance();
         this.getGasBalance();
       }
-    }
+    },
   },
   computed: {
     outDayTime() {
@@ -225,7 +264,8 @@ export default {
       let images_tag = "";
       if (
         this.placeOrderData.images_tag === null ||
-        this.placeOrderData.images_tag === ""
+        this.placeOrderData.images_tag === "" ||
+        this.placeOrderData.images_tag === undefined
       ) {
         images_tag = "tensorflow1.14-pytorch1.2";
       } else {
@@ -236,12 +276,12 @@ export default {
       for (let i = 0; i <= tags.length; i++) {
         opts.push({
           name: tags[i],
-          value: tags[i]
+          value: tags[i],
         });
       }
       opts.push({
         name: this.$t("user_defined"),
-        value: "tensorflow114andpytorch12"
+        value: "tensorflow114andpytorch12",
       });
       return opts;
     },
@@ -260,22 +300,22 @@ export default {
       get_disk_deposit_list({
         user_name_platform,
         language,
-        machine_id: this.placeOrderData.machine_id
-      }).then(res => {
+        machine_id: this.placeOrderData.machine_id,
+      }).then((res) => {
         if (res.status === 1) {
           let disk_deposit_list = res.content;
 
-          for (let i = 0; i <= disk_deposit_list.length; i++) {
+          for (let i = 0; i < disk_deposit_list.length; i++) {
             opts.push({
               name: disk_deposit_list[i].capacity / (1024 * 1024),
-              value: disk_deposit_list[i].capacity / (1024 * 1024)
+              value: disk_deposit_list[i].capacity / (1024 * 1024),
             });
           }
         } else {
           this.$message({
             showClose: true,
             message: res.msg,
-            type: "error"
+            type: "error",
           });
         }
       });
@@ -295,38 +335,37 @@ export default {
       get_memory_deposit_list({
         user_name_platform,
         language,
-        machine_id: this.placeOrderData.machine_id
-      }).then(res => {
+        machine_id: this.placeOrderData.machine_id,
+      }).then((res) => {
         if (res.status === 1) {
           let memory_deposit_list = res.content;
-
-          for (let i = 0; i <= memory_deposit_list.length; i++) {
+          for (let i = 0; i < memory_deposit_list.length; i++) {
             opts.push({
               name: memory_deposit_list[i].capacity / (1024 * 1024),
-              value: memory_deposit_list[i].capacity / (1024 * 1024)
+              value: memory_deposit_list[i].capacity / (1024 * 1024),
             });
           }
         } else {
           this.$message({
             showClose: true,
             message: res.msg,
-            type: "error"
+            type: "error",
           });
         }
       });
 
       return opts;
-    }
+    },
   },
   methods: {
     getBalance() {
-      getBalance().then(res => {
+      getBalance().then((res) => {
         this.balance = res.balance;
       });
     },
 
     getGasBalance() {
-      getGasBalance().then(res => {
+      getGasBalance().then((res) => {
         this.gas_balance = res.gas_balance;
       });
     },
@@ -353,15 +392,15 @@ export default {
         diskspace: this.diskSelect * (1024 * 1024),
         memory: this.memorySelect * (1024 * 1024),
         user_name_platform,
-        language
-      }).then(res => {
+        language,
+      }).then((res) => {
         if (res.status === 1) {
           this.dbc_count = res.content;
         } else {
           this.$message({
             showClose: true,
             message: res.msg,
-            type: "error"
+            type: "error",
           });
         }
       });
@@ -375,7 +414,7 @@ export default {
       can_rent_this_machine({
         order_id_new: order_id,
         user_name_platform,
-        language
+        language,
       });
     },
     confirm() {
@@ -385,7 +424,7 @@ export default {
         this.$message({
           showClose: true,
           message: this.$t("lessdbc"),
-          type: "error"
+          type: "error",
         });
         return;
       }
@@ -393,7 +432,7 @@ export default {
         this.$message({
           showClose: true,
           message: this.$t("zerogas"),
-          type: "error"
+          type: "error",
         });
         return;
       }
@@ -413,7 +452,7 @@ export default {
           order_id: this.placeOrderData.order_id,
 
           user_name_platform: this.$t("website_name"),
-          language: this.$i18n.locale
+          language: this.$i18n.locale,
         };
       } else {
         params = {
@@ -427,7 +466,7 @@ export default {
           order_id: this.placeOrderData.order_id,
 
           user_name_platform: this.$t("website_name"),
-          language: this.$i18n.locale
+          language: this.$i18n.locale,
         };
       }
       this.$emit("confirm", params);
@@ -443,8 +482,8 @@ export default {
     closed() {
       this.isOpen = false;
       this.$emit("update:open", false);
-    }
-  }
+    },
+  },
 };
 </script>
 

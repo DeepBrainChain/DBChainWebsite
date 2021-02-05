@@ -1,6 +1,6 @@
 <template>
   <el-dialog :visible.sync="isOpen" width="540px" @close="closed">
-    <div slot="title">{{$t('unsubscribe')}}</div>
+    <div slot="title">{{ $t("unsubscribe") }}</div>
     <div class="dlg-content">
       <div class="midInfo mt20">
         <!--<p>{{$t('gpu.backDbcNum')}}: xxx DBC</p>
@@ -9,28 +9,41 @@
           <span></span>
         </div>-->
         <el-form>
-          <el-form-item :label="$t('dlg_input_code')" v-if="item.mcData.dbc_version==='0.3.7.2'">
-            <el-input v-model="stop_code" size="small" style="width: 200px"></el-input>
+          <el-form-item
+            :label="$t('dlg_input_code')"
+            v-if="item.mcData.dbc_version === '0.3.7.2'"
+          >
+            <el-input
+              v-model="stop_code"
+              size="small"
+              style="width: 200px"
+            ></el-input>
             <el-button
               :loading="isCoding"
               class="ml10"
               plain
               size="mini"
               @click="getStopCode"
-            >{{$t('dlg_get_code')}}</el-button>
+              >{{ $t("dlg_get_code") }}</el-button
+            >
           </el-form-item>
           <el-form-item
             :label="$t('dlg_input_code_stop')"
-            v-if="item.mcData.dbc_version!=='0.3.7.2'"
+            v-if="item.mcData.dbc_version !== '0.3.7.2'"
           >
-            <el-input v-model="stop_code" size="small" style="width: 200px"></el-input>
+            <el-input
+              v-model="stop_code"
+              size="small"
+              style="width: 200px"
+            ></el-input>
             <el-button
               :loading="isCoding"
               class="ml10"
               plain
               size="mini"
               @click="getStopCode"
-            >{{$t('dlg_get_code')}}</el-button>
+              >{{ $t("dlg_get_code") }}</el-button
+            >
           </el-form-item>
         </el-form>
       </div>
@@ -42,8 +55,11 @@
         type="primary"
         size="small"
         @click="confirm"
-      >{{$t('confirm')}}</el-button>
-      <el-button class="dlg-btn" plain size="small" @click="cancel">{{$t('cancel')}}</el-button>
+        >{{ $t("confirm") }}</el-button
+      >
+      <el-button class="dlg-btn" plain size="small" @click="cancel">{{
+        $t("cancel")
+      }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -55,19 +71,19 @@ export default {
   name: "popup_reload",
   props: {
     open: Boolean,
-    item: Object
+    item: Object,
   },
   watch: {
     open(newVal) {
       this.isOpen = newVal;
-    }
+    },
   },
   data() {
     return {
       isOpen: this.open,
       isLoading: false,
       isCoding: false,
-      stop_code: ""
+      stop_code: "",
     };
   },
   methods: {
@@ -82,20 +98,20 @@ export default {
       get_stop_code({
         order_id: this.item.orderData.order_id,
         user_name_platform,
-        language
+        language,
       })
-        .then(res => {
+        .then((res) => {
           if (res.status === 1) {
             this.$message({
               showClose: true,
               message: res.msg,
-              type: "success"
+              type: "success",
             });
           } else {
             this.$message({
               showClose: true,
               message: res.msg,
-              type: "error"
+              type: "error",
             });
           }
         })
@@ -111,14 +127,14 @@ export default {
         order_id: this.item.orderData.order_id,
         stop_code: this.stop_code,
         user_name_platform,
-        language
+        language,
       })
-        .then(res => {
+        .then((res) => {
           if (res.status === 1) {
             this.$message({
               showClose: true,
               message: res.msg,
-              type: "success"
+              type: "success",
             });
             this.closed();
             this.$emit("success");
@@ -126,7 +142,7 @@ export default {
             this.$message({
               showClose: true,
               message: res.msg,
-              type: "error"
+              type: "error",
             });
           }
         })
@@ -136,8 +152,8 @@ export default {
     },
     cancel() {
       this.closed();
-    }
-  }
+    },
+  },
 };
 </script>
 
