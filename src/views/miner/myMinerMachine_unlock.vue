@@ -5,12 +5,17 @@
         >{{ $t("my_machine_miner_info") }}：{{ res_body.content.length }}</span
       >
       <div v-if="!isBinding && bindMail" class="binding">
-        <span class="bindingInfo"
+        <span class="bindingInfo" v-if="$t('website_name') !== 'congTuCloud'"
           >{{ $t("my_machine_binding_email") }}：{{ bindMail }}</span
         >
-        <el-button class="ml10" size="mini" plain @click="openDlgMail(false)">{{
-          $t("gpu.modifyMail")
-        }}</el-button>
+        <el-button
+          class="ml10"
+          v-if="$t('website_name') !== 'congTuCloud'"
+          size="mini"
+          plain
+          @click="openDlgMail(false)"
+          >{{ $t("gpu.modifyMail") }}</el-button
+        >
         <el-tooltip
           class="item"
           effect="dark"

@@ -6,7 +6,10 @@
       >
       <span v-else>{{ $t("gpu.myMachineTitle") }}：{{ rentNumber }}</span>
 
-      <div v-if="!isBinding && bindMail" class="binding">
+      <div
+        v-if="!isBinding && bindMail && $t('website_name') !== 'congTuCloud'"
+        class="binding"
+      >
         <span class="bindingInfo"
           >{{ $t("my_machine_binding_email") }}:{{ bindMail }}</span
         >
