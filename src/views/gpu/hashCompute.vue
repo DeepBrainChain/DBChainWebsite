@@ -639,9 +639,10 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page.sync="currentPage"
+        :current-page="currentPage"
+        :page-sizes="[10, 20, 50, 100]"
         :page-size="pageSize"
-        layout="total, prev, pager, next"
+        layout="total, sizes, prev, pager, next, jumper"
         :total="machineCount"
       >
       </el-pagination>
@@ -879,13 +880,15 @@ export default {
       this.idle_status[2].name = this.$t("gpu.idle_status[2]");
       this.language = this.$i18n.locale;
     },
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+    handleSizeChange(pageSize) {
+      console.log(`每页 ${pageSize} 条`);
+      this.pageSize = pageSize;
+      this.showMachines(this.allListedMachine, this.currentPage, this.pageSize);
     },
     handleCurrentChange(currentPage) {
       console.log(`当前页: ${currentPage}`);
       this.currentPage = currentPage;
-      this.showMachines(this.allListedMachine, currentPage);
+      this.showMachines(this.allListedMachine, this.currentPage, this.pageSize);
     },
     pushDetail(machine_id) {
       this.$router.push("/machineDetail?machine_id=" + machine_id);
@@ -1289,12 +1292,12 @@ export default {
           loading.close();
         });
     },
-    showMachines(machines, currentPage) {
+    showMachines(machines, currentPage, pageSize) {
       let needMachines = []; //需要展示的机器
       // 循环页面要显示的机器数量次
       for (
-        let machineIndex = (currentPage - 1) * this.pageSize; //当前分页机器起始索引
-        machineIndex < currentPage * this.pageSize && //当前分页机器索引范围
+        let machineIndex = (currentPage - 1) * pageSize; //当前分页机器起始索引
+        machineIndex < currentPage * pageSize && //当前分页机器索引范围
         machineIndex < machines.length; //机器索引最大值
         machineIndex++
       ) {
@@ -1351,7 +1354,11 @@ export default {
       query_machines_by_machine_type(params).then((res) => {
         // this.res_body = res;
         this.arrangeAllMachines(res);
-        this.showMachines(this.allListedMachine, this.currentPage);
+        this.showMachines(
+          this.allListedMachine,
+          this.currentPage,
+          this.pageSize
+        );
         // console.log("res body -----------------------");
         // console.log(this.res_body);
       });
@@ -1367,7 +1374,11 @@ export default {
         query_machines_by_machine_type(params).then((res) => {
           // this.res_body = res;
           this.arrangeAllMachines(res);
-          this.showMachines(this.allListedMachine, this.currentPage);
+          this.showMachines(
+            this.allListedMachine,
+            this.currentPage,
+            this.pageSize
+          );
           // console.log("res body *********************************");
           // console.log(this.res_body);
         });
