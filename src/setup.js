@@ -33,7 +33,8 @@ import {
   Form,
   FormItem,
   Autocomplete,
-  Tooltip
+  Tooltip,
+  Pagination
 } from 'element-ui'
 import ElementLocale from 'element-ui/lib/locale'
 import {
@@ -79,6 +80,7 @@ Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Autocomplete)
 Vue.use(Tooltip)
+Vue.use(Pagination)
 Vue.component(Message)
 
 Vue.use(TextField)
