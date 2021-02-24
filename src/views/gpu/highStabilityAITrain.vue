@@ -669,6 +669,17 @@
         </div>
       </li>
     </ul>
+    <div class="paging">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page.sync="currentPage"
+        :page-size="pageSize"
+        layout="total, prev, pager, next"
+        :total="machineCount"
+      >
+      </el-pagination>
+    </div>
     <dlg-leasegpu
       :open.sync="dlg_opengpu"
       :place-order-data="placeOrderData"
@@ -726,6 +737,10 @@ export default {
   },
   data() {
     return {
+      machineCount: 0,
+      pageSize: 10,
+      currentPage: 1,
+      allListedMachine: [],
       usdToRmb: getUsdToRmb(),
       styleHidden: {},
       rent_index: -1,
@@ -897,6 +912,14 @@ export default {
       this.idle_status[1].name = this.$t("gpu.idle_status[1]");
       this.idle_status[2].name = this.$t("gpu.idle_status[2]");
       this.language = this.$i18n.locale;
+    },
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+    },
+    handleCurrentChange(currentPage) {
+      console.log(`当前页: ${currentPage}`);
+      this.currentPage = currentPage;
+      this.showMachines(this.allListedMachine, currentPage);
     },
     pushDetail(machine_id) {
       this.$router.push("/machineDetail?machine_id=" + machine_id);
@@ -1375,6 +1398,34 @@ export default {
           loading.close();
         });
     },
+    showMachines(machines, currentPage) {
+      let needMachines = []; //需要展示的机器
+      // 循环页面要显示的机器数量次
+      for (
+        let machineIndex = (currentPage - 1) * this.pageSize; //当前分页机器起始索引
+        machineIndex < currentPage * this.pageSize && //当前分页机器索引范围
+        machineIndex < machines.length; //机器索引最大值
+        machineIndex++
+      ) {
+        needMachines.push(machines[machineIndex]);
+      }
+      this.res_body.content = needMachines; //需要展示的机器
+      this.machineCount = machines.length; //展示的机器总数
+    },
+    arrangeAllMachines(res) {
+      let machines = []; //所有可展示机器
+      for (let item of res.content) {
+        // console.log(item);
+        if (item.online_status) {
+          machines.push(item);
+        }
+      }
+      // console.log(machines);
+      this.res_body.code = res.code; //原始返回数据
+      this.res_body.msg = res.msg; //原始返回数据
+      this.res_body.status = res.status; //原始返回数据
+      this.allListedMachine = machines; //所有可展示机器
+    },
     queryMc() {
       let params = {
         machine_type: 1,
@@ -1407,7 +1458,11 @@ export default {
         language: this.language,
       };
       query_machines_by_machine_type(params).then((res) => {
-        this.res_body = res;
+        // this.res_body = res;
+        this.arrangeAllMachines(res);
+        this.showMachines(this.allListedMachine, this.currentPage);
+        // console.log("res body -----------------------");
+        // console.log(this.res_body);
       });
       if (this.si) {
         clearInterval(this.si);
@@ -1419,7 +1474,11 @@ export default {
           clearInterval(this.si);
         }
         query_machines_by_machine_type(params).then((res) => {
-          this.res_body = res;
+          // this.res_body = res;
+          this.arrangeAllMachines(res);
+          this.showMachines(this.allListedMachine, this.currentPage);
+          // console.log("res body *********************************");
+          // console.log(this.res_body);
         });
       }, 15000);
       // if (this.st) {
