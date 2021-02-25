@@ -2271,4 +2271,10 @@ export default {
     }
   }
 }
+.paging {
+  .el-pagination {
+    display: flex;
+    justify-content: center;
+  }
+}
 </style>

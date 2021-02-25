@@ -2253,12 +2253,11 @@ export default {
       opacity: 0.7;
     }
   }
-  // div.paging {
-  //   width: 300px;
-  // }
-  // .el-pagination {
-  //   display: flex;
-  //   justify-content: center;
-  // }
+}
+.paging {
+  .el-pagination {
+    display: flex;
+    justify-content: center;
+  }
 }
 </style>
