@@ -470,6 +470,12 @@ export function getCookie(cname){
   }
   return "";
 }
+// 删除cookie
+export function clearCookie(cname)
+{
+  // setCookie(cname, "", -1);
+  document.cookie = cname + "=" + "; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+}
 // 检查cookie
 export function checkCookie(){
   var user=getCookie("username");
