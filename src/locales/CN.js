@@ -767,7 +767,11 @@ export default {
   zerogas: "当前钱包GAS为0,无法支付，请在支付宝购买100个DBC，会免费获得0.005个gas",
   zerogas_wallet: "当前钱包GAS为0,无法转账，请在支付宝购买100个DBC，会免费获得0.005个gas",
   congTuCloud: {
-    header: {},
+    header: {
+      login:"登录",
+      register:"注册",
+      signOut:"退出账号"
+    },
     page1: {
       title: ["聪图云", "聪图云", "聪图云"],
       describe: [

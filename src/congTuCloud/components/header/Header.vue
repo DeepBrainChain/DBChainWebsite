@@ -48,17 +48,41 @@
           >{{ $t("heads.help") }}</a
         >
       </div>
-      <div class="account">{{ getCookie("email") }}</div>
+      <div class="account">
+        <el-dropdown v-if="accountIsLogin" trigger="click">
+          <span class="el-dropdown-link">
+            <span>{{ getCookie("email") }}</span>
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <span @click="signOut()">
+              <el-dropdown-item icon="el-icon-delete">{{
+                $t("congTuCloud.header.signOut")
+              }}</el-dropdown-item>
+            </span>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <div class="account-nav" v-else>
+          <span class="login" @click="toLogin()">{{
+            $t("congTuCloud.header.login")
+          }}</span>
+          <span>&nbsp;&nbsp;/&nbsp;&nbsp;</span>
+          <span class="register" @click="toRegister()">{{
+            $t("congTuCloud.header.register")
+          }}</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import { mapActions, mapState } from "vuex";
-import { getCookie } from "../../../utlis/index";
+import { getCookie, clearCookie } from "../../../utlis/index";
 export default {
   name: "Header",
   data() {
     return {
+      accountIsLogin: false,
       curLang: undefined, //this.$i18n.locale,
       //  menuName: "",
       link: undefined,
@@ -73,6 +97,11 @@ export default {
     this.set_logo();
     this.setLanguageCode();
     this.initData();
+    console.log(getCookie("login"));
+    if (getCookie("login") === "login") {
+      this.accountIsLogin = true;
+    }
+    console.log(this.accountIsLogin);
   },
   computed: {
     ...mapState([
@@ -243,6 +272,17 @@ export default {
     pushToPreview() {
       this.$router.push("/preview");
     },
+    toLogin() {
+      this.$router.push("/login");
+    },
+    toRegister() {
+      this.$router.push("/register");
+    },
+    signOut() {
+      clearCookie("login");
+      clearCookie("email");
+      this.accountIsLogin = false;
+    },
     drop_home(name) {
       // this.menuName = name;
       this.$store.commit("setMenuName", name);
@@ -350,12 +390,30 @@ export default {
 }
 .account {
   height: 22px;
-  font-size: 16px;
-  font-family: PingFangSC-Regular, PingFang SC;
-  font-weight: 400;
-  color: rgba(255, 255, 255, 1);
   line-height: 62px;
   float: right;
-  margin-right: 60px;
+  margin-right: 20px;
+  .account-nav {
+    color: #ffffff;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-size: 16px;
+    .login,
+    .register {
+      cursor: pointer;
+    }
+    .login:hover,
+    .register:hover {
+      color: #cc6666;
+    }
+  }
+  .el-dropdown-link {
+    cursor: pointer;
+    color: #ffffff;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-size: 16px;
+  }
+  .el-icon-arrow-down {
+    font-size: 12px;
+  }
 }
 </style>
