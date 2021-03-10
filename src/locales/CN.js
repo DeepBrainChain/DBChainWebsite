@@ -5,8 +5,8 @@ export default {
    ** 修改数值时，要把router.js文件开头引入的Home组件切换与此类型一致
    ** 如果是法币聪图云模式，要把根目录下public/index.html 中脚本的 websiteNameIsCongtuCloud变量 修改为true
    */
-  webtype: "0", //0:表示法币支付网站,1:表示dbc支付网站
-  website_name: "congTuCloud", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab,congTuCloud
+  webtype: "1", //0:表示法币支付网站,1:表示dbc支付网站
+  website_name: "dbchain", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab,congTuCloud
   display_select_rent_platform: "0", //0：不显示机器出租的云平台选项，1:显示出租的云平台选项
   //alpha-dbchain/aichriscloud/deepbit/vnxmart/aiaicloud/snbt/heekmind/redstonewill/rocketai/aicv/\shareaiot\freegpu\boincplanet\topgpu\thinkotech
   //coolgpu\scclouds\nvidiaai\deligpu\longway\sharedgpu\aipower\cvstudy\gpuhub\district51\deepmind\transportation\planetc\sdnu\freegputop\tensorgpu
@@ -174,7 +174,7 @@ export default {
     highStabilityAITrain: "高稳定AI训练区",
     aiInference: "AI推理区",
     hashCompute: "高性能并行计算区",
-    superNodeCompute: "超级节点算力区"
+    superNodeCompute: "DBC超级节点算力区"
   },
 
   country: "国家",
@@ -598,7 +598,7 @@ export default {
   diskspace_new_gpu: "启动GPU后容器剩余空间为",
   diskspace_every_cpu_can_buy: "每个GPU最多可以购买",
   myMachine_is_vocing_machine_update: "正在启动GPU(如果无法启动，可以联系support@dbchain.ai)，根据您容器已存储的数据大小，大概需要",
-  myMachine_is_vocing_machine_update_congtu_cloud:"正在启动GPU(如果无法启动，可以联系support@congtu.cloud)，根据您容器已存储的数据大小，大概需要",
+  myMachine_is_vocing_machine_update_congtu_cloud: "正在启动GPU(如果无法启动，可以联系support@congtu.cloud)，根据您容器已存储的数据大小，大概需要",
   container_is_closed_update: "在启动GPU的过程中,当前CPU容器会处于关闭状态,无法使用,启动完成后,可以重新登陆",
   rent_cpu_cotainer: "租用CPU容器",
   open_gpu_cpu_to_gpu: "启动GPU",
@@ -656,7 +656,7 @@ export default {
   no_container: "当前机器CPU容器已满",
   stop_to_cpu_container: "启动为CPU容器",
   myMachine_is_vocing_machine_update_stop_to_open: "正在启动容器(如果无法启动，可以联系support@dbchain.ai)，根据您容器已存储的数据大小，大概需要",
-  myMachine_is_vocing_machine_update_stop_to_open_congtu_cloud:"正在启动容器(如果无法启动，可以联系support@congtu.cloud)，根据您容器已存储的数据大小，大概需要",
+  myMachine_is_vocing_machine_update_stop_to_open_congtu_cloud: "正在启动容器(如果无法启动，可以联系support@congtu.cloud)，根据您容器已存储的数据大小，大概需要",
   myMachine_rent_success_msg_update_stop_to_open: "容器启动成功，稍等3分钟，可以登陆使用",
   stop_to_gpu_container: "启动为GPU容器",
   user_defined: "自定义安装",
@@ -748,7 +748,7 @@ export default {
   miner_confirmPay_tip1: "质押DBC成功后，机器将会进入高性能并行计算区",
   ai_help: "AI训练和推理帮助文档",
   filecoin_help: "高性能并行计算帮助文档",
-  supernode_help: "超级节点租用帮助文档",
+  supernode_help: "DBC超级节点租用帮助文档",
   rent_machine_ai_help: "租用AI服务器帮助文档",
   use_machine_ai_help: "AI服务器使用手册",
   question_machine_ai_help: "常见问题汇总",
@@ -768,9 +768,9 @@ export default {
   zerogas_wallet: "当前钱包GAS为0,无法转账，请在支付宝购买100个DBC，会免费获得0.005个gas",
   congTuCloud: {
     header: {
-      login:"登录",
-      register:"注册",
-      signOut:"退出账号"
+      login: "登录",
+      register: "注册",
+      signOut: "退出账号"
     },
     page1: {
       title: ["聪图云", "聪图云", "聪图云"],

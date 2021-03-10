@@ -2,7 +2,7 @@ import enLocale from 'element-ui/lib/locale/lang/en'
 
 export default {
   message: 'hello i18n !!',
-  website_name: '52cv', //yousanai,  dbchain,aionego
+  website_name: 'dbchain', //yousanai,  dbchain,aionego
   $: '$',
   send: 'Send',
   closeWallet: 'Close Wallet',
@@ -167,8 +167,8 @@ export default {
     common: "Normal AI training area",
     highStabilityAITrain: "High stability AI training area",
     aiInference: "AI inference area",
-    hashCompute: "High performance parallelism calculation area",
-    superNodeCompute: "Supernode force region"
+    hashCompute: "High performance  calculation area",
+    superNodeCompute: "DBC supernode area"
   },
 
   country: 'Country',
@@ -369,8 +369,8 @@ export default {
   list_country: 'Country',
   list_dbc_version: 'DBC Version',
   list_try: 'Trial',
-  list_rentout_gpu: "Rent GPU container", //2020 1 9
-  list_rentout_cpu: "Rent CPU container", //2020 1 9
+  list_rentout_gpu: "Rent GPU", //2020 1 9
+  list_rentout_cpu: "Rent CPU", //2020 1 9
   list_china: 'China',
   list_idle_gpus: 'Idle GPUs',
   list_length_of_available_time: 'Available Time',
@@ -745,16 +745,16 @@ export default {
   disk_auto_machine_type: '分配的硬盘空间',
   miner_confirmPay_tip0: '质押DBC成功后，机器将会进入高稳定AI训练区',
   miner_confirmPay_tip1: '质押DBC成功后，机器将会进入High performance parallelism计算区',
-  ai_help: 'AI训练和推理帮助文档',
+  ai_help: 'AI training and reasoning help doc',
   filecoin_help: 'High performance parallelism 计算帮助文档',
-  supernode_help: '超级节点租用帮助文档',
-  rent_machine_ai_help: '租用AI服务器帮助文档',
-  use_machine_ai_help: 'AI服务器使用手册',
-  question_machine_ai_help: '常见问题汇总',
+  supernode_help: 'DBC super node rent help doc',
+  rent_machine_ai_help: 'Rent AI server help doc',
+  use_machine_ai_help: 'AI Server User Manual',
+  question_machine_ai_help: 'Frequently Asked Questions',
   rent_machine_filecoin_help: '租用 High performance parallelism 计算服务器帮助文档',
   use_machine_filecoin_help: 'High performance parallelism 计算API接口使用手册',
-  rent_machine_dbc_help: 'DBC超级节点租用帮助文档',
-  use_machine_dbc_help: '启用DBC超级节点帮助文档',
+  rent_machine_dbc_help: 'DBC super node rent help doc',
+  use_machine_dbc_help: 'Enable the DBC super node help doc',
   myMachine_confirm_pay_tip: '如果已经支付，请点击继续支付后，在弹框中点击我已支付；如果没有支付，请点击继续支付后，在弹框中点击确认支付',
   miner_confirmPay_tip3: '请点击开始质押DBC,质押DBC成功后，机器将会正式上线',
   gasamount: "GAS amount",

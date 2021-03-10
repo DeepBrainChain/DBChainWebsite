@@ -50,7 +50,7 @@
         href="http://www.dbctalk.ai"
         target="_blank"
       >{{set_dbctalk}}</a>
-      <a class="item" v-else href="https://t.me/deepbrainchain" target="_blank">Join Telegram</a>
+      <a class="item" v-else href="https://t.me/deepbrainchainglobal" target="_blank">Join Telegram</a>
       <!--      <router-link class="item" to="/home">{{$t('heads.api')}}</router-link>-->
       <!--  <router-link class="item" to="/home">{{$t('heads.help')}}</router-link>-->
       <el-dropdown class="drop-lang" trigger="click" v-on:command="drop_command">
@@ -559,7 +559,7 @@ export default {
   align-items: flex-start;
 
   .logo {
-    margin-top: -30px; //dbchain:10px ,aionego:-30px,yousanai:-30px,deepshare-30px,yalecloud-30px,panchuanga:-30px,,sharegpu:-30px
+    margin-top: 10px; //dbchain:10px ,aionego:-30px,yousanai:-30px,deepshare-30px,yalecloud-30px,panchuanga:-30px,,sharegpu:-30px
     //alpha-dbchain:-50px,xyzlab:-20px
     margin-right: 119px; //dbchain: 119px  ,aionego:119px,yousanai:119px,deepshare:119px
   }

@@ -20,7 +20,6 @@
         </el-aside>
         <el-aside v-else class="left-wrap">
           <navi :menus="menus_chain" :index="curNavIndex"></navi>
-          <navi :menus="menus" :index="curNavIndex"></navi>
         </el-aside>
         <el-main class="right-wrap">
           <keep-alive :include="cacheList">
@@ -51,8 +50,8 @@ export default {
           to: "aiHelp",
           index: 0,
 
-          iconClass: "iconwallet",
-        },
+          iconClass: "iconwallet"
+        }
       ],
 
       menus_chain: [
@@ -61,7 +60,7 @@ export default {
           to: "aiHelp",
           index: 0,
 
-          iconClass: "iconwallet",
+          iconClass: "iconwallet"
         },
         //  {
         //   title: undefined, //this.$t("gpu.myMachine"),
@@ -73,13 +72,13 @@ export default {
           title: undefined, //this.$t("gpu.machineList"),
           to: "supernodeHelp",
           index: 1,
-          iconClass: "iconlist",
-        },
+          iconClass: "iconlist"
+        }
       ],
       underlineStyle: {
         width: "65px",
-        left: "343px",
-      },
+        left: "343px"
+      }
     };
   },
   beforeRouteUpdate(to, from, next) {
@@ -100,7 +99,7 @@ export default {
   watch: {
     "$i18n.locale"() {
       this.inti_menus();
-    },
+    }
   },
   computed: {
     inti_menus() {
@@ -113,13 +112,13 @@ export default {
       } else {
         this.menus[0].title = this.$t("ai_help");
       }
-    },
+    }
   },
   components: {
     Navi,
     Header,
-    Footer,
-  },
+    Footer
+  }
 };
 </script>
 

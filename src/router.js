@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import Home from './views/Home.vue'
-import Home from "./congTuCloud/pages/home.vue";
+import Home from './views/Home.vue'
+//import Home from "./congTuCloud/pages/home.vue";
 import Login from "./congTuCloud/pages/login"
 import Register from "./congTuCloud/pages/register"
 import Preview from './views/preview'

@@ -4,10 +4,9 @@
       <h3 v-if="$t('website_name')!=='congTuCloud'">
         {{$t('rent_machine_ai_help')}}：
         <a
-          v-if="this.$i18n.locale==='cn' || this.$i18n.locale==='CN'"
-          href="https://kdocs.cn/l/sLuyBksnz"
+          href="https://kdocs.cn/l/squb9SS9Bd8F"
           target="_blank"
-        >https://kdocs.cn/l/sLuyBksnz</a>
+        >https://kdocs.cn/l/squb9SS9Bd8F</a>
       </h3>
 
       <h3>
