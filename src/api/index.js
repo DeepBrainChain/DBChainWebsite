@@ -13,7 +13,8 @@ import axios from "@/utlis/axios";
 
 //const host = 'http://13.124.237.200:8031'
 //const host = "https://otherinfo.dbchain.ai";
-const host = "https://info.dbchain.ai";
+//const host = "https://info.dbchain.ai";
+const host = "https://infodata.dbchain.ai";
 //const host = "https://infotest.dbchain.ai";
 //const host = 'http://116.85.24.172:8031'
 //const host = "http://192.168.1.186:8080";
@@ -795,10 +796,7 @@ export const dbc_deposite_count_new = params => {
 };
 
 // 获取当前人的订单列表
-export const get_address_abstracts = ({
-  address,
-  page
-}) => {
+export const get_address_abstracts = ({ address, page }) => {
   return axios({
     method: "get",
     url: `https://api.neoscan.io/api/main_net/v1/get_address_abstracts/${address}/${page}`
@@ -812,7 +810,6 @@ export const exchangeUSDToCNY = (from, to) => {
     url: `http://op.juhe.cn/onebox/exchange/currency?key=${juheKey}&from=USD&to=CNY`
   });
 };
-
 
 // **********************************************  聪图云接口   **********************************************
 /**

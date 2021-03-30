@@ -6,7 +6,7 @@ export default {
    ** 如果是法币聪图云模式，要把根目录下public/index.html 中脚本的 websiteNameIsCongtuCloud变量 修改为true
    */
   webtype: "1", //0:表示法币支付网站,1:表示dbc支付网站
-  website_name: "dbchain", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab,congTuCloud
+  website_name: "52cv", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab,congTuCloud
   display_select_rent_platform: "0", //0：不显示机器出租的云平台选项，1:显示出租的云平台选项
   //alpha-dbchain/aichriscloud/deepbit/vnxmart/aiaicloud/snbt/heekmind/redstonewill/rocketai/aicv/\shareaiot\freegpu\boincplanet\topgpu\thinkotech
   //coolgpu\scclouds\nvidiaai\deligpu\longway\sharedgpu\aipower\cvstudy\gpuhub\district51\deepmind\transportation\planetc\sdnu\freegputop\tensorgpu
@@ -207,7 +207,7 @@ export default {
     dlg_0: "当前机器最长可以租用{time}，最短1个小时。 \n" +
       "容器使用完成后，可以提前退租，只会收取实际产生的费用，剩余费用将会退还到钱包中. " +
       "时间到期,容器会被停用,机器所有数据将会" +
-      "被自动保留7天,如果您的钱包余额超过20000DBC,7天内任何时间可以继续启用容器,进行使用,容器停止超过7天将会被销毁.",
+      "被自动保留7天,如果您的钱包余额超过2000DBC,7天内任何时间可以继续启用容器,进行使用,容器停止超过7天将会被销毁.",
 
     dlg_5: "使用过程中机器出现中断，如果使用时间不超过144小时，则退回全部DBC \n" +
       "<br>" +
@@ -613,7 +613,7 @@ export default {
   return_deposit_dbc: "使用过程中，如果机器发生中断，将会退回所有质押的DBC",
   deposit_time_tip: "当前机器最长可以选择使用{time}，最短1个小时.",
   stop_time_tip: "如果机器时间到期,容器会被停用.,机器所有数据将会" +
-    "被自动保留7天,7天内任何时间可以继续启用容器,进行使用,但是启用的时候钱包DBC余额需要大于20000DBC,容器停止超过7天将会被销毁." +
+    "被自动保留7天,7天内任何时间可以继续启用容器,进行使用,但是启用的时候钱包DBC余额需要大于2000DBC,容器停止超过7天将会被销毁." +
     "机器使用完成后,可以提前退租,质押的DBC将会退还到钱包中.",
   deposit_dbcs_cpu: "质押的DBC总数",
   cpu_containers_list: "已创建CPU容器数",
@@ -669,7 +669,7 @@ export default {
   transfer_success: "转账成功",
   dbc_lack_of_balance: "DBC余额不足",
   please_confirm_pay: "请确认支付",
-  stop_instruaction: "温馨提示：您钱包余额大于20000DBC，可以启用已经停止的容器，历史数据保存在里面",
+  stop_instruaction: "温馨提示：您钱包余额大于2000DBC，可以启用已经停止的容器，历史数据保存在里面",
   dbcnum_error: "输入数字不正确",
   your_country: "添加机器所处地理位置",
   stopgpu_tip_mymachine: "停止GPU后，会切换成CPU容器，所有数据都会被保存,并且可以继续使用",
@@ -678,7 +678,7 @@ export default {
   myMachine_is_vocing_machine_rentout: "正在验证机器是否可用，请耐心等待，大概需要5-10分钟",
   my_machine_miner_vocing_rentout: "验证中",
   my_machine_miner_vocing_error: "验证失败",
-  stoprent_tip_mymachine: "退租后,数据会被继续保存7天，如果钱包余额大于20000DBC,可以在我的停止容器中启动后继续使用",
+  stoprent_tip_mymachine: "退租后,数据会被继续保存7天，如果钱包余额大于2000DBC,可以在我的停止容器中启动后继续使用",
   list_gpu_count_tip: "当前机器的GPU型号和GPU总数",
   transfer_tips: "在目标地址中输入对方的DBC钱包地址，然后输入转账的DBC数量，点击发送，就可以把DBC转账到对方的DBC钱包中,大概10-30秒对方就可以收到DBC",
   dbc_price_wallet_tips: "DBC价格是随时波动的，购买DBC的时候请注意波动风险",
