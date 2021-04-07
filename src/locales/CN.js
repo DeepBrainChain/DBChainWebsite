@@ -11,7 +11,7 @@ export default {
   //alpha-dbchain/aichriscloud/deepbit/vnxmart/aiaicloud/snbt/heekmind/redstonewill/rocketai/aicv/\shareaiot\freegpu\boincplanet\topgpu\thinkotech
   //coolgpu\scclouds\nvidiaai\deligpu\longway\sharedgpu\aipower\cvstudy\gpuhub\district51\deepmind\transportation\planetc\sdnu\freegputop\tensorgpu
   //opengpu\aiyanxishe\codefate\changhe\dpool
-
+  contain_new_wallet: "1", //0:不包含新钱包，1:包含新钱包
   message: "hello i18n !!",
 
   $: "$",
@@ -907,5 +907,8 @@ export default {
     },
     forgetPwd: "忘记密码?",
   },
+
+  mywallet_open_old: "打开旧钱包账号",
+  mywallet_open_new: "打开新钱包账号",
   ...enLocale
 };

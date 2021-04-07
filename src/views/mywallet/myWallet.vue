@@ -5,7 +5,21 @@
         type="primary"
         v-on:click="openCreateWallet('/createWallet')"
       >{{$t('mywallet_create')}}</el-button>
-      <el-button type="primary" v-on:click="openWallet">{{$t('mywallet_open')}}</el-button>
+      <el-button
+        type="primary"
+        v-on:click="openWallet"
+        v-if="!contain_new_wallet"
+      >{{$t('mywallet_open')}}</el-button>
+      <el-button
+        type="primary"
+        v-on:click="openWallet"
+        v-if="contain_new_wallet"
+      >{{$t('mywallet_open_old')}}</el-button>
+      <el-button
+        type="primary"
+        v-on:click="openWallet"
+        v-if="contain_new_wallet"
+      >{{$t('mywallet_open_new')}}</el-button>
     </div>
     <div class="center-box">
       <div plain>{{$t('mywallet_open_create')}}</div>
@@ -28,11 +42,15 @@ export default {
   name: "myWallet",
   data() {
     return {
-      gas_balance: 0
+      gas_balance: 0,
+      contain_new_wallet: false
     };
   },
   created() {
     this.initData();
+    if (this.$t("contain_new_wallet") === "1") {
+      this.contain_new_wallet = true;
+    }
   },
   methods: {
     ...mapActions(["getAccountState", "getTransferList"]),
