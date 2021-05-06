@@ -17,7 +17,7 @@
       >{{$t('mywallet_open_old')}}</el-button>
       <el-button
         type="primary"
-        v-on:click="openWallet"
+        v-on:click="openWallet_new"
         v-if="contain_new_wallet"
       >{{$t('mywallet_open_new')}}</el-button>
     </div>
@@ -72,6 +72,9 @@ export default {
           const type = this.$route.path.search("gpu") !== -1 ? "gpu" : "miner";
           this.$router.push(`/openWallet/${type}`);
         });
+    },
+    openWallet_new() {
+      this.$router.push(`/newWallet/openWallet`)
     }
   }
 };

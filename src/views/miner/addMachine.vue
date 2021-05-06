@@ -742,7 +742,7 @@ export default {
 .mc-input {
   margin-bottom: 0;
 
-  /deep/ .mu-text-field-input {
+  ::v-deep(.mu-text-field-input) {
     text-align: center;
     font-size: 26px;
     color: #6e8299;

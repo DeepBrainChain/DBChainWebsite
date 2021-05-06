@@ -119,9 +119,6 @@ const router = new Router({
       component: () => import('./views/mymachine'),
       redirect: '/mymachine/myMachine',
       children: [{
-
-
-
           meta: {
             menuIndex: 0
           },
@@ -294,7 +291,11 @@ const router = new Router({
       name: 'machineOrder',
       component: () => import('./views/machineOrder')
     },
-
+    {
+      path: '/newWallet/openWallet',
+      name: 'OpenWallet',
+      component: () => import('./views/newWallet/openWallet')
+    }
   ]
 })
 
