@@ -382,7 +382,7 @@ export default {
 
     imagesOptions() {
       let opts = [];
-      var tags = new Array();
+      var tags = [];
       if (
         this.placeOrderData.images_tag === null ||
         this.placeOrderData.images_tag === "" ||

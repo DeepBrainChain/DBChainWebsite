@@ -13,6 +13,8 @@ import {
   getTransactions
 } from '../utlis'
 
+import newDbc from './modules/dbcWallet'
+
 import {
   get_dbc_price,
   dbc_info,
@@ -24,7 +26,9 @@ import cookie from 'js-cookie'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  modules: {},
+  modules: {
+    newDbc
+  },
   state: {
     account: undefined,
     balance: 0,

@@ -3,32 +3,52 @@
     <div class="wallet-btns">
       <el-button
         type="primary"
-        v-on:click="openCreateWallet('/createWallet')"
-      >{{$t('mywallet_create')}}</el-button>
+        @click="openCreateWallet('/createWallet')"
+      >
+        {{ $t('mywallet_create') }}
+      </el-button>
       <el-button
+        v-if="contain_new_wallet"
         type="primary"
-        v-on:click="openWallet"
+        @click="openCreateWalletNew('/createWallet')"
+      >
+        {{ $t('mywallet_create_new') }}
+      </el-button>
+      <el-button
         v-if="!contain_new_wallet"
-      >{{$t('mywallet_open')}}</el-button>
-      <el-button
         type="primary"
-        v-on:click="openWallet"
-        v-if="contain_new_wallet"
-      >{{$t('mywallet_open_old')}}</el-button>
+        @click="openWallet"
+      >
+        {{ $t('mywallet_open') }}
+      </el-button>
       <el-button
-        type="primary"
-        v-on:click="openWallet_new"
         v-if="contain_new_wallet"
-      >{{$t('mywallet_open_new')}}</el-button>
+        type="primary"
+        @click="openWallet"
+      >
+        {{ $t('mywallet_open_old') }}
+      </el-button>
+      <el-button
+        v-if="contain_new_wallet"
+        type="primary"
+        @click="openWallet_new"
+      >
+        {{ $t('mywallet_open_new') }}
+      </el-button>
     </div>
     <div class="center-box">
-      <div plain>{{$t('mywallet_open_create')}}</div>
+      <div plain>
+        {{ $t('mywallet_open_create') }}
+      </div>
     </div>
     <div class="center-box">
-      <div class="btn lg" plain>
-        {{$t('mywallet_transfer_record')}}
-        <br />
-        {{$t('mywallet_display')}}
+      <div
+        class="btn lg"
+        plain
+      >
+        {{ $t('mywallet_transfer_record') }}
+        <br>
+        {{ $t('mywallet_display') }}
       </div>
     </div>
   </div>
@@ -37,9 +57,13 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import { getAccount } from "@/utlis";
+import { getCurrentPair } from "@/utlis/dot"
+import {
+  initFromLocalstorage
+} from '@/utlis/dot'
 
 export default {
-  name: "myWallet",
+  name: "MyWallet",
   data() {
     return {
       gas_balance: 0,
@@ -47,21 +71,26 @@ export default {
     };
   },
   created() {
-    this.initData();
     if (this.$t("contain_new_wallet") === "1") {
       this.contain_new_wallet = true;
     }
+    this.initData();
   },
   methods: {
     ...mapActions(["getAccountState", "getTransferList"]),
     initData() {
       if (getAccount()) {
         this.$router.push("myWalletUnlock");
+      } else if (getCurrentPair()) {
+        this.$router.push('/newWallet/myWalletUnlock')
       }
     },
     openCreateWallet() {
       const type = this.$route.path.search("gpu") !== -1 ? "gpu" : "miner";
       this.$router.push(`/createWallet/${type}`);
+    },
+    openCreateWalletNew () {
+      this.$router.push(`/newWallet/createWallet`)
     },
     openWallet() {
       this.getAccountState()
@@ -74,7 +103,13 @@ export default {
         });
     },
     openWallet_new() {
-      this.$router.push(`/newWallet/openWallet`)
+      const pair = initFromLocalstorage()
+      if (pair) {
+        console.log('pair->', pair)
+        this.$router.push('/newWallet/myWalletUnlock')
+      } else {
+        this.$router.push(`/newWallet/openWallet`)
+      }
     }
   }
 };

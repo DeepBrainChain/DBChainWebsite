@@ -5,48 +5,47 @@
       <el-button
         type="primary"
         v-on:click="openCreateWallet('/createWallet')"
-      >{{$t('gpu.createWallet')}}</el-button>
-      <el-button type="primary" v-on:click="openWallet">{{$t('gpu.openWallet')}}</el-button>
+      >{{ $t('gpu.createWallet') }}
+      </el-button>
+      <el-button type="primary" v-on:click="openWallet">{{ $t('gpu.openWallet') }}</el-button>
     </div>
     <div class="center-box">
-      <div>{{$t('gpu.rentMachine')}}</div>
+      <div>{{ $t('gpu.rentMachine') }}</div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
-import { getAccount } from "@/utlis";
+import {mapActions, mapState} from "vuex"
+import {getAccount} from "@/utlis"
 
 export default {
   name: "myMinerMachine",
   created() {
-    console.log(this.$route);
-    this.initData();
+    console.log(this.$route)
+    this.initData()
   },
   methods: {
     ...mapActions(["getAccountState", "getTransferList"]),
     initData() {
       if (getAccount()) {
-        this.$router.replace("myMinerMachine_unlock");
+        this.$router.replace("myMinerMachine_unlock")
       }
     },
     openCreateWallet() {
-      const type = this.$route.path.search("gpu") !== -1 ? "gpu" : "miner";
-      this.$router.push(`/createWallet/${type}`);
+      const type = this.$route.path.search("gpu") !== -1 ? "gpu" : "miner"
+      this.$router.push(`/createWallet/${type}`)
     },
     openWallet() {
-      this.getAccountState()
-        .then(data => {
-          this.$router.push("myMinerMachine_unlock");
-        })
-        .catch(err => {
-          const type = this.$route.path.search("gpu") !== -1 ? "gpu" : "miner";
-          this.$router.push(`/openWallet/${type}`);
-        });
+      this.getAccountState().then(data => {
+        this.$router.push("myMinerMachine_unlock")
+      }).catch(err => {
+        const type = this.$route.path.search("gpu") !== -1 ? "gpu" : "miner"
+        this.$router.push(`/openWallet/${type}`)
+      })
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

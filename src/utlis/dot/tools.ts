@@ -1,5 +1,5 @@
 import type { Registry } from '@polkadot/types/types'
-import { formatBalance } from '@polkadot/util'
+import { formatBalance  } from '@polkadot/util'
 import { Balance } from '@polkadot/types/interfaces/runtime'
 
 function getFormat (registry: Registry, formatIndex = 0): [number, string] {
@@ -15,8 +15,8 @@ function getFormat (registry: Registry, formatIndex = 0): [number, string] {
   ]
 }
 
-export const getFormatBalance = (value: Balance): [string, string] => {
+export const getFormatBalance = (value: Balance): [string, string, number] => {
   const [decimals, token] = getFormat(value.registry)
-  const balance = formatBalance(value, { decimals, forceUnit: '-', withSi: false })
-  return [balance, token]
+  const balance = formatBalance(value, { withSi: false })
+  return [balance, token, decimals]
 }
