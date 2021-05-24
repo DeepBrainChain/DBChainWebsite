@@ -75,5 +75,6 @@ module.exports = {
         changeOrigin: true
       }
     }
-  }
+  },
+  lintOnSave: false
 };
