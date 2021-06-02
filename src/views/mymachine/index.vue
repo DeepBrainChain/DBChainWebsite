@@ -31,6 +31,11 @@ import Footer from "@/congTuCloud/components/footer/Footer.vue";
 
 export default {
   name: "mymachine",
+  components: {
+    Navi,
+    Header,
+    Footer,
+  },
   data() {
     return {
       // 缓存组件列表
@@ -86,11 +91,9 @@ export default {
       this.init_menus();
     },
   },
-  computed: {},
   methods: {
     init_menus() {
       this.menus[0].title = this.$t("gpu.myMachine_gpu");
-
       this.menus[1].title = this.$t("gpu.myMachine_cpu");
       this.menus[2].title = this.$t("gpu.myMachine_stopped");
 
@@ -98,11 +101,6 @@ export default {
       //   this.menus.splice(2, 1);
       // }
     },
-  },
-  components: {
-    Navi,
-    Header,
-    Footer,
   },
 };
 </script>

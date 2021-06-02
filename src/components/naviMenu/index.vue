@@ -1,7 +1,7 @@
 <template>
   <div class="navi">
     <ul class="btn-list">
-      <li v-for="item in menus">
+      <li v-for="(item,idx) in menus" :key="idx">
         <el-button
           class="lg naviBtn"
           :class="{active: index === item.index}"

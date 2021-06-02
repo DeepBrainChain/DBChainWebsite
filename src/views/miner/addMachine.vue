@@ -433,7 +433,7 @@ export default {
     },
     countrysOptions() {
       let opts = [];
-      let countrys = new Array();
+      let countrys = [];
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       get_country_list({
@@ -470,8 +470,8 @@ export default {
     },
     digitalOptions() {
       let opts = [];
-      var tags = new Array();
-      var value = new Array();
+      var tags = [];
+      var value = [];
       let digital_tag = "100%@95%@90%@85%@80%@75%@70%@65%@60%@55%@50%";
       let value_tag = "100@95@90@85@80@75@70@65@60@55@50";
       tags = digital_tag.split("@");
@@ -487,7 +487,7 @@ export default {
     },
     rentout_machine_typeOptions() {
       let opts = [];
-      var tags = new Array();
+      var tags = [];
 
       let rentout_machine_tag = this.$t("rentout_machine_tag");
 
@@ -505,7 +505,7 @@ export default {
 
     rentout_machine_platformOptions() {
       let opts = [];
-      var tags = new Array();
+      var tags = [];
 
       let rentout_machine_platform_tag = this.$t(
         "rentout_machine_platform_tag"
@@ -524,7 +524,7 @@ export default {
     },
     rentout_machine_classificationOptions() {
       let opts = [];
-      var tags = new Array();
+      var tags = [];
 
       let rentout_machine_classification_tag = this.$t(
         "rentout_machine_classification_tag"
@@ -742,7 +742,7 @@ export default {
 .mc-input {
   margin-bottom: 0;
 
-  /deep/ .mu-text-field-input {
+  ::v-deep(.mu-text-field-input) {
     text-align: center;
     font-size: 26px;
     color: #6e8299;

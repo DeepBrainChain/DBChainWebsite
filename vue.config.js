@@ -7,7 +7,7 @@ module.exports = {
   },
   pluginOptions: {
     i18n: {
-      locale: "en",
+      locale: "cn",
       fallbackLocale: "cn",
       localeDir: "locales",
       enableInSFC: true
@@ -16,7 +16,7 @@ module.exports = {
   css: {
     loaderOptions: {
       sass: {
-        data: '@import "@/assets/css/variables.scss";'
+        additionalData: '@import "@/assets/css/variables.scss";'
       }
     }
   },
@@ -75,5 +75,6 @@ module.exports = {
         changeOrigin: true
       }
     }
-  }
+  },
+  lintOnSave: false
 };

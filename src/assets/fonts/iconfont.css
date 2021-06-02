@@ -27,3 +27,11 @@
   content: "\e60a";
 }
 
+.icon-success:before {
+  content: "\e617";
+}
+
+.icon-ava_error:before {
+  content: "\e621";
+}
+

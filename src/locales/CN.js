@@ -1,4 +1,4 @@
-import enLocale from "element-ui/lib/locale/lang/en";
+import enLocale from "element-ui/lib/locale/lang/zh-CN";
 
 export default {
   /* 关于webtype:
@@ -6,7 +6,7 @@ export default {
    ** 如果是法币聪图云模式，要把根目录下public/index.html 中脚本的 websiteNameIsCongtuCloud变量 修改为true
    */
   webtype: "1", //0:表示法币支付网站,1:表示dbc支付网站
-  website_name: "52cv", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab,congTuCloud
+  website_name: "dbchain", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab,congTuCloud
   display_select_rent_platform: "0", //0：不显示机器出租的云平台选项，1:显示出租的云平台选项
   //alpha-dbchain/aichriscloud/deepbit/vnxmart/aiaicloud/snbt/heekmind/redstonewill/rocketai/aicv/\shareaiot\freegpu\boincplanet\topgpu\thinkotech
   //coolgpu\scclouds\nvidiaai\deligpu\longway\sharedgpu\aipower\cvstudy\gpuhub\district51\deepmind\transportation\planetc\sdnu\freegputop\tensorgpu
@@ -64,7 +64,6 @@ export default {
   enter_key: "输入密码",
   continue: "继续",
   unlock: "解锁",
-
   heads: {
     logo: "DBChain",
     home: "首页",
@@ -230,7 +229,9 @@ export default {
       "<b>一定要备份</b>" +
       "就像它有一天可能价值数百万美元一样",
     wallet_4: "私钥不正确！",
-    wallet_5: "一定要记住密码！不能丢失，" + "你需要这个密码和你的私钥才能解锁钱包 "
+    wallet_5: "一定要记住密码！不能丢失，" + "你需要这个密码和你的私钥才能解锁钱包 ",
+    // 新加
+    wallet_6: "以下为你生成的助记词。请确保你会将它保存在一个安全的地方，拥有该助记词时你才可以重新创建此账户。"
   },
   home: {
     intr_dbchain_1: "DBChain",
@@ -910,5 +911,13 @@ export default {
 
   mywallet_open_old: "打开旧钱包账号",
   mywallet_open_new: "打开新钱包账号",
-  ...enLocale
+
+  // 新加
+  mnemonic: "助记词",
+  errorPassword: "密码错误",
+  mywallet_create_new: "创建新钱包账号",
+  ...enLocale,
+
+  // hz 新增
+  result: '结果'
 };

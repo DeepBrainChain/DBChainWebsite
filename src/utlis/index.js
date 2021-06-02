@@ -241,10 +241,11 @@ export function getTransfer(address) {
   });
 }
 
-export function getTransactions(address, page, assetsHash = DBCHash) {
+export function getTransactions(address, page, row,assetsHash = DBCHash) {
   return get_address_abstracts({
     address,
-    page
+    page,
+    row
   }).then(res => {
     return Promise.resolve(res);
   });

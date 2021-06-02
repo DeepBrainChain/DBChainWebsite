@@ -7,7 +7,7 @@
         :title="$t('list_country')"
         :drop-list="countries"
         @selected="queryMc"
-      ></drop-item>
+      />
       <!--      <drop-item class="machine-item" title="Image" :dropList="images"></drop-item>-->
       <!--    <drop-item
         class="machine-item"
@@ -18,224 +18,244 @@
       ></drop-item>-->
 
       <drop-item
+        v-model="req_body.have_ip"
         class="machine-item"
         :title="$t('have_ip_title')"
-        v-model="req_body.have_ip"
-        :dropList="have_ip"
+        :drop-list="have_ip"
         @selected="queryMc"
-      ></drop-item>
+      />
       <drop-item
+        v-model="req_body.idle_status"
         class="machine-item"
         :title="$t('idle_status')"
-        v-model="req_body.idle_status"
-        :dropList="idle_status"
+        :drop-list="idle_status"
         @selected="queryMc"
-      ></drop-item>
+      />
       <slide-item
+        v-model="lengthOfAvailableTimeVal"
         class="machine-item"
         :title="$t('length_of_available_time')"
-        v-model="lengthOfAvailableTimeVal"
         :min="0"
         :max="100"
         :step="1"
         @change="queryMc"
-        >{{ showlengthOfAvailableTime }}</slide-item
       >
+        {{ showlengthOfAvailableTime }}
+      </slide-item>
       <slide-item
+        v-model="totalTimeVal"
         class="machine-item"
         :title="$t('total_time')"
-        v-model="totalTimeVal"
         :min="0"
         :max="100"
         :step="1"
         @change="queryMc"
-        >{{ showTotalTime }}</slide-item
       >
+        {{ showTotalTime }}
+      </slide-item>
       <slide-item
+        v-model="diskSpaceVal"
         class="machine-item"
         :title="$t('disk_space')"
-        v-model="diskSpaceVal"
         :min="0"
         :max="100"
         :step="1"
         @change="queryMc"
-        >{{ showDiskSpace }}</slide-item
       >
+        {{ showDiskSpace }}
+      </slide-item>
       <slide-item
+        v-model="gpuPriceVal"
         class="machine-item"
         :title="$t('gpu_price_dollar')"
-        v-model="gpuPriceVal"
         :min="0"
         :max="100"
         :step="1"
         @change="queryMc"
-        >{{ showGpuPrice }}</slide-item
       >
+        {{ showGpuPrice }}
+      </slide-item>
       <slide-item
+        v-model="gpuCountVal"
         class="machine-item"
         :title="$t('gpu_count')"
-        v-model="gpuCountVal"
         :min="0"
         :max="100"
         :step="1"
         @change="queryMc"
-        >{{ showGpuCount }}</slide-item
       >
+        {{ showGpuCount }}
+      </slide-item>
       <slide-item
+        v-model="total_rent_count_CountVal"
         class="machine-item"
         :title="$t('total_rent_count')"
-        v-model="total_rent_count_CountVal"
         :min="0"
         :max="100"
         :step="1"
         @change="queryMc"
-        >{{ show_total_rent_count }}</slide-item
       >
+        {{ show_total_rent_count }}
+      </slide-item>
       <slide-item
+        v-model="error_rent_count_CountVal"
         class="machine-item"
         :title="$t('error_rent_count')"
-        v-model="error_rent_count_CountVal"
         :min="0"
         :max="100"
         :step="1"
         @change="queryMc"
-        >{{ show_error_rent_count }}</slide-item
       >
+        {{ show_error_rent_count }}
+      </slide-item>
       <slide-item
+        v-model="tensor_cores_CountVal"
         class="machine-item"
         :title="$t('tensor_cores')"
-        v-model="tensor_cores_CountVal"
         :min="0"
         :max="100"
         :step="1"
         @change="queryMc"
-        >{{ show_tensor_cores_count }}</slide-item
       >
+        {{ show_tensor_cores_count }}
+      </slide-item>
       <slide-item
+        v-model="half_tflopsVal"
         class="machine-item"
         :title="$t('half_precision_tflops')"
-        v-model="half_tflopsVal"
         :min="0"
         :max="100"
         :step="1"
         @change="queryMc"
-        >{{ half_showTflops }}</slide-item
       >
+        {{ half_showTflops }}
+      </slide-item>
       <slide-item
+        v-model="single_tflopsVal"
         class="machine-item"
         :title="$t('single_precision_tflops')"
-        v-model="single_tflopsVal"
         :min="0"
         :max="100"
         :step="1"
         @change="queryMc"
-        >{{ single_showTflops }}</slide-item
       >
+        {{ single_showTflops }}
+      </slide-item>
       <slide-item
+        v-model="double_tflopsVal"
         class="machine-item"
         :title="$t('double_precision_tflops')"
-        v-model="double_tflopsVal"
         :min="0"
         :max="100"
         :step="1"
         @change="queryMc"
-        >{{ double_showTflops }}</slide-item
       >
+        {{ double_showTflops }}
+      </slide-item>
       <slide-item
+        v-model="gpuRamSizeVal"
         class="machine-item"
         :title="$t('gpu_ram_size')"
-        v-model="gpuRamSizeVal"
         :min="0"
         :max="100"
         :step="1"
         @change="queryMc"
-        >{{ showGpuRamSize }}</slide-item
       >
+        {{ showGpuRamSize }}
+      </slide-item>
       <slide-item
+        v-model="gpuRamBandwidthVal"
         class="machine-item"
         :title="$t('gpu_ram_bandwidth')"
-        v-model="gpuRamBandwidthVal"
         :min="0"
         :max="100"
         :step="1"
         @change="queryMc"
-        >{{ showGpuRamBandwidth }}</slide-item
       >
+        {{ showGpuRamBandwidth }}
+      </slide-item>
       <slide-item
+        v-model="piceBandwidthVal"
         class="machine-item"
         :title="$t('pcie_bandwidth')"
-        v-model="piceBandwidthVal"
         :min="0"
         :max="100"
         :step="1"
         @change="queryMc"
-        >{{ showPiceBandwidth }}</slide-item
       >
+        {{ showPiceBandwidth }}
+      </slide-item>
       <slide-item
+        v-model="cpuCoresVal"
         class="machine-item"
         :title="$t('cpu_numbers')"
-        v-model="cpuCoresVal"
         :min="0"
         :max="100"
         :step="1"
         @change="queryMc"
-        >{{ showCpuCores }}</slide-item
       >
+        {{ showCpuCores }}
+      </slide-item>
       <slide-item
+        v-model="cpuRamSizeVal"
         class="machine-item"
         :title="$t('ram_size')"
-        v-model="cpuRamSizeVal"
         :min="0"
         :max="100"
         :step="1"
         @change="queryMc"
-        >{{ showCpuRamSize }}</slide-item
       >
+        {{ showCpuRamSize }}
+      </slide-item>
       <slide-item
+        v-model="diskBandwidthVal"
         class="machine-item"
         :title="$t('disk_bandwidth')"
-        v-model="diskBandwidthVal"
         :min="0"
         :max="100"
         :step="1"
         @change="queryMc"
-        >{{ showDiskBandwidth }}</slide-item
       >
+        {{ showDiskBandwidth }}
+      </slide-item>
       <slide-item
+        v-model="inetUpVal"
         class="machine-item"
         :title="$t('inet_up')"
-        v-model="inetUpVal"
         :min="0"
         :max="100"
         :step="1"
         @change="queryMc"
-        >{{ showInetUp }}</slide-item
       >
+        {{ showInetUp }}
+      </slide-item>
       <slide-item
+        v-model="inetDownVal"
         class="machine-item"
         :title="$t('inet_down')"
-        v-model="inetDownVal"
         :min="0"
         :max="100"
         :step="1"
         @change="queryMc"
-        >{{ showInetDown }}</slide-item
       >
+        {{ showInetDown }}
+      </slide-item>
     </div>
     <ul>
       <li
         v-for="(item, index) in res_body.content"
-        v-if="item.online_status"
         class="info-wrap"
+        :key="index"
+        v-if="item.online_status"
       >
         <div
           v-if="
             item.evaluation_score_average > 0 &&
-            $t('website_name') != 'congTuCloud'
+              $t('website_name') != 'congTuCloud'
           "
           class="flex vCenter"
         >
-          <el-rate :value="item.evaluation_score_average / 2"></el-rate>
+          <el-rate :value="item.evaluation_score_average / 2" />
           <span>{{ item.evaluation_score_average }}</span>
         </div>
         <div class="flex status-title">
@@ -245,24 +265,33 @@
               plain
               class="is-link"
               @click="pushDetail(item.machine_id)"
-              >{{ item.machine_id }}</el-button
             >
-            <div v-else class="machineIdBox">
+              {{ item.machine_id }}
+            </el-button>
+            <div
+              v-else
+              class="machineIdBox"
+            >
               {{ item.machine_id }}
             </div>
             <span class="fs28">
-              <span class="cRedbig" v-if="$t('website_name') === 'congTuCloud'"
-                >&nbsp;&nbsp; {{ (item.gpu_price_dollar * usdToRmb).toFixed(2)
-                }}{{ $t("RMB") }}/{{ $t("my_machine_hour") }}</span
-              >
-              <span class="cRedbig" v-else
-                >&nbsp;&nbsp;$ {{ item.gpu_price_dollar }}/{{
-                  $t("my_machine_hour")
-                }}</span
-              >
+              <span
+                v-if="$t('website_name') === 'congTuCloud'"
+                class="cRedbig"
+              >&nbsp;&nbsp; {{ (item.gpu_price_dollar * usdToRmb).toFixed(2)
+              }}{{ $t("RMB") }}/{{ $t("my_machine_hour") }}</span>
+              <span
+                v-else
+                class="cRedbig"
+              >&nbsp;&nbsp;$ {{ item.gpu_price_dollar }}/{{
+                $t("my_machine_hour")
+              }}</span>
             </span>
           </div>
-          <div class="td4" :style="styleHidden">
+          <div
+            class="td4"
+            :style="styleHidden"
+          >
             <span class="fs16">
               {{ $t("list_dbc_version") }}：
               <a class="cPrimaryColor">{{ item.dbc_version }}</a>
@@ -274,71 +303,76 @@
               :style="styleHidden"
               plain
               size="mini"
-              @click="openTry(item, index)"
               :disabled="
                 !item.idle_status || item.can_rent_start_time_later < 0
               "
               :loading="try_rentLoading && try_rent_index === index"
-              >{{ $t("list_try") }}</el-button
+              @click="openTry(item, index)"
             >
+              {{ $t("list_try") }}
+            </el-button>
             <el-button
               v-if="$t('website_name') === 'congTuCloud'"
               style="width: 120px"
               type="primary"
               size="mini"
-              @click="openDlg_gpu_congtu(item, index)"
               :disabled="
                 !item.idle_status || item.can_rent_start_time_later < 0
               "
               :loading="rentLoading_gpu && rent_index === index"
-              >{{ $t("list_rentout_gpu") }}</el-button
+              @click="openDlg_gpu_congtu(item, index)"
             >
+              {{ $t("list_rentout_gpu") }}
+            </el-button>
             <el-button
               v-else
               style="width: 120px"
               type="primary"
               size="mini"
-              @click="openDlg_gpu(item, index)"
               :disabled="
                 !item.idle_status || item.can_rent_start_time_later < 0
               "
               :loading="rentLoading_gpu && rent_index === index"
-              >{{ $t("list_rentout_gpu") }}</el-button
+              @click="openDlg_gpu(item, index)"
             >
+              {{ $t("list_rentout_gpu") }}
+            </el-button>
             <el-button
-              style="width: 150px"
-              type="primary"
-              size="mini"
               v-if="
                 item.dbc_version !== '0.3.7.2' &&
-                item.usage_type === 0 &&
-                $t('website_name') !== 'congTuCloud'
+                  item.usage_type === 0 &&
+                  $t('website_name') !== 'congTuCloud'
               "
-              @click="openDlg_cpu_switch(item, index)"
-              :disabled="
-                !item.can_create_cpu_container ||
-                item.can_rent_start_time_later < 0
-              "
-              :loading="rentLoading_cpu && rent_index === index"
-              >{{ $t("list_rentout_cpu") }}</el-button
-            >
-            <el-button
               style="width: 150px"
               type="primary"
               size="mini"
-              v-else-if="
-                item.dbc_version !== '0.3.7.2' &&
-                item.usage_type === 0 &&
-                $t('website_name') === 'congTuCloud'
-              "
-              @click="openDlg_congtu_cpu_switch(item, index)"
               :disabled="
                 !item.can_create_cpu_container ||
-                item.can_rent_start_time_later < 0
+                  item.can_rent_start_time_later < 0
               "
               :loading="rentLoading_cpu && rent_index === index"
-              >{{ $t("list_rentout_cpu") }}</el-button
+              @click="openDlg_cpu_switch(item, index)"
             >
+              {{ $t("list_rentout_cpu") }}
+            </el-button>
+            <el-button
+              v-else-if="
+                item.dbc_version !== '0.3.7.2' &&
+                  item.usage_type === 0 &&
+                  $t('website_name') === 'congTuCloud'
+              "
+              style="width: 150px"
+              type="primary"
+              size="mini"
+              :disabled="
+                !item.can_create_cpu_container ||
+                  item.can_rent_start_time_later < 0
+              "
+              :loading="rentLoading_cpu && rent_index === index"
+              @click="openDlg_congtu_cpu_switch(item, index)"
+            >
+              {{ $t("list_rentout_cpu") }}
+            </el-button>
           </div>
         </div>
         <div class="flex">
@@ -359,7 +393,10 @@
               <a class="cPrimaryColor">{{ item.country }}</a>
             </span>
           </div>
-          <div class="td" v-if="item.can_rent_start_time_later < 0">
+          <div
+            v-if="item.can_rent_start_time_later < 0"
+            class="td"
+          >
             <span class="fs16">
               <a class="cPrimaryColor">{{ -item.can_rent_start_time_later }}</a>
               {{ $t("list_start_rentout") }}
@@ -374,11 +411,11 @@
               :content="$t('month_discount_instruction')"
             >
               <span class="fs28">
-                <a class="cPrimaryColor"
-                  >{{ $t("month_discount") }}:{{
-                    item.discount_month
-                  }}%&nbsp;&nbsp;</a
-                >
+                <a
+                  class="cPrimaryColor"
+                >{{ $t("month_discount") }}:{{
+                  item.discount_month
+                }}%&nbsp;&nbsp;</a>
               </span>
             </el-tooltip>
           </div>
@@ -389,11 +426,11 @@
               :content="$t('quarter_discount_instruction')"
             >
               <span class="fs28">
-                <a class="cPrimaryColor"
-                  >{{ $t("quarter_discount") }}:{{
-                    item.discount_quarter
-                  }}%&nbsp;&nbsp;</a
-                >
+                <a
+                  class="cPrimaryColor"
+                >{{ $t("quarter_discount") }}:{{
+                  item.discount_quarter
+                }}%&nbsp;&nbsp;</a>
               </span>
             </el-tooltip>
           </div>
@@ -404,49 +441,52 @@
               :content="$t('year_discount_instruction')"
             >
               <span class="fs28">
-                <a class="cPrimaryColor"
-                  >{{ $t("year_discount") }}:{{
-                    item.discount_year
-                  }}%&nbsp;&nbsp;</a
-                >
+                <a
+                  class="cPrimaryColor"
+                >{{ $t("year_discount") }}:{{
+                  item.discount_year
+                }}%&nbsp;&nbsp;</a>
               </span>
             </el-tooltip>
           </div>
           <div class="td5">
             <el-tooltip
+              v-if="item.gpu_rentout_whole"
               class="item"
               effect="dark"
               :content="$t('rentout_machine_whole_instruction')"
-              v-if="item.gpu_rentout_whole"
             >
               <span class="fs28">
                 <a class="cPrimaryColor">{{ $t("rentout_machine_whole") }}</a>
               </span>
             </el-tooltip>
             <el-tooltip
+              v-else
               class="item"
               effect="dark"
               :content="$t('rentout_machine_one_gpu_instruction')"
-              v-else
             >
               <span class="fs28">
                 <a class="cPrimaryColor">{{ $t("rentout_machine_one_gpu") }}</a>
               </span>
             </el-tooltip>
           </div>
-          <div class="td5" :style="styleHidden">
-            <span class="fs28"></span>
+          <div
+            class="td5"
+            :style="styleHidden"
+          >
+            <span class="fs28" />
             <el-tooltip
               class="item"
               effect="dark"
               :content="$t('deposite_dbc_count_instruction')"
             >
               <span class="fs28">
-                <a class="cPrimaryColor"
-                  >{{ $t("compensation_dbc_count") }}:{{
-                    item.rentout_deposite_dbc_count / item.gpu_count
-                  }}</a
-                >
+                <a
+                  class="cPrimaryColor"
+                >{{ $t("compensation_dbc_count") }}:{{
+                  item.rentout_deposite_dbc_count / item.gpu_count
+                }}</a>
               </span>
             </el-tooltip>
           </div>
@@ -463,10 +503,10 @@
           <div class="td">
             <span class="fs16">
               {{ $t("list_length_of_available_time") }}：
-              <a class="cPrimaryColor"
-                >{{ Math.floor(item.length_of_available_time)
-                }}{{ $t("my_machine_hour") }}</a
-              >
+              <a
+                class="cPrimaryColor"
+              >{{ Math.floor(item.length_of_available_time)
+              }}{{ $t("my_machine_hour") }}</a>
             </span>
           </div>
           <div class="td">
@@ -491,7 +531,10 @@
           </div>
         </div>
 
-        <div class="flex" v-if="item.dbc_version !== '0.3.7.2'">
+        <div
+          v-if="item.dbc_version !== '0.3.7.2'"
+          class="flex"
+        >
           <div class="td">
             <span class="fs16">
               {{ $t("cpu_containers_list") }}:
@@ -501,47 +544,50 @@
           <div class="td">
             <span class="fs16">
               {{ $t("cpu_containers_can_use_memory_list") }}：
-              <a class="cPrimaryColor"
-                >{{
-                  parseInt(item.cpu_containers_can_use_memory / (1024 * 1024))
-                }}G</a
-              >
+              <a
+                class="cPrimaryColor"
+              >{{
+                parseInt(item.cpu_containers_can_use_memory / (1024 * 1024))
+              }}G</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
               {{ $t("cpu_containers_can_use_disk_list") }}：
-              <a class="cPrimaryColor"
-                >{{
-                  parseInt(item.cpu_containers_can_use_disk / (1024 * 1024))
-                }}G</a
-              >
+              <a
+                class="cPrimaryColor"
+              >{{
+                parseInt(item.cpu_containers_can_use_disk / (1024 * 1024))
+              }}G</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
               {{ $t("gpu_containers_can_use_memory_list") }}：
-              <a class="cPrimaryColor"
-                >{{
-                  parseInt(item.gpu_containers_can_use_memory / (1024 * 1024))
-                }}G</a
-              >
+              <a
+                class="cPrimaryColor"
+              >{{
+                parseInt(item.gpu_containers_can_use_memory / (1024 * 1024))
+              }}G</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
               {{ $t("gpu_containers_can_use_disk_list") }}：
-              <a class="cPrimaryColor"
-                >{{
-                  parseInt(item.gpu_containers_can_use_disk / (1024 * 1024))
-                }}G</a
-              >
+              <a
+                class="cPrimaryColor"
+              >{{
+                parseInt(item.gpu_containers_can_use_disk / (1024 * 1024))
+              }}G</a>
             </span>
           </div>
         </div>
 
         <div class="flex">
-          <div v-if="item.tensor_cores > 0" class="td">
+          <div
+            v-if="item.tensor_cores > 0"
+            class="td"
+          >
             <span class="fs16">
               Tensor Cores：
               <a class="cPrimaryColor">{{ item.tensor_cores }}</a>
@@ -554,11 +600,14 @@
             </span>
           </div>
           <div class="td">
-            <span v-if="item.disk_space" class="fs16">
+            <span
+              v-if="item.disk_space"
+              class="fs16"
+            >
               {{ $t("list_disk_space") }}：
-              <a class="cPrimaryColor"
-                >{{ parseInt(item.disk_space / (1024 * 1024)) }}GB</a
-              >
+              <a
+                class="cPrimaryColor"
+              >{{ parseInt(item.disk_space / (1024 * 1024)) }}GB</a>
               <a class="cPrimaryColor">&nbsp;&nbsp;{{ item.disk_type }}</a>
             </span>
           </div>
@@ -570,31 +619,43 @@
           </div>
         </div>
         <div class="flex">
-          <div v-if="item.half_precision_tflops > 0" class="td">
+          <div
+            v-if="item.half_precision_tflops > 0"
+            class="td"
+          >
             <span class="fs16">
               {{ $t("list_half_precision_tflops") }}：
-              <a class="cPrimaryColor"
-                >{{ item.half_precision_tflops }}TFLOPS</a
-              >
+              <a
+                class="cPrimaryColor"
+              >{{ item.half_precision_tflops }}TFLOPS</a>
             </span>
           </div>
-          <div v-if="item.gpu_ram_size > 0" class="td">
+          <div
+            v-if="item.gpu_ram_size > 0"
+            class="td"
+          >
             <span class="fs16">
               {{ $t("list_gpu_ram_size") }}：
-              <a class="cPrimaryColor"
-                >{{ parseInt(item.gpu_ram_size / (1000 * 1000)) }}GB</a
-              >
+              <a
+                class="cPrimaryColor"
+              >{{ parseInt(item.gpu_ram_size / (1000 * 1000)) }}GB</a>
             </span>
           </div>
-          <div v-if="item.disk_bandwidth > 0" class="td">
+          <div
+            v-if="item.disk_bandwidth > 0"
+            class="td"
+          >
             <span class="fs16">
               {{ $t("list_disk_bandwidth") }}：
-              <a class="cPrimaryColor"
-                >{{ parseInt(item.disk_bandwidth / 1024) }}MB/s</a
-              >
+              <a
+                class="cPrimaryColor"
+              >{{ parseInt(item.disk_bandwidth / 1024) }}MB/s</a>
             </span>
           </div>
-          <div v-if="item.cpu_numbers > 0" class="td">
+          <div
+            v-if="item.cpu_numbers > 0"
+            class="td"
+          >
             <span class="fs16">
               {{ $t("list_cpu_numbers") }}：
               <a class="cPrimaryColor">{{ item.cpu_numbers }}</a>
@@ -602,62 +663,83 @@
           </div>
         </div>
         <div class="flex">
-          <div v-if="item.single_precision_tflops > 0" class="td">
+          <div
+            v-if="item.single_precision_tflops > 0"
+            class="td"
+          >
             <span class="fs16">
               {{ $t("list_single_precision_tflops") }}：
-              <a class="cPrimaryColor"
-                >{{ item.single_precision_tflops }}TFLOPS</a
-              >
+              <a
+                class="cPrimaryColor"
+              >{{ item.single_precision_tflops }}TFLOPS</a>
             </span>
           </div>
-          <div v-if="item.gpu_ram_bandwidth > 0" class="td">
+          <div
+            v-if="item.gpu_ram_bandwidth > 0"
+            class="td"
+          >
             <span class="fs16">
               {{ $t("list_gpu_ram_bandwidth") }}：
-              <a class="cPrimaryColor"
-                >{{ parseInt(item.gpu_ram_bandwidth / (1024 * 1024)) }}GB/s</a
-              >
+              <a
+                class="cPrimaryColor"
+              >{{ parseInt(item.gpu_ram_bandwidth / (1024 * 1024)) }}GB/s</a>
             </span>
           </div>
-          <div v-if="item.inet_up > 0" class="td">
+          <div
+            v-if="item.inet_up > 0"
+            class="td"
+          >
             <span class="fs16">
               {{ $t("list_inet_up") }}：
-              <a class="cPrimaryColor"
-                >{{ parseInt(item.inet_up / 1024) }}Mbps</a
-              >
+              <a
+                class="cPrimaryColor"
+              >{{ parseInt(item.inet_up / 1024) }}Mbps</a>
             </span>
           </div>
-          <div v-if="item.ram_size > 0" class="td">
+          <div
+            v-if="item.ram_size > 0"
+            class="td"
+          >
             <span class="fs16">
               {{ $t("list_ram_size") }}：
-              <a class="cPrimaryColor"
-                >{{ parseInt(item.ram_size / (1024 * 1024)) }}GB</a
-              >
+              <a
+                class="cPrimaryColor"
+              >{{ parseInt(item.ram_size / (1024 * 1024)) }}GB</a>
             </span>
           </div>
         </div>
         <div class="flex">
-          <div v-if="item.double_precision_tflops > 0" class="td">
+          <div
+            v-if="item.double_precision_tflops > 0"
+            class="td"
+          >
             <span class="fs16">
               {{ $t("list_double_precision_tflops") }}：
-              <a class="cPrimaryColor"
-                >{{ item.double_precision_tflops }}TFLOPS</a
-              >
+              <a
+                class="cPrimaryColor"
+              >{{ item.double_precision_tflops }}TFLOPS</a>
             </span>
           </div>
-          <div v-if="item.pcie_bandwidth > 0" class="td">
+          <div
+            v-if="item.pcie_bandwidth > 0"
+            class="td"
+          >
             <span class="fs16">
               {{ $t("list_pcie_bandwidth") }}：
-              <a class="cPrimaryColor"
-                >{{ parseInt(item.pcie_bandwidth / (1024 * 1024)) }}GB/s</a
-              >
+              <a
+                class="cPrimaryColor"
+              >{{ parseInt(item.pcie_bandwidth / (1024 * 1024)) }}GB/s</a>
             </span>
           </div>
-          <div v-if="item.inet_down > 0" class="td">
+          <div
+            v-if="item.inet_down > 0"
+            class="td"
+          >
             <span class="fs16">
               {{ $t("list_inet_down") }}：
-              <a class="cPrimaryColor"
-                >{{ parseInt(item.inet_down / 1024) }}Mbps</a
-              >
+              <a
+                class="cPrimaryColor"
+              >{{ parseInt(item.inet_down / 1024) }}Mbps</a>
             </span>
           </div>
           <div class="td3">
@@ -671,38 +753,40 @@
     </ul>
     <div class="paging">
       <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[5, 10, 20, 50]"
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="machineCount"
-      >
-      </el-pagination>
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </div>
     <dlg-leasegpu
       :open.sync="dlg_opengpu"
       :place-order-data="placeOrderData"
       @confirm="createOrder"
-    ></dlg-leasegpu>
+    />
     <dlg-leaseswitchcpu
       :open.sync="dlg_openswitchcpu"
       :place-order-data="placeOrderData"
       @confirm="switch_cpu_mode"
-    ></dlg-leaseswitchcpu>
+    />
     <dlg-leasecpupayment
       :open.sync="dlg_opencpupayment"
       :place-order-data="placeOrderData"
       @confirm="createOrder"
-    ></dlg-leasecpupayment>
+    />
     <dlg-leasecpudeposit
       :open.sync="dlg_opencpudeposit"
       :place-order-data="placeOrderData"
       @confirm="createOrder"
-    ></dlg-leasecpudeposit>
+    />
     <!--    try-dlg-->
-    <dlg-try :open.sync="dlg_open_try" @confirm="createTry"></dlg-try>
+    <dlg-try
+      :open.sync="dlg_open_try"
+      @confirm="createTry"
+    />
   </div>
 </template>
 
@@ -726,7 +810,7 @@ import {
 import { getAccount, getCookie, getUsdToRmb } from "@/utlis";
 import { mapActions, mapState } from "vuex";
 export default {
-  name: "highStabilityAITrain",
+  name: "HighStabilityAITrain",
   components: {
     DropItem,
     SlideItem,
@@ -878,6 +962,605 @@ export default {
       placeOrderData: undefined,
       st: undefined,
     };
+  },
+  computed: {
+    showTotalTime() {
+      let showTotalTime = 0;
+      let hours = 0;
+      let day = 0;
+      let month = 0;
+      if (this.totalTimeVal < 24) {
+        hours = this.totalTimeVal;
+        showTotalTime = hours + "hrs";
+        this.req_body.totalTime = hours;
+      } else if (this.totalTimeVal >= 24 && this.totalTimeVal < 54) {
+        day = this.totalTimeVal - 24 + 1;
+        showTotalTime = day + "days";
+        this.req_body.totalTime = day * 24;
+      } else if (this.totalTimeVal >= 54 && this.totalTimeVal <= 100) {
+        month = this.totalTimeVal - 54 + 1;
+        showTotalTime = month + "mon";
+        this.req_body.totalTime = month * 720;
+      }
+      return showTotalTime;
+    },
+    showReliability() {
+      this.req_body.reliability = this.reliabilityVal / 100;
+      return this.reliabilityVal > 0 ? `${this.reliabilityVal}%` : "New";
+    },
+    showDiskSpace() {
+      let val = 0;
+      if (this.diskSpaceVal <= 10) {
+        val = this.diskSpaceVal * 1;
+      } else if (this.diskSpaceVal > 10 && this.diskSpaceVal <= 20) {
+        val = (this.diskSpaceVal - 10) * 10;
+      } else if (this.diskSpaceVal > 20 && this.diskSpaceVal <= 30) {
+        val = (this.diskSpaceVal - 20) * 100;
+      } else if (this.diskSpaceVal > 30 && this.diskSpaceVal <= 40) {
+        val = (this.diskSpaceVal - 30) * 1000;
+      } else if (this.diskSpaceVal > 40 && this.diskSpaceVal <= 100) {
+        val = (this.diskSpaceVal - 40) * (90000 / 60) + 9990;
+      }
+      // val += 10;
+      this.req_body.diskSpace = val;
+      return val >= 1000 ? (val / 1000).toFixed(1) + "T" : val + "G";
+    },
+    showDiskPrice() {
+      const min = 0.00001;
+      const max = 1;
+      const stepArray = [
+        {
+          valMax: 0.0001,
+          step: 0.00001,
+        },
+        {
+          valMax: 0.001,
+          step: 0.0001,
+        },
+        {
+          valMax: 0.01,
+          step: 0.001,
+        },
+        {
+          valMax: 0.1,
+          step: 0.01,
+        },
+        {
+          valMax: 1,
+          step: -1,
+        },
+      ];
+      let val = this.$noLinearNumAdd(min, max, stepArray, this.diskPriceVal);
+      const money = parseFloat(val.toFixed(5));
+      this.req_body.diskPrice = money;
+      return "$" + money;
+    },
+    showlengthOfAvailableTime() {
+      let showTotalTime = 0;
+      let hours = 0;
+      let day = 0;
+      let month = 0;
+      if (this.lengthOfAvailableTimeVal < 24) {
+        hours = this.lengthOfAvailableTimeVal;
+        showTotalTime = hours + "hrs";
+        this.req_body.lengthOfAvailableTime = hours;
+      } else if (
+        this.lengthOfAvailableTimeVal >= 24 &&
+        this.lengthOfAvailableTimeVal < 54
+      ) {
+        day = this.lengthOfAvailableTimeVal - 24 + 1;
+        showTotalTime = day + "days";
+        this.req_body.lengthOfAvailableTime = day * 24;
+      } else if (
+        this.lengthOfAvailableTimeVal >= 54 &&
+        this.lengthOfAvailableTimeVal <= 100
+      ) {
+        month = this.lengthOfAvailableTimeVal - 54 + 1;
+        showTotalTime = month + "mon";
+        this.req_body.lengthOfAvailableTime = month * 720;
+      }
+      return showTotalTime;
+    },
+    showGpuPrice() {
+      const min = 0.00001;
+      const max = 1;
+      const stepArray = [
+        {
+          valMax: 0.0001,
+          step: 0.00001,
+        },
+        {
+          valMax: 0.001,
+          step: 0.0001,
+        },
+        {
+          valMax: 0.01,
+          step: 0.001,
+        },
+        {
+          valMax: 0.1,
+          step: 0.01,
+        },
+        {
+          valMax: 1,
+          step: -1,
+        },
+      ];
+      let val = this.$noLinearNumAdd(min, max, stepArray, this.gpuPriceVal);
+      const money = parseFloat(val.toFixed(5));
+      this.req_body.gpuPrice = money;
+      return "$" + money;
+    },
+    half_showTflops() {
+      const stepArray = [
+        {
+          valMax: 100,
+          step: 5,
+        },
+        {
+          valMax: 1000,
+          step: 50,
+        },
+        {
+          valMax: 5000,
+          step: 200,
+        },
+        {
+          valMax: 10000,
+          step: -1,
+        },
+      ];
+      let val = this.$noLinearNumAdd(0, 10000, stepArray, this.half_tflopsVal);
+      val = Math.floor(val);
+      this.req_body.half_precision_tflops = val;
+      return val;
+    },
+    showGpuCount() {
+      const min = 1;
+      const max = 1024;
+      const stepArray = [
+        {
+          valMax: 10,
+          step: 1,
+        },
+        {
+          valMax: 500,
+          step: 10,
+        },
+        {
+          valMax: 800,
+          step: 20,
+        },
+        {
+          valMax: 1024,
+          step: -1,
+        },
+      ];
+      let val = this.$noLinearNumAdd(min, max, stepArray, this.gpuCountVal);
+      val = Math.floor(val);
+      this.req_body.gpuCount = val;
+      return val;
+    },
+    show_total_rent_count() {
+      const min = 0;
+      const max = 1024;
+      const stepArray = [
+        {
+          valMax: 10,
+          step: 1,
+        },
+        {
+          valMax: 500,
+          step: 10,
+        },
+        {
+          valMax: 800,
+          step: 20,
+        },
+        {
+          valMax: 1024,
+          step: -1,
+        },
+      ];
+      let val = this.$noLinearNumAdd(
+        min,
+        max,
+        stepArray,
+        this.total_rent_count_CountVal
+      );
+      val = Math.floor(val);
+      this.req_body.total_rent_count = val;
+      return val;
+    },
+    show_error_rent_count() {
+      const min = 0;
+      const max = 1024;
+      const stepArray = [
+        {
+          valMax: 10,
+          step: 1,
+        },
+        {
+          valMax: 500,
+          step: 10,
+        },
+        {
+          valMax: 800,
+          step: 20,
+        },
+        {
+          valMax: 1024,
+          step: -1,
+        },
+      ];
+      let val = this.$noLinearNumAdd(
+        min,
+        max,
+        stepArray,
+        this.error_rent_count_CountVal
+      );
+      val = Math.floor(val);
+      this.req_body.error_rent_count = val;
+      return val;
+    },
+    show_tensor_cores_count() {
+      const min = 0;
+      const max = 1024;
+      const stepArray = [
+        {
+          valMax: 10,
+          step: 1,
+        },
+        {
+          valMax: 500,
+          step: 10,
+        },
+        {
+          valMax: 800,
+          step: 20,
+        },
+        {
+          valMax: 1024,
+          step: -1,
+        },
+      ];
+      let val = this.$noLinearNumAdd(
+        min,
+        max,
+        stepArray,
+        this.tensor_cores_CountVal
+      );
+      val = Math.floor(val);
+      this.req_body.tensor_cores = val;
+      return val;
+    },
+    single_showTflops() {
+      const stepArray = [
+        {
+          valMax: 100,
+          step: 5,
+        },
+        {
+          valMax: 1000,
+          step: 50,
+        },
+        {
+          valMax: 5000,
+          step: 200,
+        },
+        {
+          valMax: 10000,
+          step: -1,
+        },
+      ];
+      let val = this.$noLinearNumAdd(
+        0,
+        10000,
+        stepArray,
+        this.single_tflopsVal
+      );
+      val = Math.floor(val);
+      this.req_body.single_precision_tflops = val;
+      return val;
+    },
+    double_showTflops() {
+      const stepArray = [
+        {
+          valMax: 100,
+          step: 5,
+        },
+        {
+          valMax: 1000,
+          step: 50,
+        },
+        {
+          valMax: 5000,
+          step: 200,
+        },
+        {
+          valMax: 10000,
+          step: -1,
+        },
+      ];
+      let val = this.$noLinearNumAdd(
+        0,
+        10000,
+        stepArray,
+        this.double_tflopsVal
+      );
+      val = Math.floor(val);
+      this.req_body.double_precision_tflops = val;
+      return val;
+    },
+    showGpuRamSize() {
+      const min = 0;
+      const max = 1024;
+      const stepArray = [
+        {
+          valMax: 10,
+          step: 1,
+        },
+        {
+          valMax: 500,
+          step: 10,
+        },
+        {
+          valMax: 800,
+          step: 20,
+        },
+        {
+          valMax: 1024,
+          step: -1,
+        },
+      ];
+      let val = this.$noLinearNumAdd(min, max, stepArray, this.gpuRamSizeVal);
+      val = Math.floor(val);
+      this.req_body.gpuRamSize = val;
+      return val + "G";
+    },
+    showGpuRamBandwidth() {
+      const min = 0;
+      const max = 10000;
+      const stepArray = [
+        {
+          valMax: 100,
+          step: 5,
+        },
+        {
+          valMax: 5000,
+          step: 100,
+        },
+        {
+          valMax: max,
+          step: -1,
+        },
+      ];
+      let val = this.$noLinearNumAdd(
+        min,
+        max,
+        stepArray,
+        this.gpuRamBandwidthVal
+      );
+      val = Math.floor(val);
+      this.req_body.gpuRamBandwidth = val;
+      return val < 1000 ? val + "G" : val / 1000 + "T";
+    },
+    showPiceBandwidth() {
+      const min = 0;
+      const max = 128000;
+      const stepArray = [
+        {
+          valMax: 100,
+          step: 10,
+        },
+        {
+          valMax: 1000,
+          step: 100,
+        },
+        {
+          valMax: 10000,
+          step: 500,
+        },
+        {
+          valMax: 100000,
+          step: 2000,
+        },
+        {
+          valMax: max,
+          step: -1,
+        },
+      ];
+      let val = this.$noLinearNumAdd(
+        min,
+        max,
+        stepArray,
+        this.piceBandwidthVal
+      );
+      val = Math.floor(val);
+      this.req_body.piceBandwidth = val;
+      return val < 1000 ? val + "M" : val / 1000 + "G";
+    },
+    showCpuCores() {
+      const min = 0;
+      const max = 8096;
+      const stepArray = [
+        {
+          valMax: 8,
+          step: 1,
+        },
+        {
+          valMax: 32,
+          step: 2,
+        },
+        {
+          valMax: 128,
+          step: 8,
+        },
+        {
+          valMax: 256,
+          step: 16,
+        },
+        {
+          valMax: 512,
+          step: 32,
+        },
+        {
+          valMax: 1024,
+          step: 64,
+        },
+        {
+          valMax: max,
+          step: -1,
+        },
+      ];
+      let val = this.$noLinearNumAdd(min, max, stepArray, this.cpuCoresVal);
+      val = Math.floor(val);
+      this.req_body.cpuCores = val;
+      return val;
+    },
+    showCpuRamSize() {
+      const min = 0;
+      const max = 8096;
+      const stepArray = [
+        {
+          valMax: 8,
+          step: 1,
+        },
+        {
+          valMax: 32,
+          step: 2,
+        },
+        {
+          valMax: 128,
+          step: 8,
+        },
+        {
+          valMax: 256,
+          step: 16,
+        },
+        {
+          valMax: 512,
+          step: 32,
+        },
+        {
+          valMax: 1024,
+          step: 64,
+        },
+        {
+          valMax: max,
+          step: -1,
+        },
+      ];
+      let val = this.$noLinearNumAdd(min, max, stepArray, this.cpuRamSizeVal);
+      val = Math.floor(val);
+      this.req_body.cpuRamSize = val;
+      return val + "G";
+    },
+    showDiskBandwidth() {
+      const min = 0;
+      const max = 20000;
+      const stepArray = [
+        {
+          valMax: 100,
+          step: 10,
+        },
+        {
+          valMax: 1000,
+          step: 50,
+        },
+        {
+          valMax: 10000,
+          step: 500,
+        },
+        {
+          valMax: max,
+          step: -1,
+        },
+      ];
+      let val = this.$noLinearNumAdd(
+        min,
+        max,
+        stepArray,
+        this.diskBandwidthVal
+      );
+      val = Math.floor(val);
+      this.req_body.diskBandwidth = val;
+      return val < 1000 ? val + "M" : val / 1000 + "G";
+    },
+    showInetUp() {
+      const min = 0;
+      const max = 8096;
+      const stepArray = [
+        {
+          valMax: 8,
+          step: 0.5,
+        },
+        {
+          valMax: 64,
+          step: 4,
+        },
+        {
+          valMax: 128,
+          step: 8,
+        },
+        {
+          valMax: 256,
+          step: 16,
+        },
+        {
+          valMax: 512,
+          step: 32,
+        },
+        {
+          valMax: 1024,
+          step: 64,
+        },
+        {
+          valMax: max,
+          step: -1,
+        },
+      ];
+      let val = this.$noLinearNumAdd(min, max, stepArray, this.inetUpVal);
+      this.req_body.inetUp = val;
+      return val < 1000 ? val + "Mbps" : (val / 1000).toFixed(3) + "Gbps";
+    },
+    showInetDown() {
+      const min = 0;
+      const max = 8096;
+      const stepArray = [
+        {
+          valMax: 8,
+          step: 0.5,
+        },
+        {
+          valMax: 64,
+          step: 4,
+        },
+        {
+          valMax: 128,
+          step: 8,
+        },
+        {
+          valMax: 256,
+          step: 16,
+        },
+        {
+          valMax: 512,
+          step: 32,
+        },
+        {
+          valMax: 1024,
+          step: 64,
+        },
+        {
+          valMax: max,
+          step: -1,
+        },
+      ];
+      let val = this.$noLinearNumAdd(min, max, stepArray, this.inetDownVal);
+      this.req_body.inetDown = val;
+      return val < 1000 ? val + "Mbps" : (val / 1000).toFixed(3) + "Gbps";
+    },
   },
   watch: {
     "$i18n.locale"() {
@@ -1500,635 +2183,6 @@ export default {
       //    this.res_body = res;
       // });
       //}, 5000);
-    },
-  },
-  computed: {
-    showTotalTime() {
-      let showTotalTime = 0;
-      let hours = 0;
-      let day = 0;
-      let month = 0;
-      if (this.totalTimeVal < 24) {
-        hours = this.totalTimeVal;
-        showTotalTime = hours + "hrs";
-        this.req_body.totalTime = hours;
-      } else if (this.totalTimeVal >= 24 && this.totalTimeVal < 54) {
-        day = this.totalTimeVal - 24 + 1;
-        showTotalTime = day + "days";
-        this.req_body.totalTime = day * 24;
-      } else if (this.totalTimeVal >= 54 && this.totalTimeVal <= 100) {
-        month = this.totalTimeVal - 54 + 1;
-        showTotalTime = month + "mon";
-        this.req_body.totalTime = month * 720;
-      }
-      return showTotalTime;
-    },
-    showReliability() {
-      this.req_body.reliability = this.reliabilityVal / 100;
-      return this.reliabilityVal > 0 ? `${this.reliabilityVal}%` : "New";
-    },
-    showDiskSpace() {
-      let val = 0;
-      if (this.diskSpaceVal <= 10) {
-        val = this.diskSpaceVal * 1;
-      } else if (this.diskSpaceVal > 10 && this.diskSpaceVal <= 20) {
-        val = (this.diskSpaceVal - 10) * 10;
-      } else if (this.diskSpaceVal > 20 && this.diskSpaceVal <= 30) {
-        val = (this.diskSpaceVal - 20) * 100;
-      } else if (this.diskSpaceVal > 30 && this.diskSpaceVal <= 40) {
-        val = (this.diskSpaceVal - 30) * 1000;
-      } else if (this.diskSpaceVal > 40 && this.diskSpaceVal <= 100) {
-        val = (this.diskSpaceVal - 40) * (90000 / 60) + 9990;
-      }
-      // val += 10;
-      this.req_body.diskSpace = val;
-      return val >= 1000 ? (val / 1000).toFixed(1) + "T" : val + "G";
-    },
-    showDiskPrice() {
-      const min = 0.00001;
-      const max = 1;
-      const stepArray = [
-        {
-          valMax: 0.0001,
-          step: 0.00001,
-        },
-        {
-          valMax: 0.001,
-          step: 0.0001,
-        },
-        {
-          valMax: 0.01,
-          step: 0.001,
-        },
-        {
-          valMax: 0.1,
-          step: 0.01,
-        },
-        {
-          valMax: 1,
-          step: -1,
-        },
-      ];
-      let val = this.$noLinearNumAdd(min, max, stepArray, this.diskPriceVal);
-      const money = parseFloat(val.toFixed(5));
-      this.req_body.diskPrice = money;
-      return "$" + money;
-    },
-    showlengthOfAvailableTime() {
-      let showTotalTime = 0;
-      let hours = 0;
-      let day = 0;
-      let month = 0;
-      if (this.lengthOfAvailableTimeVal < 24) {
-        hours = this.lengthOfAvailableTimeVal;
-        showTotalTime = hours + "hrs";
-        this.req_body.lengthOfAvailableTime = hours;
-      } else if (
-        this.lengthOfAvailableTimeVal >= 24 &&
-        this.lengthOfAvailableTimeVal < 54
-      ) {
-        day = this.lengthOfAvailableTimeVal - 24 + 1;
-        showTotalTime = day + "days";
-        this.req_body.lengthOfAvailableTime = day * 24;
-      } else if (
-        this.lengthOfAvailableTimeVal >= 54 &&
-        this.lengthOfAvailableTimeVal <= 100
-      ) {
-        month = this.lengthOfAvailableTimeVal - 54 + 1;
-        showTotalTime = month + "mon";
-        this.req_body.lengthOfAvailableTime = month * 720;
-      }
-      return showTotalTime;
-    },
-    showGpuPrice() {
-      const min = 0.00001;
-      const max = 1;
-      const stepArray = [
-        {
-          valMax: 0.0001,
-          step: 0.00001,
-        },
-        {
-          valMax: 0.001,
-          step: 0.0001,
-        },
-        {
-          valMax: 0.01,
-          step: 0.001,
-        },
-        {
-          valMax: 0.1,
-          step: 0.01,
-        },
-        {
-          valMax: 1,
-          step: -1,
-        },
-      ];
-      let val = this.$noLinearNumAdd(min, max, stepArray, this.gpuPriceVal);
-      const money = parseFloat(val.toFixed(5));
-      this.req_body.gpuPrice = money;
-      return "$" + money;
-    },
-    showGpuCount() {
-      const min = 1;
-      const max = 1024;
-      const stepArray = [
-        {
-          valMax: 10,
-          step: 1,
-        },
-        {
-          valMax: 500,
-          step: 10,
-        },
-        {
-          valMax: 800,
-          step: 20,
-        },
-        {
-          valMax: 1024,
-          step: -1,
-        },
-      ];
-      let val = this.$noLinearNumAdd(min, max, stepArray, this.gpuCountVal);
-      val = Math.floor(val);
-      this.req_body.gpuCount = val;
-      return val;
-    },
-    half_showTflops() {
-      const stepArray = [
-        {
-          valMax: 100,
-          step: 5,
-        },
-        {
-          valMax: 1000,
-          step: 50,
-        },
-        {
-          valMax: 5000,
-          step: 200,
-        },
-        {
-          valMax: 10000,
-          step: -1,
-        },
-      ];
-      let val = this.$noLinearNumAdd(0, 10000, stepArray, this.half_tflopsVal);
-      val = Math.floor(val);
-      this.req_body.half_precision_tflops = val;
-      return val;
-    },
-
-    showGpuCount() {
-      const min = 1;
-      const max = 1024;
-      const stepArray = [
-        {
-          valMax: 10,
-          step: 1,
-        },
-        {
-          valMax: 500,
-          step: 10,
-        },
-        {
-          valMax: 800,
-          step: 20,
-        },
-        {
-          valMax: 1024,
-          step: -1,
-        },
-      ];
-      let val = this.$noLinearNumAdd(min, max, stepArray, this.gpuCountVal);
-      val = Math.floor(val);
-      this.req_body.gpuCount = val;
-      return val;
-    },
-
-    show_total_rent_count() {
-      const min = 0;
-      const max = 1024;
-      const stepArray = [
-        {
-          valMax: 10,
-          step: 1,
-        },
-        {
-          valMax: 500,
-          step: 10,
-        },
-        {
-          valMax: 800,
-          step: 20,
-        },
-        {
-          valMax: 1024,
-          step: -1,
-        },
-      ];
-      let val = this.$noLinearNumAdd(
-        min,
-        max,
-        stepArray,
-        this.total_rent_count_CountVal
-      );
-      val = Math.floor(val);
-      this.req_body.total_rent_count = val;
-      return val;
-    },
-
-    show_error_rent_count() {
-      const min = 0;
-      const max = 1024;
-      const stepArray = [
-        {
-          valMax: 10,
-          step: 1,
-        },
-        {
-          valMax: 500,
-          step: 10,
-        },
-        {
-          valMax: 800,
-          step: 20,
-        },
-        {
-          valMax: 1024,
-          step: -1,
-        },
-      ];
-      let val = this.$noLinearNumAdd(
-        min,
-        max,
-        stepArray,
-        this.error_rent_count_CountVal
-      );
-      val = Math.floor(val);
-      this.req_body.error_rent_count = val;
-      return val;
-    },
-
-    show_tensor_cores_count() {
-      const min = 0;
-      const max = 1024;
-      const stepArray = [
-        {
-          valMax: 10,
-          step: 1,
-        },
-        {
-          valMax: 500,
-          step: 10,
-        },
-        {
-          valMax: 800,
-          step: 20,
-        },
-        {
-          valMax: 1024,
-          step: -1,
-        },
-      ];
-      let val = this.$noLinearNumAdd(
-        min,
-        max,
-        stepArray,
-        this.tensor_cores_CountVal
-      );
-      val = Math.floor(val);
-      this.req_body.tensor_cores = val;
-      return val;
-    },
-    single_showTflops() {
-      const stepArray = [
-        {
-          valMax: 100,
-          step: 5,
-        },
-        {
-          valMax: 1000,
-          step: 50,
-        },
-        {
-          valMax: 5000,
-          step: 200,
-        },
-        {
-          valMax: 10000,
-          step: -1,
-        },
-      ];
-      let val = this.$noLinearNumAdd(
-        0,
-        10000,
-        stepArray,
-        this.single_tflopsVal
-      );
-      val = Math.floor(val);
-      this.req_body.single_precision_tflops = val;
-      return val;
-    },
-    double_showTflops() {
-      const stepArray = [
-        {
-          valMax: 100,
-          step: 5,
-        },
-        {
-          valMax: 1000,
-          step: 50,
-        },
-        {
-          valMax: 5000,
-          step: 200,
-        },
-        {
-          valMax: 10000,
-          step: -1,
-        },
-      ];
-      let val = this.$noLinearNumAdd(
-        0,
-        10000,
-        stepArray,
-        this.double_tflopsVal
-      );
-      val = Math.floor(val);
-      this.req_body.double_precision_tflops = val;
-      return val;
-    },
-    showGpuRamSize() {
-      const min = 0;
-      const max = 1024;
-      const stepArray = [
-        {
-          valMax: 10,
-          step: 1,
-        },
-        {
-          valMax: 500,
-          step: 10,
-        },
-        {
-          valMax: 800,
-          step: 20,
-        },
-        {
-          valMax: 1024,
-          step: -1,
-        },
-      ];
-      let val = this.$noLinearNumAdd(min, max, stepArray, this.gpuRamSizeVal);
-      val = Math.floor(val);
-      this.req_body.gpuRamSize = val;
-      return val + "G";
-    },
-    showGpuRamBandwidth() {
-      const min = 0;
-      const max = 10000;
-      const stepArray = [
-        {
-          valMax: 100,
-          step: 5,
-        },
-        {
-          valMax: 5000,
-          step: 100,
-        },
-        {
-          valMax: max,
-          step: -1,
-        },
-      ];
-      let val = this.$noLinearNumAdd(
-        min,
-        max,
-        stepArray,
-        this.gpuRamBandwidthVal
-      );
-      val = Math.floor(val);
-      this.req_body.gpuRamBandwidth = val;
-      return val < 1000 ? val + "G" : val / 1000 + "T";
-    },
-    showPiceBandwidth() {
-      const min = 0;
-      const max = 128000;
-      const stepArray = [
-        {
-          valMax: 100,
-          step: 10,
-        },
-        {
-          valMax: 1000,
-          step: 100,
-        },
-        {
-          valMax: 10000,
-          step: 500,
-        },
-        {
-          valMax: 100000,
-          step: 2000,
-        },
-        {
-          valMax: max,
-          step: -1,
-        },
-      ];
-      let val = this.$noLinearNumAdd(
-        min,
-        max,
-        stepArray,
-        this.piceBandwidthVal
-      );
-      val = Math.floor(val);
-      this.req_body.piceBandwidth = val;
-      return val < 1000 ? val + "M" : val / 1000 + "G";
-    },
-    showCpuCores() {
-      const min = 0;
-      const max = 8096;
-      const stepArray = [
-        {
-          valMax: 8,
-          step: 1,
-        },
-        {
-          valMax: 32,
-          step: 2,
-        },
-        {
-          valMax: 128,
-          step: 8,
-        },
-        {
-          valMax: 256,
-          step: 16,
-        },
-        {
-          valMax: 512,
-          step: 32,
-        },
-        {
-          valMax: 1024,
-          step: 64,
-        },
-        {
-          valMax: max,
-          step: -1,
-        },
-      ];
-      let val = this.$noLinearNumAdd(min, max, stepArray, this.cpuCoresVal);
-      val = Math.floor(val);
-      this.req_body.cpuCores = val;
-      return val;
-    },
-    showCpuRamSize() {
-      const min = 0;
-      const max = 8096;
-      const stepArray = [
-        {
-          valMax: 8,
-          step: 1,
-        },
-        {
-          valMax: 32,
-          step: 2,
-        },
-        {
-          valMax: 128,
-          step: 8,
-        },
-        {
-          valMax: 256,
-          step: 16,
-        },
-        {
-          valMax: 512,
-          step: 32,
-        },
-        {
-          valMax: 1024,
-          step: 64,
-        },
-        {
-          valMax: max,
-          step: -1,
-        },
-      ];
-      let val = this.$noLinearNumAdd(min, max, stepArray, this.cpuRamSizeVal);
-      val = Math.floor(val);
-      this.req_body.cpuRamSize = val;
-      return val + "G";
-    },
-    showDiskBandwidth() {
-      const min = 0;
-      const max = 20000;
-      const stepArray = [
-        {
-          valMax: 100,
-          step: 10,
-        },
-        {
-          valMax: 1000,
-          step: 50,
-        },
-        {
-          valMax: 10000,
-          step: 500,
-        },
-        {
-          valMax: max,
-          step: -1,
-        },
-      ];
-      let val = this.$noLinearNumAdd(
-        min,
-        max,
-        stepArray,
-        this.diskBandwidthVal
-      );
-      val = Math.floor(val);
-      this.req_body.diskBandwidth = val;
-      return val < 1000 ? val + "M" : val / 1000 + "G";
-    },
-    showInetUp() {
-      const min = 0;
-      const max = 8096;
-      const stepArray = [
-        {
-          valMax: 8,
-          step: 0.5,
-        },
-        {
-          valMax: 64,
-          step: 4,
-        },
-        {
-          valMax: 128,
-          step: 8,
-        },
-        {
-          valMax: 256,
-          step: 16,
-        },
-        {
-          valMax: 512,
-          step: 32,
-        },
-        {
-          valMax: 1024,
-          step: 64,
-        },
-        {
-          valMax: max,
-          step: -1,
-        },
-      ];
-      let val = this.$noLinearNumAdd(min, max, stepArray, this.inetUpVal);
-      this.req_body.inetUp = val;
-      return val < 1000 ? val + "Mbps" : (val / 1000).toFixed(3) + "Gbps";
-    },
-    showInetDown() {
-      const min = 0;
-      const max = 8096;
-      const stepArray = [
-        {
-          valMax: 8,
-          step: 0.5,
-        },
-        {
-          valMax: 64,
-          step: 4,
-        },
-        {
-          valMax: 128,
-          step: 8,
-        },
-        {
-          valMax: 256,
-          step: 16,
-        },
-        {
-          valMax: 512,
-          step: 32,
-        },
-        {
-          valMax: 1024,
-          step: 64,
-        },
-        {
-          valMax: max,
-          step: -1,
-        },
-      ];
-      let val = this.$noLinearNumAdd(min, max, stepArray, this.inetDownVal);
-      this.req_body.inetDown = val;
-      return val < 1000 ? val + "Mbps" : (val / 1000).toFixed(3) + "Gbps";
     },
   },
 };

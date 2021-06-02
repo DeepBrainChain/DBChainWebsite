@@ -13,6 +13,8 @@ import {
   getTransactions
 } from '../utlis'
 
+import newDbc from './modules/dbcWallet'
+
 import {
   get_dbc_price,
   dbc_info,
@@ -24,7 +26,9 @@ import cookie from 'js-cookie'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  modules: {},
+  modules: {
+    newDbc
+  },
   state: {
     account: undefined,
     balance: 0,
@@ -37,8 +41,9 @@ export default new Vuex.Store({
     publicKey: '',
     address: '',
     transferList: [],
+    listTotal: 0,
     dbcToUS: 0, // DBC对美金汇率
-    menuName: '',
+    menuName: sessionStorage.getItem('menuName'),
     webtype: ""
   },
   mutations: {
@@ -69,6 +74,9 @@ export default new Vuex.Store({
     setTransferList(state, data) {
       state.transferList = data
     },
+    setListTotal(state, data) {
+      state.listTotal = data
+    },
     setdbcToUS(state, data) {
       state.dbcToUS = data
     },
@@ -80,6 +88,7 @@ export default new Vuex.Store({
     },
     setMenuName(state, data) {
       state.menuName = data
+      sessionStorage.setItem('menuName',data)
     },
     setWebtype(state, data) {
       state.webtype = data
@@ -139,17 +148,19 @@ export default new Vuex.Store({
       commit,
       state
     }) {
-      getTransactions(state.address, 1).then(res => {
-        const array = res.entries.map(item => {
+      getTransactions(state.address, 0, 10).then(res => {
+        const array = res.data.transfers.map(item => {
           return {
-            txHash: item.txid,
-            fromAddress: item.address_from,
-            toAddress: item.address_to,
-            time: item.time,
-            amount: item.amount
+            txHash: item.hash,
+            fromAddress: item.from,
+            toAddress: item.to,
+            time: item.block_timestamp,
+            amount: item.amount,
+            result: item.success
           }
         })
         commit('setTransferList', array)
+        commit('setListTotal', res.data.count)
       })
       /*getTransfer(state.address).then(data => {
         const recArray = data.received.map(item => {
@@ -213,7 +224,7 @@ export default new Vuex.Store({
 
           })
 
-          getTransactions(state.address, 1).then(res => {
+          getTransactions(state.address, 0, 10).then(res => {
             const array = res.entries.map(item => {
               return {
                 txHash: item.txid,
@@ -224,6 +235,7 @@ export default new Vuex.Store({
               }
             })
             commit('setTransferList', array)
+            commit('setListTotal', res.data.count)
           })
 
 

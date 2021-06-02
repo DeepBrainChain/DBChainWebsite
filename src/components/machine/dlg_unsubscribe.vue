@@ -75,6 +75,7 @@ export default {
   },
   watch: {
     open(newVal) {
+      console.log(this.item,'item',this.isOpen, 'this.isOpen')
       this.isOpen = newVal;
     },
   },
@@ -85,6 +86,8 @@ export default {
       isCoding: false,
       stop_code: "",
     };
+  },
+  mounted(){
   },
   methods: {
     closed() {

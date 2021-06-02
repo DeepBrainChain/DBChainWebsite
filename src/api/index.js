@@ -796,12 +796,20 @@ export const dbc_deposite_count_new = params => {
 };
 
 // 获取当前人的订单列表
-export const get_address_abstracts = ({ address, page }) => {
+// export const get_address_abstracts = ({ address, page }) => {
+//   return axios({
+//     method: "get",
+//     url: `https://api.neoscan.io/api/main_net/v1/get_address_abstracts/${address}/${page}`
+//   });
+// };
+export const get_address_abstracts = data => {
   return axios({
-    method: "get",
-    url: `https://api.neoscan.io/api/main_net/v1/get_address_abstracts/${address}/${page}`
+    method: "post",
+    url: 'https://dbc.subscan.io/api/scan/transfers',
+    data: data
   });
 };
+
 
 // 获取汇率接口
 export const exchangeUSDToCNY = (from, to) => {

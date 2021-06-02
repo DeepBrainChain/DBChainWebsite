@@ -14,7 +14,8 @@ const router = new Router({
   base: process.env.NODE_ENV === 'production' ? '/' : '/',
 
   mode: 'history',
-  routes: [{
+  routes: [
+    {
       path: '/preview',
       name: ' preview',
       component: Preview
@@ -51,14 +52,14 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       component: () => import('./views/gpu'),
       redirect: '/gpu/highStabilityAITrain',
-      children: [{
+      children: [
+        {
           meta: {
             menuIndex: 0
           },
           path: 'list',
           component: () => import('./views/gpu/list')
         },
-
         {
           meta: {
             menuIndex: 1
@@ -94,7 +95,9 @@ const router = new Router({
       name: 'miner',
       component: () => import('./views/miner'),
       redirect: '/miner/myMinerMachine',
-      children: [{
+      children: [
+        {
+          name: 'myMinerMachine',
           meta: {
             menuIndex: 0
           },
@@ -102,6 +105,7 @@ const router = new Router({
           component: () => import('./views/miner/myMinerMachine')
         },
         {
+          name: 'myMinerMachine_unlock',
           meta: {
             menuIndex: 0
           },
@@ -119,9 +123,6 @@ const router = new Router({
       component: () => import('./views/mymachine'),
       redirect: '/mymachine/myMachine',
       children: [{
-
-
-
           meta: {
             menuIndex: 0
           },
@@ -175,7 +176,8 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       component: () => import('./views/mywallet'),
       redirect: '/mywallet/myWallet',
-      children: [{
+      children: [
+        {
           meta: {
             menuIndex: 0
           },
@@ -222,7 +224,8 @@ const router = new Router({
           component: () => import('./views/help/supernodeHelp')
         }
       ]
-    }, {
+    },
+    /*{
       path: '/miner',
       name: 'miner',
       component: () => import('./views/miner'),
@@ -242,7 +245,7 @@ const router = new Router({
           component: () => import('./views/miner/myMinerMachine_unlock')
         }
       ]
-    },
+    },*/
     {
       path: '/continuePayDetail',
       name: 'continuePayDetail',
@@ -294,11 +297,39 @@ const router = new Router({
       name: 'machineOrder',
       component: () => import('./views/machineOrder')
     },
-
+    {
+      path: '/newWallet/createWallet',
+      name: 'CreateWallet',
+      component: () => import('./views/newWallet/createWallet')
+    },
+    {
+      path: '/newWallet/openWallet',
+      name: 'OpenWallet',
+      component: () => import('./views/newWallet/openWallet')
+    },
+    {
+      path: '/newWallet',
+      name: 'newMyWallet',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('./views/mywallet'),
+      children: [
+        {
+          
+          meta: {
+            menuIndex: 0
+          },
+          path: '/newWallet/myWalletUnlock',
+          name: 'myWalletUnlockNew',
+          component: () => import('./views/newWallet/myWallet_unlock')
+        }
+      ]
+    }
   ]
 })
 
-/*router.beforeEach((to, from, next) => {
+/*router.beforeEach((to, from, toStep2) => {
 })*/
 
 export default router

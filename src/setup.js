@@ -90,7 +90,7 @@ Vue.prototype.$message = Message
 
 ElementLocale.i18n((key, value) => i18n.t(key, value))
 
-const loadedLanguages = ['CN'] // 我们的预装默认语言
+const loadedLanguages = ['cn'] // 我们的预装默认语言
 
 function setI18nLanguage(lang) {
   i18n.locale = lang

@@ -96,6 +96,9 @@ export default {
     this.setLanguageCode();
     this.initData();
   },
+  mounted() {
+    console.log('this.$store.state.menuName='+this.$store.state.menuName);
+  },
   computed: {
     ...mapState([
       "address",

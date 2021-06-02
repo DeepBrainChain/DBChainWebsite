@@ -9,7 +9,7 @@
     </div>
     <!-- dbc首页 -->
     <div v-else>
-      <Head></Head>
+      <Head/>
       <router-view></router-view>
       <Footer></Footer>
     </div>

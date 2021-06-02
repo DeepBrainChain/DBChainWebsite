@@ -92,6 +92,7 @@ export default {
     this.inti_menus();
   },
   mounted() {
+    console.log(this.$t("website_name"));
     if (this.$t("website_name") === "congTuCloud") {
       this.$refs.gpuBox.style.marginBottom = "0px";
     }
@@ -101,7 +102,7 @@ export default {
       this.inti_menus();
     }
   },
-  computed: {
+  methods: {
     inti_menus() {
       if (this.$t("website_name") !== "congTuCloud") {
         this.menus_chain[0].title = this.$t("ai_help");

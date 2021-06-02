@@ -51,19 +51,20 @@
 import { mapActions, mapState } from "vuex";
 
 export default {
-  name: "tradeList",
+  name: "TradeList",
   data() {
     return {
-      tempNum: 12335234234.23456
+      tempNum: 12335234234.23456,
+      address: ''
     };
-  },
-  methods: {
-    ...mapActions(["getTransferList"])
   },
   computed: {
     ...mapState(["transferList"])
+  },
+  methods: {
+    ...mapActions(["getTransferList"])
   }
-};
+}
 </script>
 
 <style scoped>

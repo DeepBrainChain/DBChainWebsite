@@ -132,6 +132,7 @@ body, body * {
 }
 
 body {
+  min-width: 1440px;
   height: 100%;
   background-color: $bgColor;
   color: #333;
