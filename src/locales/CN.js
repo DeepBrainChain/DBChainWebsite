@@ -10,7 +10,7 @@ export default {
   display_select_rent_platform: "0", //0：不显示机器出租的云平台选项，1:显示出租的云平台选项
   //alpha-dbchain/aichriscloud/deepbit/vnxmart/aiaicloud/snbt/heekmind/redstonewill/rocketai/aicv/\shareaiot\freegpu\boincplanet\topgpu\thinkotech
   //coolgpu\scclouds\nvidiaai\deligpu\longway\sharedgpu\aipower\cvstudy\gpuhub\district51\deepmind\transportation\planetc\sdnu\freegputop\tensorgpu
-  //opengpu\aiyanxishe\codefate\changhe\dpool
+  //opengpu\aiyanxishe\codefate\changhe\dpool\tycloud
   contain_new_wallet: "1", //0:不包含新钱包，1:包含新钱包
   message: "hello i18n !!",
 
@@ -288,6 +288,7 @@ export default {
     intr_codefate_1: "码缘",
     intr_changhe_1: "长河云",
     intr_dpool_1: "DPool",
+    intr_tycloud_1: "天予云",
     intr_1: "提供GPU出租服务，加入我们，可以帮助您的机器非常方便的接入到深脑链网络中，获取收益。\n" +
       "\n" +
       "       只要你的GPU有空闲，就可以加入我们赚取DBC Token，同时可以享受Token升值带来的更多收益。\n" +
@@ -559,6 +560,7 @@ export default {
   footer_service_codefate: "wangming1785@foxmail.com", //9.17 19:33
   footer_service_changhe: "changhecloud@outlook.com", //9.17 19:33
   footer_service_dpool: "hello@decentral.cc", //9.17 19:33
+  footer_service_tycloud: "tyhctech@hotmail.com", //9.17 19:33
 
   list_start_rentout: "分钟后可租用", //9.17 19:33
   list_can_rentout: "用户现在可租用", //9.17 19:33
