@@ -136,8 +136,6 @@ export default {
         return this.$t("footer_service_changhe");
       } else if (this.$t("website_name") == "dpool") {
         return this.$t("footer_service_dpool");
-      } else if (this.$t("website_name") == "tycloud") {
-        return this.$t("footer_service_tycloud");
       }
 
       return this.$t("footer_service_dbchain");

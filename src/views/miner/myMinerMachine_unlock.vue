@@ -753,7 +753,7 @@ import {
 import {getAccount, transfer} from "@/utlis"
 
 export default {
-  name: "MyMinerMachineUnlock",
+  name: "myMinerMachine_unlock",
   components: {
     DlgReload,
     DlgHd,
@@ -790,6 +790,7 @@ export default {
       ispayPocing: false,
       local_pay_error: false,
       pay_index: -1,
+      placeOrderData: undefined
     }
   },
   computed: {
@@ -801,14 +802,12 @@ export default {
   },
   activated() {
     // this.binding(isNewMail);
+    console.log(333333);
     this.queryMail()
     // this.queryMcList();
 
     this.queryMcList()
     this.forceToPocMachine()
-    if (this.queryOrderListSi) {
-      clearInterval(this.queryOrderListSi)
-    }
     this.queryOrderListSi = setInterval(() => {
       this.queryMcList()
       this.forceToPocMachine()
@@ -818,6 +817,9 @@ export default {
   deactivated() {
     if (this.si) {
       clearInterval(this.si)
+    }
+    if (this.queryOrderListSi) {
+      clearInterval(this.queryOrderListSi)
     }
   },
   methods: {

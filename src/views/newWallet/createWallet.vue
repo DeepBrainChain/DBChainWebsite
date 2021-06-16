@@ -9,6 +9,7 @@
         <h3 class="wallet-title">
           {{ $t('newWallet') }}
         </h3>
+        <!-- 创建密码 -->
         <template v-if="step === 0">
           <p class="wallet-subText">
             {{ $t('msg.wallet_6') }}
@@ -21,6 +22,7 @@
             />
           </div>
         </template>
+        <!-- 下载私钥文件 -->
         <template v-if="step === 1">
           <p class="wallet-subText">
             {{ $t('msg.wallet_0') }}
@@ -39,7 +41,8 @@
             v-html="$t('msg.wallet_1')"
           />
         </template>
-        <template v-if="step === 2">
+        <!-- 添加私钥助记词  隐藏 -->
+        <!-- <template v-if="step === 2">
           <p class="wallet-subText">
             {{ $t('msg.wallet_2') }}
           </p>
@@ -50,7 +53,7 @@
             class="wallet-notice"
             v-html="$t('msg.wallet_3')"
           />
-        </template>
+        </template> -->
         <el-alert
           v-if="errText.length > 0"
           class="mt20"
@@ -61,7 +64,7 @@
           :closable="false"
         />
         <div class="btn-wrap">
-<!--          第0步-创建-->
+          <!-- 第0步-创建-->
           <el-button
             v-if="step === 0"
             class="w200"
@@ -72,7 +75,25 @@
           >
             {{ $t('create') }}
           </el-button>
+          <!-- 第1步-下载文件-->
           <el-tooltip
+            v-else-if="step === 1"
+            :disabled="isNext"
+            :content="$t('creat_wallet_index_download')"
+          >
+            <el-button
+              class="w200"
+              :class="{'is-disabled': !isNext}"
+              type="primary"
+              :loading="btnloading"
+              @click="pushToMyWallet"
+            >
+              {{ $t('finished') }}
+            </el-button>
+          </el-tooltip>
+
+
+          <!--<el-tooltip
             v-else-if="step === 1"
             :disabled="isNext"
             :content="$t('creat_wallet_index_download')"
@@ -96,7 +117,7 @@
             @click="pushToMyWallet"
           >
             {{ $t('finished') }}
-          </el-button>
+          </el-button> -->
         </div>
       </div>
     </div>

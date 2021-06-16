@@ -9,21 +9,37 @@ import Neon, {
 } from "@cityofzion/neon-js";
 import cookie from "js-cookie";
 import {
-  get_address_abstracts
+  get_address_abstracts,
+  get_address_abstracts1
 } from "@/api/index";
-
+import { getCurrentPair } from './dot'
 import {
   dbc_balance,
+  getsearch,
   dbc_gas_balance
 } from "@/api";
+import store  from '@/store'
+
+import {
+  initNetwork,
+  getPairs,
+  onTransferBalance
+} from '@/utlis/dot'
+
 //const netType = 'https://api.neoscan.io'
 const netType = "https://neocli.dbchain.ai";
 //const netType = 'http://seed2.aphelion-neo.com:10332'
 const DBCHash = "b951ecbbc5fe37a9c280a76cb0ce0014827294cf"; // DBC assetId
 const DBC_NAME = "DEEPBRAIN COIN";
 const testAddress = "AKMqDy51FuMnc4poiGBczQvPh6819hQuLH";
+// const testNewAddress = "5GGu2iQBLXuys61zbSnzfBsVMYzwaM3FfMbpMAmsAiExSWcN";
+const testNewAddress = '5GEji5DojzpeNjKZnsjh3paKR2t1qgLEBnRRpZKLc5ntGNoz';
 
 export let account = undefined;
+if(store.state.isNewWallet == 'true'){
+  account = getCurrentPair();
+  console.log(account, 'getBalance_account');
+}
 
 export const client = new rpc.RPCClient(netType);
 
@@ -138,21 +154,34 @@ export function getBalance_old() {
 
 export function getBalance() {
   return new Promise((resolve, reject) => {
+    console.log(account, 'getBalance_account');
     if (account) {
-      dbc_balance({
-        user_wallet_address: account.address,
-        language: "CN"
-      }).then(res => {
-
-        resolve({
-          symbol: DBC_NAME,
-          balance: res.content
-        });
-
-      }).catch(err => {
-
-      })
+      if(store.state.isNewWallet == 'true'){
+        getsearch({ key: account.address , page: 0, row: 1 }).then(res => {
+          resolve({
+            symbol: DBC_NAME,
+            balance: res.data?res.data.account.balance:0
+          });
+        }).catch(err => {
+          console.log(err, 'getsearch_Err');
+        })
+      }else{
+        dbc_balance({
+          user_wallet_address: account.address,
+          language: "CN"
+        }).then(res => {
+  
+          resolve({
+            symbol: DBC_NAME,
+            balance: res.content
+          });
+  
+        }).catch(err => {
+  
+        })
+      }      
     } else {
+      console.log(account, 'getBalance');
       reject("please open wallet");
     }
   });
@@ -160,6 +189,7 @@ export function getBalance() {
 
 export function getGasBalance() {
   return new Promise((resolve, reject) => {
+    console.log(account);
     if (account) {
       dbc_gas_balance({
         user_wallet_address: account.address,
@@ -241,8 +271,16 @@ export function getTransfer(address) {
   });
 }
 
-export function getTransactions(address, page, row,assetsHash = DBCHash) {
+export function getTransactions(address, page, assetsHash = DBCHash) {
   return get_address_abstracts({
+    address,
+    page
+  }).then(res => {
+    return Promise.resolve(res);
+  });
+}
+export function getTransactions1(address, page, row,assetsHash = DBCHash) {
+  return get_address_abstracts1({
     address,
     page,
     row
@@ -250,13 +288,52 @@ export function getTransactions(address, page, row,assetsHash = DBCHash) {
     return Promise.resolve(res);
   });
 }
-
 // send assets to address
 export function transfer({
   toAddress = testAddress,
-  amount
+  amount,
+  passward
 }) {
-  return dbc_balance({
+  if(store.state.isNewWallet == 'true'){
+    let pair;
+    return getsearch({ key: account.address , page: 0, row: 1 })
+    .then( async (res) => {
+      if (res.data.account.balance > amount) {
+        await initNetwork();
+        // 获取地址
+        if (getPairs().length > 0) {
+          pair = getPairs()[0]
+        }
+        console.log('[pair.isLocked]:', pair.isLocked)
+        if (pair.isLocked) {
+          console.log(passward)
+          pair.unlock(passward)
+        }
+        console.log(testNewAddress, amount, 'toAddress,amount');
+        return new Promise((resolve)=>{
+          onTransferBalance(pair, testNewAddress, String(amount), (hex) => {
+            console.log('success transfer');
+            console.log(hex, 'callback hash');
+            resolve({
+              status: 1,
+              txid: hex
+            })
+          })
+        })
+      } else {
+        return Promise.resolve({
+          status: -1
+        });
+      }
+    })
+    .catch(err => {
+      console.log(err,'err-2');
+      return Promise.resolve({
+        status: -2
+      });
+    });
+  }else{
+    return dbc_balance({
       user_wallet_address: account.address,
       language: "CN"
     })
@@ -314,6 +391,8 @@ export function transfer({
         status: -2
       });
     });
+  }
+  
 }
 
 export function transfer12({
@@ -530,4 +609,22 @@ export function getCongtuGpuRenewalTradeNoPrefix(){
 export function getCongtuCpuRenewalTradeNoPrefix(){
   // 5位数
   return "21104";
+}
+
+// 路由裁剪判断
+export function getHref(url){
+  const urlstr = url.toLocaleLowerCase()
+  if (urlstr.indexOf('gpu') != -1) { // gpu
+    return 'gpu'
+  }else if (urlstr.indexOf('miner') != -1) { // miner
+    return 'miner'
+  } else if (urlstr.indexOf('machine') != -1) { // mymachine
+    return 'mymachine'
+  } else if (urlstr.indexOf('wallet') != -1) { // mywallet
+    return 'mywallet'
+  } else if (urlstr.indexOf('help') != -1) { // help
+    return 'help'
+  } else if (urlstr.indexOf('audit') != -1) { // help
+    return 'audit'
+  } 
 }

@@ -10,7 +10,8 @@ import {
   getBalance,
   getGasBalance,
   getTransfer,
-  getTransactions
+  getTransactions,
+  getTransactions1
 } from '../utlis'
 
 import newDbc from './modules/dbcWallet'
@@ -19,6 +20,7 @@ import {
   get_dbc_price,
   dbc_info,
   dbc_balance,
+  getsearch,
   dbc_gas_balance
 } from '@/api'
 import cookie from 'js-cookie'
@@ -44,7 +46,8 @@ export default new Vuex.Store({
     listTotal: 0,
     dbcToUS: 0, // DBC对美金汇率
     menuName: sessionStorage.getItem('menuName'),
-    webtype: ""
+    webtype: "",
+    isNewWallet: localStorage.getItem('isNewWallet') // true: 是新钱包 false或''：不是新钱包
   },
   mutations: {
     setAccount(state, data) {
@@ -92,6 +95,10 @@ export default new Vuex.Store({
     },
     setWebtype(state, data) {
       state.webtype = data
+    },
+    setNewWallet(state, data) {
+      state.isNewWallet = data
+      localStorage.setItem('isNewWallet',data)
     }
   },
   actions: {
@@ -144,12 +151,12 @@ export default new Vuex.Store({
       })
     },
 
-    getTransferList({
+    getTransferList1({
       commit,
       state
     }) {
-      getTransactions(state.address, 0, 10).then(res => {
-        const array = res.data.transfers.map(item => {
+      getTransactions1(state.address, 0, 10).then(res => {
+        const array = res.data.transfers&&res.data.transfers.map(item => {
           return {
             txHash: item.hash,
             fromAddress: item.from,
@@ -161,6 +168,47 @@ export default new Vuex.Store({
         })
         commit('setTransferList', array)
         commit('setListTotal', res.data.count)
+      })
+      /*getTransfer(state.address).then(data => {
+        const recArray = data.received.map(item => {
+          return {
+            txHash: item.tx_hash,
+            fromAddress: item.transfer_address,
+            toAddress: state.address,
+            time: item.timestamp,
+            amount: item.amount
+          }
+        })
+        const sendArray = data.sent.map(item => {
+          return {
+            txHash: item.tx_hash,
+            fromAddress:state.address ,
+            toAddress: item.transfer_address,
+            time: item.timestamp,
+            amount: item.amount
+          }
+        })
+        const array = recArray.concat(sendArray).sort((a, b) => {
+          return b.time - a.time
+        })
+        commit('setTransferList', array)
+      })*/
+    },
+    getTransferList({
+      commit,
+      state
+    }) {
+      getTransactions(state.address, 1).then(res => {
+        const array = res.entries.map(item => {
+          return {
+            txHash: item.txid,
+            fromAddress: item.address_from,
+            toAddress: item.address_to,
+            time: item.time,
+            amount: item.amount
+          }
+        })
+        commit('setTransferList', array)
       })
       /*getTransfer(state.address).then(data => {
         const recArray = data.received.map(item => {
@@ -200,31 +248,56 @@ export default new Vuex.Store({
             publicKey: ac.publicKey,
             address: ac.address
           })
-          dbc_balance({
-            user_wallet_address: ac.address,
-            language
-          }).then(res => {
+          if(state.isNewWallet == 'true'){
+            getsearch({ key: state.address , page: 0, row: 1 }).then(res => {
+  
+              commit('setBalances', res.data.account.balance)
+  
+  
+            }).catch(err => {
+  
+            })
+            getTransactions1(state.address, 0, 10).then(res => {
+              const array = res.data.transfers&&res.data.transfers.map(item => {
+                return {
+                  txHash: item.txid,
+                  fromAddress: item.address_from,
+                  toAddress: item.address_to,
+                  time: item.time,
+                  amount: item.amount
+                }
+              })
+              commit('setTransferList', array)
+              commit('setListTotal', res.data.count)
+            })
+          }else{
+            dbc_balance({
+              user_wallet_address: ac.address,
+              language
+            }).then(res => {
+  
+              commit('setBalances', res.content)
+  
+  
+            }).catch(err => {
+  
+            })
+  
+            dbc_gas_balance({
+              user_wallet_address: ac.address,
+              language
+            }).then(res => {
+  
+              commit('setGasBalances', res.content)
+  
+  
+            }).catch(err => {
+  
+            })
+          }
+          
 
-            commit('setBalances', res.content)
-
-
-          }).catch(err => {
-
-          })
-
-          dbc_gas_balance({
-            user_wallet_address: ac.address,
-            language
-          }).then(res => {
-
-            commit('setGasBalances', res.content)
-
-
-          }).catch(err => {
-
-          })
-
-          getTransactions(state.address, 0, 10).then(res => {
+          getTransactions(state.address, 1).then(res => {
             const array = res.entries.map(item => {
               return {
                 txHash: item.txid,
@@ -235,11 +308,11 @@ export default new Vuex.Store({
               }
             })
             commit('setTransferList', array)
-            commit('setListTotal', res.data.count)
           })
 
 
         } else {
+          console.log("store.js");
           reject('please open wallet')
         }
       })

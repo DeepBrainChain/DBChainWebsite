@@ -58,7 +58,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import { get_address_abstracts } from "@/api";
+import { get_address_abstracts1 } from "@/api";
 export default {
   name: "TradeList",
   data() {
@@ -89,8 +89,8 @@ export default {
         page: this.currentPage-1,
         row: this.pageSize
       }
-      get_address_abstracts(data).then(res => {
-        let array = res.data.transfers.map(item => {
+      get_address_abstracts1(data).then(res => {
+        let array = res.data.transfers&&res.data.transfers.map(item => {
           return {
             txHash: item.hash,
             fromAddress: item.from,

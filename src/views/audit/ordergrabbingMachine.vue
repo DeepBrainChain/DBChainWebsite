@@ -1,26 +1,31 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-08-24 14:49:16
+ * @LastEditTime: 2020-12-30 20:25:09
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \DBChainWebsite\src\views\mymachine\myMachine_cpu.vue
+-->
 <template>
   <div class="my-wallet">
-    <div class="wallet-btns">
-      <!-- <el-button
-        type="primary"
-        @click="openCreateWallet('/createWallet')"
-      >
-        {{ $t('mywallet_create') }}
-      </el-button> -->
+    <h3></h3>
+    <!-- <div class="wallet-btns">
       <el-button
-        v-if="contain_new_wallet"
+        type="primary"
+        v-on:click="openCreateWallet('/createWallet')"
+        >{{ $t("gpu.createWallet") }}</el-button
+      >
+      <el-button type="primary" v-on:click="openWallet">{{
+        $t("gpu.openWallet")
+      }}</el-button>
+    </div> -->
+    <div class="wallet-btns">
+      <el-button
         type="primary"
         @click="openCreateWalletNew('/createWallet')"
       >
         {{ $t('mywallet_create') }}
       </el-button>
-      <!-- <el-button
-        v-if="!contain_new_wallet"
-        type="primary"
-        @click="openWallet"
-      >
-        {{ $t('mywallet_open') }}
-      </el-button> -->
       <el-button
         type="primary"
         @click="openWallet"
@@ -36,19 +41,7 @@
       </el-button>
     </div>
     <div class="center-box">
-      <div plain>
-        {{ $t('mywallet_open_create') }}
-      </div>
-    </div>
-    <div class="center-box">
-      <div
-        class="btn lg"
-        plain
-      >
-        {{ $t('mywallet_transfer_record') }}
-        <br>
-        {{ $t('mywallet_display') }}
-      </div>
+      <div>{{ $t("gpu.rentMachine") }}</div>
     </div>
   </div>
 </template>
@@ -56,47 +49,35 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import { getAccount } from "@/utlis";
-import { getCurrentPair } from "@/utlis/dot"
-import {
-  initFromLocalstorage
-} from '@/utlis/dot'
-
+import { initFromLocalstorage } from '@/utlis/dot'
 export default {
-  name: "MyWallet",
-  data() {
-    return {
-      gas_balance: 0,
+  name: "ordergrabbingMachine",
+ data(){
+    return{
       contain_new_wallet: false
-    };
+    }
   },
   created() {
     if (this.$t("contain_new_wallet") === "1") {
       this.contain_new_wallet = true;
     }
+    console.log(this.$route);
     this.initData();
   },
-  computed:{
+  computed: {
     ...mapState(['isNewWallet'])
   },
   methods: {
     ...mapActions(["getAccountState", "getTransferList"]),
     initData() {
-      console.log(String(this.isNewWallet), 'this.isNewWallet');
-      if(String(this.isNewWallet) == 'false'){
-        this.$router.push("myWalletUnlock");
-      }else if(String(this.isNewWallet) == 'true'){
-        this.$router.push('/newWallet/myWalletUnlock')
+      if (this.$t("website_name") == "congTuCloud") {
+        this.$router.replace("ordergrabbingMachine_unlock");
+      } else {
+        if (this.isNewWallet) {
+          this.$router.push("ordergrabbingMachine_unlock");
+        }
       }
-      // if (getAccount()) {
-      //   this.$router.push("myWalletUnlock");
-      // } else if (getCurrentPair()) {
-      //   this.$router.push('/newWallet/myWalletUnlock')
-      // }
     },
-    // openCreateWallet() {
-    //   const type = this.$route.path.search("gpu") !== -1 ? "gpu" : "miner";
-    //   this.$router.push(`/createWallet/${type}`);
-    // },
     openCreateWalletNew () {
       this.$router.push(`/newWallet/createWallet`)
     },
@@ -119,7 +100,7 @@ export default {
         this.$router.push(`/newWallet/openWallet`)
       }
     }
-  }
+  },
 };
 </script>
 

@@ -3,7 +3,7 @@ import enLocale from "element-ui/lib/locale/lang/en";
 export default {
 
   message: "hello i18n !!",
-  website_name: "dbchain",
+  website_name: "52cv",
   $: "$",
   send: "отправить",
   closeWallet: "закрыть кошелёк",
@@ -547,7 +547,7 @@ export default {
   footer_service_aiyanxishe: "kefu@yanxishe.com", //9.17 19:33
   footer_service_codefate: "wangming1785@foxmail.com", //9.17 19:33
   footer_service_changhe: "changhecloud@outlook.com", //9.17 19:33
-  footer_service_tycloud: "tyhctech@hotmail.com", //9.17 19:33
+
   list_start_rentout: "доступно для аренды через xxx минут", //9.17 19:33
   list_can_rentout: "пользователь может взять в аренду сейчас", //9.17 19:33
   my_gpu_count: "количество графических процессоров, которые я арендую", //9.17 19:33

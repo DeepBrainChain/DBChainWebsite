@@ -4,14 +4,14 @@
     <div class="wrap1200 bg-box">
       <div class="border-box">
         <h3 class="wallet-title">{{ $t('open_wallet') }}</h3>
-        <p class="wallet-subText">{{ $t('access_wallet') }}</p>
+        <!-- <p class="wallet-subText">{{ $t('access_wallet') }}</p> -->
         <el-radio-group class="wallet-group" v-model="radio" @change="radioChange">
           <div class="row">
             <el-radio class="radio-item" label="1">{{ $t('keystore_file') }}</el-radio>
           </div>
-          <div class="row">
+          <!-- <div class="row">
             <el-radio class="radio-item" label="2">{{ $t('mnemonic') }}</el-radio>
-          </div>
+          </div> -->
           <!--  <div class="row">
           <el-radio class="radio-item" label="3">{{$t('encrypted_key')}}</el-radio>
           </div>-->

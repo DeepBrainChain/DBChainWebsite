@@ -30,6 +30,11 @@
       <div class="cRed">
         <span>{{$t('dlg_bindMail_dbc_tip')}}</span>
       </div>
+      <div class="form mt20" v-if="isNewWallet == 'true'">
+        <el-form-item label-width="150px" :label="$t('verifyPassward') + ':'">
+          <el-input style="width: 300px"  show-password v-model="form.passward" size="small"></el-input>
+        </el-form-item>
+      </div>
     </el-form>
     <div class="dlg-bottom">
       <el-button
@@ -51,18 +56,23 @@ import {
   modifySendMail_rent
 } from "@/api/index";
 import { getAccount, transfer, getGasBalance } from "@/utlis";
-
+import { getCurrentPair } from "@/utlis/dot"
+import { mapState } from "vuex"
 export default {
   name: "popup_reload",
   props: {
     open: Boolean,
     isNewMail: Boolean
   },
+  computed:{
+    ...mapState(["isNewWallet"]),
+  },
   watch: {
     open(newVal) {
       this.isOpen = newVal;
       this.form.email = "";
       this.form.dbcNum = "";
+      this.form.passward = "";
       this.getGasBalance();
     }
   },
@@ -74,7 +84,8 @@ export default {
       gas_balance: 0,
       form: {
         email: "",
-        dbcNum: ""
+        dbcNum: "",
+        passward: ""
       },
       rules: {
         email: [
@@ -84,7 +95,8 @@ export default {
             trigger: "change"
           }
         ]
-      }
+      },
+      wallet_address: (getAccount() && getAccount().address) || (getCurrentPair() && getCurrentPair().address)
     };
   },
   methods: {
@@ -99,7 +111,7 @@ export default {
     },
     binding() {
       // const self = this
-      const ac = getAccount();
+      const ac = (getAccount() || getCurrentPair());
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
       if (!ac) {
@@ -122,7 +134,7 @@ export default {
         return;
       }
 
-      if (this.gas_balance === 0) {
+      if (!(this.isNewWallet == 'true') && this.gas_balance === 0) {
         this.$message({
           showClose: true,
           message: this.$t("zerogas"),
@@ -134,9 +146,11 @@ export default {
       this.isLoading = true;
       transfer({
         toAddress: this.$tAddress,
-        amount: this.form.dbcNum
+        amount: this.form.dbcNum,
+        passward: this.form.passward
       })
         .then(res => {
+          console.log(res, 'res');
           if (res.status === 1) {
             if (this.isNewMail) {
               bindMail_rent({
@@ -240,7 +254,7 @@ export default {
           }
         })
         .catch(err => {
-          // console.log(err)
+          console.log(err,'err')
 
           this.$message({
             showClose: true,
@@ -261,7 +275,7 @@ export default {
       if (this.isNewMail) {
         sendMail_rent({
           email: this.form.email,
-          wallet_address: getAccount().address,
+          wallet_address: this.wallet_address,
           user_name_platform,
           language
         })
@@ -291,7 +305,7 @@ export default {
       } else {
         modifySendMail_rent({
           email: this.form.email,
-          wallet_address: getAccount().address,
+          wallet_address: this.wallet_address,
           user_name_platform,
           language
         })
