@@ -97,7 +97,7 @@ export default {
     this.initData();
   },
   mounted() {
-    console.log('this.$store.state.menuName='+this.$store.state.menuName);
+    console.log("this.$store.state.menuName=" + this.$store.state.menuName);
   },
   computed: {
     ...mapState([
@@ -289,6 +289,8 @@ export default {
         this.link.href = "./codefate.ico";
       } else if (this.$t("website_name") == "changhe") {
         this.link.href = "./changhe.ico";
+      } else if (this.$t("website_name") == "changhe") {
+        this.link.href = "./changhe.ico";
       }
 
       document.getElementsByTagName("head")[0].appendChild(this.link);
@@ -401,6 +403,8 @@ export default {
         document.title = "changhe";
       } else if (this.$t("website_name") == "dpool") {
         document.title = "dpool";
+      } else if (this.$t("website_name") == "tycloud") {
+        document.title = "tycloud";
       }
     },
     set_logo() {
@@ -508,6 +512,8 @@ export default {
         this.logo = require("../../assets/imgs/codefate@1x.png");
       } else if (this.$t("website_name") == "changhe") {
         this.logo = require("../../assets/imgs/changhe@1x.png");
+      } else if (this.$t("website_name") == "tycloud") {
+        this.logo = require("../../assets/imgs/tycloud@1x.png");
       }
     },
     pushMenu(name) {

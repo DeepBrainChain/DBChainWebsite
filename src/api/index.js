@@ -14,8 +14,8 @@ import axios from "@/utlis/axios";
 //const host = 'http://13.124.237.200:8031'
 //const host = "https://otherinfo.dbchain.ai";
 //const host = "https://info.dbchain.ai";
-const host = "https://infodata.dbchain.ai";
-//const host = "https://infotest.dbchain.ai";
+//const host = "https://infodata.dbchain.ai";
+const host = "https://infotest.dbchain.ai";
 //const host = 'http://116.85.24.172:8031'
 //const host = "http://192.168.1.186:8080";
 //const host = "http://192.168.31.241:8080";
