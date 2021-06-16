@@ -159,7 +159,7 @@ export default {
     },
     ...mapActions([
       "getAccountState",
-      "getTransferList",
+      // "getTransferList",
       "getExchangeRate",
       "getGate",
     ]),

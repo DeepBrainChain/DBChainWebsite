@@ -146,6 +146,7 @@ export default {
     };
   },
   created() {
+    this.$store.commit('setNewWallet', 'false')
     this.initData();
     this.si = setInterval(() => {
       //  this.initData();
@@ -158,7 +159,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["getAccountState", "getExchangeRate", "getGate"]),
+    ...mapActions(["getAccountState", "getExchangeRate", "getGate", 'getTransferList']),
     initData() {
       this.getExchangeRate();
       // this.getGate();
@@ -269,6 +270,8 @@ export default {
     closeWallet() {
       closeAc();
       this.$router.push(`myWallet`);
+      this.$store.commit('setNewWallet', '')
+      localStorage.removeItem('isNewWallet');
     },
     floorNum() {
       // this.transferAmount = Math.floor(this.transferAmount)

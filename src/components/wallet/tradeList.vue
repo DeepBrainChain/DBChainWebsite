@@ -61,9 +61,9 @@ export default {
   computed: {
     ...mapState(["transferList"])
   },
-  methods: {
-    ...mapActions(["getTransferList"])
-  }
+  // methods: {
+  //   ...mapActions(["getTransferList"])
+  // }
 }
 </script>
 

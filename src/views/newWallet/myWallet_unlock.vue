@@ -1,6 +1,6 @@
 <template>
   <div class>
-    <h3>新钱包</h3>
+    <!-- <h3>新钱包</h3> -->
     <div class="top-tools">
       <div>
         <h3>
@@ -149,6 +149,7 @@
 import {mapActions, mapState} from "vuex"
 import tradenewList from "@/components/wallet/tradenewList"
 import walletDetail from "./components/walletBox"
+import { closeAc } from "@/utlis";
 import {
   initFromLocalstorage,
   initNetwork,
@@ -191,6 +192,7 @@ export default {
     }
   },
   created() {
+    this.$store.commit('setNewWallet', 'true')
     this.initData()
     this.si = setInterval(() => {
       //  this.initData();
@@ -204,19 +206,18 @@ export default {
     if(this.refresh){
       clearInterval(this.refresh)
     }
-    if (this.unsubBalance) {
-      this.unsubBalance()
-    }
+    // if (this.unsubBalance) {
+    //   this.unsubBalance()
+    // }
   },
   methods: {
-    ...mapActions(["getAccountState", "getExchangeRate", "getGate", "getTransferList"]),
+    ...mapActions(["getAccountState", "getExchangeRate", "getGate", "getTransferList1"]),
     async initData() {
       const loading = this.$loading()
       if (getPairs().length === 0) {
         initFromLocalstorage()
       }
       const {api, nodeName, nodeVersion, properties} = await initNetwork()
-      console.log('props', properties)
       loading.close()
       // 获取地址
       if (getPairs().length > 0) {
@@ -224,6 +225,7 @@ export default {
         this.address = this.pair.address
         this.$store.commit('setData',{address: this.pair.address})
       }
+      
       // 获取余额
       this.unsubBalance = await onGetBalance(this.pair.address, (num, token, decimals) => {
         this.balance = num
@@ -237,7 +239,7 @@ export default {
           this.decimals = decimals
         })
       }, 30000)
-      this.getTransferList()
+      this.getTransferList1()
     },
     // click to send assets to input address
     send() {
@@ -328,7 +330,10 @@ export default {
       window.open(location.href)
     },
     closeWallet() {
+      closeAc()
       removePair(this.pair.address)
+      this.$store.commit('setNewWallet', '')
+      localStorage.removeItem('isNewWallet')
       this.$router.push(`/mywallet/myWallet`)
     },
     floorNum() {

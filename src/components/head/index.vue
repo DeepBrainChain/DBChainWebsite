@@ -20,28 +20,33 @@
       <!--      <a class="item" :class="{active: menuName === 'home'}" @click="pushMenu('home')">{{$t('heads.home')}}</a>-->
       <a
         class="item"
-        :class="{active: this.$store.state.menuName === 'gpu'}"
+        :class="{active: menuName === 'gpu'}"
         @click="pushMenu('gpu')"
       >{{$t('heads.gpu')}}</a>
       <!--      <router-link class="item" to="/network">{{$t('heads.network')}}</router-link>-->
       <a
         class="item"
-        :class="{active: this.$store.state.menuName === 'miner'}"
+        :class="{active: menuName === 'miner'}"
         @click="pushMenu('miner')"
       >{{$t('heads.miner')}}</a>
       <a
         class="item"
-        :class="{active: this.$store.state.menuName === 'mymachine'}"
+        :class="{active: menuName === 'audit'}"
+        @click="pushMenu('audit')"
+      >{{$t('heads.audit')}}</a>
+      <a
+        class="item"
+        :class="{active: menuName === 'mymachine'}"
         @click="pushMenu('mymachine')"
       >{{$t('heads.mymachine')}}</a>
       <a
         class="item"
-        :class="{active: this.$store.state.menuName === 'mywallet'}"
+        :class="{active: menuName === 'mywallet'}"
         @click="pushMenu('mywallet')"
       >{{$t('heads.mywallet')}}</a>
       <a
         class="item"
-        :class="{active: this.$store.state.menuName === 'help'}"
+        :class="{active: menuName === 'help'}"
         @click="pushMenu('help')"
       >{{$t('heads.help')}}</a>
       <a
@@ -96,9 +101,6 @@ export default {
     this.setLanguageCode();
     this.initData();
   },
-  mounted() {
-    console.log('this.$store.state.menuName='+this.$store.state.menuName);
-  },
   computed: {
     ...mapState([
       "address",
@@ -106,7 +108,8 @@ export default {
       "transferList",
       "dbcToUS",
       "dbcPrice",
-      "dbcChange"
+      "dbcChange",
+      "menuName",
     ]),
     set_dbctalk() {
       return "";
@@ -115,7 +118,7 @@ export default {
   methods: {
     ...mapActions([
       "getAccountState",
-      "getTransferList",
+      // "getTransferList",
       "getExchangeRate",
       "getGate"
     ]),
@@ -512,6 +515,7 @@ export default {
     },
     pushMenu(name) {
       //  this.menuName = name;
+      console.log(name, 'name');
       this.$store.commit("setMenuName", name);
       this.$router.push("/" + name);
     },

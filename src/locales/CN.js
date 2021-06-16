@@ -73,7 +73,8 @@ export default {
     mywallet: "我的钱包",
     myaccount: "我的账户",
     help: "帮助文档",
-    talk: "AI开发者论坛"
+    talk: "AI开发者论坛",
+    audit:'审核机器'
   },
   footer: {
     DBChain: "DeepBrain Chain",
@@ -231,7 +232,7 @@ export default {
     wallet_4: "私钥不正确！",
     wallet_5: "一定要记住密码！不能丢失，" + "你需要这个密码和你的私钥才能解锁钱包 ",
     // 新加
-    wallet_6: "以下为你生成的助记词。请确保你会将它保存在一个安全的地方，拥有该助记词时你才可以重新创建此账户。"
+    wallet_6: "一定要记住密码！不能丢失，" + "你需要这个密码和你的私钥文件才能解锁钱包 "
   },
   home: {
     intr_dbchain_1: "DBChain",
@@ -918,6 +919,62 @@ export default {
   mywallet_create_new: "创建新钱包账号",
   ...enLocale,
 
-  // hz 新增
-  result: '结果'
+
+  /**
+   * hz 新增单词
+   */
+  result: '结果',
+  verifyPassward: "请输入账户密码",
+  audit:{
+    // 抢单页面
+    ordergrabbingMachine:'抢单机器列表',
+    distributionMachine:'分配机器列表',
+    myAudit:'我的审核列表',
+    myOrder:'我的抢单列表',
+    ogMachine_tips:'当有人开时抢单后，该订单时间开时倒计时，限制3小时结束，需在半小时内发送给验证人session信息给对应验证人，验证人有一小时验证时间。   验证人在3小时以后才可提交原始信息，如提前提交，需扣除100RMB等值的DBC作为惩罚',
+    order:'编号',
+    seeDetails:'等待接单中',
+    seeDetails1:'等待问题描述',
+    seeDetails2:'查看问题描述',
+    status:'状态',
+    status1:'等待抢单',
+    status2:'已被抢完',
+    hasNum:'已抢单人数',
+    start:'开时抢单',
+    start1:'已抢单',
+    tipmsg:'抢单以后等待提名人发送相关信息后方可查看信息',
+    tipmsg1:'抢单成功',
+    tipmsg2:'抢单失败',
+    message:'错误描述',
+    confirm: '运行虚拟机',
+    hasError:'机器有问题',
+    noError:'机器无问题',
+    // 派单页面
+    verification:'开始验证',
+    verification1:'提交验证结果Hash值',
+    verification2:'提交验证结果原始值',
+    tipmsg3:'机器发放成功，请前往我的机器列表',
+    mytime:'我的可验证时间段',
+    verification_tips:'在验证的时间内必须提交结果',
+    verification_tips1:'36小时后才能够提交，提交内容包含原始值',
+    // 我的审核
+    machineStatus:'机器状态',
+    machineStatus1:'验证中',
+    machineStatus2:'已上线',
+    machineStatus3:'租用中',
+    machineStatus3:'闲置中',
+    verificationTime: '已验证次数',
+    today_profit:'今日收益',
+    total_profit:'累计收益',
+    all_profit:'总收益',
+    all_machine:'机器总数',
+    machineTips:'(提示:机器下架后，该机器收益停止)',
+    myResult:'我的验证结果',
+    finalResult:'最终验证结果',
+    adopt:'通过',
+    failed:'未通过',
+    proportion:'验证比例',
+    record:'历史收益信息',
+  }
+
 };

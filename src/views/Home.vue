@@ -113,7 +113,7 @@ export default {
   methods: {
     ...mapActions([
       "getAccountState",
-      "getTransferList",
+      // "getTransferList",
       "getExchangeRate",
       "getGate"
     ]),
