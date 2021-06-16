@@ -1,27 +1,28 @@
 <template>
   <div class="my-wallet">
     <div class="wallet-btns">
-      <!-- <el-button
+      <el-button
         type="primary"
         @click="openCreateWallet('/createWallet')"
       >
         {{ $t('mywallet_create') }}
-      </el-button> -->
+      </el-button>
       <el-button
         v-if="contain_new_wallet"
         type="primary"
         @click="openCreateWalletNew('/createWallet')"
       >
-        {{ $t('mywallet_create') }}
+        {{ $t('mywallet_create_new') }}
       </el-button>
-      <!-- <el-button
+      <el-button
         v-if="!contain_new_wallet"
         type="primary"
         @click="openWallet"
       >
         {{ $t('mywallet_open') }}
-      </el-button> -->
+      </el-button>
       <el-button
+        v-if="contain_new_wallet"
         type="primary"
         @click="openWallet"
       >
@@ -75,28 +76,19 @@ export default {
     }
     this.initData();
   },
-  computed:{
-    ...mapState(['isNewWallet'])
-  },
   methods: {
     ...mapActions(["getAccountState", "getTransferList"]),
     initData() {
-      console.log(String(this.isNewWallet), 'this.isNewWallet');
-      if(String(this.isNewWallet) == 'false'){
+      if (getAccount()) {
         this.$router.push("myWalletUnlock");
-      }else if(String(this.isNewWallet) == 'true'){
+      } else if (getCurrentPair()) {
         this.$router.push('/newWallet/myWalletUnlock')
       }
-      // if (getAccount()) {
-      //   this.$router.push("myWalletUnlock");
-      // } else if (getCurrentPair()) {
-      //   this.$router.push('/newWallet/myWalletUnlock')
-      // }
     },
-    // openCreateWallet() {
-    //   const type = this.$route.path.search("gpu") !== -1 ? "gpu" : "miner";
-    //   this.$router.push(`/createWallet/${type}`);
-    // },
+    openCreateWallet() {
+      const type = this.$route.path.search("gpu") !== -1 ? "gpu" : "miner";
+      this.$router.push(`/createWallet/${type}`);
+    },
     openCreateWalletNew () {
       this.$router.push(`/newWallet/createWallet`)
     },

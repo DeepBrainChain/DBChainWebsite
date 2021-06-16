@@ -5,10 +5,7 @@
     <div class="form mt20">
       <label>{{$t("myMachine_no_double_pay")}}</label>
     </div>
-    <div class="form mt20" v-if="isNewWallet == 'true'">
-      <span>{{$t('verifyPassward') + ': '}}</span>
-      <el-input style="width: 300px"  show-password v-model="passward" size="small"></el-input>
-    </div>
+
     <div class="dlg-bottom">
       <el-button class="dlg-btn" type="primary" size="small" @click="confirm">{{$t('confirmPay')}}</el-button>
       <el-button class="dlg-btn" plain size="small" @click="cancel">{{$t('myMachine_paid')}}</el-button>
@@ -19,7 +16,7 @@
 <script>
 import { get_pay_dbc_count, can_rent_this_machine } from "@/api";
 import { getBalance } from "@/utlis";
-import { mapState } from "vuex"
+
 export default {
   name: "popup_reload",
   props: {
@@ -32,13 +29,9 @@ export default {
       }
     }
   },
-  computed:{
-    ...mapState(["isNewWallet"]),
-  },
   data() {
     return {
-      isOpen: this.open,
-      passward: ''
+      isOpen: this.open
     };
   },
   watch: {
@@ -50,7 +43,6 @@ export default {
     confirm() {
       let item = this.placeOrderData;
       item.switch_pay_mode = "confirm_pay";
-      item.passward = this.passward
       this.$emit("confirm", item);
     },
     cancel() {

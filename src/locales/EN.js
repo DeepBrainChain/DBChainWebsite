@@ -2,7 +2,7 @@ import enLocale from 'element-ui/lib/locale/lang/en'
 
 export default {
   message: 'hello i18n !!',
-  website_name: '52cv', //yousanai,  dbchain,aionego
+  website_name: 'dbchain', //yousanai,  dbchain,aionego
   $: '$',
   send: 'Send',
   closeWallet: 'Close Wallet',
@@ -277,7 +277,7 @@ export default {
     intr_opengpu_1: "OpenGPU",
     intr_aiyanxishe_1: "AI YanXiShe",
     intr_codefate_1: "CodeFate",
-    intr_changhe_1: "ChangHe Cloud",
+    intr_tycloud_1: "TYCloud",
     intr_1: ' provides GPU rental service.join us! can help your machine very convenient access to the DBC network, gain revenue. \n' +
       '\n' +
       ' If your GPU is ever idle, you can connect it to the DBC network to earn DBC tokens and enjoy the benefit of the tokens appreciation. \n ' +
@@ -558,6 +558,8 @@ export default {
   footer_service_aiyanxishe: "kefu@yanxishe.com", //9.17 19:33
   footer_service_codefate: "wangming1785@foxmail.com", //9.17 19:33
   footer_service_changhe: "changhecloud@outlook.com", //9.17 19:33
+  footer_service_tycloud: "tyhctech@hotmail.com", //9.17 19:33
+
   list_start_rentout: 'minutes later, it can be rented',
   list_can_rentout: 'Users can rent it now',
   my_gpu_count: 'The number of gpus I rent ', //9.17 19:33

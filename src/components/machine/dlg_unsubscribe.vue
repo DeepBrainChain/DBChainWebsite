@@ -11,7 +11,7 @@
         <el-form>
           <el-form-item
             :label="$t('dlg_input_code')"
-            v-if="item&&item.mcData.dbc_version === '0.3.7.2'"
+            v-if="item.mcData.dbc_version === '0.3.7.2'"
           >
             <el-input
               v-model="stop_code"
@@ -29,7 +29,7 @@
           </el-form-item>
           <el-form-item
             :label="$t('dlg_input_code_stop')"
-            v-if="item&&item.mcData.dbc_version !== '0.3.7.2'"
+            v-if="item.mcData.dbc_version !== '0.3.7.2'"
           >
             <el-input
               v-model="stop_code"

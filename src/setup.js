@@ -34,9 +34,7 @@ import {
   FormItem,
   Autocomplete,
   Tooltip,
-  Pagination,
-  Table,
-  TableColumn
+  Pagination
 } from 'element-ui'
 import ElementLocale from 'element-ui/lib/locale'
 import {
@@ -82,8 +80,6 @@ Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Autocomplete)
 Vue.use(Tooltip)
-Vue.use(Table)
-Vue.use(TableColumn)
 Vue.use(Pagination)
 Vue.component(Message)
 

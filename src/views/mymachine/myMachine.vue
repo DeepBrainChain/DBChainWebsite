@@ -4,23 +4,12 @@
     <div class="wallet-btns">
       <el-button
         type="primary"
-        @click="openCreateWalletNew('/createWallet')"
+        v-on:click="openCreateWallet('/createWallet')"
+        >{{ $t("gpu.createWallet") }}</el-button
       >
-        {{ $t('mywallet_create') }}
-      </el-button>
-      <el-button
-        type="primary"
-        @click="openWallet"
-      >
-        {{ $t('mywallet_open_old') }}
-      </el-button>
-      <el-button
-        v-if="contain_new_wallet"
-        type="primary"
-        @click="openWallet_new"
-      >
-        {{ $t('mywallet_open_new') }}
-      </el-button>
+      <el-button type="primary" v-on:click="openWallet">{{
+        $t("gpu.openWallet")
+      }}</el-button>
     </div>
     <div class="center-box">
       <div>{{ $t("gpu.rentMachine") }}</div>
@@ -31,24 +20,12 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import { getAccount } from "@/utlis";
-import { initFromLocalstorage, getCurrentPair } from "@/utlis/dot"
 
 export default {
   name: "myWallet",
   created() {
-    if (this.$t("contain_new_wallet") === "1") {
-      this.contain_new_wallet = true;
-    }
     console.log(this.$route);
     this.initData();
-  },
-  data(){
-    return{
-      contain_new_wallet: false
-    }
-  },
-  computed: {
-    ...mapState(['isNewWallet'])
   },
   methods: {
     ...mapActions(["getAccountState", "getTransferList"]),
@@ -56,36 +33,27 @@ export default {
       if (this.$t("website_name") == "congTuCloud") {
         this.$router.replace("myMachineUnlock");
       } else {
-        // if (getAccount()) {
-        //   this.$router.replace("myMachineUnlock");
-        // }
-        if (this.isNewWallet == 'true' || this.isNewWallet == 'false') {
-          this.$router.push("myMachineUnlock");
+        if (getAccount()) {
+          this.$router.replace("myMachineUnlock");
         }
       }
     },
-    openCreateWalletNew () {
-      this.$router.push(`/newWallet/createWallet`)
+    openCreateWallet() {
+      const type = this.$route.path.search("gpu") !== -1 ? "gpu" : "miner";
+      this.$store.commit("setMenuName", "mywallet");
+      this.$router.push(`/createWallet/${type}`);
     },
     openWallet() {
       this.getAccountState()
-        .then(data => {
-          this.$router.push("myWalletUnlock");
+        .then((data) => {
+          this.$router.push("/gpu/myMachine_unlock");
         })
-        .catch(err => {
+        .catch((err) => {
           const type = this.$route.path.search("gpu") !== -1 ? "gpu" : "miner";
+          this.$store.commit("setMenuName", "mywallet");
           this.$router.push(`/openWallet/${type}`);
         });
     },
-    openWallet_new() {
-      const pair = initFromLocalstorage()
-      if (pair) {
-        console.log('pair->', pair)
-        this.$router.push('/newWallet/myWalletUnlock')
-      } else {
-        this.$router.push(`/newWallet/openWallet`)
-      }
-    }
   },
 };
 </script>

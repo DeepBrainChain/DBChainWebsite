@@ -113,7 +113,7 @@ export default {
   methods: {
     ...mapActions([
       "getAccountState",
-      // "getTransferList",
+      "getTransferList",
       "getExchangeRate",
       "getGate"
     ]),
@@ -247,6 +247,8 @@ export default {
         return this.$t("home.intr_changhe_1");
       } else if (this.$t("website_name") == "dpool") {
         return this.$t("home.intr_dpool_1");
+      }else if (this.$t("website_name") == "tycloud") {
+        return this.$t("home.intr_tycloud_1");
       }
 
       return this.$t("home.intr_dbchain_1");

@@ -36,7 +36,6 @@
       v-if="res_body.content.length > 0"
       v-for="(item, index) in res_body.content"
       class="border-content"
-      :key="index"
     >
       <div class="tools-head">
         <div class="l-wrap">
@@ -1039,8 +1038,6 @@ import {
   getCongtuGpuRenewalTradeNoPrefix,
 } from "@/utlis";
 
-import { initFromLocalstorage, getCurrentPair , onGetBalance } from "@/utlis/dot"
-import { mapState } from "vuex"
 export default {
   name: "myMachine_unlock",
   components: {
@@ -1106,7 +1103,6 @@ export default {
       getAlipayStatusTimer: "",
       getDbcResCodeTimer: "",
       orderCount: 0,
-      wallet_address: (getAccount() && getAccount().address) || (getCurrentPair() && getCurrentPair().address)
     };
   },
 
@@ -1183,7 +1179,6 @@ export default {
   },
 
   computed: {
-    ...mapState(["isNewWallet"]),
     rentNumber() {
       return this.res_body.content.filter((item) => {
         return item.orderData.rent_success;
@@ -1320,7 +1315,7 @@ export default {
         place_order_gpu_to_cpu_new({
           machine_type: item.machine_type,
           machine_id: item.machine_id,
-          wallet_address_user: this.wallet_address,
+          wallet_address_user: getAccount().address,
           mode: "payment",
           order_id_pre: item.order_id,
           user_name_platform,
@@ -1376,7 +1371,7 @@ export default {
       place_order_gpu_to_cpu_new({
         machine_type: item.machine_type,
         machine_id: item.machine_id,
-        wallet_address_user: this.wallet_address,
+        wallet_address_user: getAccount().address,
         user_name_platform,
         mode: "deposit",
         order_id_pre: item.order_id,
@@ -2445,11 +2440,11 @@ export default {
             }
           });
       } else {
-        if (!( getAccount() || getCurrentPair())) {
+        if (!getAccount()) {
           // this.$router.push(`/openWallet/${type}`);
           return;
         }
-        let wallet_address_user = this.wallet_address;
+        let wallet_address_user = getAccount().address;
         const user_name_platform = this.$t("website_name");
         const language = this.$i18n.locale;
         const promiseList = [
@@ -2470,8 +2465,8 @@ export default {
             // console.log(
             //   "Promise>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
             // );
-            // console.log(res_1, 11111);
-            // console.log(res_2, 222222);
+            // console.log(res_1);
+            // console.log(res_2);
             if (res_2.content) {
               res_2.content.forEach((item) => {
                 const mcItem = res_1.content.find(
@@ -2537,7 +2532,7 @@ export default {
       this.bindMail = cookie.get("mail");
       let address = "tmp";
       if (this.$t("website_name") != "congTuCloud") {
-        address = this.wallet_address
+        address = getAccount().address;
       }
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
@@ -2581,7 +2576,7 @@ export default {
           if (isNewMail) {
             binding = false;
             const res = await binding_is_ok({
-              wallet_address: this.wallet_address,
+              wallet_address: getAccount().address,
               user_name_platform,
               language,
             });
@@ -2592,7 +2587,7 @@ export default {
           } else {
             binding = false;
             const res = await binding_is_ok_modify({
-              wallet_address: this.wallet_address,
+              wallet_address: getAccount().address,
               user_name_platform,
               language,
             });

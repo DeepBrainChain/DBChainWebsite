@@ -11,7 +11,7 @@
           <h3>{{ $t("continue_pay_details") }}</h3>
         </div>
 
-        <div v-for="(item, index) in content" class="border-content" :key="index">
+        <div v-for="item in content" class="border-content">
           <div class="tools-head">
             <div class="l-wrap">
               <!--          <span class="tools-title">{{$t('gpu.mcStatusTitle')}}：<b>{{$t('gpu.machineOnLine')}}</b></span>-->

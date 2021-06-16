@@ -23,748 +23,746 @@
         <span v-if="isBinding" class="bindInfo">{{$t('my_machine_vocing')}}</span>
       </div>-->
     </div>
-    <template v-if="res_body.content.length > 0">
-      <div
-        v-for="(item, index) in res_body.content"
-        class="border-content"
-        :key='index'
-      >
-        <div class="tools-head">
-          <div class="l-wrap">
-            <!--          <span class="tools-title">{{$t('gpu.mcStatusTitle')}}：<b>{{$t('gpu.machineOnLine')}}</b></span>-->
+    <div
+      v-if="res_body.content.length > 0"
+      v-for="(item, index) in res_body.content"
+      class="border-content"
+    >
+      <div class="tools-head">
+        <div class="l-wrap">
+          <!--          <span class="tools-title">{{$t('gpu.mcStatusTitle')}}：<b>{{$t('gpu.machineOnLine')}}</b></span>-->
 
-            <span class="tools-title" v-if="item.orderData.task_id"
-              >{{ $t("container_id") }}:{{ item.orderData.task_id }}&nbsp; &nbsp;
-              &nbsp; &nbsp;</span
-            >
-            <el-button
-              v-if="item.orderData.have_continue_pay"
-              plain
-              class="is-link"
-              @click="
-                pushContinuePayDetail(
-                  item.orderData.order_id,
-                  item.orderData.order_is_over
-                )
-              "
-              >{{ $t("click_to_view_continue_pay") }}</el-button
-            >
-            <span v-if="item.orderData.have_continue_pay" class="tools-title"
-              >&nbsp; &nbsp; &nbsp; &nbsp;</span
-            >
-            <span
-              v-if="
-                item.orderData.order_is_cancer || item.orderData.order_is_over
-              "
-              class="tools-title"
-            ></span>
-            <span
-              v-else-if="!item.orderData.pay_error && !item.orderData.return_dbc"
-              class="tools-title"
-              >{{ $t("gpu.remainingTime") }}：{{
-                $secToDate(item.orderData.rest_time_rent * 60, "DHM")
-              }}</span
-            >
-          </div>
-          <div class="r-wrap">
-            <!--<span v-if="item.rent_success">正在使用中</span>
-            <span
-              v-if="Math.floor((new Date().getTime() - item.orderData.milli_create_order_time)/60000) <= 15"
-            >等待支付</span>
-            <span v-else-if="item.orderData.order_is_cancer">未支付</span>
-            <span v-if="item.orderData.order_is_cancer === false" class="ml10">
-              剩余支付时间：{{
-              15 - Math.floor((new Date().getTime() - item.orderData.milli_create_order_time)/60000)
-              }}分钟
-            </span>-->
-            <span
-              v-if="
-                item.orderData.order_is_over && item.orderData.order_isnormal_over
-              "
-              >{{ $t("my_machine_isnormal_over") }}</span
-            >
-            <span
-              v-else-if="
-                item.orderData.order_is_over &&
-                item.orderData.order_isnormal_over === false
-              "
-              >{{ $t("my_machine_nonormal_over") }}</span
-            >
-            <span v-else-if="item.orderData.order_is_cancer">{{
-              $t("my_machine_order_cancer")
-            }}</span>
-            <span v-else-if="item.orderData.rent_success">{{
-              $t("my_machine_order_rent_success")
-            }}</span>
-
-            <!--   <span v-else-if="item.orderData.vocing_pay">{{$t('my_machine_order_vocing_pay')}}</span>  -->
-            <span
-              v-else-if="
-                item.orderData.pay_error && item.orderData.return_dbc === false
-              "
-              >{{ $t("my_machine_order_pay_error") }}</span
-            >
-            <span
-              v-else-if="item.orderData.pay_error && item.orderData.return_dbc"
-              >{{ $t("my_machine_order_return_dbc") }}</span
-            >
-            <span
-              v-else-if="
-                item.orderData.container_is_exist && !item.orderData.vocing_pay
-              "
-              >{{ $t("my_machine_order_vocing_machine_success") }}</span
-            >
-          </div>
-        </div>
-        <div class="pay-wrap" v-if="$t('website_name') != 'congTuCloud'">
-          <div class="rate-head" v-if="item.mcData.evaluation_score_average > 0">
-            <div class="flex right vCenter">
-              <el-rate
-                :value="item.mcData.evaluation_score_average / 2"
-              ></el-rate>
-              <!--     <span>{{item.mcData.evaluation_score_average}}{{$t('scores')}}</span> -->
-            </div>
-          </div>
-          <div>
-            <span
-              class="tdred"
-              v-if="
-                item.orderData.mode !== null && item.orderData.mode === 'payment'
-              "
-              >{{ $t("gpu.payDBCs") }}：{{
-                (
-                  item.orderData.dbc_total_count + parseFloat(item.orderData.code)
-                ).toFixed(4)
-              }}</span
-            >
-            <span
-              class="tdred"
-              v-if="
-                item.orderData.mode !== null && item.orderData.mode === 'deposit'
-              "
-              >{{ $t("deposit_dbcs_cpu") }}：{{
-                item.orderData.dbc_total_count + parseFloat(item.orderData.code)
-              }}</span
-            >
-
-            <span class="td"
-              >{{ $t("my_machine_beused_time") }}：{{
-                parseInt(item.orderData.real_rent_time / 60)
-              }}{{ $t("my_machine_hour") }}{{ item.orderData.real_rent_time % 60
-              }}{{ $t("my_machine_min") }}</span
-            >
-            <span class="td"
-              >{{ $t("my_gpu_count") }}：{{ item.orderData.gpu_count }}</span
-            >
-          </div>
-
-          <div>
-            <span class="td"
-              >{{ $t("gpu.actualPrice") }}：{{
-                item.orderData.dbc_real_need_count
-              }}
-              DBC</span
-            >
-            <span v-if="item.orderData.have_continue_pay === false" class="td"
-              >{{ $t("gpu.gpuBilling") }}：$
-              {{ item.orderData.gpu_price_dollar }}/{{
-                $t("my_machine_hour")
-              }}</span
-            >
-            <span v-if="item.mcData.dbc_version !== '0.3.7.2'" class="td"
-              >{{ $t("diskspace_remaining") }}：{{
-                parseInt(
-                  (item.orderData.diskspace +
-                    item.orderData.diskspace_giving -
-                    item.orderData.diskspace_image_data) /
-                    (1024 * 1024)
-                )
-              }}G</span
-            >
-          </div>
-          <div>
-            <span class="td"
-              >{{ $t("gpu.currentRemaining") }}：{{
-                (
-                  item.orderData.dbc_total_count -
-                  item.orderData.dbc_real_need_count +
-                  parseFloat(item.orderData.code)
-                ).toFixed(4)
-              }}
-              DBC</span
-            >
-            <span v-if="item.orderData.have_continue_pay === false" class="td"
-              >{{ $t("gpu.payPrice") }}：$
-              {{ item.orderData.dbc_price.toFixed(4) }}</span
-            >
-            <span v-if="item.mcData.dbc_version !== '0.3.7.2'" class="td"
-              >{{ $t("memory_space") }}：{{
-                parseInt(item.orderData.memory / (1024 * 1024))
-              }}G</span
-            >
-          </div>
-        </div>
-        <div class="status-wrap">
-          <div class="flex status-title">
-            <div>
-              <span>{{ item.mcData.machine_id }}</span>
-              <span class="fs28">
-                <span
-                  class="cPrimaryColor"
-                  v-if="$t('website_name') != 'congTuCloud'"
-                  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$
-                  {{ item.mcData.gpu_price_dollar }}/{{
-                    $t("my_machine_hour")
-                  }}</span
-                >
-                <span class="cPrimaryColor" v-else
-                  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  {{ (item.mcData.gpu_price_dollar * usdToRmb).toFixed(2)
-                  }}{{ $t("RMB") }}/{{ $t("my_machine_hour") }}</span
-                >
-              </span>
-            </div>
-            <div class="td" :style="styleHidden">
-              <span class="fs16">
-                {{ $t("my_machine_dbc_version") }}：
-                <a class="cPrimaryColor">{{ item.mcData.dbc_version }}</a>
-              </span>
-            </div>
-          </div>
-          <div class="flex">
-            <div class="td2">
-              <span class="fs28">
-                <a class="cPrimaryColor">{{ item.mcData.gpu_type }}</a>
-                <a class="cPrimaryColor">x{{ item.mcData.gpu_count }}</a>
-              </span>
-            </div>
-            <div class="td2">
-              <span class="fs28">
-                <a class="cPrimaryColor">{{ item.mcData.country }}</a>
-              </span>
-            </div>
-          </div>
-          <div class="flex">
-            <div class="td">
-              <span class="fs16">
-                {{ $t("list_idle_gpus") }}:
-                <a class="cPrimaryColor">{{
-                  item.mcData.gpu_count - item.mcData.gpu_be_used
-                }}</a>
-              </span>
-            </div>
-            <div class="td">
-              <span class="fs16">
-                {{ $t("list_length_of_available_time") }}：
-                <a class="cPrimaryColor"
-                  >{{ Math.floor(item.mcData.length_of_available_time)
-                  }}{{ $t("my_machine_hour") }}</a
-                >
-              </span>
-            </div>
-            <div class="td">
-              <span class="fs16">
-                {{ $t("list_total_time_be_used") }}：
-                <a class="cPrimaryColor">{{
-                  $minsToHourMins(item.mcData.total_time_be_used)
-                }}</a>
-              </span>
-            </div>
-            <div class="td">
-              <span class="fs16">
-                {{ $t("list_total_rent_count") }}：
-                <a class="cPrimaryColor">{{ item.mcData.total_rent_count }}</a>
-              </span>
-            </div>
-            <div class="td">
-              <span class="fs16">
-                {{ $t("list_error_rent_count") }}：
-                <a class="cPrimaryColor">{{ item.mcData.error_rent_count }}</a>
-              </span>
-            </div>
-          </div>
-
-          <!--       <div class="flex" v-if="item.mcData.dbc_version!=='0.3.7.2'">
-            <div class="td">
-              <span class="fs16">
-                {{$t('cpu_containers_list')}}:
-                <a class="cPrimaryColor">{{item.mcData.cpu_containers}}</a>
-              </span>
-            </div>
-            <div class="td">
-              <span class="fs16">
-                {{$t('cpu_containers_can_use_memory_list')}}：
-                <a
-                  class="cPrimaryColor"
-                >{{parseInt(item.mcData.cpu_containers_can_use_memory/(1024*1024))}}G</a>
-              </span>
-            </div>
-            <div class="td">
-              <span class="fs16">
-                {{$t('cpu_containers_can_use_disk_list')}}：
-                <a
-                  class="cPrimaryColor"
-                >{{parseInt(item.mcData.cpu_containers_can_use_disk/(1024*1024))}}G</a>
-              </span>
-            </div>
-            <div class="td">
-              <span class="fs16">
-                {{$t('gpu_containers_can_use_memory_list')}}：
-                <a
-                  class="cPrimaryColor"
-                >{{parseInt(item.mcData.gpu_containers_can_use_memory/(1024*1024))}}G</a>
-              </span>
-            </div>
-            <div class="td">
-              <span class="fs16">
-                {{$t('gpu_containers_can_use_disk_list')}}：
-                <a
-                  class="cPrimaryColor"
-                >{{parseInt(item.mcData.gpu_containers_can_use_disk/(1024*1024))}}G</a>
-              </span>
-            </div>
-          </div>-->
-
-          <div class="flex">
-            <div v-if="item.mcData.tensor_cores" class="td">
-              <span class="fs16">
-                Tensor Cores：
-                <a class="cPrimaryColor">{{ item.mcData.tensor_cores }}</a>
-              </span>
-            </div>
-            <div class="td">
-              <span class="fs16">
-                {{ $t("list_cuda_version") }}：
-                <a class="cPrimaryColor">{{ item.mcData.cuda_version }}</a>
-              </span>
-            </div>
-            <div class="td">
-              <span class="fs16">
-                {{ $t("list_disk_space") }}：
-                <a class="cPrimaryColor"
-                  >{{ parseInt(item.mcData.disk_space / (1024 * 1024)) }}GB</a
-                >
-                <a class="cPrimaryColor"
-                  >&nbsp;&nbsp;{{ item.mcData.disk_type }}</a
-                >
-              </span>
-            </div>
-            <div class="td3">
-              <span class="fs16">
-                {{ $t("list_cpu_type") }}：
-                <a class="cPrimaryColor">{{ item.mcData.cpu_type }}</a>
-              </span>
-            </div>
-          </div>
-          <div class="flex">
-            <div v-if="item.mcData.half_precision_tflops > 0" class="td">
-              <span class="fs16">
-                {{ $t("list_half_precision_tflops") }}：
-                <a class="cPrimaryColor"
-                  >{{ item.mcData.half_precision_tflops }}TFLOPS</a
-                >
-              </span>
-            </div>
-            <div class="td">
-              <span class="fs16">
-                {{ $t("list_gpu_ram_size") }}：
-                <a class="cPrimaryColor"
-                  >{{ parseInt(item.mcData.gpu_ram_size / (1000 * 1000)) }}GB</a
-                >
-              </span>
-            </div>
-            <div class="td">
-              <span class="fs16">
-                {{ $t("list_disk_bandwidth") }}：
-                <a class="cPrimaryColor"
-                  >{{ parseInt(item.mcData.disk_bandwidth / 1024) }}MB/s</a
-                >
-              </span>
-            </div>
-            <div class="td">
-              <span class="fs16">
-                {{ $t("list_cpu_numbers") }}：
-                <a class="cPrimaryColor">{{ item.mcData.cpu_numbers }}</a>
-              </span>
-            </div>
-          </div>
-          <div class="flex">
-            <div v-if="item.mcData.single_precision_tflops > 0" class="td">
-              <span class="fs16">
-                {{ $t("list_single_precision_tflops") }}：
-                <a class="cPrimaryColor"
-                  >{{ item.mcData.single_precision_tflops }}TFLOPS</a
-                >
-              </span>
-            </div>
-            <div class="td">
-              <span class="fs16">
-                {{ $t("list_gpu_ram_bandwidth") }}：
-                <a class="cPrimaryColor"
-                  >{{
-                    parseInt(item.mcData.gpu_ram_bandwidth / (1024 * 1024))
-                  }}GB/s</a
-                >
-              </span>
-            </div>
-            <div class="td">
-              <span class="fs16">
-                {{ $t("list_inet_up") }}：
-                <a class="cPrimaryColor"
-                  >{{ parseInt(item.mcData.inet_up / 1024) }}Mbps</a
-                >
-              </span>
-            </div>
-            <div class="td">
-              <span class="fs16">
-                {{ $t("list_ram_size") }}：
-                <a class="cPrimaryColor"
-                  >{{ parseInt(item.mcData.ram_size / (1024 * 1024)) }}GB</a
-                >
-              </span>
-            </div>
-          </div>
-          <div class="flex">
-            <div v-if="item.mcData.double_precision_tflops > 0" class="td">
-              <span class="fs16">
-                {{ $t("list_double_precision_tflops") }}：
-                <a class="cPrimaryColor"
-                  >{{ item.mcData.double_precision_tflops }}TFLOPS</a
-                >
-              </span>
-            </div>
-            <div class="td">
-              <span class="fs16">
-                {{ $t("list_pcie_bandwidth") }}：
-                <a class="cPrimaryColor"
-                  >{{
-                    parseInt(item.mcData.pcie_bandwidth / (1024 * 1024))
-                  }}GB/s</a
-                >
-              </span>
-            </div>
-            <div class="td">
-              <span class="fs16">
-                {{ $t("list_inet_down") }}：
-                <a class="cPrimaryColor"
-                  >{{ parseInt(item.mcData.inet_down / 1024) }}Mbps</a
-                >
-              </span>
-            </div>
-            <div class="td3">
-              <span class="fs16">
-                {{ $t("list_os") }}：
-                <a class="cPrimaryColor">{{ item.mcData.os }}</a>
-              </span>
-            </div>
-          </div>
-        </div>
-        <!--<div class="tools-head bd">
-          <div class="l-wrap">
-            <span class="tools-title small">{{$t('gpu.machineLoginInfo')}}：ssh -p 20049 root@116.85.24.172，{{$t('password')}}：xxxxx</span>
-          </div>
-        </div>-->
-        <div class="tools-head">
-          <div class="l-wrap">
-            <span
-              v-if="
-                isShowRendSuccessMsg(item.orderData.milli_rent_success_time) &&
-                item.orderData.order_id_pre === null &&
-                !item.orderData.from_stop_to_open
-              "
-              >{{ $t("myMachine_rent_success_msg") }}</span
-            >
-            <span v-else-if="item.orderData.vocing === true">{{
-              $t("myMachine_is_pay_vocing")
-            }}</span>
-            <span
-              v-if="
-                isShowRendSuccessMsg(item.orderData.milli_rent_success_time) &&
-                item.orderData.order_id_pre !== null &&
-                !item.orderData.from_stop_to_open
-              "
-              >{{ $t("myMachine_rent_success_msg_update_stop_gpu") }}</span
-            >
-            <span
-              v-if="
-                isShowRendSuccessMsg(item.orderData.milli_rent_success_time) &&
-                item.orderData.order_id_pre !== null &&
-                item.orderData.from_stop_to_open
-              "
-              >{{ $t("myMachine_rent_success_msg_update_stop_to_open") }}</span
-            >
-
-            <span v-else-if="item.orderData.vocing === true">{{
-              $t("myMachine_is_pay_vocing")
-            }}</span>
-
-            <span
-              class="cRed"
-              v-else-if="
-                item.orderData.order_is_cancer === false &&
-                item.orderData.container_is_exist &&
-                item.orderData.wallet_address_dbchain === null
-              "
-              >{{ $t("myMachine_maybe_is_used") }}</span
-            >
-            <span
-              class="cRed"
-              v-else-if="
-                item.orderData.order_id_pre === null &&
-                item.orderData.creating_container &&
-                !item.orderData.order_is_cancer &&
-                !item.orderData.order_is_over &&
-                !item.orderData.rent_success &&
-                !item.orderData.pay_error
-              "
-              >{{ $t("myMachine_is_vocing_machine") }}</span
-            >
-
-            <span
-              class="cRed"
-              v-else-if="
-                item.orderData.order_id_pre !== null &&
-                (item.orderData.creating_container || creating_container) &&
-                !item.orderData.order_is_cancer &&
-                !item.orderData.order_is_over &&
-                !item.orderData.rent_success &&
-                !item.orderData.pay_error &&
-                !item.orderData.from_stop_to_open
-              "
-              >{{ stopGpuTips
-              }}{{
-                parseInt(
-                  item.orderData.diskspace_image_data / (1024 * 1024 * 16)
-                ) + 1
-              }}-{{
-                parseInt(
-                  item.orderData.diskspace_image_data / (1024 * 1024 * 1.5)
-                ) + 9
-              }}{{ $t("my_machine_min") }}</span
-            >
-            <span
-              class="cRed"
-              v-else-if="
-                item.orderData.order_id_pre !== null &&
-                (item.orderData.creating_container || creating_container) &&
-                !item.orderData.order_is_cancer &&
-                !item.orderData.order_is_over &&
-                !item.orderData.rent_success &&
-                !item.orderData.pay_error &&
-                item.orderData.from_stop_to_open
-              "
-              >{{ tipsText
-              }}{{
-                parseInt(
-                  item.orderData.diskspace_image_data / (1024 * 1024 * 16)
-                ) + 1
-              }}-{{
-                parseInt(
-                  item.orderData.diskspace_image_data / (1024 * 1024 * 1.5)
-                ) + 9
-              }}{{ $t("my_machine_min") }}</span
-            >
-
-            <span
-              class="cRed"
-              v-else-if="
-                isPaying &&
-                !item.orderData.order_is_cancer &&
-                !item.orderData.pay_success &&
-                !item.orderData.order_is_over &&
-                !item.orderData.rent_success &&
-                !item.orderData.pay_error
-              "
-              >{{ transferTips }}</span
-            >
-            <span class="cRed" v-else-if="local_pay_error && !isPaying">{{
-              $t("myMachine_is_transfer_error")
-            }}</span>
-            <span
-              class="cRed"
-              v-else-if="
-                ((item.orderData.vocing_pay || ispayPocing) &&
-                  !item.orderData.order_is_cancer &&
-                  !item.orderData.rent_success &&
-                  !item.orderData.order_is_over &&
-                  item.orderData.container_is_exist &&
-                  item.orderData.order_id_pre === null) ||
-                ((item.orderData.vocing_pay || ispayPocing) &&
-                  !item.orderData.order_is_cancer &&
-                  !item.orderData.pay_success &&
-                  !item.orderData.order_is_over &&
-                  item.orderData.order_id_pre != null)
-              "
-              >{{ $t("my_machine_order_vocing_pay") }}</span
-            >
-            <span
-              class="cRed"
-              v-else-if="
-                !isShowRendSuccessMsg(item.orderData.milli_rent_success_time) &&
-                item.orderData.rent_success &&
-                !item.mcData.idle_status &&
-                !item.orderData.order_is_over
-              "
-              >{{ $t("no_idle_gpus") }}</span
-            >
-            <span
-              v-else-if="
-                item.orderData.rent_success === false &&
-                ((item.orderData.order_id_pre === null &&
-                  item.orderData.container_is_exist === true &&
-                  item.orderData.pay_error === false) ||
-                  (item.orderData.order_id_pre !== null &&
-                    item.orderData.order_is_over === false &&
-                    item.orderData.order_is_cancer === false &&
-                    item.orderData.pay_success === false))
-              "
-              >{{ $t("myMachine_confirm_pay_tip") }}</span
-            >
-          </div>
-          <div
-            v-if="
-              item.orderData.order_is_cancer === false &&
-              !(
-                item.orderData.return_dbc === true &&
-                item.orderData.pay_error === true
+          <span class="tools-title" v-if="item.orderData.task_id"
+            >{{ $t("container_id") }}:{{ item.orderData.task_id }}&nbsp; &nbsp;
+            &nbsp; &nbsp;</span
+          >
+          <el-button
+            v-if="item.orderData.have_continue_pay"
+            plain
+            class="is-link"
+            @click="
+              pushContinuePayDetail(
+                item.orderData.order_id,
+                item.orderData.order_is_over
               )
             "
-            class="r-wrap"
+            >{{ $t("click_to_view_continue_pay") }}</el-button
           >
-            <el-button
-              v-if="item.orderData.order_is_over"
-              plain
-              class="tool-btn"
-              size="mini"
-              style="width: 86px"
-              :style="styleHidden"
-              @click="openRateDlg(item)"
-              >{{ $t("gpu.rate") }}</el-button
-            >
-            <template v-else-if="item.orderData.rent_success">
-              <!--<el-button plain style="width: 86px" class="tool-btn" size="mini"
-                        @click="dlgReload_open = true">
-                {{$t('gpu.reload')}}
-              </el-button>-->
-              <el-button
-                plain
-                v-if="
-                  isShowRendSuccessMsg(item.orderData.milli_rent_success_time)
-                "
-                class="tool-btn"
-                style="width: 100px"
-                size="mini"
-                :loading="
-                  send_email_repeatLoading && send_email_repeat_index === index
-                "
-                @click="send_email_repeat(item, index)"
-                >{{ $t("send_email_repeat") }}</el-button
-              >
+          <span v-if="item.orderData.have_continue_pay" class="tools-title"
+            >&nbsp; &nbsp; &nbsp; &nbsp;</span
+          >
+          <span
+            v-if="
+              item.orderData.order_is_cancer || item.orderData.order_is_over
+            "
+            class="tools-title"
+          ></span>
+          <span
+            v-else-if="!item.orderData.pay_error && !item.orderData.return_dbc"
+            class="tools-title"
+            >{{ $t("gpu.remainingTime") }}：{{
+              $secToDate(item.orderData.rest_time_rent * 60, "DHM")
+            }}</span
+          >
+        </div>
+        <div class="r-wrap">
+          <!--<span v-if="item.rent_success">正在使用中</span>
+          <span
+            v-if="Math.floor((new Date().getTime() - item.orderData.milli_create_order_time)/60000) <= 15"
+          >等待支付</span>
+          <span v-else-if="item.orderData.order_is_cancer">未支付</span>
+          <span v-if="item.orderData.order_is_cancer === false" class="ml10">
+            剩余支付时间：{{
+            15 - Math.floor((new Date().getTime() - item.orderData.milli_create_order_time)/60000)
+            }}分钟
+          </span>-->
+          <span
+            v-if="
+              item.orderData.order_is_over && item.orderData.order_isnormal_over
+            "
+            >{{ $t("my_machine_isnormal_over") }}</span
+          >
+          <span
+            v-else-if="
+              item.orderData.order_is_over &&
+              item.orderData.order_isnormal_over === false
+            "
+            >{{ $t("my_machine_nonormal_over") }}</span
+          >
+          <span v-else-if="item.orderData.order_is_cancer">{{
+            $t("my_machine_order_cancer")
+          }}</span>
+          <span v-else-if="item.orderData.rent_success">{{
+            $t("my_machine_order_rent_success")
+          }}</span>
 
-              <el-button
-                plain
-                v-if="item.orderData.try_rent === false"
-                class="tool-btn"
-                style="width: 80px"
-                size="mini"
-                :loading="continue_rentLoading && continuepay_index === index"
-                @click="openContinuePay_switch(item, index)"
-                >{{ $t("continue_pay") }}</el-button
-              >
+          <!--   <span v-else-if="item.orderData.vocing_pay">{{$t('my_machine_order_vocing_pay')}}</span>  -->
+          <span
+            v-else-if="
+              item.orderData.pay_error && item.orderData.return_dbc === false
+            "
+            >{{ $t("my_machine_order_pay_error") }}</span
+          >
+          <span
+            v-else-if="item.orderData.pay_error && item.orderData.return_dbc"
+            >{{ $t("my_machine_order_return_dbc") }}</span
+          >
+          <span
+            v-else-if="
+              item.orderData.container_is_exist && !item.orderData.vocing_pay
+            "
+            >{{ $t("my_machine_order_vocing_machine_success") }}</span
+          >
+        </div>
+      </div>
+      <div class="pay-wrap" v-if="$t('website_name') != 'congTuCloud'">
+        <div class="rate-head" v-if="item.mcData.evaluation_score_average > 0">
+          <div class="flex right vCenter">
+            <el-rate
+              :value="item.mcData.evaluation_score_average / 2"
+            ></el-rate>
+            <!--     <span>{{item.mcData.evaluation_score_average}}{{$t('scores')}}</span> -->
+          </div>
+        </div>
+        <div>
+          <span
+            class="tdred"
+            v-if="
+              item.orderData.mode !== null && item.orderData.mode === 'payment'
+            "
+            >{{ $t("gpu.payDBCs") }}：{{
+              (
+                item.orderData.dbc_total_count + parseFloat(item.orderData.code)
+              ).toFixed(4)
+            }}</span
+          >
+          <span
+            class="tdred"
+            v-if="
+              item.orderData.mode !== null && item.orderData.mode === 'deposit'
+            "
+            >{{ $t("deposit_dbcs_cpu") }}：{{
+              item.orderData.dbc_total_count + parseFloat(item.orderData.code)
+            }}</span
+          >
 
-              <el-button
-                plain
-                v-if="item.orderData.try_rent === false"
-                class="tool-btn"
-                style="width: 110px"
-                size="mini"
-                @click="stopRent(item)"
-                >{{ $t("unsubscribe") }}</el-button
-              >
+          <span class="td"
+            >{{ $t("my_machine_beused_time") }}：{{
+              parseInt(item.orderData.real_rent_time / 60)
+            }}{{ $t("my_machine_hour") }}{{ item.orderData.real_rent_time % 60
+            }}{{ $t("my_machine_min") }}</span
+          >
+          <span class="td"
+            >{{ $t("my_gpu_count") }}：{{ item.orderData.gpu_count }}</span
+          >
+        </div>
 
-              <el-button
-                plain
-                v-if="item.orderData.try_rent === false"
-                class="tool-btn"
-                style="width: 110px"
-                size="mini"
-                :disabled="
-                  item.mcData.dbc_version === '0.3.7.2' ||
-                  !item.mcData.idle_status
-                "
-                :loading="opengpuloading && opengpu_index === index"
-                @click="openDlg_cpu_to_gpu(item, index)"
-                >{{ $t("open_cpu_to_gpu") }}</el-button
+        <div>
+          <span class="td"
+            >{{ $t("gpu.actualPrice") }}：{{
+              item.orderData.dbc_real_need_count
+            }}
+            DBC</span
+          >
+          <span v-if="item.orderData.have_continue_pay === false" class="td"
+            >{{ $t("gpu.gpuBilling") }}：$
+            {{ item.orderData.gpu_price_dollar }}/{{
+              $t("my_machine_hour")
+            }}</span
+          >
+          <span v-if="item.mcData.dbc_version !== '0.3.7.2'" class="td"
+            >{{ $t("diskspace_remaining") }}：{{
+              parseInt(
+                (item.orderData.diskspace +
+                  item.orderData.diskspace_giving -
+                  item.orderData.diskspace_image_data) /
+                  (1024 * 1024)
+              )
+            }}G</span
+          >
+        </div>
+        <div>
+          <span class="td"
+            >{{ $t("gpu.currentRemaining") }}：{{
+              (
+                item.orderData.dbc_total_count -
+                item.orderData.dbc_real_need_count +
+                parseFloat(item.orderData.code)
+              ).toFixed(4)
+            }}
+            DBC</span
+          >
+          <span v-if="item.orderData.have_continue_pay === false" class="td"
+            >{{ $t("gpu.payPrice") }}：$
+            {{ item.orderData.dbc_price.toFixed(4) }}</span
+          >
+          <span v-if="item.mcData.dbc_version !== '0.3.7.2'" class="td"
+            >{{ $t("memory_space") }}：{{
+              parseInt(item.orderData.memory / (1024 * 1024))
+            }}G</span
+          >
+        </div>
+      </div>
+      <div class="status-wrap">
+        <div class="flex status-title">
+          <div>
+            <span>{{ item.mcData.machine_id }}</span>
+            <span class="fs28">
+              <span
+                class="cPrimaryColor"
+                v-if="$t('website_name') != 'congTuCloud'"
+                >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$
+                {{ item.mcData.gpu_price_dollar }}/{{
+                  $t("my_machine_hour")
+                }}</span
               >
-              <el-tooltip
-                class="item"
-                v-if="item.orderData.try_rent === false"
-                effect="dark"
-                :content="$t('restart_tip_mymachine')"
+              <span class="cPrimaryColor" v-else
+                >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                {{ (item.mcData.gpu_price_dollar * usdToRmb).toFixed(2)
+                }}{{ $t("RMB") }}/{{ $t("my_machine_hour") }}</span
               >
-                <el-button
-                  plain
-                  class="tool-btn"
-                  style="width: 110px"
-                  size="mini"
-                  @click="restartMachine(item)"
-                  >{{ $t("restart_machine") }}</el-button
-                >
-              </el-tooltip>
-            </template>
-            <el-button
-              v-else-if="
-                item.orderData.return_dbc === false && item.orderData.pay_error
-              "
-              class="tool-btn"
-              style="width: 86px"
-              plain
-              size="mini"
-              @click="openReturnDbc(item)"
-              >{{ $t("myMachine_return_dbc") }}</el-button
-            >
-            <template v-else-if="item.orderData.rent_success === false">
-              <el-button
-                v-if="
-                  (item.orderData.order_id_pre === null &&
-                    item.orderData.container_is_exist === true &&
-                    item.orderData.pay_error === false) ||
-                  (item.orderData.order_id_pre !== null &&
-                    item.orderData.order_is_over === false &&
-                    item.orderData.order_is_cancer === false &&
-                    item.orderData.pay_success === false)
-                "
-                :disabled="
-                  item.verifing === true ||
-                  item.orderData.vocing_pay ||
-                  ispayPocing
-                "
-                plain
-                :loading="isPaying"
-                class="tool-btn"
-                size="mini"
-                @click="openPay(item)"
-                >{{ $t("myMachine_confirm_pay") }}</el-button
+            </span>
+          </div>
+          <div class="td" :style="styleHidden">
+            <span class="fs16">
+              {{ $t("my_machine_dbc_version") }}：
+              <a class="cPrimaryColor">{{ item.mcData.dbc_version }}</a>
+            </span>
+          </div>
+        </div>
+        <div class="flex">
+          <div class="td2">
+            <span class="fs28">
+              <a class="cPrimaryColor">{{ item.mcData.gpu_type }}</a>
+              <a class="cPrimaryColor">x{{ item.mcData.gpu_count }}</a>
+            </span>
+          </div>
+          <div class="td2">
+            <span class="fs28">
+              <a class="cPrimaryColor">{{ item.mcData.country }}</a>
+            </span>
+          </div>
+        </div>
+        <div class="flex">
+          <div class="td">
+            <span class="fs16">
+              {{ $t("list_idle_gpus") }}:
+              <a class="cPrimaryColor">{{
+                item.mcData.gpu_count - item.mcData.gpu_be_used
+              }}</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{ $t("list_length_of_available_time") }}：
+              <a class="cPrimaryColor"
+                >{{ Math.floor(item.mcData.length_of_available_time)
+                }}{{ $t("my_machine_hour") }}</a
               >
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{ $t("list_total_time_be_used") }}：
+              <a class="cPrimaryColor">{{
+                $minsToHourMins(item.mcData.total_time_be_used)
+              }}</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{ $t("list_total_rent_count") }}：
+              <a class="cPrimaryColor">{{ item.mcData.total_rent_count }}</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{ $t("list_error_rent_count") }}：
+              <a class="cPrimaryColor">{{ item.mcData.error_rent_count }}</a>
+            </span>
+          </div>
+        </div>
 
-              <el-button
-                v-if="
-                  item.orderData.order_id_pre === null ||
-                  item.orderData.pay_success === false
-                "
-                plain
-                :disabled="isPaying"
-                class="tool-btn"
-                size="mini"
-                :loading="cancelLoading"
-                @click="cancelOrder(item)"
-                >{{ $t("myMachine_concer_order") }}</el-button
+        <!--       <div class="flex" v-if="item.mcData.dbc_version!=='0.3.7.2'">
+          <div class="td">
+            <span class="fs16">
+              {{$t('cpu_containers_list')}}:
+              <a class="cPrimaryColor">{{item.mcData.cpu_containers}}</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{$t('cpu_containers_can_use_memory_list')}}：
+              <a
+                class="cPrimaryColor"
+              >{{parseInt(item.mcData.cpu_containers_can_use_memory/(1024*1024))}}G</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{$t('cpu_containers_can_use_disk_list')}}：
+              <a
+                class="cPrimaryColor"
+              >{{parseInt(item.mcData.cpu_containers_can_use_disk/(1024*1024))}}G</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{$t('gpu_containers_can_use_memory_list')}}：
+              <a
+                class="cPrimaryColor"
+              >{{parseInt(item.mcData.gpu_containers_can_use_memory/(1024*1024))}}G</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{$t('gpu_containers_can_use_disk_list')}}：
+              <a
+                class="cPrimaryColor"
+              >{{parseInt(item.mcData.gpu_containers_can_use_disk/(1024*1024))}}G</a>
+            </span>
+          </div>
+        </div>-->
+
+        <div class="flex">
+          <div v-if="item.mcData.tensor_cores" class="td">
+            <span class="fs16">
+              Tensor Cores：
+              <a class="cPrimaryColor">{{ item.mcData.tensor_cores }}</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{ $t("list_cuda_version") }}：
+              <a class="cPrimaryColor">{{ item.mcData.cuda_version }}</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{ $t("list_disk_space") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.mcData.disk_space / (1024 * 1024)) }}GB</a
               >
-            </template>
+              <a class="cPrimaryColor"
+                >&nbsp;&nbsp;{{ item.mcData.disk_type }}</a
+              >
+            </span>
+          </div>
+          <div class="td3">
+            <span class="fs16">
+              {{ $t("list_cpu_type") }}：
+              <a class="cPrimaryColor">{{ item.mcData.cpu_type }}</a>
+            </span>
+          </div>
+        </div>
+        <div class="flex">
+          <div v-if="item.mcData.half_precision_tflops > 0" class="td">
+            <span class="fs16">
+              {{ $t("list_half_precision_tflops") }}：
+              <a class="cPrimaryColor"
+                >{{ item.mcData.half_precision_tflops }}TFLOPS</a
+              >
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{ $t("list_gpu_ram_size") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.mcData.gpu_ram_size / (1000 * 1000)) }}GB</a
+              >
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{ $t("list_disk_bandwidth") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.mcData.disk_bandwidth / 1024) }}MB/s</a
+              >
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{ $t("list_cpu_numbers") }}：
+              <a class="cPrimaryColor">{{ item.mcData.cpu_numbers }}</a>
+            </span>
+          </div>
+        </div>
+        <div class="flex">
+          <div v-if="item.mcData.single_precision_tflops > 0" class="td">
+            <span class="fs16">
+              {{ $t("list_single_precision_tflops") }}：
+              <a class="cPrimaryColor"
+                >{{ item.mcData.single_precision_tflops }}TFLOPS</a
+              >
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{ $t("list_gpu_ram_bandwidth") }}：
+              <a class="cPrimaryColor"
+                >{{
+                  parseInt(item.mcData.gpu_ram_bandwidth / (1024 * 1024))
+                }}GB/s</a
+              >
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{ $t("list_inet_up") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.mcData.inet_up / 1024) }}Mbps</a
+              >
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{ $t("list_ram_size") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.mcData.ram_size / (1024 * 1024)) }}GB</a
+              >
+            </span>
+          </div>
+        </div>
+        <div class="flex">
+          <div v-if="item.mcData.double_precision_tflops > 0" class="td">
+            <span class="fs16">
+              {{ $t("list_double_precision_tflops") }}：
+              <a class="cPrimaryColor"
+                >{{ item.mcData.double_precision_tflops }}TFLOPS</a
+              >
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{ $t("list_pcie_bandwidth") }}：
+              <a class="cPrimaryColor"
+                >{{
+                  parseInt(item.mcData.pcie_bandwidth / (1024 * 1024))
+                }}GB/s</a
+              >
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{ $t("list_inet_down") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.mcData.inet_down / 1024) }}Mbps</a
+              >
+            </span>
+          </div>
+          <div class="td3">
+            <span class="fs16">
+              {{ $t("list_os") }}：
+              <a class="cPrimaryColor">{{ item.mcData.os }}</a>
+            </span>
           </div>
         </div>
       </div>
-    </template>
+      <!--<div class="tools-head bd">
+        <div class="l-wrap">
+          <span class="tools-title small">{{$t('gpu.machineLoginInfo')}}：ssh -p 20049 root@116.85.24.172，{{$t('password')}}：xxxxx</span>
+        </div>
+      </div>-->
+      <div class="tools-head">
+        <div class="l-wrap">
+          <span
+            v-if="
+              isShowRendSuccessMsg(item.orderData.milli_rent_success_time) &&
+              item.orderData.order_id_pre === null &&
+              !item.orderData.from_stop_to_open
+            "
+            >{{ $t("myMachine_rent_success_msg") }}</span
+          >
+          <span v-else-if="item.orderData.vocing === true">{{
+            $t("myMachine_is_pay_vocing")
+          }}</span>
+          <span
+            v-if="
+              isShowRendSuccessMsg(item.orderData.milli_rent_success_time) &&
+              item.orderData.order_id_pre !== null &&
+              !item.orderData.from_stop_to_open
+            "
+            >{{ $t("myMachine_rent_success_msg_update_stop_gpu") }}</span
+          >
+          <span
+            v-if="
+              isShowRendSuccessMsg(item.orderData.milli_rent_success_time) &&
+              item.orderData.order_id_pre !== null &&
+              item.orderData.from_stop_to_open
+            "
+            >{{ $t("myMachine_rent_success_msg_update_stop_to_open") }}</span
+          >
+
+          <span v-else-if="item.orderData.vocing === true">{{
+            $t("myMachine_is_pay_vocing")
+          }}</span>
+
+          <span
+            class="cRed"
+            v-else-if="
+              item.orderData.order_is_cancer === false &&
+              item.orderData.container_is_exist &&
+              item.orderData.wallet_address_dbchain === null
+            "
+            >{{ $t("myMachine_maybe_is_used") }}</span
+          >
+          <span
+            class="cRed"
+            v-else-if="
+              item.orderData.order_id_pre === null &&
+              item.orderData.creating_container &&
+              !item.orderData.order_is_cancer &&
+              !item.orderData.order_is_over &&
+              !item.orderData.rent_success &&
+              !item.orderData.pay_error
+            "
+            >{{ $t("myMachine_is_vocing_machine") }}</span
+          >
+
+          <span
+            class="cRed"
+            v-else-if="
+              item.orderData.order_id_pre !== null &&
+              (item.orderData.creating_container || creating_container) &&
+              !item.orderData.order_is_cancer &&
+              !item.orderData.order_is_over &&
+              !item.orderData.rent_success &&
+              !item.orderData.pay_error &&
+              !item.orderData.from_stop_to_open
+            "
+            >{{ stopGpuTips
+            }}{{
+              parseInt(
+                item.orderData.diskspace_image_data / (1024 * 1024 * 16)
+              ) + 1
+            }}-{{
+              parseInt(
+                item.orderData.diskspace_image_data / (1024 * 1024 * 1.5)
+              ) + 9
+            }}{{ $t("my_machine_min") }}</span
+          >
+          <span
+            class="cRed"
+            v-else-if="
+              item.orderData.order_id_pre !== null &&
+              (item.orderData.creating_container || creating_container) &&
+              !item.orderData.order_is_cancer &&
+              !item.orderData.order_is_over &&
+              !item.orderData.rent_success &&
+              !item.orderData.pay_error &&
+              item.orderData.from_stop_to_open
+            "
+            >{{ tipsText
+            }}{{
+              parseInt(
+                item.orderData.diskspace_image_data / (1024 * 1024 * 16)
+              ) + 1
+            }}-{{
+              parseInt(
+                item.orderData.diskspace_image_data / (1024 * 1024 * 1.5)
+              ) + 9
+            }}{{ $t("my_machine_min") }}</span
+          >
+
+          <span
+            class="cRed"
+            v-else-if="
+              isPaying &&
+              !item.orderData.order_is_cancer &&
+              !item.orderData.pay_success &&
+              !item.orderData.order_is_over &&
+              !item.orderData.rent_success &&
+              !item.orderData.pay_error
+            "
+            >{{ transferTips }}</span
+          >
+          <span class="cRed" v-else-if="local_pay_error && !isPaying">{{
+            $t("myMachine_is_transfer_error")
+          }}</span>
+          <span
+            class="cRed"
+            v-else-if="
+              ((item.orderData.vocing_pay || ispayPocing) &&
+                !item.orderData.order_is_cancer &&
+                !item.orderData.rent_success &&
+                !item.orderData.order_is_over &&
+                item.orderData.container_is_exist &&
+                item.orderData.order_id_pre === null) ||
+              ((item.orderData.vocing_pay || ispayPocing) &&
+                !item.orderData.order_is_cancer &&
+                !item.orderData.pay_success &&
+                !item.orderData.order_is_over &&
+                item.orderData.order_id_pre != null)
+            "
+            >{{ $t("my_machine_order_vocing_pay") }}</span
+          >
+          <span
+            class="cRed"
+            v-else-if="
+              !isShowRendSuccessMsg(item.orderData.milli_rent_success_time) &&
+              item.orderData.rent_success &&
+              !item.mcData.idle_status &&
+              !item.orderData.order_is_over
+            "
+            >{{ $t("no_idle_gpus") }}</span
+          >
+          <span
+            v-else-if="
+              item.orderData.rent_success === false &&
+              ((item.orderData.order_id_pre === null &&
+                item.orderData.container_is_exist === true &&
+                item.orderData.pay_error === false) ||
+                (item.orderData.order_id_pre !== null &&
+                  item.orderData.order_is_over === false &&
+                  item.orderData.order_is_cancer === false &&
+                  item.orderData.pay_success === false))
+            "
+            >{{ $t("myMachine_confirm_pay_tip") }}</span
+          >
+        </div>
+        <div
+          v-if="
+            item.orderData.order_is_cancer === false &&
+            !(
+              item.orderData.return_dbc === true &&
+              item.orderData.pay_error === true
+            )
+          "
+          class="r-wrap"
+        >
+          <el-button
+            v-if="item.orderData.order_is_over"
+            plain
+            class="tool-btn"
+            size="mini"
+            style="width: 86px"
+            :style="styleHidden"
+            @click="openRateDlg(item)"
+            >{{ $t("gpu.rate") }}</el-button
+          >
+          <template v-else-if="item.orderData.rent_success">
+            <!--<el-button plain style="width: 86px" class="tool-btn" size="mini"
+                       @click="dlgReload_open = true">
+              {{$t('gpu.reload')}}
+            </el-button>-->
+            <el-button
+              plain
+              v-if="
+                isShowRendSuccessMsg(item.orderData.milli_rent_success_time)
+              "
+              class="tool-btn"
+              style="width: 100px"
+              size="mini"
+              :loading="
+                send_email_repeatLoading && send_email_repeat_index === index
+              "
+              @click="send_email_repeat(item, index)"
+              >{{ $t("send_email_repeat") }}</el-button
+            >
+
+            <el-button
+              plain
+              v-if="item.orderData.try_rent === false"
+              class="tool-btn"
+              style="width: 80px"
+              size="mini"
+              :loading="continue_rentLoading && continuepay_index === index"
+              @click="openContinuePay_switch(item, index)"
+              >{{ $t("continue_pay") }}</el-button
+            >
+
+            <el-button
+              plain
+              v-if="item.orderData.try_rent === false"
+              class="tool-btn"
+              style="width: 110px"
+              size="mini"
+              @click="stopRent(item)"
+              >{{ $t("unsubscribe") }}</el-button
+            >
+
+            <el-button
+              plain
+              v-if="item.orderData.try_rent === false"
+              class="tool-btn"
+              style="width: 110px"
+              size="mini"
+              :disabled="
+                item.mcData.dbc_version === '0.3.7.2' ||
+                !item.mcData.idle_status
+              "
+              :loading="opengpuloading && opengpu_index === index"
+              @click="openDlg_cpu_to_gpu(item, index)"
+              >{{ $t("open_cpu_to_gpu") }}</el-button
+            >
+            <el-tooltip
+              class="item"
+              v-if="item.orderData.try_rent === false"
+              effect="dark"
+              :content="$t('restart_tip_mymachine')"
+            >
+              <el-button
+                plain
+                class="tool-btn"
+                style="width: 110px"
+                size="mini"
+                @click="restartMachine(item)"
+                >{{ $t("restart_machine") }}</el-button
+              >
+            </el-tooltip>
+          </template>
+          <el-button
+            v-else-if="
+              item.orderData.return_dbc === false && item.orderData.pay_error
+            "
+            class="tool-btn"
+            style="width: 86px"
+            plain
+            size="mini"
+            @click="openReturnDbc(item)"
+            >{{ $t("myMachine_return_dbc") }}</el-button
+          >
+          <template v-else-if="item.orderData.rent_success === false">
+            <el-button
+              v-if="
+                (item.orderData.order_id_pre === null &&
+                  item.orderData.container_is_exist === true &&
+                  item.orderData.pay_error === false) ||
+                (item.orderData.order_id_pre !== null &&
+                  item.orderData.order_is_over === false &&
+                  item.orderData.order_is_cancer === false &&
+                  item.orderData.pay_success === false)
+              "
+              :disabled="
+                item.verifing === true ||
+                item.orderData.vocing_pay ||
+                ispayPocing
+              "
+              plain
+              :loading="isPaying"
+              class="tool-btn"
+              size="mini"
+              @click="openPay(item)"
+              >{{ $t("myMachine_confirm_pay") }}</el-button
+            >
+
+            <el-button
+              v-if="
+                item.orderData.order_id_pre === null ||
+                item.orderData.pay_success === false
+              "
+              plain
+              :disabled="isPaying"
+              class="tool-btn"
+              size="mini"
+              :loading="cancelLoading"
+              @click="cancelOrder(item)"
+              >{{ $t("myMachine_concer_order") }}</el-button
+            >
+          </template>
+        </div>
+      </div>
+    </div>
     <!--    reload-dlg-->
     <dlg-reload :open.sync="dlgReload_open"></dlg-reload>
     <!--    increaseHD-dlg-->
@@ -840,7 +838,6 @@ import DlgContinuepay from "@/components/machine/dlg_continuepay";
 import DlgContinuepaydeposit from "@/components/machine/dlg_continuepaydeposit";
 import DlgLeasecputogpu from "@/components/machine/dlg_leasecputogpu";
 import DlgLeaseconfirmpay from "@/components/machine/dlg_leaseconfirmpay";
-import { mapState } from "vuex";
 import {
   queryBindMail_rent,
   place_order_cpu_to_gpu_new,
@@ -976,9 +973,6 @@ export default {
         }
       }, 15000);
     },
-  },
-  computed: {
-    ...mapState(['isNewWallet'])
   },
   beforeMount() {
     if (this.$t("website_name") === "congTuCloud") {
@@ -1934,15 +1928,14 @@ export default {
             item.orderData.dbc_total_count + item.orderData.code * 1;
           this.isPaying = true;
           this.local_pay_error = false;
-          console.log(amount, 'amount');
+
           return transfer({
             toAddress: res.content,
             amount,
-            passward: item.passward
           }).then((res) => {
             if (res.status === 1) {
               console.log("转账成功");
-              const txid = res.txid;
+              const txid = res.response.txid;
               this.$message({
                 showClose: true,
                 message: this.$t("transfer_success"),

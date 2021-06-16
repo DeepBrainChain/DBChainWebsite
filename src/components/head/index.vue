@@ -20,33 +20,28 @@
       <!--      <a class="item" :class="{active: menuName === 'home'}" @click="pushMenu('home')">{{$t('heads.home')}}</a>-->
       <a
         class="item"
-        :class="{active: menuName === 'gpu'}"
+        :class="{active: this.$store.state.menuName === 'gpu'}"
         @click="pushMenu('gpu')"
       >{{$t('heads.gpu')}}</a>
       <!--      <router-link class="item" to="/network">{{$t('heads.network')}}</router-link>-->
       <a
         class="item"
-        :class="{active: menuName === 'miner'}"
+        :class="{active: this.$store.state.menuName === 'miner'}"
         @click="pushMenu('miner')"
       >{{$t('heads.miner')}}</a>
       <a
         class="item"
-        :class="{active: menuName === 'audit'}"
-        @click="pushMenu('audit')"
-      >{{$t('heads.audit')}}</a>
-      <a
-        class="item"
-        :class="{active: menuName === 'mymachine'}"
+        :class="{active: this.$store.state.menuName === 'mymachine'}"
         @click="pushMenu('mymachine')"
       >{{$t('heads.mymachine')}}</a>
       <a
         class="item"
-        :class="{active: menuName === 'mywallet'}"
+        :class="{active: this.$store.state.menuName === 'mywallet'}"
         @click="pushMenu('mywallet')"
       >{{$t('heads.mywallet')}}</a>
       <a
         class="item"
-        :class="{active: menuName === 'help'}"
+        :class="{active: this.$store.state.menuName === 'help'}"
         @click="pushMenu('help')"
       >{{$t('heads.help')}}</a>
       <a
@@ -101,6 +96,9 @@ export default {
     this.setLanguageCode();
     this.initData();
   },
+  mounted() {
+    console.log("this.$store.state.menuName=" + this.$store.state.menuName);
+  },
   computed: {
     ...mapState([
       "address",
@@ -108,8 +106,7 @@ export default {
       "transferList",
       "dbcToUS",
       "dbcPrice",
-      "dbcChange",
-      "menuName",
+      "dbcChange"
     ]),
     set_dbctalk() {
       return "";
@@ -118,7 +115,7 @@ export default {
   methods: {
     ...mapActions([
       "getAccountState",
-      // "getTransferList",
+      "getTransferList",
       "getExchangeRate",
       "getGate"
     ]),
@@ -292,6 +289,8 @@ export default {
         this.link.href = "./codefate.ico";
       } else if (this.$t("website_name") == "changhe") {
         this.link.href = "./changhe.ico";
+      } else if (this.$t("website_name") == "changhe") {
+        this.link.href = "./changhe.ico";
       }
 
       document.getElementsByTagName("head")[0].appendChild(this.link);
@@ -404,6 +403,8 @@ export default {
         document.title = "changhe";
       } else if (this.$t("website_name") == "dpool") {
         document.title = "dpool";
+      } else if (this.$t("website_name") == "tycloud") {
+        document.title = "tycloud";
       }
     },
     set_logo() {
@@ -511,11 +512,12 @@ export default {
         this.logo = require("../../assets/imgs/codefate@1x.png");
       } else if (this.$t("website_name") == "changhe") {
         this.logo = require("../../assets/imgs/changhe@1x.png");
+      } else if (this.$t("website_name") == "tycloud") {
+        this.logo = require("../../assets/imgs/tycloud@1x.png");
       }
     },
     pushMenu(name) {
       //  this.menuName = name;
-      console.log(name, 'name');
       this.$store.commit("setMenuName", name);
       this.$router.push("/" + name);
     },
