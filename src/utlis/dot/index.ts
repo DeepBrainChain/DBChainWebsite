@@ -375,10 +375,12 @@ let message = 'ceshiyixia'
 // 自己签名，别人验证
 export const CreateSignature = async (message: string | Uint8Array , password: string ): Promise<Uint8Array> => {
   let jsonStr4 = JSON.parse(localStorage.getItem('pair')!)
+  console.log(jsonStr4, 'jsonStr4');
   let signUrl = keyring.addFromJson(jsonStr4);
   signUrl.unlock(password)
   await cryptoWaitReady();
   const signature = signUrl.sign(message);
+  console.log(u8aToHex(signature) ,'signature');
   return signature
 }
 // CreateSignature(message, '123456789')
