@@ -52,7 +52,7 @@
     <div class="pt40 form-input">
       <label>
         <span>{{ $t('gpu.exchangeCash') }}：</span>
-        <span class="cash-view">{{ (dbcPrice * balance).toFixed(4) }}</span>
+        <span class="cash-view">{{ (dbcPrice * balanceFree/Math.pow(10,15)).toFixed(4) }}</span>
       </label>
       <label>
         <el-tooltip
@@ -182,6 +182,7 @@ export default {
       address: '', // 地址
       pair: null, // 账户
       balance: '0', // 余额
+      balanceFree: '0', // 余额_未简化版
       decimals: 0, // 小数
       transferFormData: { // 发送货币
         toAddress: '',
@@ -227,16 +228,18 @@ export default {
       }
       
       // 获取余额
-      this.unsubBalance = await onGetBalance(this.pair.address, (num, token, decimals) => {
+      this.unsubBalance = await onGetBalance(this.pair.address, (num, token, decimals,free) => {
         this.balance = num
         this.token = token
         this.decimals = decimals
+        this.balanceFree = free
       })
       this.refresh = setInterval(() => {
-        onGetBalance(this.pair.address, (num, token, decimals) => {
+        onGetBalance(this.pair.address, (num, token, decimals,free) => {
           this.balance = num
           this.token = token
           this.decimals = decimals
+          this.balanceFree = free
         })
       }, 30000)
       this.getTransferList1()

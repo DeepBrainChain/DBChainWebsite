@@ -33,7 +33,6 @@
       </div>
     </div>
     <div
-      v-if="res_body.content.length > 0"
       v-for="(item, index) in res_body.content"
       class="border-content"
       :key="index"

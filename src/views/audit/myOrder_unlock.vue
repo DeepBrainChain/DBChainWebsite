@@ -107,7 +107,7 @@ import {
   getBalance,
 } from "@/utlis";
 import { naclBoxKeypairFromSecret , decodeAddress} from '@polkadot/util-crypto'
-import { stringToU8a , u8aToString } from '@polkadot/util';
+import { stringToU8a , u8aToString , u8aToHex } from '@polkadot/util';
 import { getCurrentPair ,naclSeal , naclOpen, getKeypair } from "@/utlis/dot"
 import { mapState } from "vuex"
 export default {
@@ -334,15 +334,18 @@ export default {
       this.formInline.passward = ''
       this.dialogTableVisible1 = false
     },
+    // 383D1BA9DE5EB1A4656665002DA06586227362C31AABCE0988980612B858CD3A
     // 查看问题描述
     seeDetails(status){
       let KeyPair = getKeypair('123456789')
       let message = stringToU8a('Machine_ID: 234234234234234234234234 ');
       let { secretKey , publicKey} = naclBoxKeypairFromSecret(decodeAddress('5DhFCVhtxZkz1mXWQcGv67tPvGzqXjEcF1q1DPUdCAJEX7vm'));
+      console.log(u8aToHex(publicKey));
       if(status){
-        this.str_Sealed = naclSeal( message, secretKey, naclBoxKeypairFromSecret(KeyPair.secretKey).publicKey ); 
+        this.str_Sealed = naclSeal( message, secretKey, KeyPair.publicKey ); 
+        console.log(u8aToHex(this.str_Sealed.sealed), 'sealed' ,u8aToHex(this.str_Sealed.nonce), 'nonce' );
       }else{
-        console.log(u8aToString(naclOpen( this.str_Sealed.sealed , this.str_Sealed.nonce, publicKey, naclBoxKeypairFromSecret(KeyPair.secretKey).secretKey )));
+        console.log(u8aToString(naclOpen( this.str_Sealed.sealed , this.str_Sealed.nonce, publicKey, KeyPair.secretKey )));
       //   this.$message({
       //     message: this.$t('audit.tipmsg'),
       //     type: "error",

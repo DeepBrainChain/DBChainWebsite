@@ -38,7 +38,6 @@ const testNewAddress = '5GEji5DojzpeNjKZnsjh3paKR2t1qgLEBnRRpZKLc5ntGNoz';
 export let account = undefined;
 if(store.state.isNewWallet == 'true'){
   account = getCurrentPair();
-  console.log(account, 'getBalance_account');
 }
 
 export const client = new rpc.RPCClient(netType);
