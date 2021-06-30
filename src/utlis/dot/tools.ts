@@ -17,6 +17,6 @@ function getFormat (registry: Registry, formatIndex = 0): [number, string] {
 
 export const getFormatBalance = (value: Balance): [string, string, number] => {
   const [decimals, token] = getFormat(value.registry)
-  const balance = formatBalance(value, { withUnit: false })
+  const balance = formatBalance(value, { forceUnit: '-' })
   return [balance, token, decimals]
 }
