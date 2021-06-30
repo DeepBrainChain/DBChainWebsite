@@ -81,7 +81,7 @@ export const onGetBalance = async (address: string, callback: (num: string, toke
     const free = balance.free
     const [num, token, decimals] = getFormatBalance(balance.free)
     console.log(`原始余额是${balance.free}`)
-    const num1 = num.slice(0, num.length-4)
+    const num1 = num !='0'?num.slice(0, num.length-4):num
     callback(num1, token, decimals, free)
   })
 }
