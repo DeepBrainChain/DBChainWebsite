@@ -4,7 +4,7 @@
       <div class="title">
         <h3>{{$t('machine_order_rentout')}}:{{machineid}}</h3>
       </div>
-      <div v-for="item in content" class="border-content">
+      <div v-for="(item,index) in content" class="border-content" :key='index'>
         <div class="tools-head">
           <div class="l-wrap" style="width: 70%">
             <span v-if="item.orderData.evaluation_content">

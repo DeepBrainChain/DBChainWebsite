@@ -42,15 +42,15 @@
               style="width: 120px"
               type="primary"
               size="mini"
-              @click="verification(item, index)"
+              @click="verification(item, 0)"
               >{{ $t("audit.verification") }}</el-button
             >
             <el-button
-              v-else-if="item.usage_type == 2"
+              v-else-if="item.usage_type == 0"
               style="width: 155px"
               type="primary"
               size="mini"
-              @click="verification(item, index)"
+              @click="verification(item, 1)"
               >{{ $t("audit.verification1") }}</el-button
             >
             <el-button
@@ -58,7 +58,7 @@
               style="width: 155px"
               type="primary"
               size="mini"
-              @click="verification(item, index)"
+              @click="verification(item, 2)"
               >{{ $t("audit.verification2") }}</el-button
             >
             <div v-if="item.usage_type == 0" class="verification_tips">{{ $t("audit.verification_tips1") }}</div>
@@ -282,6 +282,71 @@
       @binding="binding"
       @fail="bindFail"
     ></dlg-mail>
+
+    <!-- 提交信息 -->
+    <el-dialog :visible.sync="dialogTableVisible1" width="580px">
+      <div slot="title">{{$t('audit.seeDetails3')}}</div>
+      <el-form :model="formInline" class="form-inline">
+        <el-form-item :label="$t('audit.GPUmodel')+':'">
+          <el-select :disabled='radioDisabled' size="small" @change="selectCPU" v-model="formInline.GPUmodel" placeholder="请选择">
+            <el-option
+              v-for="item in GPUmodelList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="select" :label="$t('audit.CC_num')+':'">
+          <span>222222222222222</span>
+        </el-form-item>
+        <el-form-item v-if="select" :label="$t('audit.Memoryvalue')+':'">
+          <span>111111111111111</span>
+        </el-form-item>
+        <el-form-item :label="$t('audit.GPUnumber')+':'">
+          <el-select :disabled='radioDisabled' size="small" v-model="formInline.GPUnumber" placeholder="请选择">
+            <el-option
+              v-for="item in GPUnumberList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item :label="$t('audit.CPUcores')+':'">
+          <span>222222222222222</span>
+        </el-form-item>
+        <el-form-item :label="$t('audit.CPUmodel')+':'">
+          <span>111111111111111</span>
+        </el-form-item>
+        <el-form-item :label="$t('audit.CPUfrequency')+':'">
+          <span>222222222222222</span>
+        </el-form-item>
+        <el-form-item :label="$t('audit.Memory')+':'">
+          <span>111111111111111</span>
+        </el-form-item>
+        <el-form-item :label="$t('audit.Shd_space')+':'">
+          <span>111111111111111</span>
+        </el-form-item>
+        <el-form-item :label="$t('audit.Dhd_space')+':'">
+          <span>222222222222222</span>
+        </el-form-item>
+        <el-form-item v-if="select" :label="$t('audit.SGC_power')+':'">
+          <span>111111111111111</span>
+        </el-form-item>
+        <el-form-item :label="$t('audit.Vresults')+':'" prop="radio">
+          <el-radio :disabled='radioDisabled' v-model="formInline.radio" label="1">有问题</el-radio>
+          <el-radio :disabled='radioDisabled' v-model="formInline.radio" label="2">没问题</el-radio>
+        </el-form-item>
+        <el-form-item :label="$t('verifyPassward')+':'" prop="passward" v-if=" passward == '' ">
+          <el-input size="small" style="width:200px" v-model="formInline.passward" show-password :placeholder="$t('verifyPassward')"></el-input>
+        </el-form-item>
+        <el-form-item class="dlg-bottom">
+          <el-button class="dlg-bttn" :loading="btnloading" plain size="small" @click="commit">{{$t('confirm')}}</el-button>
+          <el-button class="dlg-bn" plain size="small" @click="cancel1">{{$t('cancel')}}</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -293,7 +358,7 @@ import {
   binding_is_ok,
   binding_is_ok_modify,
   send_email_repeat,
-  query_machines_by_machine_type,
+  getMachineList
 } from "@/api";
 import {
   getAccount,
@@ -301,11 +366,15 @@ import {
 } from "@/utlis";
 
 import { getCurrentPair } from "@/utlis/dot"
-import { mapState } from "vuex"
+import { submitConfirmHash, submitConfirmRaw } from "@/utlis/dot/api"
+import { mapState, mapMutations } from "vuex"
 export default {
   name: "distributionMachine_unlock",
   components: {
     DlgMail,
+  },
+  computed: {
+    ...mapState(["isNewWallet", "passward"]),
   },
   data() {
     return {
@@ -355,6 +424,35 @@ export default {
       res_body: {
         content: [],
       },
+      formInline: {
+        GPUmodel:'',
+        GPUnumber:'',
+        GPUnumber:'',
+        passward: '',
+        radio: "1"
+      },
+      GPUmodelList:[
+        {
+          value: 'A100',
+          label: 'A100'
+        }, {
+          value: 'P100',
+          label: 'P100'
+        }
+      ],
+      GPUnumberList:[
+        {
+          value: 1,
+          label: 1
+        }, {
+          value: 2,
+          label: 2
+        }
+      ],
+      dialogTableVisible1: false,
+      btnloading: false,
+      radioDisabled: false,
+      select: false
     };
   },
   watch: {
@@ -375,11 +473,8 @@ export default {
   deactivated() {
     
   },
-
-  computed: {
-    ...mapState(["isNewWallet"]),
-  },
   methods: {
+    ...mapMutations(['setPassWard']),
     // 绑定邮箱
     openDlgMail(isNewMail) {
       getBalance().then((res) => {
@@ -517,21 +612,6 @@ export default {
       this.queryMail();
     },
 
-    // 查询机器
-    arrangeAllMachines(res) {
-      let machines = []; //所有可展示机器
-      for (let item of res.content) {
-        // console.log(item);
-        if (item.online_status) {
-          machines.push(item);
-        }
-      }
-      // console.log(machines);
-      this.res_body.code = res.code; //原始返回数据
-      this.res_body.msg = res.msg; //原始返回数据
-      this.res_body.status = res.status; //原始返回数据
-      this.allListedMachine = machines; //所有可展示机器
-    },
     showMachines(machines, currentPage, pageSize) {
       let needMachines = []; //需要展示的机器
       // 循环页面要显示的机器数量次
@@ -548,43 +628,16 @@ export default {
     },
     queryMc() {
       let params = {
-        machine_type: 0,
-        country: this.req_body.country,
-        idle_status: this.req_body.idle_status,
-        total_time: this.req_body.totalTime,
-        total_rent_count: this.req_body.total_rent_count,
-        error_rent_count: this.req_body.error_rent_count,
-        disk_GB_perhour_dollar: this.req_body.disk_GB_perhour_dollar,
-        length_of_available_time: this.req_body.lengthOfAvailableTime,
-        gpu_price_dollar: this.req_body.gpuPrice,
-        gpu_count: this.req_body.gpuCount,
-        gpu_ram_size: this.req_body.gpuRamSize,
-        gpu_ram_bandwidth: this.req_body.gpuRamBandwidth,
-        pcie_bandwidth: this.req_body.piceBandwidth,
-        cpu_numbers: this.req_body.cpuCores,
-        ram_size: this.req_body.cpuRamSize,
-        disk_bandwidth: this.req_body.diskBandwidth,
-        inet_up: this.req_body.inetUp,
-        inet_down: this.req_body.inetDown,
-        have_ip: this.req_body.have_ip,
-        onlines_tatus: 0,
-        disk_space: this.req_body.diskSpace,
-        tensor_cores: this.req_body.tensor_cores,
-        half_precision_tflops: this.req_body.half_precision_tflops,
-        single_precision_tflops: this.req_body.single_precision_tflops,
-        double_precision_tflops: this.req_body.double_precision_tflops,
-        dbc_version: this.req_body.dbcVersion,
-        user_name_platform: this.$t("website_name"),
-        language: this.language,
+        machine_id: this.wallet_address
       };
-      query_machines_by_machine_type(params).then((res) => {
+      getMachineList(params).then((res) => {
         // this.res_body = res;
-        this.arrangeAllMachines(res);
-        this.showMachines(
-          this.allListedMachine,
-          this.currentPage,
-          this.pageSize
-        );
+        console.log(res);
+        // this.showMachines(
+        //   this.allListedMachine,
+        //   this.currentPage,
+        //   this.pageSize
+        // );
       });
     },
     handleSizeChange(pageSize) {
@@ -599,11 +652,44 @@ export default {
     },
     // 开时验证
     verification(item,index){
+      this.dialogTableVisible1 = true
+      if(index == 1){ // 提交原始结果hash值
+        this.radioDisabled = false
+      }else{
+        this.radioDisabled = true
+      }
       this.$message({
         showClose: true,
         message: this.$t('audit.tipmsg3'),
         type: "success",
       });
+    },
+    selectCPU(){
+      this.select = true
+    },
+    commit(){
+      this.btnloading = true;
+      this.radioDisabled = true;
+      if(this.passward == ''){
+        this.btnloading = false;
+        this.dialogTableVisible1 = false;
+        this.setPassWard(this.formInline.passward)
+      }else{
+        this.btnloading = false;
+        this.dialogTableVisible1 = false;
+      }
+      submitConfirmHash(0, this.formInline, this.passward, (res)=>{
+        console.log(res, 'res');
+      })
+
+      submitConfirmRaw(0, this.formInline, this.passward, (res)=>{
+        console.log(res, 'res');
+      })
+    },
+    cancel1(){
+      this.radioDisabled = false;
+      this.formInline.passward = ''
+      this.dialogTableVisible1 = false
     },
   },
 };
@@ -786,4 +872,13 @@ export default {
   }
 }
 
+.el-form-item{
+  margin-bottom: 0;
+}
+.el-form-item__content {
+  line-height: 35px;
+}
+.el-form-item__label {
+  line-height: 35px;
+}
 </style>

@@ -36,9 +36,6 @@ const testAddress = "AKMqDy51FuMnc4poiGBczQvPh6819hQuLH";
 const testNewAddress = '5GEji5DojzpeNjKZnsjh3paKR2t1qgLEBnRRpZKLc5ntGNoz';
 
 export let account = undefined;
-if(store.state.isNewWallet == 'true'){
-  account = getCurrentPair();
-}
 
 export const client = new rpc.RPCClient(netType);
 
@@ -152,8 +149,11 @@ export function getBalance_old() {
 }
 
 export function getBalance() {
+  
+  if(!account && store.state.isNewWallet == 'true'){
+    account = getCurrentPair();
+  }
   return new Promise((resolve, reject) => {
-    console.log(account, 'getBalance_account');
     if (account) {
       if(store.state.isNewWallet == 'true'){
         getsearch({ key: account.address , page: 0, row: 1 }).then(res => {
@@ -180,7 +180,6 @@ export function getBalance() {
         })
       }      
     } else {
-      console.log(account, 'getBalance');
       reject("please open wallet");
     }
   });
@@ -188,7 +187,6 @@ export function getBalance() {
 
 export function getGasBalance() {
   return new Promise((resolve, reject) => {
-    console.log(account);
     if (account) {
       dbc_gas_balance({
         user_wallet_address: account.address,

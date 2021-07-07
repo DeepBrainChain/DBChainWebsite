@@ -801,11 +801,7 @@ export default {
     },
   },
   activated() {
-    // this.binding(isNewMail);
-    console.log(333333);
     this.queryMail()
-    // this.queryMcList();
-
     this.queryMcList()
     this.forceToPocMachine()
     this.queryOrderListSi = setInterval(() => {

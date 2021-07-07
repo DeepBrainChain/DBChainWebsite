@@ -1028,3 +1028,43 @@ export const get_cpu_order_id_list = params => {
     params
   });
 };
+
+
+
+// 审核机器新增
+
+/**
+ * @description 获取待审核列表
+ * @param {object} params 
+ */
+export const getMachineList = params => {
+  return axios({
+    method: "post",
+    url: "http://192.168.1.91:8080/getMachineList",
+    params
+  });
+};
+
+/**
+ * @description 提交原始信息
+ * @param {object} params {machine_id, gpu, ....}
+ */
+export const getMachineCommittee = params => {
+  return axios({
+    method: "post",
+    url: "http://192.168.1.91:8080/getMachineCommittee",
+    params
+  });
+};
+
+/**
+ * @description 获取原始信息
+ * @param {object} params {machine_id}
+ */
+export const getOriginal = params => {
+  return axios({
+    method: "post",
+    url: "http://192.168.1.91:8080/getOriginal",
+    params
+  });
+};

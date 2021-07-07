@@ -88,7 +88,7 @@ import {
   getAccount,
   getBalance,
 } from "@/utlis";
-
+import { getOrder, bookFaultOrder } from '@/utlis/dot/api'
 import { getCurrentPair } from "@/utlis/dot"
 import { mapState } from "vuex"
 export default {
@@ -143,6 +143,12 @@ export default {
   activated() {
     // this.binding(isNewMail);
     this.queryMail();
+    getOrder().then(
+      res => {
+        console.log(res)
+        this.res_body.content = res.bookable_report
+      } 
+    );
   },
   deactivated() {
     
@@ -291,6 +297,7 @@ export default {
 
     // 开时抢单
     start(){
+      // let list = bookFaultOrder(0);
       this.$message({
         showClose: true,
         message: this.$t('audit.tipmsg1'),

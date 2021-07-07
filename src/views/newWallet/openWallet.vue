@@ -103,7 +103,7 @@
 </template>
 <script>
 import PsInput from "@/components/wallet/inputPassword"
-import {mapActions, mapState} from "vuex"
+import {mapActions, mapMutations, mapState} from "vuex"
 import {wallet} from "@cityofzion/neon-js"
 import {
   initNetwork,
@@ -121,7 +121,6 @@ import {
 } from "@/utlis/dot/index.ts"
 import Header from "@/congTuCloud/components/header/SubHeader.vue"
 import Footer from "@/congTuCloud/components/footer/Footer.vue"
-
 export default {
   name: "OpenWallet_new",
   components: {
@@ -130,7 +129,7 @@ export default {
     Footer,
   },
   computed: {
-    ...mapState(["account"]),
+    ...mapState(["account",'passward']),
     canUnlock() {
       return !(this.canInputPassword && this.formData.password.length >= 8)
     }
@@ -166,6 +165,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(["setPassWard"]),
     importWalletFromKeystore(file) { // 通过keystore来恢复账户
       importAccountFromKeystore(file.raw).then(pair => {
         this.pair = pair
@@ -178,6 +178,7 @@ export default {
         try {
           this.pair.unlock(this.formData.password)
           if (!this.pair.isLocked) { // 已解锁
+            this.setPassWard(this.formData.password)
             savePair(this.pair, this.formData.password) // 保存到localstorage
             this.$router.push('/newWallet/myWalletUnlock')
           }

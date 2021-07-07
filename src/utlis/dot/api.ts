@@ -1,4 +1,7 @@
 import { ApiPromise, WsProvider } from '@polkadot/api'
+import {cryptoWaitReady, blake2AsHex} from '@polkadot/util-crypto'
+import { getCurrentPair } from './index' // 获取kerPair
+
 
 const node = {
   polkadot: 'wss://rpc.polkadot.io',
@@ -19,6 +22,7 @@ export const GetApi = async (): Promise<Network> =>{
         "PriceURL": "Text",
         "ReportId": "u64",
         "SlashId": "u64",
+        "BoxPubkey": "[u8; 32]",
         "StandardGpuPointPrice": {
           "gpu_point": "u64",
           "gpu_price": "u64"
@@ -28,36 +32,54 @@ export const GetApi = async (): Promise<Network> =>{
         "OrderId": "u64",
         "LiveMachine": {
           "bonding_machine": "Vec<MachineId>",
-          "ocw_confirmed_machine": "Vec<MachineId>",
+          "confirmed_machine": "Vec<MachineId>",
           "booked_machine": "Vec<MachineId>",
-          "waiting_hash": "Vec<MachineId>",
-          "bonded_machine": "Vec<MachineId>"
+          "online_machine": "Vec<MachineId>",
+          "fulfilling_machine": "Vec<MachineId>",
+          "refused_machine": "Vec<MachineId>"
         },
-        "StakerMachine": {
+        "StashMachine": {
           "total_machine": "Vec<MachineId>",
           "online_machine": "Vec<MachineId>",
           "total_calc_points": "u64",
           "total_gpu_num": "u64",
+          "total_rented_gpu": "u64",
           "total_claimed_reward": "Balance",
           "can_claim_reward": "Balance",
-          "left_reward": "VecDeque<Balance>"
+          "left_reward": "Vec<Balance>",
+          "total_rent_fee": "Balance",
+          "total_burn_fee": "Balance"
         },
         "BlockNumber": "u32",
+        "SysInfoDetail": {
+          "total_gpu_num": "u64",
+          "total_rented_gpu": "u64",
+          "total_staker": "u64",
+          "total_calc_points": "u64",
+          "total_stake": "Balance",
+          "total_rent_fee": "Balance",
+          "total_burn_fee": "Balance"
+        },
         "MachineInfo": {
+          "controller": "AccountId",
           "machine_owner": "AccountId",
           "machine_renter": "Option<AccountId>",
           "bonding_height": "BlockNumber",
           "stake_amount": "Balance",
           "machine_status": "MachineStatus",
+          "total_rented_duration": "u64",
+          "total_rented_times": "u64",
+          "total_rent_fee": "Balance",
+          "total_burn_fee": "Balance",
           "machine_info_detail": "MachineInfoDetail",
-          "machine_price": "u64",
           "reward_committee": "Vec<AccountId>",
           "reward_deadline": "BlockNumber"
         },
         "MachineStatus": {
           "_enum": [
-            "MachineSelfConfirming",
+            "AddingCustomizeInfo",
             "CommitteeVerifying",
+            "CommitteeRefused",
             "WaitingFulfill",
             "Online",
             "StakerReportOffline(BlockNumber)",
@@ -77,7 +99,8 @@ export const GetApi = async (): Promise<Network> =>{
           "cuda_core": "u32",
           "gpu_mem": "u64",
           "calc_point": "u64",
-          "hard_disk": "u64",
+          "sys_disk": "u64",
+          "data_disk": "u64",
           "cpu_type": "Vec<u8>",
           "cpu_core_num": "u32",
           "cpu_rate": "u64",
@@ -86,20 +109,20 @@ export const GetApi = async (): Promise<Network> =>{
           "is_support": "bool"
         },
         "StakerCustomizeInfo": {
-          "left_change_time": "u64",
           "upload_net": "u64",
           "download_net": "u64",
-          "longitude": "u64",
-          "latitude": "u64",
+          "longitude": "i64",
+          "latitude": "i64",
+          "telecom_operators": "Vec<TelecomName>",
           "images": "Vec<ImageName>"
         },
         "ImageName": "Text",
+        "TelecomName": "Text",
         "CPU": {
           "num": "Vec<u8>",
           "type": "Vec<u8>"
         },
-        "Disk": {
-        },
+        "Disk": {},
         "GPU": {
           "num": "Vec<u8>",
           "gpus": "Vec<GPUDetail>"
@@ -115,31 +138,24 @@ export const GetApi = async (): Promise<Network> =>{
         },
         "EraMachinePoints": {
           "total": "u64",
-          "individual_points": "BTreeMap<MachineId, MachineGradeStatus>",
-          "staker_statistic": "BTreeMap<AccountId, StakerStatistics>"
+          "staker_statistic": "BTreeMap<AccountId, StashMachineStatistics>"
+        },
+        "PosInfo": {
+          "online_gpu": "u64",
+          "offline_gpu": "u64",
+          "rented_gpu": "u64",
+          "online_gpu_calc_points": "u64"
         },
         "MachineGradeStatus": {
           "basic_grade": "u64",
           "is_online": "bool"
         },
-        "StakerStatistics": {
-          "online_num": "u64",
+        "StashMachineStatistics": {
+          "online_gpu_num": "u64",
           "inflation": "Perbill",
           "machine_total_calc_point": "u64",
-          "rent_extra_grade": "u64"
-        },
-        "StakingLedger": {
-          "stash": "AccountId",
-          "total": "Compact<Balance>",
-          "active": "Compact<Balance>",
-          "unlocking": "Vec<UnlockChunk>",
-          "claimed_rewards": "Vec<EraIndex>",
-          "released_rewards": "Balance",
-          "upcoming_rewards": "Vec<Balance>"
-        },
-        "UnlockChunk": {
-          "value": "Compact<Balance>",
-          "era": "Compact<EraIndex>"
+          "rent_extra_grade": "u64",
+          "individual_machine": "BTreeMap<MachineId, MachineGradeStatus>"
         },
         "CommitteeMachine": {
           "machine_id": "Vec<MachineId>",
@@ -147,11 +163,10 @@ export const GetApi = async (): Promise<Network> =>{
           "total_gpu_num": "u64",
           "total_reward": "Balance"
         },
-        "LCCommitteeList": {
-          "committee": "Vec<AccountId>",
+        "CommitteeList": {
+          "normal": "Vec<AccountId>",
           "chill_list": "Vec<AccountId>",
-          "fulfill_list": "Vec<AccountId>",
-          "black_list": "Vec<AccountId>"
+          "waiting_box_pubkey": "Vec<AccountId>"
         },
         "LCCommitteeMachineList": {
           "booked_machine": "Vec<MachineId>",
@@ -160,14 +175,13 @@ export const GetApi = async (): Promise<Network> =>{
           "online_machine": "Vec<MachineId>"
         },
         "LCCommitteeOps": {
-          "booked_time": "BlockNumber",
-          "stake_dbc": "Balance",
+          "staked_dbc": "Balance",
           "verify_time": "Vec<BlockNumber>",
-          "confirm_hash": "[u8; 16]",
+          "confirm_hash": "Hash",
           "hash_time": "BlockNumber",
           "confirm_time": "BlockNumber",
           "machine_status": "LCMachineStatus",
-          "machine_info": "CommitteeUploadInfo1"
+          "machine_info": "CommitteeUploadInfo"
         },
         "LCMachineStatus": {
           "_enum": [
@@ -176,28 +190,22 @@ export const GetApi = async (): Promise<Network> =>{
             "Confirmed"
           ]
         },
-        "CommitteeUploadInfo1": {
-          "machine_id": "MachineId",
-          "gpu_type": "Vec<u8>",
-          "gpu_num": "u32",
-          "cuda_core": "u32",
-          "gpu_mem": "u64",
-          "calc_point": "u64",
-          "hard_disk": "u64",
-          "cpu_type": "Vec<u8>",
-          "cpu_core_num": "u32",
-          "cpu_rate": "u64",
-          "mem_num": "u64",
-          "rand_str": "Vec<u8>",
-          "is_support": "bool"
-        },
         "LCMachineCommitteeList": {
           "book_time": "BlockNumber",
           "booked_committee": "Vec<AccountId>",
           "hashed_committee": "Vec<AccountId>",
-          "confirm_start": "BlockNumber",
+          "confirm_start_time": "BlockNumber",
           "confirmed_committee": "Vec<AccountId>",
-          "onlined_committee": "Vec<AccountId>"
+          "onlined_committee": "Vec<AccountId>",
+          "status": "LCVerifyStatus"
+        },
+        "LCVerifyStatus": {
+          "_enum": [
+            "SubmittingHash",
+            "SubmittingRaw",
+            "Summarizing",
+            "Finished"
+          ]
         },
         "CommitteeMachineList": {
           "booked_order": "Vec<OrderId>",
@@ -255,10 +263,6 @@ export const GetApi = async (): Promise<Network> =>{
           "machine_price": "u64",
           "reward_deadline": "BlockNumber"
         },
-        "MTCommitteeList": {
-          "committee": "Vec<AccountId>",
-          "waiting_box_pubkey": "Vec<AccountId>"
-        },
         "MTCommitteeOpsDetail": {
           "booked_time": "BlockNumber",
           "encrypted_err_info": "Option<Vec<u8>>",
@@ -279,10 +283,10 @@ export const GetApi = async (): Promise<Network> =>{
             "Finished"
           ]
         },
-        "MTCommitteeOrderList": {
-          "booked_order": "Vec<ReportId>",
-          "hashed_order": "Vec<ReportId>",
-          "confirmed_order": "Vec<ReportId>",
+        "MTCommitteeReportList": {
+          "booked_report": "Vec<ReportId>",
+          "hashed_report": "Vec<ReportId>",
+          "confirmed_report": "Vec<ReportId>",
           "online_machine": "Vec<MachineId>"
         },
         "MTLiveReportList": {
@@ -295,7 +299,7 @@ export const GetApi = async (): Promise<Network> =>{
           "reporter": "AccountId",
           "report_time": "BlockNumber",
           "raw_hash": "Hash",
-          "box_public_key": "[u8; 32]",
+          "box_public_key": "BoxPubkey",
           "reporter_stake": "Balance",
           "first_book_time": "BlockNumber",
           "machine_id": "MachineId",
@@ -309,22 +313,22 @@ export const GetApi = async (): Promise<Network> =>{
           "support_committee": "Vec<AccountId>",
           "against_committee": "Vec<AccountId>",
           "report_status": "ReportStatus",
-          "report_type": "ReportType"
+          "machine_fault_type": "MachineFaultType"
         },
         "ReportStatus": {
           "_enum": [
             "Reported",
             "WaitingBook",
             "Verifying",
-            "SubmitingRaw",
+            "SubmittingRaw",
             "CommitteeConfirmed"
           ]
         },
-        "ReportType": {
+        "MachineFaultType": {
           "_enum": [
-            "HardwareFault",
-            "MachineOffline",
-            "MachineUnrentable"
+            "HardwareFault(Hash, BoxPubkey)",
+            "MachineOffline(Hash, BoxPubkey)",
+            "MachineUnrentable(MachineId)"
           ]
         },
         "PendingSlashInfo": {
@@ -349,11 +353,11 @@ export const GetApi = async (): Promise<Network> =>{
 }
 
 /**
+ * getAccount 获取用户信息
  * toHuman() 转义成可读字符串
  * 
  * @param address 
  */
-// 获取链上信息
 export const getAccount = async (address: string) => {
   await GetApi();
   const now = await api!?.query.timestamp.now();
@@ -361,32 +365,118 @@ export const getAccount = async (address: string) => {
   // console.log( balance.toHuman() , `${now}: balance of ${balance.free} and a nonce of ${nonce}` , nonce, now);
 }
 
-// 获取链上抢单列表
-export const getOrder = async () => {
+
+/**
+ * getOrder 获取链上抢单列表
+ * 
+ * @return [] 抢单列表
+ */
+ 
+export const getOrder = async (): Promise<any> => {
   await GetApi();
   let de = await api?.query.maintainCommittee.liveReport()
-  // console.log(de?.toJSON());
+  return de
 }
-// 开始抢单
+
+/**
+ * StartGrabbing 开始抢单
+ * @param publicKey: Uint8Array 公钥
+ * @return [] 抢单列表
+ */
 export const StartGrabbing = async (publicKey: Uint8Array) => {
   await GetApi();
   let de = await api?.tx.committee.committeeSetBoxPubkey(publicKey)
 }
+/**
+ * StartGrabbing 开始抢单
+ * @param reportid: number 订单号
+ * @return [] 抢单列表
+ */
+export const bookFaultOrder = async (reportid: number) => {
+  await GetApi();
+  let de = await api?.tx.committee.bookFaultOrder(reportid)
+  return de
+}
+
+/**
+ * StartGrabbing 查询加密信息
+ * @param (AccountId, ReportId)
+ * @return [] 抢单列表
+ */
+export const committeeOps = async (AccountId: number, ReportId:number):Promise<any> => {
+  await GetApi();
+  let de = await api?.query.maintainCommittee.committeeOps(AccountId, ReportId)
+  return de?.toHuman()
+}
 
 
-// import { Keyring } from "@polkadot/keyring";
-// import {cryptoWaitReady} from '@polkadot/util-crypto'
-const json = localStorage.getItem('pair')
-const json2= JSON.parse(json?json:'{}')
-// 提交原始信息
-// export const commite = async () => {
-//   await GetApi();
-//   const { nonce } = await api?.query.system.account(json2.address)
-//   console.log(json2, nonce, 'eqweqw');
-//   let result = await api?.tx.maintainCommittee
-//     .submitConfirmRaw(0,'0x2222','0x11111111','0x11111111','0x11111111','不')
-//     .signAndSend( json2, nonce ,(result: any) => {
-//       console.log(`Current status is ${result.status}`);
-//       console.log(result , 'deded');
-//     })
-// }
+
+
+/**
+ * StartGrabbing 提交hash信息
+ * @param  submitConfirmHash(report_id, hash)  passward: string 密码（可从vuex中获取）
+ * @return callback 回调函数，返回数组信息
+ */
+export const submitConfirmHash = async (report_id: number, permas: any,  passward: string, callback: (arr: Array<string>) => void) => {
+  let str='';
+  for(var i in permas){
+    str += permas[i]
+  }
+  console.log(blake2AsHex(str), 'blake2AsHex(str)');
+  await GetApi();
+  let kering = await getCurrentPair()
+  await kering!.unlock(passward)
+  await cryptoWaitReady();
+  await api?.tx.maintainCommittee
+  .submitConfirmHash( report_id, blake2AsHex(str) )
+  .signAndSend( kering! , ( { events = [], status  } ) => {
+    let methods: Array<string> = []
+    if (status.isFinalized) {
+      events.forEach(({ event: { method }, phase }) => {
+        methods.push(method)
+      });
+      if (callback) {
+        console.log('callback');
+        callback(methods)
+      }
+    }
+  })
+  .then((res)=>{
+    console.log(res, 'then');
+  })
+  .catch((res)=>{
+    callback(['error'])
+  })
+}
+
+
+/**
+ * StartGrabbing 提交原始信息
+ * @param report_id
+ * @param machine_id  
+ * @param reporter_rand_str
+ * @param committee_rand_str
+ * @param err_reason
+ * @param support_report
+ * @return callback 回调函数，返回数组信息
+ */
+export const submitConfirmRaw = async (report_id:number, permas: object, passward: string, callback?: (arr: Array<string>) => void) => {
+  await GetApi();
+  let kering = await getCurrentPair()
+  await kering!.unlock(passward)
+  await cryptoWaitReady();
+  await api?.tx.maintainCommittee
+  .submitConfirmRaw(report_id, permas )
+  .signAndSend( kering! , ( { events = [], status  } ) => {
+    let methods: Array<string> = []
+    if (status.isFinalized) {
+      events.forEach(({ event: { method }, phase }) => {
+        methods.push(method)
+      });
+      if (callback) {
+        console.log('callback');
+        callback(methods)
+      }
+    }
+  })
+}

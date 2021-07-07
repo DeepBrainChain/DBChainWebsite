@@ -41,8 +41,8 @@
             <el-button v-if="item.status == 0" size="small" plain @click="seeDetails(false)">{{$t("audit.seeDetails1")}}</el-button>
             <el-button v-else size="small" plain @click="seeDetails(true)">{{$t("audit.seeDetails2")}}</el-button>
           </div>
-          <el-button class="button" v-if="item.status == 0" size="small" plain @click="start">{{$t("audit.verification1")}}</el-button>
-          <el-button class="button" v-else size="small" plain @click="start">{{$t("audit.verification2")}}</el-button>
+          <el-button class="button" v-if="item.status == 0" size="small" plain @click="start(1)">{{$t("audit.verification1")}}</el-button>
+          <el-button class="button" v-else size="small" plain @click="start(2)">{{$t("audit.verification2")}}</el-button>
         </div>
         <div class="order-list mt20">
           <div>{{$t("audit.hasNum")}}:1</div>
@@ -60,23 +60,36 @@
       @binding="binding"
       @fail="bindFail"
     ></dlg-mail>
-    <!-- seeDetails -->
+    <!-- 提交信息 -->
     <el-dialog :visible.sync="dialogTableVisible1" width="580px">
-      <div slot="title">{{$t('audit.seeDetails2')}}</div>
-      <el-form  :rules="rules" :model="formInline" class="demo-form-inline">
-        <el-form-item :label="$t('verifyPassward')" prop="passward">
-          <el-input v-model="formInline.passward" :placeholder="$t('verifyPassward')"></el-input>
+      <div slot="title">{{$t('audit.seeDetails3')}}</div>
+      <el-form :model="formInline" class="form-inline">
+        <el-form-item :label="$t('audit.machine_id')+':'">
+          <span>{{formInline.machine_id}}</span>
+        </el-form-item>
+        <el-form-item :label="$t('audit.reporter_nonce')+':'">
+          <span>{{formInline.reporter_nonce}}</span>
+        </el-form-item>
+        <el-form-item :label="$t('audit.validator_nonce')+':'">
+          <span>{{formInline.validator_nonce}}</span>
+        </el-form-item>
+        <el-form-item :label="$t('audit.contentofreport')+':'">
+          <span>{{formInline.contentofreport}}</span>
+        </el-form-item>
+        <el-form-item :label="$t('audit.problem')+':'" prop="radio">
+          <el-radio :disabled='radioDisabled' v-model="formInline.radio" label="1">{{$t("audit.hasproblem")}}</el-radio>
+          <el-radio :disabled='radioDisabled' v-model="formInline.radio" label="2">{{$t("audit.noproblem")}}</el-radio>
+        </el-form-item>
+        <el-form-item :label="$t('verifyPassward')+':'" prop="passward">
+          <el-input style="width:200px" v-model="formInline.passward" show-password :placeholder="$t('verifyPassward')"></el-input>
         </el-form-item>
         <el-form-item class="dlg-bottom">
           <el-button class="dlg-bttn" :loading="btnloading" plain size="small" @click="commit">{{$t('confirm')}}</el-button>
           <el-button class="dlg-bn" plain size="small" @click="cancel1">{{$t('cancel')}}</el-button>
         </el-form-item>
       </el-form>
-      <!-- <div class="dlg-bottom">
-        <el-button class="dlg-btn" type="primary" size="small" @click="confirm">{{$t('confirm')}}</el-button>
-        <el-button class="dlg-btn" plain size="small" @click="cancel">{{$t('cancel')}}</el-button>
-      </div> -->
     </el-dialog>
+    <!-- 具体信息描述 -->
     <el-dialog :visible.sync="dialogTableVisible" width="580px">
       <div slot="title">{{$t('audit.seeDetails2')}}</div>
       <div class="machine_details">
@@ -99,7 +112,9 @@ import {
   queryBindMail_rent,
   binding_is_ok,
   binding_is_ok_modify,
-  send_email_repeat
+  send_email_repeat,
+  getMachineCommittee,
+  getOriginal
 } from "@/api";
 
 import {
@@ -109,11 +124,16 @@ import {
 import { naclBoxKeypairFromSecret , decodeAddress} from '@polkadot/util-crypto'
 import { stringToU8a , u8aToString , u8aToHex } from '@polkadot/util';
 import { getCurrentPair ,naclSeal , naclOpen, getKeypair } from "@/utlis/dot"
-import { mapState } from "vuex"
+import { mapState, mapMutations } from "vuex"
+
+import { committeeOps, submitConfirmHash, submitConfirmRaw } from "@/utlis/dot/api"
 export default {
   name: "myOrder_unlock",
   components: {
     DlgMail,
+  },
+  computed: {
+    ...mapState(["isNewWallet", "passward"]),
   },
   data() {
     return {
@@ -154,12 +174,14 @@ export default {
       dialogTableVisible1: false,
       formInline: {
         passward: '',
+        radio: "1",
+        machine_id:'2gfpp3MAB3wfY3G4d21eB9xNv98WTZ4kq5LP14MYdzw',
+        reporter_nonce:'222222222222222',
+        validator_nonce:'111111111111111',
+        contentofreport:'要不是写着2080ti，我差点以为是CPU跑的代码，2天多，resnet34层没跑到100批次'
       },
-      rules: {
-        passward: [
-          { required: true, message: this.$t('verifyPassward'), trigger: 'blur' }
-        ]
-      }
+      radioDisabled: false,
+      isHex: true
     };
   },
   watch: {
@@ -176,11 +198,8 @@ export default {
   deactivated() {
     
   },
-
-  computed: {
-    ...mapState(["isNewWallet"]),
-  },
   methods: {
+    ...mapMutations(['setPassWard']),
     // 绑定邮箱
     openDlgMail(isNewMail) {
       getBalance().then((res) => {
@@ -319,39 +338,70 @@ export default {
     },
 
     // 开时抢单
-    start(){
+    start(num){
+      if(num == 1){
+        this.radioDisabled = false
+        this.isHex = true
+      }else{
+        this.radioDisabled = true
+        this.isHex = false
+        getOriginal(this.wallet_address).then( res => {
+          this.formInline = res
+        })
+      }
       this.dialogTableVisible1 = true
-      // this.$message({
-      //   showClose: true,
-      //   message: this.$t('audit.tipmsg1'),
-      //   type: "success",
-      // });
+      if(this.passward != ''){
+        this.formInline.passward = this.passward
+      }
     },
     commit(){
       this.btnloading = true;
+      if(this.passward == ''){
+        this.setPassWard(this.formInline.passward)
+      }
+      if(this.isHex){
+        getMachineCommittee(this.formInline).then( res => {
+          console.log(res);
+          submitConfirmHash(0, this.formInline, this.passward, (res)=>{
+            console.log(res, 'submitConfirmHash');
+            this.btnloading = false;
+            this.dialogTableVisible1 = false;
+          })
+        })
+      }else{
+        submitConfirmRaw(0, this.formInline, this.formInline.passward, (res)=>{
+          console.log(res, 'submitConfirmRaw');
+          this.btnloading = false;
+          this.dialogTableVisible1 = false;
+        })
+      }
     },
     cancel1(){
       this.formInline.passward = ''
       this.dialogTableVisible1 = false
     },
-    // 383D1BA9DE5EB1A4656665002DA06586227362C31AABCE0988980612B858CD3A
     // 查看问题描述
     seeDetails(status){
-      let KeyPair = getKeypair('123456789')
-      let message = stringToU8a('Machine_ID: 234234234234234234234234 ');
-      let { secretKey , publicKey} = naclBoxKeypairFromSecret(decodeAddress('5DhFCVhtxZkz1mXWQcGv67tPvGzqXjEcF1q1DPUdCAJEX7vm'));
-      console.log(u8aToHex(publicKey));
       if(status){
-        this.str_Sealed = naclSeal( message, secretKey, KeyPair.publicKey ); 
-        console.log(u8aToHex(this.str_Sealed.sealed), 'sealed' ,u8aToHex(this.str_Sealed.nonce), 'nonce' );
+        committeeOps(this.wallet_address, 0).then( res => {
+          console.log(res, ' res');
+        })
       }else{
-        console.log(u8aToString(naclOpen( this.str_Sealed.sealed , this.str_Sealed.nonce, publicKey, KeyPair.secretKey )));
-      //   this.$message({
-      //     message: this.$t('audit.tipmsg'),
-      //     type: "error",
-      //   });
+        
       }
-      
+      // let KeyPair = getKeypair('123456789')
+      // let message = stringToU8a('Machine_ID: 234234234234234234234234 ');
+      // let { secretKey , publicKey} = naclBoxKeypairFromSecret(decodeAddress('5DhFCVhtxZkz1mXWQcGv67tPvGzqXjEcF1q1DPUdCAJEX7vm'));
+      // if(status){
+      //   this.str_Sealed = naclSeal( message, secretKey, KeyPair.publicKey ); 
+      //   console.log(this.str_Sealed, 'this.str_Sealed');
+      // }else{
+      //   console.log(u8aToString(naclOpen( this.str_Sealed.sealed , this.str_Sealed.nonce, publicKey, KeyPair.secretKey )));
+      // //   this.$message({
+      // //     message: this.$t('audit.tipmsg'),
+      // //     type: "error",
+      // //   });
+      // }
     },
     confirm() {
       this.dialogTableVisible = false
@@ -425,5 +475,7 @@ export default {
   width: 110px;
   margin: 0 10px;
 }
-
+.el-form-item{
+  margin-bottom: 0;
+}
 </style>
