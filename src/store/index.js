@@ -316,7 +316,6 @@ export default new Vuex.Store({
 
 
         } else {
-          console.log("store.js");
           reject('please open wallet')
         }
       })

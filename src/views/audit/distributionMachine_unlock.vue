@@ -35,10 +35,15 @@
         :key='index'
       >
         <div class="flex status-title">
-          <div class="verification_time f16 c333">{{ $t("audit.mytime") }}: 0-3h49m / 11h45-15h45m / 19h45m-23h45m</div>
+          <div class="verification_time f16 c333">{{ $t("audit.mytime") }}:
+            <span v-for="(el, idx) in item.verify_time" class="fs14" :key="idx">
+              {{el.timestart}}-{{el.timeend}}
+              <i v-if="idx != item.verify_time.length-1" class="f16"> | </i>
+            </span>
+          </div>
           <div class="center">
             <el-button 
-              v-if="item.usage_type == 1"
+              v-if="item.machine_status == 'CommitteeVerifying'"
               style="width: 120px"
               type="primary"
               size="mini"
@@ -46,7 +51,7 @@
               >{{ $t("audit.verification") }}</el-button
             >
             <el-button
-              v-else-if="item.usage_type == 0"
+              v-else-if="item.machine_status == 'Online'"
               style="width: 155px"
               type="primary"
               size="mini"
@@ -61,8 +66,8 @@
               @click="verification(item, 2)"
               >{{ $t("audit.verification2") }}</el-button
             >
-            <div v-if="item.usage_type == 0" class="verification_tips">{{ $t("audit.verification_tips1") }}</div>
-            <div v-else class="verification_tips">{{ $t("audit.verification_tips1") }}</div>
+            <div v-if="item.machine_status == 'Online'" class="verification_tips">{{ $t("audit.verification_tips") }}</div>
+            <div v-else-if="item.machine_status == 'Rented'" class="verification_tips">{{ $t("audit.verification_tips1") }}</div>
           </div>
         </div>
         <div class="flex">
@@ -79,185 +84,68 @@
             >
               <span class="fs28">
                 <a class="cPrimaryColor">{{ item.gpu_type }}</a>
-                <a class="cRedbig">x{{ item.gpu_count }} GPU</a>
+                <a class="cRedbig">x{{ item.gpu_num }} GPU</a>
               </span>
             </el-tooltip>
           </div>
-          <div class="td2">
-            <span class="fs28">
-              <a class="cPrimaryColor">{{ item.country }}</a>
+        </div>
+        <div class="flex">
+          <div class="td">
+            <span class="fs16">
+              Cuda_core：
+              <a class="cPrimaryColor">{{ item.cuda_core }}</a>
             </span>
           </div>
-          <div class="td" v-if="item.can_rent_start_time_later < 0">
+          <div v-if="item.gpu_mem > 0" class="td">
             <span class="fs16">
-              <a class="cPrimaryColor">{{ -item.can_rent_start_time_later }}</a>
-              {{ $t("list_start_rentout") }}
+              {{ $t("list_gpu_ram_size") }}：
+              <a class="cPrimaryColor"
+                >{{ parseInt(item.gpu_mem / (1000 * 1000)) }}GB</a
+              >
+            </span>
+          </div>
+          <div class="td">
+            <span v-if="item.calc_point" class="fs16">
+              {{$t("audit.SGC_power")}}：
+              <a class="cPrimaryColor">{{ item.calc_point }}</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{$t("audit.Shd_space")}}：
+              <a class="cPrimaryColor">{{ parseInt(item.sys_disk / (1000 * 1000)) }}GB</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{$t("audit.Dhd_space")}}：
+              <a class="cPrimaryColor">{{ parseInt(item.data_disk / (1000 * 1000)) }}GB</a>
             </span>
           </div>
         </div>
         <div class="flex">
           <div class="td">
-            <span class="fs16">
-              {{ $t("list_idle_gpus") }}:
-              <a class="cPrimaryColor">{{
-                item.gpu_count - item.gpu_be_used
-              }}</a>
+            <span v-if="item.calc_point" class="fs16">
+              {{ $t('list_cpu_numbers')}}：
+              <a class="cPrimaryColor">{{ item.cpu_core_num }}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{ $t("list_length_of_available_time") }}：
-              <a class="cPrimaryColor"
-                >{{ Math.floor(item.length_of_available_time)
-                }}{{ $t("my_machine_hour") }}</a
-              >
+              {{ $t('audit.CPUfrequency')}}：
+              <a class="cPrimaryColor">{{ item.cpu_rate }}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{ $t("list_total_time_be_used") }}：
-              <a class="cPrimaryColor">{{
-                $minsToHourMins(item.total_time_be_used)
-              }}</a>
-            </span>
-          </div>
-          <div class="td">
-            <span class="fs16">
-              {{ $t("list_total_rent_count") }}：
-              <a class="cPrimaryColor">{{ item.total_rent_count }}</a>
-            </span>
-          </div>
-          <div class="td">
-            <span class="fs16">
-              {{ $t("list_error_rent_count") }}：
-              <a class="cPrimaryColor">{{ item.error_rent_count }}</a>
-            </span>
-          </div>
-        </div>
-        <div class="flex">
-          <div v-if="item.tensor_cores > 0" class="td">
-            <span class="fs16">
-              Tensor Cores：
-              <a class="cPrimaryColor">{{ item.tensor_cores }}</a>
-            </span>
-          </div>
-          <div class="td">
-            <span class="fs16">
-              {{ $t("list_cuda_version") }}：
-              <a class="cPrimaryColor">{{ item.cuda_version }}</a>
-            </span>
-          </div>
-          <div class="td">
-            <span v-if="item.disk_space" class="fs16">
-              {{ $t("list_disk_space") }}：
-              <a class="cPrimaryColor"
-                >{{ parseInt(item.disk_space / (1024 * 1024)) }}GB</a
-              >
-              <a class="cPrimaryColor">&nbsp;&nbsp;{{ item.disk_type }}</a>
+              {{$t('list_ram_size')}}：
+              <a class="cPrimaryColor">{{ parseInt(item.mem_num / (1000 * 1000)) }}GB</a>
             </span>
           </div>
           <div class="td3">
             <span class="fs16">
               {{ $t("list_cpu_type") }}：
               <a class="cPrimaryColor">{{ item.cpu_type }}</a>
-            </span>
-          </div>
-        </div>
-        <div class="flex">
-          <div v-if="item.half_precision_tflops > 0" class="td">
-            <span class="fs16">
-              {{ $t("list_half_precision_tflops") }}：
-              <a class="cPrimaryColor"
-                >{{ item.half_precision_tflops }}TFLOPS</a
-              >
-            </span>
-          </div>
-          <div v-if="item.gpu_ram_size > 0" class="td">
-            <span class="fs16">
-              {{ $t("list_gpu_ram_size") }}：
-              <a class="cPrimaryColor"
-                >{{ parseInt(item.gpu_ram_size / (1000 * 1000)) }}GB</a
-              >
-            </span>
-          </div>
-          <div v-if="item.disk_bandwidth > 0" class="td">
-            <span class="fs16">
-              {{ $t("list_disk_bandwidth") }}：
-              <a class="cPrimaryColor"
-                >{{ parseInt(item.disk_bandwidth / 1024) }}MB/s</a
-              >
-            </span>
-          </div>
-          <div v-if="item.cpu_numbers > 0" class="td">
-            <span class="fs16">
-              {{ $t("list_cpu_numbers") }}：
-              <a class="cPrimaryColor">{{ item.cpu_numbers }}</a>
-            </span>
-          </div>
-        </div>
-        <div class="flex">
-          <div v-if="item.single_precision_tflops > 0" class="td">
-            <span class="fs16">
-              {{ $t("list_single_precision_tflops") }}：
-              <a class="cPrimaryColor"
-                >{{ item.single_precision_tflops }}TFLOPS</a
-              >
-            </span>
-          </div>
-          <div v-if="item.gpu_ram_bandwidth > 0" class="td">
-            <span class="fs16">
-              {{ $t("list_gpu_ram_bandwidth") }}：
-              <a class="cPrimaryColor"
-                >{{ parseInt(item.gpu_ram_bandwidth / (1024 * 1024)) }}GB/s</a
-              >
-            </span>
-          </div>
-          <div v-if="item.inet_up > 0" class="td">
-            <span class="fs16">
-              {{ $t("list_inet_up") }}：
-              <a class="cPrimaryColor"
-                >{{ parseInt(item.inet_up / 1024) }}Mbps</a
-              >
-            </span>
-          </div>
-          <div v-if="item.ram_size > 0" class="td">
-            <span class="fs16">
-              {{ $t("list_ram_size") }}：
-              <a class="cPrimaryColor"
-                >{{ parseInt(item.ram_size / (1024 * 1024)) }}GB</a
-              >
-            </span>
-          </div>
-        </div>
-        <div class="flex">
-          <div v-if="item.double_precision_tflops > 0" class="td">
-            <span class="fs16">
-              {{ $t("list_double_precision_tflops") }}：
-              <a class="cPrimaryColor"
-                >{{ item.double_precision_tflops }}TFLOPS</a
-              >
-            </span>
-          </div>
-          <div v-if="item.pcie_bandwidth > 0" class="td">
-            <span class="fs16">
-              {{ $t("list_pcie_bandwidth") }}：
-              <a class="cPrimaryColor"
-                >{{ parseInt(item.pcie_bandwidth / (1024 * 1024)) }}GB/s</a
-              >
-            </span>
-          </div>
-          <div v-if="item.inet_down > 0" class="td">
-            <span class="fs16">
-              {{ $t("list_inet_down") }}：
-              <a class="cPrimaryColor"
-                >{{ parseInt(item.inet_down / 1024) }}Mbps</a
-              >
-            </span>
-          </div>
-          <div class="td3">
-            <span class="fs16">
-              {{ $t("list_os") }}：
-              <a class="cPrimaryColor">{{ item.os }}</a>
             </span>
           </div>
         </div>
@@ -275,7 +163,7 @@
       >
       </el-pagination>
     </div>
-    <!--    bindMail-dlg-->
+    <!-- bindMail-dlg-->
     <dlg-mail
       :open.sync="dlgMail_open"
       :is-new-mail="isNewMail"
@@ -288,7 +176,7 @@
       <div slot="title">{{$t('audit.seeDetails3')}}</div>
       <el-form :model="formInline" class="form-inline">
         <el-form-item :label="$t('audit.GPUmodel')+':'">
-          <el-select :disabled='radioDisabled' size="small" @change="selectCPU" v-model="formInline.GPUmodel" placeholder="请选择">
+          <el-select :disabled='radioDisabled' size="small" @change="selectCPU" v-model="formInline.gpu_type" placeholder="请选择">
             <el-option
               v-for="item in GPUmodelList"
               :key="item.value"
@@ -298,13 +186,13 @@
           </el-select>
         </el-form-item>
         <el-form-item v-if="select" :label="$t('audit.CC_num')+':'">
-          <span>222222222222222</span>
+          <span>{{formInline.cuda_core}}</span>
         </el-form-item>
         <el-form-item v-if="select" :label="$t('audit.Memoryvalue')+':'">
-          <span>111111111111111</span>
+          <span>{{ parseInt(formInline.gpu_mem / (1000 * 1000)) }}GB</span>
         </el-form-item>
         <el-form-item :label="$t('audit.GPUnumber')+':'">
-          <el-select :disabled='radioDisabled' size="small" v-model="formInline.GPUnumber" placeholder="请选择">
+          <el-select :disabled='radioDisabled' size="small" v-model="formInline.gpu_num" placeholder="请选择">
             <el-option
               v-for="item in GPUnumberList"
               :key="item.value"
@@ -314,31 +202,31 @@
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('audit.CPUcores')+':'">
-          <span>222222222222222</span>
+          <span>{{formInline.cpu_core_num}}</span>
         </el-form-item>
         <el-form-item :label="$t('audit.CPUmodel')+':'">
-          <span>111111111111111</span>
+          <span>{{formInline.cpu_type}}</span>
         </el-form-item>
         <el-form-item :label="$t('audit.CPUfrequency')+':'">
-          <span>222222222222222</span>
+          <span>{{formInline.cpu_rate}}</span>
         </el-form-item>
         <el-form-item :label="$t('audit.Memory')+':'">
-          <span>111111111111111</span>
+          <span>{{ parseInt(formInline.mem_num / (1000 * 1000)) }}GB</span>
         </el-form-item>
         <el-form-item :label="$t('audit.Shd_space')+':'">
-          <span>111111111111111</span>
+          <span>{{ parseInt(formInline.sys_disk / (1000 * 1000)) }}GB</span>
         </el-form-item>
         <el-form-item :label="$t('audit.Dhd_space')+':'">
-          <span>222222222222222</span>
+          <span>{{ parseInt(formInline.data_disk / (1000 * 1000)) }}GB</span>
         </el-form-item>
         <el-form-item v-if="select" :label="$t('audit.SGC_power')+':'">
-          <span>111111111111111</span>
+          <span>{{formInline.calc_point}}</span>
         </el-form-item>
         <el-form-item :label="$t('audit.Vresults')+':'" prop="radio">
-          <el-radio :disabled='radioDisabled' v-model="formInline.radio" label="1">有问题</el-radio>
-          <el-radio :disabled='radioDisabled' v-model="formInline.radio" label="2">没问题</el-radio>
+          <el-radio :disabled='radioDisabled' v-model="formInline.is_support" label="1">有问题</el-radio>
+          <el-radio :disabled='radioDisabled' v-model="formInline.is_support" label="0">没问题</el-radio>
         </el-form-item>
-        <el-form-item :label="$t('verifyPassward')+':'" prop="passward" v-if=" passward == '' ">
+        <el-form-item :label="$t('verifyPassward')+':'" prop="passward">
           <el-input size="small" style="width:200px" v-model="formInline.passward" show-password :placeholder="$t('verifyPassward')"></el-input>
         </el-form-item>
         <el-form-item class="dlg-bottom">
@@ -363,10 +251,11 @@ import {
 import {
   getAccount,
   getBalance,
+  getBlockchainTime
 } from "@/utlis";
 
-import { getCurrentPair } from "@/utlis/dot"
-import { submitConfirmHash, submitConfirmRaw } from "@/utlis/dot/api"
+import { getCurrentPair, getRand_str } from "@/utlis/dot"
+import { ConfirmHash, ConfirmRaw } from "@/utlis/dot/api"
 import { mapState, mapMutations } from "vuex"
 export default {
   name: "distributionMachine_unlock",
@@ -425,11 +314,21 @@ export default {
         content: [],
       },
       formInline: {
-        GPUmodel:'',
-        GPUnumber:'',
-        GPUnumber:'',
-        passward: '',
-        radio: "1"
+        machine_id:'',
+        gpu_type:'',
+        gpu_num:'',
+        cuda_core:'',
+        gpu_mem: '',
+        calc_point:'',
+        sys_disk:'',
+        data_disk:'',
+        cpu_type: '',
+        cpu_core_num:'',
+        cpu_rate:'',
+        mem_num:'',
+        rand_str: getRand_str(),
+        is_support:'1',
+        passward:''
       },
       GPUmodelList:[
         {
@@ -630,15 +529,101 @@ export default {
       let params = {
         machine_id: this.wallet_address
       };
-      getMachineList(params).then((res) => {
+
+      let res1 = {
+        "status": -1,
+        "code": "10001",
+        "msg": "验证人可以审核的机器",
+        "content": [
+            {
+                "original": {
+                    "machine_id": "8eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48",
+                    "gpu_type": "GeForceRTX2080Ti",
+                    "gpu_num": "3",
+                    "cuda_core": "3453",
+                    "gpu_mem": "23422223",
+                    "calc_point": "232",
+                    "sys_disk": "2323424222",
+                    "data_disk": "1231121",
+                    "cpu_type": "Intel(R) Xeon(R) Silver 4110 CPU",
+                    "cpu_core_num": "23",
+                    "cpu_rate": "23",
+                    "mem_num": "3254243223"
+                },
+                "lcOpsEntity": {
+                    "mid": "5DAAnrj7VHTznn2AWBemMuyBwZWs6FNFjdyVXUeYum3PTXFy",
+                    "booked_committee": "8eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48",
+                    "staked_dbc": null,
+                    "verify_time": [
+                        17796,
+                        17876,
+                        17956,
+                        18036
+                    ],
+                    "hash_time": "0",
+                    "confirm_time": "0",
+                    "machine_status": "booked"
+                    // "AddingCustomizeInfo 添加自定义信息","CommitteeVerifying 委员会验证","CommitteeRefused 委员会拒绝",
+                    // "WaitingFulfill 等待完成","Online 在线","Creating" 创建,"Rented" 租用中,"booked" 已预订
+                    //"StakerReportOffline(BlockNumber)质押者报告离线","ReporterReportOffline(BlockNumber)报告离线"
+                }
+            },
+            {
+                "original": {
+                    "machine_id": "8eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48",
+                    "gpu_type": "GeForceRTX2080Ti",
+                    "gpu_num": "3",
+                    "cuda_core": "3453",
+                    "gpu_mem": "23422223",
+                    "calc_point": "232",
+                    "sys_disk": "2323424222",
+                    "data_disk": "1231121",
+                    "cpu_type": "Intel(R) Xeon(R) Silver 4110 CPU",
+                    "cpu_core_num": "23",
+                    "cpu_rate": "23",
+                    "mem_num": "3254243223"
+                },
+                "lcOpsEntity": {
+                    "mid": "5DAAnrj7VHTznn2AWBemMuyBwZWs6FNFjdyVXUeYum3PTXFy",
+                    "booked_committee": "8eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48",
+                    "staked_dbc": null,
+                    "verify_time": [
+                        17796,
+                        17876,
+                        17956,
+                        18036
+                    ],
+                    "hash_time": "0",
+                    "confirm_time": "0",
+                    "machine_status": "booked"
+                }
+            }
+        ]
+      }
+      this.allListedMachine = res1.content.map(el=>{
+        let newel = Object.assign({},el.original,el.lcOpsEntity)
+        getBlockchainTime(newel.verify_time).then(
+          res => {
+            newel.verify_time = res
+          }
+        )
+        return newel
+      })
+      this.showMachines(
+        this.allListedMachine,
+        this.currentPage,
+        this.pageSize
+      );
+      // getMachineList(params).then((res) => {
         // this.res_body = res;
-        console.log(res);
+        // console.log(res, 'getMachineList');
+        // this.allListedMachine = res.content
         // this.showMachines(
         //   this.allListedMachine,
         //   this.currentPage,
         //   this.pageSize
         // );
-      });
+      // });
     },
     handleSizeChange(pageSize) {
       console.log(`每页 ${pageSize} 条`);
@@ -652,43 +637,88 @@ export default {
     },
     // 开时验证
     verification(item,index){
-      this.dialogTableVisible1 = true
       if(index == 1){ // 提交原始结果hash值
+        Object.assign(this.formInline , item)
+        this.dialogTableVisible1 = true
         this.radioDisabled = false
-      }else{
+      }else if(index == 2 ){
+        Object.assign(this.formInline , item)
+        this.dialogTableVisible1 = true
         this.radioDisabled = true
+      }else{
+        if(!this.isBinding){
+          this.$message({
+            showClose: true,
+            message: this.$t('audit.bindEmail'),
+            type: "error",
+          });
+        }else{
+          this.$message({
+            showClose: true,
+            message: this.$t('audit.tipmsg3'),
+            type: "success",
+          });
+        }
       }
-      this.$message({
-        showClose: true,
-        message: this.$t('audit.tipmsg3'),
-        type: "success",
-      });
     },
     selectCPU(){
       this.select = true
     },
     commit(){
-      this.btnloading = true;
-      this.radioDisabled = true;
-      if(this.passward == ''){
-        this.btnloading = false;
-        this.dialogTableVisible1 = false;
-        this.setPassWard(this.formInline.passward)
+      if(this.formInline.passward == ''){
+        this.$message({
+          showClose: true,
+          message: this.$t('verifyPassward'),
+          type: "error",
+        });
       }else{
-        this.btnloading = false;
-        this.dialogTableVisible1 = false;
+        this.btnloading = true;
+        if(this.passward == ''){
+          this.setPassWard(this.formInline.passward)
+        }
+        if(this.radioDisabled){
+          ConfirmRaw(this.formInline, this.formInline.passward, (res)=>{
+            console.log(res, 'res');
+            this.btnloading = false;
+            if(res.success){
+              this.$message({
+                showClose: true,
+                message: this.$t('audit.Op_Successful'),
+                type: "success",
+              });
+            }else{
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: "error",
+              });
+            }
+          })
+        }else{
+          ConfirmHash(this.formInline, this.formInline.passward, (res)=>{
+            console.log(res, 'res');
+            this.btnloading = false;
+            if(res.success){
+              this.$message({
+                showClose: true,
+                message: this.$t('audit.Op_Successful'),
+                type: "success",
+              });
+            }else{
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: "error",
+              });
+            }
+          })
+        }
       }
-      submitConfirmHash(0, this.formInline, this.passward, (res)=>{
-        console.log(res, 'res');
-      })
-
-      submitConfirmRaw(0, this.formInline, this.passward, (res)=>{
-        console.log(res, 'res');
-      })
+      
     },
     cancel1(){
       this.radioDisabled = false;
-      this.formInline.passward = ''
+      this.btnloading = false;
       this.dialogTableVisible1 = false
     },
   },
@@ -749,7 +779,10 @@ export default {
     .verification_time{
       font-weight: bold;
     }
-    
+    .center{
+      width: 250px;
+      text-align: right;
+    }
     .verification_tips{
       font-size: 10px;
       color: red;  
@@ -848,7 +881,7 @@ export default {
       display: inline-flex;
       justify-content: center;
       align-items: center;
-      width: 396.67px;
+      width: 530px;
       height: 50px;
       border: 1px solid #195d91;
       border-radius: 2px;

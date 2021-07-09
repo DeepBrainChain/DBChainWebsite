@@ -958,7 +958,7 @@ export default {
     verification2:'提交验证结果原始值',
     tipmsg3:'机器发放成功，请前往我的机器列表',
     mytime:'我的可验证时间段',
-    verification_tips:'在验证的时间内必须提交结果',
+    verification_tips:'在验证的时间内必须提交结果Hash值',
     verification_tips1:'36小时后才能够提交，提交内容包含原始值',
     // 我的审核
     machineStatus:'机器状态',
@@ -988,7 +988,7 @@ export default {
 
     GPUmodel:'GPU型号',
     CC_num:'CUDA core数量',
-    Memoryvalue:'CUDA core数量',
+    Memoryvalue:'显存值',
     GPUnumber:'GPU数量',
     CPUcores:'CPU核数',
     CPUmodel:'CPU型号',
@@ -998,6 +998,9 @@ export default {
     Dhd_space:'数据硬盘空间',
     SGC_power:'单个GPU算力值',
     Vresults:'验证结果',
+    bindEmail:'请先绑定邮箱信息',
+    Op_Successful:'操作成功',
+    Op_Failed:'操作失败',
   }
 
 };

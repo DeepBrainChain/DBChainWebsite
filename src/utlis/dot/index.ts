@@ -593,6 +593,12 @@ export function isHexSeed(seed: string): boolean {
   return isHex(seed) && seed.length === 66;
 }
 
+// 获取随机数
+export function getRand_str(){
+  const rand_str = u8aToHex(randomAsU8a(24))
+  return rand_str
+}
+
 // 工具
 export {mnemonicValidate, isAddress} from '@polkadot/util-crypto'
 
@@ -759,6 +765,6 @@ let raw_input = (
     + rand_str
     + is_support
 )
-console.log(blake2AsHex(raw_input ,128), 'raw_input ,128');
+// console.log(blake2AsHex(raw_input ,128), 'raw_input ,128');
 
 

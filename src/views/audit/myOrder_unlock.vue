@@ -62,23 +62,24 @@
     ></dlg-mail>
     <!-- 提交信息 -->
     <el-dialog :visible.sync="dialogTableVisible1" width="580px">
-      <div slot="title">{{$t('audit.seeDetails3')}}</div>
+      <div v-if="isHex" slot="title">{{$t('audit.verification1')}}</div>
+      <div v-else slot="title">{{$t('audit.verification2')}}</div>
       <el-form :model="formInline" class="form-inline">
         <el-form-item :label="$t('audit.machine_id')+':'">
           <span>{{formInline.machine_id}}</span>
         </el-form-item>
         <el-form-item :label="$t('audit.reporter_nonce')+':'">
-          <span>{{formInline.reporter_nonce}}</span>
+          <span>{{formInline.reporter_rand_str}}</span>
         </el-form-item>
         <el-form-item :label="$t('audit.validator_nonce')+':'">
-          <span>{{formInline.validator_nonce}}</span>
+          <span>{{formInline.committee_rand_str}}</span>
         </el-form-item>
         <el-form-item :label="$t('audit.contentofreport')+':'">
-          <span>{{formInline.contentofreport}}</span>
+          <span>{{formInline.err_reason}}</span>
         </el-form-item>
         <el-form-item :label="$t('audit.problem')+':'" prop="radio">
-          <el-radio :disabled='radioDisabled' v-model="formInline.radio" label="1">{{$t("audit.hasproblem")}}</el-radio>
-          <el-radio :disabled='radioDisabled' v-model="formInline.radio" label="2">{{$t("audit.noproblem")}}</el-radio>
+          <el-radio :disabled='radioDisabled' v-model="formInline.support_report" label="1">{{$t("audit.hasproblem")}}</el-radio>
+          <el-radio :disabled='radioDisabled' v-model="formInline.support_report" label="0">{{$t("audit.noproblem")}}</el-radio>
         </el-form-item>
         <el-form-item :label="$t('verifyPassward')+':'" prop="passward">
           <el-input style="width:200px" v-model="formInline.passward" show-password :placeholder="$t('verifyPassward')"></el-input>
@@ -121,12 +122,10 @@ import {
   getAccount,
   getBalance,
 } from "@/utlis";
-import { naclBoxKeypairFromSecret , decodeAddress} from '@polkadot/util-crypto'
-import { stringToU8a , u8aToString , u8aToHex } from '@polkadot/util';
-import { getCurrentPair ,naclSeal , naclOpen, getKeypair } from "@/utlis/dot"
+import { getCurrentPair ,getRand_str } from "@/utlis/dot"
 import { mapState, mapMutations } from "vuex"
 
-import { committeeOps, submitConfirmHash, submitConfirmRaw } from "@/utlis/dot/api"
+import { committeeOps, submitConfirmHash, submitConfirmRaw, getTime } from "@/utlis/dot/api"
 export default {
   name: "myOrder_unlock",
   components: {
@@ -174,11 +173,12 @@ export default {
       dialogTableVisible1: false,
       formInline: {
         passward: '',
-        radio: "1",
-        machine_id:'2gfpp3MAB3wfY3G4d21eB9xNv98WTZ4kq5LP14MYdzw',
-        reporter_nonce:'222222222222222',
-        validator_nonce:'111111111111111',
-        contentofreport:'要不是写着2080ti，我差点以为是CPU跑的代码，2天多，resnet34层没跑到100批次'
+        report_id:'0',
+        machine_id:'8eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48',
+        reporter_rand_str:'0x78dd824a692abcea95648bb26086c58adb3f46d019e6738e',
+        committee_rand_str: getRand_str(),
+        err_reason:'要不是写着2080ti，我差点以为是CPU跑的代码，2天多，resnet34层没跑到100批次',
+        support_report: "1",
       },
       radioDisabled: false,
       isHex: true
@@ -345,9 +345,9 @@ export default {
       }else{
         this.radioDisabled = true
         this.isHex = false
-        getOriginal(this.wallet_address).then( res => {
-          this.formInline = res
-        })
+        // getOriginal(this.wallet_address).then( res => {
+        //   this.formInline = res
+        // })
       }
       this.dialogTableVisible1 = true
       if(this.passward != ''){
@@ -355,25 +355,55 @@ export default {
       }
     },
     commit(){
-      this.btnloading = true;
-      if(this.passward == ''){
-        this.setPassWard(this.formInline.passward)
-      }
-      if(this.isHex){
-        getMachineCommittee(this.formInline).then( res => {
-          console.log(res);
-          submitConfirmHash(0, this.formInline, this.passward, (res)=>{
-            console.log(res, 'submitConfirmHash');
-            this.btnloading = false;
-            this.dialogTableVisible1 = false;
-          })
-        })
+      if(this.formInline.passward == ''){
+        this.$message({
+          showClose: true,
+          message: this.$t('verifyPassward'),
+          type: "error",
+        });
       }else{
-        submitConfirmRaw(0, this.formInline, this.formInline.passward, (res)=>{
-          console.log(res, 'submitConfirmRaw');
-          this.btnloading = false;
-          this.dialogTableVisible1 = false;
-        })
+        this.btnloading = true;
+        if(this.passward == ''){
+          this.setPassWard(this.formInline.passward)
+        }
+        if(this.isHex){
+          // getMachineCommittee(this.formInline).then( res => {
+            // console.log(res);
+            submitConfirmHash(this.formInline, this.formInline.passward, (res)=>{
+              if(res.success){
+                this.$message({
+                  showClose: true,
+                  message: this.$t('audit.Op_Successful'),
+                  type: "success",
+                });
+              }else{
+                this.$message({
+                  showClose: true,
+                  message: res.msg,
+                  type: "error",
+                });
+              }
+              this.btnloading = false;
+            })
+          // })
+        }else{
+          submitConfirmRaw(this.formInline, this.formInline.passward, (res)=>{
+            if(res.success){
+              this.$message({
+                showClose: true,
+                message: this.$t('audit.Op_Successful'),
+                type: "success",
+              });
+            }else{
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: "error",
+              });
+            }
+            this.btnloading = false;
+          })
+        }
       }
     },
     cancel1(){
@@ -382,12 +412,15 @@ export default {
     },
     // 查看问题描述
     seeDetails(status){
+      this.btnloading = true
       if(status){
         committeeOps(this.wallet_address, 0).then( res => {
           console.log(res, ' res');
+          this.btnloading = false
+          this.dialogTableVisible = true
         })
       }else{
-        
+
       }
       // let KeyPair = getKeypair('123456789')
       // let message = stringToU8a('Machine_ID: 234234234234234234234234 ');

@@ -625,3 +625,26 @@ export function getHref(url){
     return 'audit'
   } 
 }
+
+import { getTime } from './dot/api'
+
+function getdate(time) {
+  var now = new Date(time),
+      m = now.getMonth() + 1,
+      d = now.getDate(),
+      h = now.getHours(),
+      s = now.getMinutes();
+  return (m < 10 ? "0" + m : m) + "/" + (d < 10 ? "0" + d : d) + " " + (h < 10 ? "0" + h : h) +'h'+(s < 10 ? "0" + s : s)+'m'
+}
+
+// 区块验证时间换算，返回验证时间段
+export const getBlockchainTime = async (arr) => {
+  let BlockchainTime = await getTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
+  let nowDate = Date.parse(new Date()) // 获取当前时间的秒数
+  let newarr = arr.map(el => {
+    let timestart = (el - BlockchainTime)*6000 + nowDate
+    let timeend = timestart+14400000
+    return { timestart: getdate(timestart), timeend: getdate(timeend) }
+  })
+  return newarr
+}

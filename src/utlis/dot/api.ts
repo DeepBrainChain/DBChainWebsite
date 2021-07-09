@@ -1,7 +1,7 @@
 import { ApiPromise, WsProvider } from '@polkadot/api'
-import {cryptoWaitReady, blake2AsHex} from '@polkadot/util-crypto'
+import { cryptoWaitReady, blake2AsHex, randomAsU8a } from '@polkadot/util-crypto'
+import { isHex,stringToU8a, u8aToHex, hexToU8a } from '@polkadot/util';
 import { getCurrentPair } from './index' // 获取kerPair
-
 
 const node = {
   polkadot: 'wss://rpc.polkadot.io',
@@ -12,6 +12,7 @@ let api: ApiPromise | null = null
 declare interface Network {
   api: ApiPromise,
 }
+
 // 链上交互
 export const GetApi = async (): Promise<Network> =>{
   if (!api) {
@@ -353,18 +354,194 @@ export const GetApi = async (): Promise<Network> =>{
 }
 
 /**
- * getAccount 获取用户信息
- * toHuman() 转义成可读字符串
- * 
- * @param address 
+ * transfer 测试交易
+ * @return callback 回调函数，返回结果信息
  */
-export const getAccount = async (address: string) => {
+ export const transfer = async (dest: any, value: any,  passward: string, callback: (data: Object) => void) => {
   await GetApi();
-  const now = await api!?.query.timestamp.now();
-  let { nonce, data: balance} = await api!?.query.system.account(address)
-  // console.log( balance.toHuman() , `${now}: balance of ${balance.free} and a nonce of ${nonce}` , nonce, now);
+  let kering = await getCurrentPair()
+  
+  await cryptoWaitReady();
+  await api?.tx.balances
+  .transfer( dest, value )
+  .signAndSend( kering! , ( { events = [], status , dispatchError  } ) => {
+    let data = {
+      msg:'',
+      success: false
+    };
+  })
+  .catch((res)=>{
+    let data1 = {
+      msg: res.message,
+      success: false
+    };
+    callback(data1)
+  })
 }
 
+// transfer('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY', 1, '123456789' , (res)=>{
+//   console.log(res, 'transfer');
+// })
+// 定义信息返回
+let CallBack_data = {
+  msg:'',
+  success: false
+}
+
+const getKering = async (passward: string) => {
+  let kering = await getCurrentPair()
+  try {
+    await kering!.unlock(passward)
+  } catch (e: any) {
+    CallBack_data = {
+      msg: e.message,
+      success: false
+    };
+    return CallBack_data;
+  }
+  await cryptoWaitReady();
+  return kering
+}
+
+/**
+ * getOrder 查询链上时间
+ * 
+ * @return time:链上时间块
+ */
+ 
+export const getTime = async (): Promise<any> => {
+  await GetApi();
+  let de = await api?.rpc.chain.getBlock()
+  return de?.block.header.number.toHuman()
+}
+
+/**
+ * ConfirmHash 派单 提交hash信息 
+ * @param  ConfirmHash(machine_id, hash)  passward: string 密码（可从vuex中获取）
+ * @return callback 回调函数，返回结果信息
+ */
+ export const ConfirmHash = async (permas: any,  passward: string, callback: (data: Object) => void) => {
+  let { machine_id, gpu_type, gpu_num, cuda_core, gpu_mem, calc_point, sys_disk, data_disk, cpu_type, cpu_core_num, cpu_rate, mem_num, rand_str, is_support } = permas
+  let raw_input = blake2AsHex(
+    machine_id
+    + gpu_type
+    + gpu_num
+    + cuda_core
+    + gpu_mem
+    + calc_point
+    + sys_disk
+    + data_disk
+    + cpu_type
+    + cpu_core_num
+    + cpu_rate
+    + mem_num
+    + rand_str
+    + is_support
+    , 128)
+  await GetApi();
+  let kering = await getCurrentPair()
+  try {
+    await kering!.unlock(passward)
+  } catch (e: any) {
+    CallBack_data = {
+      msg: e.message,
+      success: false
+    };
+    callback(CallBack_data)
+    return;
+  }
+  await cryptoWaitReady();
+  await api?.tx.leaseCommittee
+  .submitConfirmHash( machine_id, raw_input)
+  .signAndSend( kering! , ( { events = [], status } ) => {
+    if (status.isFinalized) {
+      events.forEach(({ event: { method, data: [error] } }) => {
+        if (error.isModule && method == 'ExtrinsicFailed') {
+          const decoded = api?.registry.findMetaError(error.asModule);
+          CallBack_data.msg = decoded!.method;
+          CallBack_data.success = false
+        }else if(method == 'ExtrinsicSuccess'){
+          CallBack_data.msg = method;
+          CallBack_data.success = true
+        }
+      });
+      if (callback) {
+        callback(CallBack_data)
+      }
+    }
+  })
+  .catch((res)=>{
+    CallBack_data = {
+      msg: res.message,
+      success: false
+    };
+    callback(CallBack_data)
+  })
+}
+
+/**
+ * ConfirmRaw 派单 提交原始信息
+ * @param permas => machine_info_detail
+ * @return callback 回调函数，返回结果信息
+ */
+export const ConfirmRaw = async (permas: any, passward: string, callback: (arr: Object) => void) => {
+  let { machine_id, gpu_type, gpu_num, cuda_core, gpu_mem, calc_point, sys_disk, data_disk, cpu_type, cpu_core_num, cpu_rate, mem_num, rand_str, is_support } = permas
+  let machine_info_detail = {
+    machine_id, 
+    gpu_type: u8aToHex(stringToU8a(gpu_type)), 
+    gpu_num, 
+    cuda_core, 
+    gpu_mem, 
+    calc_point, 
+    sys_disk, 
+    data_disk, 
+    cpu_type: u8aToHex(stringToU8a(cpu_type)), 
+    cpu_core_num, 
+    cpu_rate,
+    mem_num, 
+    rand_str, 
+    is_support
+  }
+  await GetApi();
+  let kering = await getCurrentPair()
+  try {
+    await kering!.unlock(passward)
+  } catch (e: any) {
+    CallBack_data = {
+      msg: e.message,
+      success: false
+    };
+    callback(CallBack_data)
+    return;
+  }
+  await cryptoWaitReady()
+  await api?.tx.leaseCommittee
+  .submitConfirmRaw( machine_info_detail )
+  .signAndSend( kering! , ( { events = [], status  } ) => {
+    if (status.isFinalized) {
+      events.forEach(({ event: { method, data: [error] } }) => {
+        if (error.isModule && method == 'ExtrinsicFailed') {
+          const decoded = api?.registry.findMetaError(error.asModule);
+          CallBack_data.msg = decoded!.method;
+          CallBack_data.success = false
+        }else if(method == 'ExtrinsicSuccess'){
+          CallBack_data.msg = method;
+          CallBack_data.success = true
+        }
+      });
+      if (callback) {
+        callback(CallBack_data)
+      }
+    }
+  })
+  .catch((res)=>{
+    CallBack_data = {
+      msg: res.message,
+      success: false
+    };
+    callback(CallBack_data)
+  })
+}
 
 /**
  * getOrder 获取链上抢单列表
@@ -375,7 +552,7 @@ export const getAccount = async (address: string) => {
 export const getOrder = async (): Promise<any> => {
   await GetApi();
   let de = await api?.query.maintainCommittee.liveReport()
-  return de
+  return de?.toHuman()
 }
 
 /**
@@ -383,19 +560,20 @@ export const getOrder = async (): Promise<any> => {
  * @param publicKey: Uint8Array 公钥
  * @return [] 抢单列表
  */
-export const StartGrabbing = async (publicKey: Uint8Array) => {
+export const StartGrabbing = async (publicKey: Uint8Array): Promise<any> => {
   await GetApi();
   let de = await api?.tx.committee.committeeSetBoxPubkey(publicKey)
+  return de?.toHuman()
 }
 /**
  * StartGrabbing 开始抢单
  * @param reportid: number 订单号
  * @return [] 抢单列表
  */
-export const bookFaultOrder = async (reportid: number) => {
+export const bookFaultOrder = async (reportid: number): Promise<any> => {
   await GetApi();
   let de = await api?.tx.committee.bookFaultOrder(reportid)
-  return de
+  return de?.toHuman()
 }
 
 /**
@@ -413,45 +591,65 @@ export const committeeOps = async (AccountId: number, ReportId:number):Promise<a
 
 
 /**
- * StartGrabbing 提交hash信息
+ * StartGrabbing 抢单 提交hash信息
  * @param  submitConfirmHash(report_id, hash)  passward: string 密码（可从vuex中获取）
  * @return callback 回调函数，返回数组信息
  */
-export const submitConfirmHash = async (report_id: number, permas: any,  passward: string, callback: (arr: Array<string>) => void) => {
-  let str='';
-  for(var i in permas){
-    str += permas[i]
-  }
-  console.log(blake2AsHex(str), 'blake2AsHex(str)');
+export const submitConfirmHash = async ( permas: any,  passward: string, callback: (data: Object) => void) => {
+  let { report_id, machine_id, reporter_rand_str, committee_rand_str, err_reason, support_report } = permas
+  let raw_input = blake2AsHex(
+    report_id
+    +machine_id
+    + reporter_rand_str
+    + committee_rand_str
+    + err_reason
+    + support_report
+    , 256)
   await GetApi();
   let kering = await getCurrentPair()
-  await kering!.unlock(passward)
+  try {
+    await kering!.unlock(passward)
+  } catch (e: any) {
+    CallBack_data = {
+      msg: e.message,
+      success: false
+    };
+    callback(CallBack_data)
+    return;
+  }
   await cryptoWaitReady();
+  console.log(report_id, raw_input, 'raw_input');
   await api?.tx.maintainCommittee
-  .submitConfirmHash( report_id, blake2AsHex(str) )
+  .submitConfirmHash( report_id, raw_input )
   .signAndSend( kering! , ( { events = [], status  } ) => {
-    let methods: Array<string> = []
     if (status.isFinalized) {
-      events.forEach(({ event: { method }, phase }) => {
-        methods.push(method)
+      events.forEach(({ event: { method, data: [error] }}) => {
+        if (error.isModule && method == 'ExtrinsicFailed') {
+          const decoded = api?.registry.findMetaError(error.asModule);
+          CallBack_data.msg = decoded!.method;
+          CallBack_data.success = false
+        }else if(method == 'ExtrinsicSuccess'){
+          CallBack_data.msg = method;
+          CallBack_data.success = true
+        }
       });
       if (callback) {
-        console.log('callback');
-        callback(methods)
+        callback(CallBack_data)
       }
     }
   })
-  .then((res)=>{
-    console.log(res, 'then');
-  })
   .catch((res)=>{
-    callback(['error'])
+    CallBack_data = {
+      msg: res.message,
+      success: false
+    };
+    callback(CallBack_data)
   })
 }
 
 
 /**
- * StartGrabbing 提交原始信息
+ * StartGrabbing 抢单 提交原始信息
  * @param report_id
  * @param machine_id  
  * @param reporter_rand_str
@@ -460,23 +658,45 @@ export const submitConfirmHash = async (report_id: number, permas: any,  passwar
  * @param support_report
  * @return callback 回调函数，返回数组信息
  */
-export const submitConfirmRaw = async (report_id:number, permas: object, passward: string, callback?: (arr: Array<string>) => void) => {
+export const submitConfirmRaw = async ( permas: any, passward: string, callback: (data: Object) => void) => {
+  let { report_id, machine_id, reporter_rand_str, committee_rand_str, err_reason, support_report } = permas
   await GetApi();
   let kering = await getCurrentPair()
-  await kering!.unlock(passward)
+  try {
+    await kering!.unlock(passward)
+  } catch (e: any) {
+    CallBack_data = {
+      msg: e.message,
+      success: false
+    };
+    callback(CallBack_data)
+    return;
+  }
   await cryptoWaitReady();
   await api?.tx.maintainCommittee
-  .submitConfirmRaw(report_id, permas )
+  .submitConfirmRaw(report_id, machine_id, reporter_rand_str, committee_rand_str, err_reason, support_report )
   .signAndSend( kering! , ( { events = [], status  } ) => {
-    let methods: Array<string> = []
     if (status.isFinalized) {
-      events.forEach(({ event: { method }, phase }) => {
-        methods.push(method)
+      events.forEach(({ event: { method, data: [error] }}) => {
+        if (error.isModule && method == 'ExtrinsicFailed') {
+          const decoded = api?.registry.findMetaError(error.asModule);
+          CallBack_data.msg = decoded!.method;
+          CallBack_data.success = false
+        }else if(method == 'ExtrinsicSuccess'){
+          CallBack_data.msg = method;
+          CallBack_data.success = true
+        }
       });
       if (callback) {
-        console.log('callback');
-        callback(methods)
+        callback(CallBack_data)
       }
     }
+  })
+  .catch((res)=>{
+    CallBack_data = {
+      msg: res.message,
+      success: false
+    };
+    callback(CallBack_data)
   })
 }

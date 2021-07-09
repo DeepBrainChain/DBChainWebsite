@@ -1040,7 +1040,7 @@ export const get_cpu_order_id_list = params => {
 export const getMachineList = params => {
   return axios({
     method: "post",
-    url: "http://192.168.1.91:8080/getMachineList",
+    url: "http://192.168.1.91:8080/bywallet",
     params
   });
 };
