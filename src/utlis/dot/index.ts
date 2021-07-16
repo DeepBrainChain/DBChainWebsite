@@ -11,7 +11,7 @@ import {
   naclBoxKeypairFromSecret,
   signatureVerify,
   blake2AsHex} from '@polkadot/util-crypto'
-import { BN_TEN, formatBalance, isHex,stringToU8a , u8aToHex, hexToU8a } from '@polkadot/util';
+import { BN_TEN, formatBalance, isHex, stringToU8a , u8aToHex, hexToU8a, hexToString } from '@polkadot/util';
 import { decodePair } from "@polkadot/keyring/pair/decode";
 import BN from 'bn.js'
 import { KeyringPair, KeyringPair$Json } from '@polkadot/keyring/types'
@@ -645,7 +645,9 @@ export const getKeypair = ( password : string ): Kerpair => {
     // throw Error ('pair is not define')
   }
 }
-
+//  0xb75b54a9c6b819acf9fbb00614be9d62f68599909e5fb25e0ab081ad581f8a0b publicKey
+//  0xc8c275687a435f58471111e4dc5412a3edb9e7158aea981e38733eefc195005b secretKey
+// console.log(u8aToHex(getKeypair('123456789').publicKey), u8aToHex(getKeypair('123456789').secretKey),'NewKeyPair1');
 // 通过助记词获取密钥对
 // const MNEMONIC = 'unfold tackle winner comfort child hammer build recall regular lucky inform remain';
 
@@ -765,6 +767,6 @@ let raw_input = (
     + rand_str
     + is_support
 )
-// console.log(blake2AsHex(raw_input ,128), 'raw_input ,128');
+console.log(blake2AsHex('测试bug，请通过一下' ,256), 'raw_input ,256');
 
 

@@ -36,18 +36,18 @@
         :key="index"
       >
         <div class="order-list">
-          <div>{{$t("audit.order")}}: {{item.listId}}</div>
+          <div>{{$t("audit.order")}}: {{item.report_id}}</div>
           <!-- <div>
             <el-button v-if="item.status == 0" size="small" plain @click="seeDetails(false)">{{$t("audit.seeDetails")}}</el-button>
             <el-button v-else-if="item.status == 1" size="small" plain @click="seeDetails(false)">{{$t("audit.seeDetails1")}}</el-button>
             <el-button v-else size="small" plain @click="seeDetails(true)">{{$t("audit.seeDetails2")}}</el-button>
           </div> -->
-          <div>订单倒计时：3:00:00</div>
-          <div>抢单倒计时：1:00:00</div>
-          <div>{{$t("audit.hasNum")}}: 2</div>
+          <div v-if="item.booked_committee.length != 0">订单倒计时：3:00:00</div>
+          <div v-if="item.booked_committee.length != 0">抢单倒计时：1:00:00</div>
+          <div>{{$t("audit.hasNum")}}: {{item.booked_committee.length}}</div>
           <div>{{$t("audit.status")}}:{{$t("audit.status1")}}</div>
-          <el-button class="button" v-if="item.status == 0" size="small" plain @click="start">{{$t("audit.start")}}</el-button>
-          <el-button class="button" v-else size="small" disabled plain @click="start">{{$t("audit.start1")}}</el-button>
+          <el-button class="button" v-if="item.booked_committee.length < 3" size="small" :loading="btnloading" plain @click="start(item.report_id)">{{$t("audit.start")}}</el-button>
+          <el-button class="button" v-else size="small" disabled plain>{{$t("audit.start1")}}</el-button>
         </div>
       </div>
     </template>
@@ -88,7 +88,7 @@ import {
   getAccount,
   getBalance,
 } from "@/utlis";
-import { getOrder, bookFaultOrder } from '@/utlis/dot/api'
+import { getOrder, reportInfo, getCommitteeList, bookFaultOrder } from '@/utlis/dot/api'
 import { getCurrentPair } from "@/utlis/dot"
 import { mapState } from "vuex"
 export default {
@@ -103,34 +103,15 @@ export default {
       dlgMail_open: false,
       isNewMail: false,
       isBinding: false,
+      btnloading: false,
       bindMail: "",
       res_body: {
-        content: [
-          {
-            status: 0, // 状态 0：等待接单中 1：等待问题描述 2：查看问题描述
-            nowData: 0, // 有人抢单后，该订单倒计时
-            nextData: 0, // 有人抢单后，下一个人能抢单的倒计时，可提前截至， 最晚可抢单时间
-            listId: 1234567890123
-          },
-          {
-            status: 1, // 状态 0：等待接单中 1：等待问题描述 2：查看问题描述
-            nowData: 0, // 有人抢单后，该订单倒计时
-            nextData: 0, // 有人抢单后，下一个人能抢单的倒计时，可提前截至， 最晚可抢单时间
-            listId: 2222222222222
-          },
-          {
-            status: 2, // 状态 0：等待接单中 1：等待问题描述 2：查看问题描述
-            nowData: 0, // 有人抢单后，该订单倒计时
-            nextData: 0, // 有人抢单后，下一个人能抢单的倒计时，可提前截至， 最晚可抢单时间
-            listId: 3333333333333
-          }
-        ],
+        content: [],
       },
       send_email_repeatLoading: false,
       send_email_repeat_index: -1,
       // 查询问题描述
       dialogTableVisible: false,
-
     };
   },
   watch: {
@@ -145,8 +126,15 @@ export default {
     this.queryMail();
     getOrder().then(
       res => {
-        console.log(res)
-        this.res_body.content = res.bookable_report
+        this.res_body.content = []
+        res.bookable_report.map(el => {
+          let report = { report_id: el}
+          reportInfo(el).then( res1 => {
+            this.res_body.content.push(
+              {...report, ...res1}
+            )
+          })
+        })
       } 
     );
   },
@@ -296,13 +284,37 @@ export default {
     },
 
     // 开时抢单
-    start(){
+    start(id){
+      this.btnloading = false
+      getCommitteeList(this.wallet_address).then(res=>{
+        if(res){
+          bookFaultOrder(id, '123456789', res=>{
+            console.log(res,'res');
+            if(res.success){
+              this.$message({
+                showClose: true,
+                message: this.$t('audit.tipmsg1'),
+                type: "success",
+              });
+            }else{
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: "success",
+              });
+            }
+          })
+          
+        }else{
+          this.$message({
+            showClose: true,
+            message: this.$t('audit.tipmsg4'),
+            type: "error",
+          });
+        }
+      })
       // let list = bookFaultOrder(0);
-      this.$message({
-        showClose: true,
-        message: this.$t('audit.tipmsg1'),
-        type: "success",
-      });
+      
     },
     // 查看问题描述
     seeDetails(status){

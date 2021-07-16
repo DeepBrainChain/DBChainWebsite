@@ -1035,36 +1035,73 @@ export const get_cpu_order_id_list = params => {
 
 /**
  * @description 获取待审核列表
- * @param {object} params 
+ * @param wallet 钱包地址
  */
 export const getMachineList = params => {
   return axios({
     method: "post",
-    url: "http://192.168.1.91:8080/bywallet",
+    url: "https://identifier.congtu.cloud/bywallet",
     params
   });
 };
 
 /**
- * @description 提交原始信息
+ * @description 查询Gpu信息
  * @param {object} params {machine_id, gpu, ....}
  */
-export const getMachineCommittee = params => {
+ export const getGPUList = () => {
+  return axios({
+    method: "get",
+    url: "https://identifier.congtu.cloud/getGPU",
+  });
+};
+
+/**
+ * @description 保存抢单列表hash
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const Save_GrabbingHash = params => {
   return axios({
     method: "post",
-    url: "http://192.168.1.91:8080/getMachineCommittee",
+    url: "https://identifier.congtu.cloud/Save_GrabbingHash",
+    params
+  });
+};
+
+
+/**
+ * @description 保存派单机器hash
+ * @param {object} params {machine_id, gpu, ....}
+ */
+export const Save_ResultHash = params => {
+  return axios({
+    method: "post",
+    url: "https://identifier.congtu.cloud/Save_ResultHash",
     params
   });
 };
 
 /**
- * @description 获取原始信息
- * @param {object} params {machine_id}
+ * @description 保存抢单列表hash
+ * @param {object} params {machine_id, gpu, ....}
  */
-export const getOriginal = params => {
+ export const Save_GrabbingHash1 = params => {
   return axios({
     method: "post",
-    url: "http://192.168.1.91:8080/getOriginal",
+    url: "https://identifier.congtu.cloud/Save_GrabbingHash",
+    params
+  });
+};
+
+
+/**
+ * @description 保存派单机器hash
+ * @param {object} params {machine_id, gpu, ....}
+ */
+export const Save_ResultHash1 = params => {
+  return axios({
+    method: "post",
+    url: "https://identifier.congtu.cloud/Save_ResultHash",
     params
   });
 };

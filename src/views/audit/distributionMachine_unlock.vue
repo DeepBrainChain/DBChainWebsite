@@ -51,7 +51,7 @@
               >{{ $t("audit.verification") }}</el-button
             >
             <el-button
-              v-else-if="item.machine_status == 'Online'"
+              v-else-if="item.machine_status == 'booked'"
               style="width: 155px"
               type="primary"
               size="mini"
@@ -176,12 +176,12 @@
       <div slot="title">{{$t('audit.seeDetails3')}}</div>
       <el-form :model="formInline" class="form-inline">
         <el-form-item :label="$t('audit.GPUmodel')+':'">
-          <el-select :disabled='radioDisabled' size="small" @change="selectCPU" v-model="formInline.gpu_type" placeholder="请选择">
+          <el-select :disabled='radioDisabled' size="small" @change="selectCPU" value-key="gpu_type" v-model="sclectItem" placeholder="请选择">
             <el-option
               v-for="item in GPUmodelList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              :key="item.gpu_type"
+              :label="item.gpu_type"
+              :value="item">
             </el-option>
           </el-select>
         </el-form-item>
@@ -330,22 +330,52 @@ export default {
         is_support:'1',
         passward:''
       },
+      sclectItem: {},
       GPUmodelList:[
         {
-          value: 'A100',
-          label: 'A100'
-        }, {
-          value: 'P100',
-          label: 'P100'
+          gpu_type: "3090Ti",
+          cuda_core: "4352",
+          gpu_mem: "4503482",
+          calc_point: "68.25"
+        },
+        {
+          gpu_type: "3080Ti",
+          cuda_core: "10240",
+          gpu_mem: "10090989",
+          calc_point: "99.01"
         }
       ],
       GPUnumberList:[
         {
-          value: 1,
-          label: 1
+          value: "1",
+          label: "1"
         }, {
-          value: 2,
-          label: 2
+          value: "2",
+          label: "2"
+        }, {
+          value: "3",
+          label: "3"
+        }, {
+          value: "4",
+          label: "4"
+        }, {
+          value: "5",
+          label: "5"
+        }, {
+          value: "6",
+          label: "6"
+        }, {
+          value: "7",
+          label: "7"
+        }, {
+          value: "8",
+          label: "8"
+        }, {
+          value: "9",
+          label: "9"
+        }, {
+          value: "10",
+          label: "10"
         }
       ],
       dialogTableVisible1: false,
@@ -538,7 +568,7 @@ export default {
             {
                 "original": {
                     "machine_id": "8eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48",
-                    "gpu_type": "GeForceRTX2080Ti",
+                    gpu_type: "3080Ti",
                     "gpu_num": "3",
                     "cuda_core": "3453",
                     "gpu_mem": "23422223",
@@ -638,6 +668,7 @@ export default {
     // 开时验证
     verification(item,index){
       if(index == 1){ // 提交原始结果hash值
+        this.sclectItem.gpu_type = item.gpu_type
         Object.assign(this.formInline , item)
         this.dialogTableVisible1 = true
         this.radioDisabled = false
@@ -661,8 +692,10 @@ export default {
         }
       }
     },
-    selectCPU(){
+    selectCPU(val){
       this.select = true
+      this.sclectItem = val 
+      this.formInline = {...this.formInline, ...val}
     },
     commit(){
       if(this.formInline.passward == ''){

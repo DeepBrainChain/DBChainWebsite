@@ -137,7 +137,7 @@ export const GetApi = async (): Promise<Network> =>{
           "providers": "u32",
           "data": "AccountData"
         },
-        "EraMachinePoints": {
+        "EraStashPoints": {
           "total": "u64",
           "staker_statistic": "BTreeMap<AccountId, StashMachineStatistics>"
         },
@@ -178,18 +178,14 @@ export const GetApi = async (): Promise<Network> =>{
         "LCCommitteeOps": {
           "staked_dbc": "Balance",
           "verify_time": "Vec<BlockNumber>",
-          "confirm_hash": "Hash",
+          "confirm_hash": "[u8; 16]",
           "hash_time": "BlockNumber",
           "confirm_time": "BlockNumber",
           "machine_status": "LCMachineStatus",
           "machine_info": "CommitteeUploadInfo"
         },
         "LCMachineStatus": {
-          "_enum": [
-            "Booked",
-            "Hashed",
-            "Confirmed"
-          ]
+          "_enum": ["Booked", "Hashed", "Confirmed"]
         },
         "LCMachineCommitteeList": {
           "book_time": "BlockNumber",
@@ -201,12 +197,7 @@ export const GetApi = async (): Promise<Network> =>{
           "status": "LCVerifyStatus"
         },
         "LCVerifyStatus": {
-          "_enum": [
-            "SubmittingHash",
-            "SubmittingRaw",
-            "Summarizing",
-            "Finished"
-          ]
+          "_enum": ["SubmittingHash", "SubmittingRaw", "Summarizing", "Finished"]
         },
         "CommitteeMachineList": {
           "booked_order": "Vec<OrderId>",
@@ -219,7 +210,7 @@ export const GetApi = async (): Promise<Network> =>{
           "encrypted_err_info": "Option<Vec<u8>>",
           "encrypted_login_info": "Option<Vec<u8>>",
           "encrypted_time": "BlockNumber",
-          "confirm_hash": "Hash",
+          "confirm_hash": "[u8; 16]",
           "hash_time": "BlockNumber",
           "confirm_raw": "Vec<u8>",
           "confirm_time": "BlockNumber",
@@ -268,7 +259,7 @@ export const GetApi = async (): Promise<Network> =>{
           "booked_time": "BlockNumber",
           "encrypted_err_info": "Option<Vec<u8>>",
           "encrypted_time": "BlockNumber",
-          "confirm_hash": "Hash",
+          "confirm_hash": "[u8; 16]",
           "hash_time": "BlockNumber",
           "confirm_raw": "Vec<u8>",
           "confirm_time": "BlockNumber",
@@ -277,12 +268,7 @@ export const GetApi = async (): Promise<Network> =>{
           "order_status": "MTOrderStatus"
         },
         "MTOrderStatus": {
-          "_enum": [
-            "WaitingEncrypt",
-            "Verifying",
-            "WaitingRaw",
-            "Finished"
-          ]
+          "_enum": ["WaitingEncrypt", "Verifying", "WaitingRaw", "Finished"]
         },
         "MTCommitteeReportList": {
           "booked_report": "Vec<ReportId>",
@@ -299,8 +285,6 @@ export const GetApi = async (): Promise<Network> =>{
         "MTReportInfoDetail": {
           "reporter": "AccountId",
           "report_time": "BlockNumber",
-          "raw_hash": "Hash",
-          "box_public_key": "BoxPubkey",
           "reporter_stake": "Balance",
           "first_book_time": "BlockNumber",
           "machine_id": "MachineId",
@@ -327,8 +311,8 @@ export const GetApi = async (): Promise<Network> =>{
         },
         "MachineFaultType": {
           "_enum": [
-            "HardwareFault(Hash, BoxPubkey)",
-            "MachineOffline(Hash, BoxPubkey)",
+            "HardwareFault([u8; 16], BoxPubkey)",
+            "MachineOffline([u8; 16], BoxPubkey)",
             "MachineUnrentable(MachineId)"
           ]
         },
@@ -387,33 +371,32 @@ let CallBack_data = {
   msg:'',
   success: false
 }
-
-const getKering = async (passward: string) => {
-  let kering = await getCurrentPair()
-  try {
-    await kering!.unlock(passward)
-  } catch (e: any) {
-    CallBack_data = {
-      msg: e.message,
-      success: false
-    };
-    return CallBack_data;
-  }
-  await cryptoWaitReady();
-  return kering
-}
-
 /**
  * getOrder 查询链上时间
  * 
  * @return time:链上时间块
  */
  
-export const getTime = async (): Promise<any> => {
+export const getBlockTime = async (): Promise<any> => {
   await GetApi();
   let de = await api?.rpc.chain.getBlock()
   return de?.block.header.number.toHuman()
 }
+
+/**
+ * getCommitteeList 查询是否为理事会成员
+ * 
+ * @return list: boolen 理事会成员列表
+ */
+
+export const getCommitteeList = async (wallet: string): Promise<any> => {
+  await GetApi();
+  let de = await api?.query.committee.committee()
+  let list  = de?.normal.toHuman().indexOf(wallet) > -1? true : false
+  return list
+}
+
+
 
 /**
  * ConfirmHash 派单 提交hash信息 
@@ -555,8 +538,14 @@ export const getOrder = async (): Promise<any> => {
   return de?.toHuman()
 }
 
+export const reportInfo = async (ReportId: string): Promise<any> => {
+  await GetApi();
+  let de = await api?.query.maintainCommittee.reportInfo(ReportId)
+  return de?.toHuman()
+}
+
 /**
- * StartGrabbing 开始抢单
+ * committeeSetBoxPubkey 开始抢单
  * @param publicKey: Uint8Array 公钥
  * @return [] 抢单列表
  */
@@ -566,20 +555,66 @@ export const StartGrabbing = async (publicKey: Uint8Array): Promise<any> => {
   return de?.toHuman()
 }
 /**
- * StartGrabbing 开始抢单
+ * bookFaultOrder 开始抢单
  * @param reportid: number 订单号
  * @return [] 抢单列表
+ * 
  */
-export const bookFaultOrder = async (reportid: number): Promise<any> => {
+export const bookFaultOrder = async (reportid: number, passward:string, callback: (data: Object) => void) => {
   await GetApi();
-  let de = await api?.tx.committee.bookFaultOrder(reportid)
+  let kering = await getCurrentPair()
+  try {
+    await kering!.unlock(passward)
+  } catch (e: any) {
+    CallBack_data = {
+      msg: e.message,
+      success: false
+    };
+    callback(CallBack_data)
+    return;
+  }
+  await cryptoWaitReady()
+  await api?.tx.maintainCommittee
+  .bookFaultOrder(reportid)
+  .signAndSend( kering! , ( { events = [], status  } ) => {
+    if (status.isFinalized) {
+      events.forEach(({ event: { method, data: [error] } }) => {
+        if (error.isModule && method == 'ExtrinsicFailed') {
+          const decoded = api?.registry.findMetaError(error.asModule);
+          CallBack_data.msg = decoded!.method;
+          CallBack_data.success = false
+        }else if(method == 'ExtrinsicSuccess'){
+          CallBack_data.msg = method;
+          CallBack_data.success = true
+        }
+      });
+      if (callback) {
+        callback(CallBack_data)
+      }
+    }
+  })
+  .catch((res)=>{
+    CallBack_data = {
+      msg: res.message,
+      success: false
+    };
+    callback(CallBack_data)
+  })
+}
+
+/**
+ * committeeOrder 查询我的抢单列表
+ * @param (AccountId)
+ */
+ export const committeeOrder = async (AccountId: string):Promise<any> => {
+  await GetApi();
+  let de = await api?.query.maintainCommittee.committeeOrder(AccountId)
   return de?.toHuman()
 }
 
 /**
- * StartGrabbing 查询加密信息
+ * committeeOps 查询抢单机器详细信息
  * @param (AccountId, ReportId)
- * @return [] 抢单列表
  */
 export const committeeOps = async (AccountId: number, ReportId:number):Promise<any> => {
   await GetApi();
@@ -650,12 +685,7 @@ export const submitConfirmHash = async ( permas: any,  passward: string, callbac
 
 /**
  * StartGrabbing 抢单 提交原始信息
- * @param report_id
- * @param machine_id  
- * @param reporter_rand_str
- * @param committee_rand_str
- * @param err_reason
- * @param support_report
+ * @param permas
  * @return callback 回调函数，返回数组信息
  */
 export const submitConfirmRaw = async ( permas: any, passward: string, callback: (data: Object) => void) => {

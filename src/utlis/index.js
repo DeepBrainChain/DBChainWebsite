@@ -626,20 +626,29 @@ export function getHref(url){
   } 
 }
 
-import { getTime } from './dot/api'
+import { getBlockTime } from './dot/api'
+
+
+/**
+ * getdate 返回时间格式 MM/DD HH:SS
+ * @param time 时间戳
+ */
 
 function getdate(time) {
-  var now = new Date(time),
-      m = now.getMonth() + 1,
-      d = now.getDate(),
-      h = now.getHours(),
-      s = now.getMinutes();
+  let now = new Date(time),
+    m = now.getMonth() + 1,
+    d = now.getDate(),
+    h = now.getHours(),
+    s = now.getMinutes();
   return (m < 10 ? "0" + m : m) + "/" + (d < 10 ? "0" + d : d) + " " + (h < 10 ? "0" + h : h) +'h'+(s < 10 ? "0" + s : s)+'m'
 }
 
-// 区块验证时间换算，返回验证时间段
+/**
+ * getBlockchainTime 区块验证时间换算，返回派单验证时间段  以6S一个块计算
+ * @param arr 开始时间时间块数组
+ */
 export const getBlockchainTime = async (arr) => {
-  let BlockchainTime = await getTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
+  let BlockchainTime = await getBlockTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
   let nowDate = Date.parse(new Date()) // 获取当前时间的秒数
   let newarr = arr.map(el => {
     let timestart = (el - BlockchainTime)*6000 + nowDate
@@ -647,4 +656,51 @@ export const getBlockchainTime = async (arr) => {
     return { timestart: getdate(timestart), timeend: getdate(timeend) }
   })
   return newarr
+}
+
+/**
+ * getHashCountDown 获取链上时间，返回抢单倒计时  以30S一个块计算
+ * @param type 对应时间戳类型 1：hash倒计时 2：订单结束倒计时 3：提交原始结果倒计时
+ * @param srt 抢单的时间块高
+ */
+export const getCountDown = async ( type , srt ) => {
+  let BlockchainTime = await getBlockTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
+  let str1 = parseFloat(srt.replace(/,/g, ''))
+  // let nowDate = Date.parse(new Date()) // 获取当前时间的秒数
+  let timeend // 获取结束时间的块高
+  if( type === 1 ){
+    timeend = str1+115
+  }else if(type === 2){
+    timeend = str1+360
+  }else{
+    timeend = str1+470
+  }
+  let endTime = (timeend - BlockchainTime)*30 // 获取秒数倒计时
+  return endTime
+}
+
+
+/**
+ * GetRTime 时间戳倒计时 天 时分秒
+ * @param t 差值时间戳
+ */
+export const GetRTime = (t) => {
+  let iner;
+  clearInterval(iner)
+  iner = setInterval( ()=> {
+    let d = 0, h = 0, m = 0, s = 0
+    let time_str = ''
+    if(t>=0){
+      d=Math.floor(t/60/60/24);
+      h=Math.floor(t/60/60%24);
+      m=Math.floor(t/60%60);
+      s=Math.floor(t%60);
+      --t
+      time_str = (d>0?d + 'Day ' : "") + (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s)
+    }else{
+      time_str = '00:00:00'
+      clearInterval(iner)
+    }
+    return time_str
+  }, 1000)
 }

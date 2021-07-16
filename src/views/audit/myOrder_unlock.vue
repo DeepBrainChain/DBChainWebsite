@@ -36,20 +36,20 @@
         :key="index"
       >
         <div class="order-list">
-          <div>{{$t("audit.order")}}: {{item.listId}}</div>
+          <div>{{$t("audit.order")}}: {{item.report_id}}</div>
           <div>
             <el-button v-if="item.status == 0" size="small" plain @click="seeDetails(false)">{{$t("audit.seeDetails1")}}</el-button>
             <el-button v-else size="small" plain @click="seeDetails(true)">{{$t("audit.seeDetails2")}}</el-button>
           </div>
-          <el-button class="button" v-if="item.status == 0" size="small" plain @click="start(1)">{{$t("audit.verification1")}}</el-button>
+          <el-button class="button" v-if="item.hashed_committee.length == 0" size="small" plain @click="start(1)">{{$t("audit.verification1")}}</el-button>
           <el-button class="button" v-else size="small" plain @click="start(2)">{{$t("audit.verification2")}}</el-button>
         </div>
         <div class="order-list mt20">
-          <div>{{$t("audit.hasNum")}}:1</div>
-          <div>提交验证结果hash值倒计时：1:00:00</div>
-          <div>{{$t("audit.myResult")}}:{{$t("audit.hasError")}}</div>
-          <div>{{$t("audit.finalResult")}}:{{$t("audit.hasError")}}</div>
-          <div>{{ $t("audit.proportion") }}: 1:2</div>
+          <div>{{$t("audit.hasNum")}}:{{ item.booked_committee.length }}</div>
+          <div>{{$t("audit.verification1_time")}}：{{ item.report_info.booked_time}}</div>
+          <div>{{$t("audit.myResult")}}:{{ item.hashed_committee.length == 0? '' :$t("audit.hasError")}}</div>
+          <div>{{$t("audit.finalResult")}}:{{ item.hashed_committee.length == 0? '' :$t("audit.hasError")}}</div>
+          <div>{{ $t("audit.proportion") }}: {{item.support_committee.length}}/{{item.against_committee.length}}</div>
         </div>
       </div>
     </template>
@@ -121,11 +121,12 @@ import {
 import {
   getAccount,
   getBalance,
+  getCountDown
 } from "@/utlis";
 import { getCurrentPair ,getRand_str } from "@/utlis/dot"
 import { mapState, mapMutations } from "vuex"
 
-import { committeeOps, submitConfirmHash, submitConfirmRaw, getTime } from "@/utlis/dot/api"
+import { committeeOps, submitConfirmHash, submitConfirmRaw, committeeOrder, reportInfo, getTime } from "@/utlis/dot/api"
 export default {
   name: "myOrder_unlock",
   components: {
@@ -133,6 +134,11 @@ export default {
   },
   computed: {
     ...mapState(["isNewWallet", "passward"]),
+  },
+  filters:{
+    CountDown:(t) => {
+      
+    }
   },
   data() {
     return {
@@ -144,26 +150,7 @@ export default {
       btnloading: false,
       bindMail: "",
       res_body: {
-        content: [
-          {
-            status: 0, // 状态 0：等待接单中 1：等待问题描述 2：查看问题描述
-            nowData: 0, // 有人抢单后，该订单倒计时
-            nextData: 0, // 有人抢单后，下一个人能抢单的倒计时，可提前截至， 最晚可抢单时间
-            listId: 1234567890123
-          },
-          {
-            status: 1, // 状态 0：等待接单中 1：等待问题描述 2：查看问题描述
-            nowData: 0, // 有人抢单后，该订单倒计时
-            nextData: 0, // 有人抢单后，下一个人能抢单的倒计时，可提前截至， 最晚可抢单时间
-            listId: 2222222222222
-          },
-          {
-            status: 2, // 状态 0：等待接单中 1：等待问题描述 2：查看问题描述
-            nowData: 0, // 有人抢单后，该订单倒计时
-            nextData: 0, // 有人抢单后，下一个人能抢单的倒计时，可提前截至， 最晚可抢单时间
-            listId: 3333333333333
-          }
-        ],
+        content: [],
       },
       send_email_repeatLoading: false,
       send_email_repeat_index: -1,
@@ -194,6 +181,25 @@ export default {
   activated() {
     // this.binding(isNewMail);
     this.queryMail();
+    committeeOrder(this.wallet_address).then( res=> {
+      this.res_body.content = []
+      res.booked_report.map(el => {
+        committeeOps(this.wallet_address, el).then( res1 => {
+          getCountDown(1, res1.booked_time).then(
+            res3 => {
+              res1.booked_time = -res3
+            }
+          )
+          let report = { report_id: el, report_info: res1}
+          reportInfo(el).then( res2 => {
+            this.res_body.content.push(
+              {...report, ...res2}
+            )
+          })
+        })
+        console.log(this.res_body.content, 'this.res_body.content');
+      })
+    })
   },
   deactivated() {
     
@@ -414,11 +420,7 @@ export default {
     seeDetails(status){
       this.btnloading = true
       if(status){
-        committeeOps(this.wallet_address, 0).then( res => {
-          console.log(res, ' res');
-          this.btnloading = false
-          this.dialogTableVisible = true
-        })
+        
       }else{
 
       }
@@ -447,8 +449,81 @@ export default {
     closed() {
       this.isOpen = false;
       this.$emit("update:open", false);
-    }
+    },
+    GetRTime(item, t){
+      let iner;
+      let time_str = ''
+      clearInterval(iner)
+      iner = setInterval( ()=> {
+        let d = 0, h = 0, m = 0, s = 0
+        if(t>=0){
+          d=Math.floor(t/60/60/24);
+          h=Math.floor(t/60/60%24);
+          m=Math.floor(t/60%60);
+          s=Math.floor(t%60);
+          --t
+          time_str = (d>0?d + 'Day ' : "") + (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s)
+        }else{
+          time_str = '00:00:00'
+          clearInterval(iner)
+        }
+        item.report_info.booked_time = time_str
+      }, 1000)
+    },
 
+    init(){
+      //获取当前时间
+      let cur = new Date().getTime();
+      //设置截止时间
+      let str=[
+          "2022/6/30 00:00:00",
+          "2022/7/1 00:00:00",
+      ];
+      // 倒计时
+      this.counts.map((item,index)=>{
+        // 当前时间减去停止时间
+          let leftTime = parseInt((new Date(str[index])-cur)/1000)
+          this.count(leftTime,(msg)=>{
+              item.countNumber=msg;
+          })
+      })
+    },
+    // 倒计时
+    count(time,fn){
+      let t=this;
+      let times=time;
+      ti()
+      this.timer.push(setInterval(ti,1000))
+      function ti(){
+        times--
+        // 定义变量 h,m,s保存倒计时的时间  
+        let h,m,s;  
+        if (times>=0) {
+          // 时分秒
+          h = Math.floor(times/60/60);  
+          m = Math.floor(times/60%60);  
+          s = Math.floor(times%60);
+          let msg=t.repair(h)+':'+t.repair(m)+':'+t.repair(s);
+          fn(msg);
+        }else{
+          // 关闭定时器
+          clearInterval(t.timer);
+          return false
+        }
+      }
+    },
+    // 数字补0
+    repair(o){
+      let x=o;
+      let t=x > 9 ? x : '0' + x
+      return t
+    },
+    // 关闭定时器
+    stopInter(){
+      this.timer.map((item)=>{
+          clearInterval(item);
+      })
+    },
   },
 };
 </script>
