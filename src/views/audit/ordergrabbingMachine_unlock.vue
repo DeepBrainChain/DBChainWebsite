@@ -46,7 +46,7 @@
           <div v-if="item.booked_committee.length != 0">抢单倒计时：1:00:00</div>
           <div>{{$t("audit.hasNum")}}: {{item.booked_committee.length}}</div>
           <div>{{$t("audit.status")}}:{{$t("audit.status1")}}</div>
-          <el-button class="button" v-if="item.booked_committee.length < 3" size="small" :loading="btnloading" plain @click="start(item.report_id)">{{$t("audit.start")}}</el-button>
+          <el-button class="button" v-if="item.booked_committee.length < 3" size="small" :loading="item.btnloading" plain @click="start(item)">{{$t("audit.start")}}</el-button>
           <el-button class="button" v-else size="small" disabled plain>{{$t("audit.start1")}}</el-button>
         </div>
       </div>
@@ -90,7 +90,7 @@ import {
 } from "@/utlis";
 import { getOrder, reportInfo, getCommitteeList, bookFaultOrder } from '@/utlis/dot/api'
 import { getCurrentPair } from "@/utlis/dot"
-import { mapState } from "vuex"
+import { mapState, mapMutations } from "vuex"
 export default {
   name: "ordergrabbingMachine_unlock",
   components: {
@@ -123,16 +123,17 @@ export default {
   },
   activated() {
     // this.binding(isNewMail);
-    this.queryMail();
+    // this.queryMail();
     getOrder().then(
       res => {
         this.res_body.content = []
         res.bookable_report.map(el => {
-          let report = { report_id: el}
+          let report = { report_id: el, btnloading: false }
           reportInfo(el).then( res1 => {
             this.res_body.content.push(
               {...report, ...res1}
             )
+            console.log(this.res_body.content, 'this.res_body.content');
           })
         })
       } 
@@ -143,9 +144,10 @@ export default {
   },
 
   computed: {
-    ...mapState(["isNewWallet"]),
+    ...mapState(["isNewWallet", "passward"]),
   },
   methods: {
+    ...mapMutations(['setPassWard']),
     // 绑定邮箱
     openDlgMail(isNewMail) {
       getBalance().then((res) => {
@@ -284,35 +286,49 @@ export default {
     },
 
     // 开时抢单
-    start(id){
-      this.btnloading = false
-      getCommitteeList(this.wallet_address).then(res=>{
-        if(res){
-          bookFaultOrder(id, '123456789', res=>{
-            console.log(res,'res');
-            if(res.success){
-              this.$message({
-                showClose: true,
-                message: this.$t('audit.tipmsg1'),
-                type: "success",
-              });
-            }else{
-              this.$message({
-                showClose: true,
-                message: res.msg,
-                type: "success",
-              });
-            }
-          })
-          
-        }else{
-          this.$message({
-            showClose: true,
-            message: this.$t('audit.tipmsg4'),
-            type: "error",
-          });
-        }
-      })
+    start(item){
+      this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
+        confirmButtonText: this.$t('confirm'),
+        cancelButtonText:  this.$t('cancel'),
+        inputValue: this.passward
+      }).then( ({ value }) => {
+        item.btnloading = true
+        getCommitteeList(this.wallet_address).then(res=>{
+          if(res){
+            bookFaultOrder(item.id, value, res=>{
+              if(res.success){
+                this.$message({
+                  showClose: true,
+                  message: this.$t('audit.tipmsg1'),
+                  type: "success",
+                });
+                item.btnloading = false
+              }else{
+                this.$message({
+                  showClose: true,
+                  message: res.msg,
+                  type: "error",
+                });
+                item.btnloading = false
+              }
+            })
+          }else{
+            this.$message({
+              showClose: true,
+              message: this.$t('audit.tipmsg4'),
+              type: "error",
+            });
+            item.btnloading = false
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          showClose: true,
+          message: this.$t('verifyPassward'),
+          type: "error",
+        });  
+      });
+      
       // let list = bookFaultOrder(0);
       
     },
@@ -393,7 +409,7 @@ export default {
       flex:1
     }
     .button{
-      width: 100px;
+      width: 120px;
     }
   }
 }

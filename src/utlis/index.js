@@ -640,15 +640,15 @@ function getdate(time) {
     d = now.getDate(),
     h = now.getHours(),
     s = now.getMinutes();
-  return (m < 10 ? "0" + m : m) + "/" + (d < 10 ? "0" + d : d) + " " + (h < 10 ? "0" + h : h) +'h'+(s < 10 ? "0" + s : s)+'m'
+  return (m < 10 ? "0" + m : m) + "/" + (d < 10 ? "0" + d : d) + " " + (h < 10 ? "0" + h : h) +':'+(s < 10 ? "0" + s : s)
 }
 
 /**
  * getBlockchainTime 区块验证时间换算，返回派单验证时间段  以6S一个块计算
  * @param arr 开始时间时间块数组
  */
-export const getBlockchainTime = async (arr) => {
-  let BlockchainTime = await getBlockTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
+export const getBlockchainTime = async (BlockchainTime, arr) => {
+  // let BlockchainTime = await getBlockTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
   let nowDate = Date.parse(new Date()) // 获取当前时间的秒数
   let newarr = arr.map(el => {
     let timestart = (el - BlockchainTime)*6000 + nowDate

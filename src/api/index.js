@@ -1057,7 +1057,7 @@ export const getMachineList = params => {
 };
 
 /**
- * @description 保存抢单列表hash
+ * @description 保存派单机器hash
  * @param {object} params {machine_id, gpu, ....}
  */
  export const Save_GrabbingHash = params => {
@@ -1068,18 +1068,19 @@ export const getMachineList = params => {
   });
 };
 
-
 /**
- * @description 保存派单机器hash
+ * @description  获取派单机器hash提交原始值
  * @param {object} params {machine_id, gpu, ....}
  */
-export const Save_ResultHash = params => {
+ export const GetResultHash = params => {
   return axios({
     method: "post",
-    url: "https://identifier.congtu.cloud/Save_ResultHash",
+    url: "https://identifier.congtu.cloud/GetResultHash",
     params
   });
 };
+
+
 
 /**
  * @description 保存抢单列表hash

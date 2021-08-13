@@ -168,7 +168,8 @@ export default {
         support_report: "1",
       },
       radioDisabled: false,
-      isHex: true
+      isHex: true,
+      timer: []
     };
   },
   watch: {
@@ -180,24 +181,21 @@ export default {
   },
   activated() {
     // this.binding(isNewMail);
+    this.stopInter()
     this.queryMail();
-    committeeOrder(this.wallet_address).then( res=> {
+    committeeOrder(this.wallet_address).then( async res=> {
       this.res_body.content = []
-      res.booked_report.map(el => {
-        committeeOps(this.wallet_address, el).then( res1 => {
-          getCountDown(1, res1.booked_time).then(
-            res3 => {
-              res1.booked_time = -res3
-            }
-          )
-          let report = { report_id: el, report_info: res1}
-          reportInfo(el).then( res2 => {
-            this.res_body.content.push(
-              {...report, ...res2}
-            )
-          })
+      res.booked_report.map( async (el, index) => {
+        let res1 = await committeeOps(this.wallet_address, el)
+        console.log(res1.booked_time, 'res1.booked_time1');
+        res1.booked_time = await getCountDown(1, res1.booked_time)
+        console.log(res1.booked_time, 'res1.booked_time2');
+        let report = { report_id: el, report_info: res1}
+        let res2 =  await reportInfo(el)
+        this.res_body.content.push({ ...report, ...res2 })
+        this.count(res1.booked_time, index, (msg)=>{
+          report.report_info.booked_time=msg;
         })
-        console.log(this.res_body.content, 'this.res_body.content');
       })
     })
   },
@@ -342,7 +340,7 @@ export default {
       this.isBinding = false;
       this.queryMail();
     },
-
+    
     // 开时抢单
     start(num){
       if(num == 1){
@@ -470,30 +468,25 @@ export default {
         item.report_info.booked_time = time_str
       }, 1000)
     },
-
-    init(){
-      //获取当前时间
-      let cur = new Date().getTime();
-      //设置截止时间
-      let str=[
-          "2022/6/30 00:00:00",
-          "2022/7/1 00:00:00",
-      ];
-      // 倒计时
-      this.counts.map((item,index)=>{
-        // 当前时间减去停止时间
-          let leftTime = parseInt((new Date(str[index])-cur)/1000)
-          this.count(leftTime,(msg)=>{
-              item.countNumber=msg;
-          })
-      })
-    },
+    getData(el) {
+      return new Promise(resolve => {
+        committeeOps(this.wallet_address, el).then(async res1 => {
+          let result = await Promise.all([getCountDown(1, res1.booked_time),reportInfo(el)])
+          res1.booked_time = result[0]
+          resolve({
+            res1: res1, 
+            result: result[1]
+           })
+        });
+      })
+    },
+    
     // 倒计时
-    count(time,fn){
+    count(time, i, fn){
       let t=this;
-      let times=time;
+      let times=time>0?time: -time;
       ti()
-      this.timer.push(setInterval(ti,1000))
+      t.timer[i] = setInterval(ti,1000)
       function ti(){
         times--
         // 定义变量 h,m,s保存倒计时的时间  
@@ -507,7 +500,7 @@ export default {
           fn(msg);
         }else{
           // 关闭定时器
-          clearInterval(t.timer);
+          clearInterval(t.timer[i]);
           return false
         }
       }
@@ -521,7 +514,7 @@ export default {
     // 关闭定时器
     stopInter(){
       this.timer.map((item)=>{
-          clearInterval(item);
+        clearInterval(item);
       })
     },
   },

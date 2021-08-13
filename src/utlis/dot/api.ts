@@ -5,7 +5,7 @@ import { getCurrentPair } from './index' // 获取kerPair
 
 const node = {
   polkadot: 'wss://rpc.polkadot.io',
-  dbc: 'wss://innertest.dbcwallet.io'
+  dbc: 'wss://innertest2.dbcwallet.io'
 }
 let api: ApiPromise | null = null
 
@@ -24,6 +24,7 @@ export const GetApi = async (): Promise<Network> =>{
         "ReportId": "u64",
         "SlashId": "u64",
         "BoxPubkey": "[u8; 32]",
+        "ReportHash": "[u8; 16]",
         "StandardGpuPointPrice": {
           "gpu_point": "u64",
           "gpu_price": "u64"
@@ -37,7 +38,9 @@ export const GetApi = async (): Promise<Network> =>{
           "booked_machine": "Vec<MachineId>",
           "online_machine": "Vec<MachineId>",
           "fulfilling_machine": "Vec<MachineId>",
-          "refused_machine": "Vec<MachineId>"
+          "refused_machine": "Vec<MachineId>",
+          "rented_machine": "Vec<MachineId>",
+          "offline_machine": "Vec<MachineId>"
         },
         "StashMachine": {
           "total_machine": "Vec<MachineId>",
@@ -47,7 +50,7 @@ export const GetApi = async (): Promise<Network> =>{
           "total_rented_gpu": "u64",
           "total_claimed_reward": "Balance",
           "can_claim_reward": "Balance",
-          "left_reward": "Vec<Balance>",
+          "linear_release_reward": "Vec<Balance>",
           "total_rent_fee": "Balance",
           "total_burn_fee": "Balance"
         },
@@ -63,31 +66,36 @@ export const GetApi = async (): Promise<Network> =>{
         },
         "MachineInfo": {
           "controller": "AccountId",
-          "machine_owner": "AccountId",
-          "machine_renter": "Option<AccountId>",
+          "machine_stash": "AccountId",
+          "last_machine_renter": "Option<AccountId>",
+          "last_machine_restake": "BlockNumber",
           "bonding_height": "BlockNumber",
+          "online_height": "BlockNumber",
+          "last_online_height": "BlockNumber",
           "stake_amount": "Balance",
           "machine_status": "MachineStatus",
           "total_rented_duration": "u64",
           "total_rented_times": "u64",
+          "unapplied_slash": "Vec<(AccountId, u32)>",
           "total_rent_fee": "Balance",
           "total_burn_fee": "Balance",
           "machine_info_detail": "MachineInfoDetail",
           "reward_committee": "Vec<AccountId>",
-          "reward_deadline": "BlockNumber"
+          "reward_deadline": "EraIndex"
         },
         "MachineStatus": {
-          "_enum": [
-            "AddingCustomizeInfo",
-            "CommitteeVerifying",
-            "CommitteeRefused",
-            "WaitingFulfill",
-            "Online",
-            "StakerReportOffline(BlockNumber)",
-            "ReporterReportOffline(BlockNumber",
-            "Creating",
-            "Rented"
-          ]
+          "_enum": {
+            "AddingCustomizeInfo": null,
+            "DistributingOrder": null,
+            "CommitteeVerifying": null,
+            "CommitteeRefused": "BlockNumber",
+            "WaitingFulfill": null,
+            "Online": null,
+            "StakerReportOffline": "(BlockNumber, Box<MachineStatus>)",
+            "ReporterReportOffline": "(BlockNumber, Box<MachineStatus>)",
+            "Creating": null,
+            "Rented": null
+          }
         },
         "MachineInfoDetail": {
           "committee_upload_info": "CommitteeUploadInfo",
@@ -112,25 +120,25 @@ export const GetApi = async (): Promise<Network> =>{
         "StakerCustomizeInfo": {
           "upload_net": "u64",
           "download_net": "u64",
-          "longitude": "i64",
-          "latitude": "i64",
+          "longitude": "Longitude",
+          "latitude": "Latitude",
           "telecom_operators": "Vec<TelecomName>",
           "images": "Vec<ImageName>"
         },
+        "Longitude": {
+          "_enum": {
+            "East": "u64",
+            "West": "u64"
+          }
+        },
+        "Latitude": {
+          "_enum": {
+            "South": "u64",
+            "North": "u64"
+          }
+        },
         "ImageName": "Text",
         "TelecomName": "Text",
-        "CPU": {
-          "num": "Vec<u8>",
-          "type": "Vec<u8>"
-        },
-        "Disk": {},
-        "GPU": {
-          "num": "Vec<u8>",
-          "gpus": "Vec<GPUDetail>"
-        },
-        "GPUDetail": {
-          "grade": "Vec<u8>"
-        },
         "AccountInfo": {
           "nonce": "u32",
           "consumers": "u32",
@@ -149,14 +157,14 @@ export const GetApi = async (): Promise<Network> =>{
         },
         "MachineGradeStatus": {
           "basic_grade": "u64",
-          "is_online": "bool"
+          "is_rented": "bool",
+          "reward_account": "Vec<AccountId>"
         },
         "StashMachineStatistics": {
           "online_gpu_num": "u64",
           "inflation": "Perbill",
           "machine_total_calc_point": "u64",
-          "rent_extra_grade": "u64",
-          "individual_machine": "BTreeMap<MachineId, MachineGradeStatus>"
+          "rent_extra_grade": "u64"
         },
         "CommitteeMachine": {
           "machine_id": "Vec<MachineId>",
@@ -248,13 +256,6 @@ export const GetApi = async (): Promise<Network> =>{
           "chill_list": "Vec<AccountId>",
           "black_list": "Vec<AccountId>"
         },
-        "TestMachineInfo": {
-          "machine_owner": "AccountId",
-          "bonding_height": "BlockNumber",
-          "machine_grade": "u64",
-          "machine_price": "u64",
-          "reward_deadline": "BlockNumber"
-        },
         "MTCommitteeOpsDetail": {
           "booked_time": "BlockNumber",
           "encrypted_err_info": "Option<Vec<u8>>",
@@ -310,11 +311,11 @@ export const GetApi = async (): Promise<Network> =>{
           ]
         },
         "MachineFaultType": {
-          "_enum": [
-            "HardwareFault([u8; 16], BoxPubkey)",
-            "MachineOffline([u8; 16], BoxPubkey)",
-            "MachineUnrentable(MachineId)"
-          ]
+          "_enum": {
+            "HardwareFault": "(ReportHash, BoxPubkey)",
+            "MachineOffline": "(ReportHash, BoxPubkey)",
+            "MachineUnrentable": "MachineId"
+          }
         },
         "PendingSlashInfo": {
           "slash_who": "AccountId",
@@ -329,7 +330,11 @@ export const GetApi = async (): Promise<Network> =>{
           "rent_start": "BlockNumber",
           "confirm_rent": "BlockNumber",
           "rent_end": "BlockNumber",
-          "stake_amount": "Balance"
+          "stake_amount": "Balance",
+          "rent_status": "RentStatus"
+        },
+        "RentStatus": {
+          "_enum": ["WaitingVerifying", "Renting", "RentExpired"]
         }
       }
     })
@@ -372,7 +377,7 @@ let CallBack_data = {
   success: false
 }
 /**
- * getOrder 查询链上时间
+ * getBlockTime 查询链上时间
  * 
  * @return time:链上时间块
  */
@@ -634,7 +639,7 @@ export const submitConfirmHash = async ( permas: any,  passward: string, callbac
   let { report_id, machine_id, reporter_rand_str, committee_rand_str, err_reason, support_report } = permas
   let raw_input = blake2AsHex(
     report_id
-    +machine_id
+    + machine_id
     + reporter_rand_str
     + committee_rand_str
     + err_reason

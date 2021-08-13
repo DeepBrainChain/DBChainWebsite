@@ -1004,6 +1004,7 @@ export default {
     bindEmail:'请先绑定邮箱信息',
     Op_Successful:'操作成功',
     Op_Failed:'操作失败',
+    errormsg:'获取数据失败，请稍后再试！'
   }
 
 };

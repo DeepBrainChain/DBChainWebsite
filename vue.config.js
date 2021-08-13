@@ -79,11 +79,11 @@ module.exports = {
         ws: true,
         changeOrigin: true
       },
-      "/binding_email_rent": {
-        target: "https://info.dbchain.ai",
-        ws: true,
-        changeOrigin: true
-      },
+      // "/binding_email_rent": {
+      //   target: "https://info.dbchain.ai",
+      //   ws: true,
+      //   changeOrigin: true
+      // },
       query_all_machines: {
         target: "https://info.dbchain.ai",
         ws: true,
@@ -123,6 +123,15 @@ module.exports = {
         target: "https://info.dbchain.ai",
         ws: true,
         changeOrigin: true
+      },
+      "/identifier": {
+        target: "http://192.168.1.91:8080",
+        ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          // 路径重写
+          "/identifier": "" // 这个意思就是以api开头的，定向到哪里, 如果你的后边还有路径的话， 会自动拼接上
+        }
       }
     }
   },
