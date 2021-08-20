@@ -663,8 +663,8 @@ export const getBlockchainTime = async (BlockchainTime, arr) => {
  * @param type 对应时间戳类型 1：hash倒计时 2：订单结束倒计时 3：提交原始结果倒计时
  * @param srt 抢单的时间块高
  */
-export const getCountDown = async ( type , srt ) => {
-  let BlockchainTime = await getBlockTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
+export const getCountDown = async ( type, srt, BlockchainTime) => {
+  // let BlockchainTime = await getBlockTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
   let str1 = parseFloat(srt.replace(/,/g, ''))
   // let nowDate = Date.parse(new Date()) // 获取当前时间的秒数
   let timeend // 获取结束时间的块高

@@ -50,7 +50,6 @@ export const GetApi = async (): Promise<Network> =>{
           "total_rented_gpu": "u64",
           "total_claimed_reward": "Balance",
           "can_claim_reward": "Balance",
-          "linear_release_reward": "Vec<Balance>",
           "total_rent_fee": "Balance",
           "total_burn_fee": "Balance"
         },
@@ -72,11 +71,11 @@ export const GetApi = async (): Promise<Network> =>{
           "bonding_height": "BlockNumber",
           "online_height": "BlockNumber",
           "last_online_height": "BlockNumber",
-          "stake_amount": "Balance",
+          "init_stake_amount": "Balance",
+          "current_stake_amount": "Balance",
           "machine_status": "MachineStatus",
           "total_rented_duration": "u64",
           "total_rented_times": "u64",
-          "unapplied_slash": "Vec<(AccountId, u32)>",
           "total_rent_fee": "Balance",
           "total_burn_fee": "Balance",
           "machine_info_detail": "MachineInfoDetail",
@@ -118,12 +117,12 @@ export const GetApi = async (): Promise<Network> =>{
           "is_support": "bool"
         },
         "StakerCustomizeInfo": {
+          "server_room": "H256",
           "upload_net": "u64",
           "download_net": "u64",
           "longitude": "Longitude",
           "latitude": "Latitude",
-          "telecom_operators": "Vec<TelecomName>",
-          "images": "Vec<ImageName>"
+          "telecom_operators": "Vec<TelecomName>"
         },
         "Longitude": {
           "_enum": {
@@ -133,11 +132,10 @@ export const GetApi = async (): Promise<Network> =>{
         },
         "Latitude": {
           "_enum": {
-            "South": "u64",
-            "North": "u64"
+            "North": "u64",
+            "South": "u64"
           }
         },
-        "ImageName": "Text",
         "TelecomName": "Text",
         "AccountInfo": {
           "nonce": "u32",
@@ -175,7 +173,8 @@ export const GetApi = async (): Promise<Network> =>{
         "CommitteeList": {
           "normal": "Vec<AccountId>",
           "chill_list": "Vec<AccountId>",
-          "waiting_box_pubkey": "Vec<AccountId>"
+          "waiting_box_pubkey": "Vec<AccountId>",
+          "fulfilling_list": "Vec<AccountId>"
         },
         "LCCommitteeMachineList": {
           "booked_machine": "Vec<MachineId>",
@@ -193,7 +192,11 @@ export const GetApi = async (): Promise<Network> =>{
           "machine_info": "CommitteeUploadInfo"
         },
         "LCMachineStatus": {
-          "_enum": ["Booked", "Hashed", "Confirmed"]
+          "_enum": [
+            "Booked",
+            "Hashed",
+            "Confirmed"
+          ]
         },
         "LCMachineCommitteeList": {
           "book_time": "BlockNumber",
@@ -205,7 +208,12 @@ export const GetApi = async (): Promise<Network> =>{
           "status": "LCVerifyStatus"
         },
         "LCVerifyStatus": {
-          "_enum": ["SubmittingHash", "SubmittingRaw", "Summarizing", "Finished"]
+          "_enum": [
+            "SubmittingHash",
+            "SubmittingRaw",
+            "Summarizing",
+            "Finished"
+          ]
         },
         "CommitteeMachineList": {
           "booked_order": "Vec<OrderId>",
@@ -260,16 +268,21 @@ export const GetApi = async (): Promise<Network> =>{
           "booked_time": "BlockNumber",
           "encrypted_err_info": "Option<Vec<u8>>",
           "encrypted_time": "BlockNumber",
-          "confirm_hash": "[u8; 16]",
+          "confirm_hash": "ReportHash",
           "hash_time": "BlockNumber",
-          "confirm_raw": "Vec<u8>",
+          "extra_err_info": "Vec<u8>",
           "confirm_time": "BlockNumber",
           "confirm_result": "bool",
           "staked_balance": "Balance",
           "order_status": "MTOrderStatus"
         },
         "MTOrderStatus": {
-          "_enum": ["WaitingEncrypt", "Verifying", "WaitingRaw", "Finished"]
+          "_enum": [
+            "WaitingEncrypt",
+            "Verifying",
+            "WaitingRaw",
+            "Finished"
+          ]
         },
         "MTCommitteeReportList": {
           "booked_report": "Vec<ReportId>",
@@ -334,7 +347,35 @@ export const GetApi = async (): Promise<Network> =>{
           "rent_status": "RentStatus"
         },
         "RentStatus": {
-          "_enum": ["WaitingVerifying", "Renting", "RentExpired"]
+          "_enum": [
+            "WaitingVerifying",
+            "Renting",
+            "RentExpired"
+          ]
+        },
+        "CommitteeStakeParamsInfo": {
+          "stake_baseline": "Balance",
+          "stake_per_order": "Balance",
+          "min_free_stake_percent": "Perbill"
+        },
+        "CommitteeStakeInfo": {
+          "box_pubkey": "[u8; 32]",
+          "staked_amount": "Balance",
+          "used_stake": "Balance",
+          "can_claim_reward": "Balance",
+          "claimed_reward": "Balance"
+        },
+        "ReporterStakeParamsInfo": {
+          "stake_baseline": "Balance",
+          "stake_per_report": "Balance",
+          "min_free_stake_percent": "Perbill"
+        },
+        "ReporterStakeInfo": {
+          "box_pubkey": "[u8; 32]",
+          "staked_amount": "Balance",
+          "used_stake": "Balance",
+          "can_claim_reward": "Balance",
+          "claimed_reward": "Balance"
         }
       }
     })

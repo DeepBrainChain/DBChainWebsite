@@ -38,18 +38,19 @@
         <div class="order-list">
           <div>{{$t("audit.order")}}: {{item.report_id}}</div>
           <div>
-            <el-button v-if="item.status == 0" size="small" plain @click="seeDetails(false)">{{$t("audit.seeDetails1")}}</el-button>
-            <el-button v-else size="small" plain @click="seeDetails(true)">{{$t("audit.seeDetails2")}}</el-button>
+            <el-button v-if="item.report_info.encrypted_err_info == null" size="small" plain @click="seeDetails(false, '')">{{$t("audit.seeDetails1")}}</el-button>
+            <el-button v-else size="small" plain @click="seeDetails(true, item)" :loading='btnloading1'>{{$t("audit.seeDetails2")}}</el-button>
           </div>
-          <el-button class="button" v-if="item.hashed_committee.length == 0" size="small" plain @click="start(1)">{{$t("audit.verification1")}}</el-button>
+          <el-button class="button" v-if="item.hash_time == 0" size="small" plain @click="start(1)">{{$t("audit.verification1")}}</el-button>
           <el-button class="button" v-else size="small" plain @click="start(2)">{{$t("audit.verification2")}}</el-button>
         </div>
         <div class="order-list mt20">
-          <div>{{$t("audit.hasNum")}}:{{ item.booked_committee.length }}</div>
-          <div>{{$t("audit.verification1_time")}}：{{ item.report_info.booked_time}}</div>
-          <div>{{$t("audit.myResult")}}:{{ item.hashed_committee.length == 0? '' :$t("audit.hasError")}}</div>
-          <div>{{$t("audit.finalResult")}}:{{ item.hashed_committee.length == 0? '' :$t("audit.hasError")}}</div>
-          <div>{{ $t("audit.proportion") }}: {{item.support_committee.length}}/{{item.against_committee.length}}</div>
+          <div>{{$t("audit.hasNum")}}:{{ item.report_order.booked_committee.length }}</div>
+          <div v-if="item.report_info.hash_time == 0">{{$t("audit.verification1_time")}}：{{ item.report_info.booked_time}}</div>
+          <div v-else>{{$t("audit.verification2_time")}}：{{ item.report_order.confirm_start}}</div>
+          <div>{{$t("audit.myResult")}}:{{ item.report_order.hashed_committee.length == 0? '' :$t("audit.hasError")}}</div>
+          <div>{{$t("audit.finalResult")}}:{{ item.report_order.hashed_committee.length == 0? '' :$t("audit.hasError")}}</div>
+          <div>{{ $t("audit.proportion") }}: {{item.report_order.support_committee.length}}/{{item.report_order.against_committee.length}}</div>
         </div>
       </div>
     </template>
@@ -61,7 +62,7 @@
       @fail="bindFail"
     ></dlg-mail>
     <!-- 提交信息 -->
-    <el-dialog :visible.sync="dialogTableVisible1" width="580px">
+    <el-dialog :visible.sync="dialogTableVisible1" width="580px" :close-on-click-modal='false'>
       <div v-if="isHex" slot="title">{{$t('audit.verification1')}}</div>
       <div v-else slot="title">{{$t('audit.verification2')}}</div>
       <el-form :model="formInline" class="form-inline">
@@ -91,12 +92,12 @@
       </el-form>
     </el-dialog>
     <!-- 具体信息描述 -->
-    <el-dialog :visible.sync="dialogTableVisible" width="580px">
+    <el-dialog :visible.sync="dialogTableVisible" width="580px" :close-on-click-modal='false'>
       <div slot="title">{{$t('audit.seeDetails2')}}</div>
       <div class="machine_details">
-        <div class="machine_id"><span>Machine_ID: </span> 2gfpp3MAB42X3BJhQjmMe6HAFivnMVU5QXVC1nFfAK5</div>
-        <div class="session_id"><span>Session_ID: </span> 2gfpp3MAB42X3BJhQjmMe6HAFivnMVU5QXVC1nFfAK5</div>
-        <div class="message"><span>{{$t('audit.message')}}: </span> 虚拟机运行报错等等等等等等等等等等等等等等等等等等等等等等等等等等等等等等等等等等</div>
+        <div class="machine_id"><span>Machine_ID: </span> {{formInline.machine_id}}</div>
+        <div class="session_id"><span>Session_ID: </span> {{formInline.session_id}}</div>
+        <div class="message"><span>{{$t('audit.message')}}: </span> {{formInline.err_reason}}</div>
       </div>
       <div class="dlg-bottom">
         <el-button class="dlg-btn" type="primary" size="small" @click="confirm">{{$t('audit.confirm')}}</el-button>
@@ -123,10 +124,11 @@ import {
   getBalance,
   getCountDown
 } from "@/utlis";
-import { getCurrentPair ,getRand_str } from "@/utlis/dot"
+import { getCurrentPair ,getRand_str, naclSeal, naclOpen, getKeypair } from "@/utlis/dot"
 import { mapState, mapMutations } from "vuex"
-
-import { committeeOps, submitConfirmHash, submitConfirmRaw, committeeOrder, reportInfo, getTime } from "@/utlis/dot/api"
+import { stringToU8a , u8aToHex, hexToU8a, hexToString, u8aToString } from '@polkadot/util';
+import { naclBoxKeypairFromSecret, decodeAddress, randomAsU8a } from '@polkadot/util-crypto';
+import { committeeOps, submitConfirmHash, submitConfirmRaw, committeeOrder, reportInfo, getTime, getBlockTime } from "@/utlis/dot/api"
 export default {
   name: "myOrder_unlock",
   components: {
@@ -148,6 +150,7 @@ export default {
       isNewMail: false,
       isBinding: false,
       btnloading: false,
+      btnloading1: false,
       bindMail: "",
       res_body: {
         content: [],
@@ -160,11 +163,11 @@ export default {
       dialogTableVisible1: false,
       formInline: {
         passward: '',
-        report_id:'0',
-        machine_id:'8eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48',
-        reporter_rand_str:'0x78dd824a692abcea95648bb26086c58adb3f46d019e6738e',
-        committee_rand_str: getRand_str(),
-        err_reason:'要不是写着2080ti，我差点以为是CPU跑的代码，2天多，resnet34层没跑到100批次',
+        report_id:'',
+        machine_id:'',
+        reporter_rand_str:'',
+        committee_rand_str: '',
+        err_reason:'',
         support_report: "1",
       },
       radioDisabled: false,
@@ -185,22 +188,35 @@ export default {
     this.queryMail();
     committeeOrder(this.wallet_address).then( async res=> {
       this.res_body.content = []
-      res.booked_report.map( async (el, index) => {
+      res = [ ...res.booked_report, ...res.hashed_report, ...res.confirmed_report, ...res.online_machine ]
+      let BlockchainTime = await getBlockTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
+      res.map( async (el, index) => {
         let res1 = await committeeOps(this.wallet_address, el)
-        console.log(res1.booked_time, 'res1.booked_time1');
-        res1.booked_time = await getCountDown(1, res1.booked_time)
-        console.log(res1.booked_time, 'res1.booked_time2');
-        let report = { report_id: el, report_info: res1}
         let res2 =  await reportInfo(el)
-        this.res_body.content.push({ ...report, ...res2 })
-        this.count(res1.booked_time, index, (msg)=>{
-          report.report_info.booked_time=msg;
-        })
+        res1.booked_time = await getCountDown(1, res1.booked_time, BlockchainTime)
+        res2.confirm_start = await getCountDown(3, res2.confirm_start, BlockchainTime)
+        let report = { report_id: el, report_info: res1, report_order: res2 }
+        this.res_body.content.push({ ...report })
+        if(report.report_order.confirm_start > 0 ){
+          this.count(report.report_order.confirm_start, index, (msg)=>{
+            report.report_order.confirm_start = msg;
+          })
+        }else{
+          report.report_order.confirm_start = '00:00:00'
+        }
+        if(report.report_info.booked_time > 0 ){
+          this.count(res1.booked_time, index, (msg)=>{
+            report.report_info.booked_time=msg;
+          })
+        }else{
+          report.report_info.booked_time = '00:00:00'
+        }
+        console.log(this.res_body.content,'this.res_body.content');
       })
     })
   },
   deactivated() {
-    
+    this.stopInter()
   },
   methods: {
     ...mapMutations(['setPassWard']),
@@ -415,25 +431,56 @@ export default {
       this.dialogTableVisible1 = false
     },
     // 查看问题描述
-    seeDetails(status){
-      this.btnloading = true
+    seeDetails(status, item){
       if(status){
-        
+        this.btnloading1 = true
+        let KeyPair = getKeypair('lynn123123')
+        let { secretKey , publicKey} = naclBoxKeypairFromSecret(decodeAddress(item.reporter));
+        this.formInline.err_reason = u8aToString(naclOpen( 
+          hexToU8a(item.report_info.encrypted_err_info), 
+          hexToU8a('0x8d842da497f095e0d0afb969e3a7cb51e77d76dc97343dfc'), 
+          publicKey, 
+          KeyPair.secretKey 
+        ))
+        this.formInline.machine_id = item.machine_id
+        this.formInline.report_id = item.report_id
+        this.dialogTableVisible = true
+        this.btnloading1 = false
       }else{
-
+        this.$message({
+          message: this.$t('audit.tipmsg'),
+          type: "warning",
+        });
+        let KeyPair = getKeypair('lynn123123')
+        let message = stringToU8a(this.formInline.err_reason);
+        let { secretKey , publicKey} = naclBoxKeypairFromSecret(decodeAddress("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"));
+        console.log(u8aToHex(secretKey), u8aToHex(publicKey), 'secretKey');
+        let nonce = hexToU8a('0x8d842da497f095e0d0afb969e3a7cb51e77d76dc97343dfc')
+        this.str_Sealed = naclSeal( message, secretKey, KeyPair.publicKey, nonce ); 
+        console.log(this.str_Sealed,'this.str_Sealed');
       }
-      // let KeyPair = getKeypair('123456789')
-      // let message = stringToU8a('Machine_ID: 234234234234234234234234 ');
-      // let { secretKey , publicKey} = naclBoxKeypairFromSecret(decodeAddress('5DhFCVhtxZkz1mXWQcGv67tPvGzqXjEcF1q1DPUdCAJEX7vm'));
+      // let KeyPair = getKeypair('lynn123123')
+      // let message = stringToU8a(this.formInline.err_reason);
+      // let { secretKey , publicKey} = naclBoxKeypairFromSecret(decodeAddress("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"));
+      // console.log(u8aToHex(secretKey), u8aToHex(publicKey), 'secretKey');
+      // let nonce = hexToU8a('0x8d842da497f095e0d0afb969e3a7cb51e77d76dc97343dfc')
       // if(status){
-      //   this.str_Sealed = naclSeal( message, secretKey, KeyPair.publicKey ); 
-      //   console.log(this.str_Sealed, 'this.str_Sealed');
+      //   console.log(
+      //    u8aToString(naclOpen( 
+      //       hexToU8a(item) , 
+      //       hexToU8a('0x8d842da497f095e0d0afb969e3a7cb51e77d76dc97343dfc'), 
+      //       publicKey, 
+      //       KeyPair.secretKey 
+      //     ))
+      //   );
+        // console.log(u8aToString(naclOpen( this.str_Sealed.sealed , this.str_Sealed.nonce, publicKey, KeyPair.secretKey )));
       // }else{
-      //   console.log(u8aToString(naclOpen( this.str_Sealed.sealed , this.str_Sealed.nonce, publicKey, KeyPair.secretKey )));
-      // //   this.$message({
-      // //     message: this.$t('audit.tipmsg'),
-      // //     type: "error",
-      // //   });
+      //   this.str_Sealed = naclSeal( message, secretKey, KeyPair.publicKey, nonce ); 
+      //   console.log(this.str_Sealed,'this.str_Sealed');
+      //   this.$message({
+      //     message: this.$t('audit.tipmsg'),
+      //     type: "error",
+      //   });
       // }
     },
     confirm() {
@@ -448,43 +495,10 @@ export default {
       this.isOpen = false;
       this.$emit("update:open", false);
     },
-    GetRTime(item, t){
-      let iner;
-      let time_str = ''
-      clearInterval(iner)
-      iner = setInterval( ()=> {
-        let d = 0, h = 0, m = 0, s = 0
-        if(t>=0){
-          d=Math.floor(t/60/60/24);
-          h=Math.floor(t/60/60%24);
-          m=Math.floor(t/60%60);
-          s=Math.floor(t%60);
-          --t
-          time_str = (d>0?d + 'Day ' : "") + (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s)
-        }else{
-          time_str = '00:00:00'
-          clearInterval(iner)
-        }
-        item.report_info.booked_time = time_str
-      }, 1000)
-    },
-    getData(el) {
-      return new Promise(resolve => {
-        committeeOps(this.wallet_address, el).then(async res1 => {
-          let result = await Promise.all([getCountDown(1, res1.booked_time),reportInfo(el)])
-          res1.booked_time = result[0]
-          resolve({
-            res1: res1, 
-            result: result[1]
-           })
-        });
-      })
-    },
-    
     // 倒计时
     count(time, i, fn){
       let t=this;
-      let times=time>0?time: -time;
+      let times= time>0 ? time: 0;
       ti()
       t.timer[i] = setInterval(ti,1000)
       function ti(){

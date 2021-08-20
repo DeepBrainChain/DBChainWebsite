@@ -42,8 +42,8 @@
             <el-button v-else-if="item.status == 1" size="small" plain @click="seeDetails(false)">{{$t("audit.seeDetails1")}}</el-button>
             <el-button v-else size="small" plain @click="seeDetails(true)">{{$t("audit.seeDetails2")}}</el-button>
           </div> -->
-          <div v-if="item.booked_committee.length != 0">订单倒计时：3:00:00</div>
-          <div v-if="item.booked_committee.length != 0">抢单倒计时：1:00:00</div>
+          <div v-if="item.first_book_time != ''">订单倒计时：{{item.first_book_time}}</div>
+          <div v-if="item.booked_committee.length != 0">抢单倒计时：</div>
           <div>{{$t("audit.hasNum")}}: {{item.booked_committee.length}}</div>
           <div>{{$t("audit.status")}}:{{$t("audit.status1")}}</div>
           <el-button class="button" v-if="item.booked_committee.length < 3" size="small" :loading="item.btnloading" plain @click="start(item)">{{$t("audit.start")}}</el-button>
@@ -59,7 +59,7 @@
       @fail="bindFail"
     ></dlg-mail>
     <!-- seeDetails -->
-    <el-dialog :visible.sync="dialogTableVisible" width="580px">
+    <el-dialog :visible.sync="dialogTableVisible" width="580px" :close-on-click-modal='false'>
       <div slot="title">{{$t('audit.seeDetails2')}}</div>
       <div class="machine_details">
         <div class="machine_id"><span>Machine_ID: </span> 2gfpp3MAB42X3BJhQjmMe6HAFivnMVU5QXVC1nFfAK5</div>
@@ -87,8 +87,9 @@ import {
 import {
   getAccount,
   getBalance,
+  getCountDown
 } from "@/utlis";
-import { getOrder, reportInfo, getCommitteeList, bookFaultOrder } from '@/utlis/dot/api'
+import { getOrder, reportInfo, getCommitteeList, bookFaultOrder, getBlockTime } from '@/utlis/dot/api'
 import { getCurrentPair } from "@/utlis/dot"
 import { mapState, mapMutations } from "vuex"
 export default {
@@ -112,6 +113,7 @@ export default {
       send_email_repeat_index: -1,
       // 查询问题描述
       dialogTableVisible: false,
+      timer:[]
     };
   },
   watch: {
@@ -125,22 +127,33 @@ export default {
     // this.binding(isNewMail);
     // this.queryMail();
     getOrder().then(
-      res => {
+      async res => {
         this.res_body.content = []
-        res.bookable_report.map(el => {
+        res = [...res.bookable_report, ...res.verifying_report, ...res.waiting_raw_report, ...res.waiting_rechecked_report]
+        let BlockchainTime = await getBlockTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
+        res.map((el, index) => {
           let report = { report_id: el, btnloading: false }
-          reportInfo(el).then( res1 => {
+          reportInfo(el).then( async (res1) => {
+            res1.first_book_time = await getCountDown(2, res1.first_book_time, BlockchainTime)
             this.res_body.content.push(
               {...report, ...res1}
             )
-            console.log(this.res_body.content, 'this.res_body.content');
+            console.log(res1, index, 'index');
+            if(res1.first_book_time > 0){
+              this.count(res1.first_book_time, index, (msg)=>{
+                this.res_body.content[index].first_book_time = msg
+                // res1.first_book_time = msg;
+              })
+            }else{
+              this.res_body.content[index].first_book_time = ''
+            }
           })
         })
       } 
     );
   },
   deactivated() {
-    
+    this.stopInter()
   },
 
   computed: {
@@ -292,6 +305,7 @@ export default {
         cancelButtonText:  this.$t('cancel'),
         inputValue: this.passward
       }).then( ({ value }) => {
+        this.setPassWard(value)
         item.btnloading = true
         getCommitteeList(this.wallet_address).then(res=>{
           if(res){
@@ -355,8 +369,43 @@ export default {
     closed() {
       this.isOpen = false;
       this.$emit("update:open", false);
+    },
+    // 倒计时
+    count(time, i, fn){
+      let t=this;
+      let times=time>0?time:0;
+      ti()
+      t.timer[i] = setInterval(ti,1000)
+      function ti(){
+        times--
+        // 定义变量 h,m,s保存倒计时的时间  
+        let h,m,s;  
+        if (times>=0) {
+          // 时分秒
+          h = Math.floor(times/60/60);  
+          m = Math.floor(times/60%60);  
+          s = Math.floor(times%60);
+          let msg=t.repair(h)+':'+t.repair(m)+':'+t.repair(s);
+          fn(msg);
+        }else{
+          // 关闭定时器
+          clearInterval(t.timer[i]);
+          return false
+        }
+      }
+    },
+    // 数字补0
+    repair(o){
+      let x=o;
+      let t=x > 9 ? x : '0' + x
+      return t
+    },
+    // 关闭定时器
+    stopInter(){
+      this.timer.map((item)=>{
+        clearInterval(item);
+      })
     }
-
   },
 };
 </script>
