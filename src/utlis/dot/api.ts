@@ -63,6 +63,10 @@ export const GetApi = async (): Promise<Network> =>{
           "total_rent_fee": "Balance",
           "total_burn_fee": "Balance"
         },
+        "UserReonlineStakeInfo": {
+          "stake_amount": "Balance",
+          "offline_time": "BlockNumber"
+        },
         "MachineInfo": {
           "controller": "AccountId",
           "machine_stash": "AccountId",
@@ -91,7 +95,7 @@ export const GetApi = async (): Promise<Network> =>{
             "WaitingFulfill": null,
             "Online": null,
             "StakerReportOffline": "(BlockNumber, Box<MachineStatus>)",
-            "ReporterReportOffline": "(BlockNumber, Box<MachineStatus>)",
+            "ReporterReportOffline": "(BlockNumber, Box<MachineStatus>, Vec<AccountId>)",
             "Creating": null,
             "Rented": null
           }
@@ -132,8 +136,8 @@ export const GetApi = async (): Promise<Network> =>{
         },
         "Latitude": {
           "_enum": {
-            "North": "u64",
-            "South": "u64"
+            "South": "u64",
+            "North": "u64"
           }
         },
         "TelecomName": "Text",
@@ -192,11 +196,7 @@ export const GetApi = async (): Promise<Network> =>{
           "machine_info": "CommitteeUploadInfo"
         },
         "LCMachineStatus": {
-          "_enum": [
-            "Booked",
-            "Hashed",
-            "Confirmed"
-          ]
+          "_enum": ["Booked", "Hashed", "Confirmed"]
         },
         "LCMachineCommitteeList": {
           "book_time": "BlockNumber",
@@ -208,12 +208,7 @@ export const GetApi = async (): Promise<Network> =>{
           "status": "LCVerifyStatus"
         },
         "LCVerifyStatus": {
-          "_enum": [
-            "SubmittingHash",
-            "SubmittingRaw",
-            "Summarizing",
-            "Finished"
-          ]
+          "_enum": ["SubmittingHash", "SubmittingRaw", "Summarizing", "Finished"]
         },
         "CommitteeMachineList": {
           "booked_order": "Vec<OrderId>",
@@ -277,12 +272,7 @@ export const GetApi = async (): Promise<Network> =>{
           "order_status": "MTOrderStatus"
         },
         "MTOrderStatus": {
-          "_enum": [
-            "WaitingEncrypt",
-            "Verifying",
-            "WaitingRaw",
-            "Finished"
-          ]
+          "_enum": ["WaitingEncrypt", "Verifying", "WaitingRaw", "Finished"]
         },
         "MTCommitteeReportList": {
           "booked_report": "Vec<ReportId>",
@@ -347,11 +337,7 @@ export const GetApi = async (): Promise<Network> =>{
           "rent_status": "RentStatus"
         },
         "RentStatus": {
-          "_enum": [
-            "WaitingVerifying",
-            "Renting",
-            "RentExpired"
-          ]
+          "_enum": ["WaitingVerifying", "Renting", "RentExpired"]
         },
         "CommitteeStakeParamsInfo": {
           "stake_baseline": "Balance",

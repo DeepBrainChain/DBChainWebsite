@@ -39,17 +39,17 @@
           <div>{{$t("audit.order")}}: {{item.report_id}}</div>
           <div>
             <el-button v-if="item.report_info.encrypted_err_info == null" size="small" plain @click="seeDetails(false, '')">{{$t("audit.seeDetails1")}}</el-button>
-            <el-button v-else size="small" plain @click="seeDetails(true, item)" :loading='btnloading1'>{{$t("audit.seeDetails2")}}</el-button>
+            <el-button v-else size="small" plain @click="seeDetails(true, item)" :loading='item.btnloading1'>{{$t("audit.seeDetails2")}}</el-button>
           </div>
-          <el-button class="button" v-if="item.hash_time == 0" size="small" plain @click="start(1)">{{$t("audit.verification1")}}</el-button>
-          <el-button class="button" v-else size="small" plain @click="start(2)">{{$t("audit.verification2")}}</el-button>
+          <el-button class="button" v-if="item.report_info.hash_time == 0" size="small" plain @click="start(1, '')">{{$t("audit.verification1")}}</el-button>
+          <el-button class="button" v-else size="small" plain @click="start(2, item)">{{$t("audit.verification2")}}</el-button>
         </div>
         <div class="order-list mt20">
           <div>{{$t("audit.hasNum")}}:{{ item.report_order.booked_committee.length }}</div>
           <div v-if="item.report_info.hash_time == 0">{{$t("audit.verification1_time")}}：{{ item.report_info.booked_time}}</div>
           <div v-else>{{$t("audit.verification2_time")}}：{{ item.report_order.confirm_start}}</div>
-          <div>{{$t("audit.myResult")}}:{{ item.report_order.hashed_committee.length == 0? '' :$t("audit.hasError")}}</div>
-          <div>{{$t("audit.finalResult")}}:{{ item.report_order.hashed_committee.length == 0? '' :$t("audit.hasError")}}</div>
+          <div v-if="item.report_info.order_status == 'Finished'">{{$t("audit.myResult")}}:{{ item.report_info.order_status != 'Finished'? '' :$t("audit.hasError")}}</div>
+          <div v-if="item.report_info.order_status == 'Finished'">{{$t("audit.finalResult")}}:{{ item.report_order.support_committee.length.length > item.report_order.against_committee.length? $t("audit.noError") :$t("audit.hasError")}}</div>
           <div>{{ $t("audit.proportion") }}: {{item.report_order.support_committee.length}}/{{item.report_order.against_committee.length}}</div>
         </div>
       </div>
@@ -116,7 +116,9 @@ import {
   binding_is_ok_modify,
   send_email_repeat,
   getMachineCommittee,
-  getOriginal
+  getOriginal,
+  Save_ResultHash,
+  GetResultHash
 } from "@/api";
 
 import {
@@ -124,7 +126,7 @@ import {
   getBalance,
   getCountDown
 } from "@/utlis";
-import { getCurrentPair ,getRand_str, naclSeal, naclOpen, getKeypair } from "@/utlis/dot"
+import { getCurrentPair ,getRand_str, naclSeal, naclOpen, getKeypair, CreateSignature } from "@/utlis/dot"
 import { mapState, mapMutations } from "vuex"
 import { stringToU8a , u8aToHex, hexToU8a, hexToString, u8aToString } from '@polkadot/util';
 import { naclBoxKeypairFromSecret, decodeAddress, randomAsU8a } from '@polkadot/util-crypto';
@@ -150,7 +152,7 @@ export default {
       isNewMail: false,
       isBinding: false,
       btnloading: false,
-      btnloading1: false,
+      // btnloading1: false,
       bindMail: "",
       res_body: {
         content: [],
@@ -195,7 +197,7 @@ export default {
         let res2 =  await reportInfo(el)
         res1.booked_time = await getCountDown(1, res1.booked_time, BlockchainTime)
         res2.confirm_start = await getCountDown(3, res2.confirm_start, BlockchainTime)
-        let report = { report_id: el, report_info: res1, report_order: res2 }
+        let report = { report_id: el, report_info: res1, report_order: res2 , btnloading1: false}
         this.res_body.content.push({ ...report })
         if(report.report_order.confirm_start > 0 ){
           this.count(report.report_order.confirm_start, index, (msg)=>{
@@ -357,19 +359,53 @@ export default {
       this.queryMail();
     },
     
-    // 开时抢单
-    start(num){
+    // 提交结果
+    start(num, item){
       if(num == 1){
         this.radioDisabled = false
         this.isHex = true
+        this.dialogTableVisible1 = true
       }else{
         this.radioDisabled = true
         this.isHex = false
-        // getOriginal(this.wallet_address).then( res => {
-        //   this.formInline = res
-        // })
+        this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
+          confirmButtonText: this.$t('confirm'),
+          cancelButtonText:  this.$t('cancel'),
+          inputValue: this.passward
+        })
+        .then( ({ value }) => {
+          CreateSignature(item.report_order.machine_id, value)
+          .then((res)=> {
+            this.setPassWard(value)
+            let parmas = { 
+              machine_id: item.report_order.machine_id,
+              signature: res,
+              wallet: this.wallet_address
+            }
+            GetResultHash(parmas)
+            .then(res1 => {
+              if( typeof res == 'string'){
+                this.$message({
+                  showClose: true,
+                  message: res1,
+                  type: "error",
+                });
+              }else{
+                this.formInline = res1?res1:{}
+                this.formInline.is_support = res?String(res1.is_support):''
+                this.dialogTableVisible1 = true
+              }
+            })
+          })
+          .catch( err=> {
+            this.$message({
+              showClose: true,
+              message: err.message,
+              type: "error",
+            });
+          })
+        })
       }
-      this.dialogTableVisible1 = true
       if(this.passward != ''){
         this.formInline.passward = this.passward
       }
@@ -387,25 +423,54 @@ export default {
           this.setPassWard(this.formInline.passward)
         }
         if(this.isHex){
-          // getMachineCommittee(this.formInline).then( res => {
-            // console.log(res);
-            submitConfirmHash(this.formInline, this.formInline.passward, (res)=>{
-              if(res.success){
-                this.$message({
-                  showClose: true,
-                  message: this.$t('audit.Op_Successful'),
-                  type: "success",
-                });
+          CreateSignature(this.formInline.machine_id, this.formInline.passward)
+          .then((res) =>{
+            let params = {
+              machine_id: this.formInline.machine_id,
+              report_id: this.formInline.report_id, 
+              reporter_rand_str: this.formInline.reporter_rand_str, 
+              committee_rand_str: this.formInline.committee_rand_str, 
+              err_reason: this.formInline.err_reason, 
+              is_support: this.formInline.is_support,
+              wallet: this.wallet_address,
+              signature: res
+            }
+            Save_ResultHash(params).then(res1=>{
+              if(typeof res1 != 'string'){
+                submitConfirmHash(this.formInline, this.formInline.passward, (res2)=>{
+                  if(res2.success){
+                    this.$message({
+                      showClose: true,
+                      message: this.$t('audit.Op_Successful'),
+                      type: "success",
+                    });
+                  }else{
+                    this.$message({
+                      showClose: true,
+                      message: res2.msg,
+                      type: "error",
+                    });
+                  }
+                  this.btnloading = false;
+                })
               }else{
                 this.$message({
                   showClose: true,
-                  message: res.msg,
+                  message: res1,
                   type: "error",
                 });
+                this.btnloading = false;
               }
-              this.btnloading = false;
             })
-          // })
+          })
+          .catch( err=> {
+            this.$message({
+              showClose: true,
+              message: err.message,
+              type: "error",
+            });
+            this.btnloading = false;
+          })
         }else{
           submitConfirmRaw(this.formInline, this.formInline.passward, (res)=>{
             if(res.success){
@@ -433,55 +498,50 @@ export default {
     // 查看问题描述
     seeDetails(status, item){
       if(status){
-        this.btnloading1 = true
-        let KeyPair = getKeypair('lynn123123')
-        let { secretKey , publicKey} = naclBoxKeypairFromSecret(decodeAddress(item.reporter));
-        this.formInline.err_reason = u8aToString(naclOpen( 
-          hexToU8a(item.report_info.encrypted_err_info), 
-          hexToU8a('0x8d842da497f095e0d0afb969e3a7cb51e77d76dc97343dfc'), 
-          publicKey, 
-          KeyPair.secretKey 
-        ))
-        this.formInline.machine_id = item.machine_id
-        this.formInline.report_id = item.report_id
-        this.dialogTableVisible = true
-        this.btnloading1 = false
+        this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
+          confirmButtonText: this.$t('confirm'),
+          cancelButtonText:  this.$t('cancel'),
+          inputValue: this.passward
+        }).then( ({ value }) => {
+          console.log(status, value);
+          this.setPassWard(value)
+          let KeyPair;
+          try {
+            KeyPair = getKeypair(value)
+          } catch (err) {
+            this.$message({
+              message: err.message,
+              type: "error",
+            });
+            return false
+          }
+          item.btnloading1 = true
+          console.log(KeyPair, 'KeyPair');
+          let { secretKey , publicKey} = naclBoxKeypairFromSecret(decodeAddress(item.report_order.reporter));
+          this.formInline.err_reason = u8aToString(naclOpen( 
+            hexToU8a(item.report_info.encrypted_err_info), 
+            hexToU8a('0x8d842da497f095e0d0afb969e3a7cb51e77d76dc97343dfc'), 
+            publicKey, 
+            KeyPair.secretKey 
+          ))
+          this.formInline.machine_id = item.machine_id
+          this.formInline.report_id = item.report_id
+          this.dialogTableVisible = true
+          item.btnloading1 = false
+        })
       }else{
         this.$message({
           message: this.$t('audit.tipmsg'),
           type: "warning",
         });
-        let KeyPair = getKeypair('lynn123123')
-        let message = stringToU8a(this.formInline.err_reason);
-        let { secretKey , publicKey} = naclBoxKeypairFromSecret(decodeAddress("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"));
-        console.log(u8aToHex(secretKey), u8aToHex(publicKey), 'secretKey');
-        let nonce = hexToU8a('0x8d842da497f095e0d0afb969e3a7cb51e77d76dc97343dfc')
-        this.str_Sealed = naclSeal( message, secretKey, KeyPair.publicKey, nonce ); 
-        console.log(this.str_Sealed,'this.str_Sealed');
+        // console.log(KeyPair, 'KeyPair');
+        // let message = stringToU8a(this.formInline.err_reason);
+        // let { secretKey , publicKey} = naclBoxKeypairFromSecret(decodeAddress("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"));
+        // console.log(u8aToHex(secretKey), u8aToHex(publicKey), 'secretKey');
+        // let nonce = hexToU8a('0x8d842da497f095e0d0afb969e3a7cb51e77d76dc97343dfc')
+        // this.str_Sealed = naclSeal( message, secretKey, KeyPair.publicKey, nonce ); 
+        // console.log(this.str_Sealed,'this.str_Sealed');
       }
-      // let KeyPair = getKeypair('lynn123123')
-      // let message = stringToU8a(this.formInline.err_reason);
-      // let { secretKey , publicKey} = naclBoxKeypairFromSecret(decodeAddress("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"));
-      // console.log(u8aToHex(secretKey), u8aToHex(publicKey), 'secretKey');
-      // let nonce = hexToU8a('0x8d842da497f095e0d0afb969e3a7cb51e77d76dc97343dfc')
-      // if(status){
-      //   console.log(
-      //    u8aToString(naclOpen( 
-      //       hexToU8a(item) , 
-      //       hexToU8a('0x8d842da497f095e0d0afb969e3a7cb51e77d76dc97343dfc'), 
-      //       publicKey, 
-      //       KeyPair.secretKey 
-      //     ))
-      //   );
-        // console.log(u8aToString(naclOpen( this.str_Sealed.sealed , this.str_Sealed.nonce, publicKey, KeyPair.secretKey )));
-      // }else{
-      //   this.str_Sealed = naclSeal( message, secretKey, KeyPair.publicKey, nonce ); 
-      //   console.log(this.str_Sealed,'this.str_Sealed');
-      //   this.$message({
-      //     message: this.$t('audit.tipmsg'),
-      //     type: "error",
-      //   });
-      // }
     },
     confirm() {
       this.dialogTableVisible = false

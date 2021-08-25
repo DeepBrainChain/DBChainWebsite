@@ -651,9 +651,14 @@ export const getBlockchainTime = async (BlockchainTime, arr) => {
   // let BlockchainTime = await getBlockTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
   let nowDate = Date.parse(new Date()) // 获取当前时间的秒数
   let newarr = arr.map(el => {
-    let timestart = (el - BlockchainTime)*6000 + nowDate
+    let timestart = (el - BlockchainTime)*30000 + nowDate
     let timeend = timestart+14400000
-    return { timestart: getdate(timestart), timeend: getdate(timeend) }
+    return { 
+      startTimestamp: timestart,
+      endTimestamp: timeend,
+      timestart: getdate(timestart), 
+      timeend: getdate(timeend) 
+    }
   })
   return newarr
 }
@@ -703,4 +708,19 @@ export const GetRTime = (t) => {
     }
     return time_str
   }, 1000)
+}
+
+
+/**
+ * getComputing_Power 时间戳倒计时 天 时分秒
+ * 整机算力值=50*√（卡数）+内存/3.5+(√(cuda数量)*√（显存/10））*卡数
+ * @param Gpu_Num 卡数
+ * @param Mem 内存
+ * @param Cuda cuda数量
+ * @param M_value 显存
+ */
+ 
+export const getComputing_Power = (Gpu_Num, Mem, Cuda, M_value) => {
+  var num = (Math.sqrt(Gpu_Num)*50+ Mem/3.5 + Math.sqrt(Cuda) * Math.sqrt(M_value/10)*Gpu_Num).toFixed(2)
+  return num
 }

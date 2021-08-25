@@ -55,6 +55,7 @@
               style="width: 155px"
               type="primary"
               size="mini"
+              :disabled='!item.submit'
               @click="verification(item, 1)"
               >{{ $t("audit.verification1") }}</el-button
             >
@@ -186,14 +187,14 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item v-if="select" :label="$t('audit.CC_num')+':'">
+        <el-form-item v-show="select" :label="$t('audit.CC_num')+':'">
           <span>{{formInline.cuda_core}}</span>
         </el-form-item>
-        <el-form-item v-if="select" :label="$t('audit.Memoryvalue')+':'">
+        <el-form-item v-show="select" :label="$t('audit.Memoryvalue')+':'">
           <span>{{ formInline.gpu_mem }}GB</span>
         </el-form-item>
-        <el-form-item :label="$t('audit.GPUnumber')+':'">
-          <el-select :disabled='radioDisabled' size="small" v-model="formInline.gpu_num" placeholder="请选择">
+        <el-form-item v-show="select" :label="$t('audit.GPUnumber')+':'">
+          <el-select :disabled='radioDisabled' size="small" @change="selectCPUNum" v-model="formInline.gpu_num" placeholder="请选择">
             <el-option
               v-for="item in GPUnumberList"
               :key="item.value"
@@ -220,8 +221,8 @@
         <el-form-item :label="$t('audit.Dhd_space')+':'">
           <span>{{ formInline.data_disk }}</span>
         </el-form-item>
-        <el-form-item v-if="select" :label="$t('audit.SGC_power')+':'">
-          <span>{{formInline.calc_point}}</span>
+        <el-form-item v-show="select1" :label="$t('audit.SGC_power')+':'">
+          <el-input size="small" style="width:200px" v-model="formInline.calc_point"></el-input>
         </el-form-item>
         <el-form-item :label="$t('audit.Vresults')+':'" prop="radio">
           <el-radio :disabled='radioDisabled' v-model="formInline.is_support" label="1">有问题</el-radio>
@@ -249,13 +250,14 @@ import {
   send_email_repeat,
   getGPUList,
   getMachineList,
-  Save_ResultHash,
-  GetResultHash
+  Save_GrabbingHash,
+  GetGrabbingHash
 } from "@/api";
 import {
   getAccount,
   getBalance,
-  getBlockchainTime
+  getBlockchainTime,
+  getComputing_Power
 } from "@/utlis";
 
 import { getCurrentPair, getRand_str, CreateSignature } from "@/utlis/dot"
@@ -377,7 +379,8 @@ export default {
       dialogTableVisible1: false,
       btnloading: false,
       radioDisabled: false,
-      select: false
+      select: false,
+      select1: false
     };
   },
   watch: {
@@ -562,16 +565,20 @@ export default {
       getMachineList(params)
       .then( async (res) => {
         let BlockchainTime = await getBlockTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
-        this.allListedMachine = res.content.map(el=>{ 
-          el.lcOpsEntity.btnloading1 = false;
-          let newel = Object.assign({}, JSON.parse(el.original), el.lcOpsEntity)
-          getBlockchainTime(BlockchainTime, newel.verify_time).then(res => {
-            newel.verify_time = res
+        this.allListedMachine = []
+        await res.content.map( async el=>{ 
+          el.lcOpsEntity == null ? el.lcOpsEntity = {btnloading1: false} : el.lcOpsEntity.btnloading1 = false;
+          let newel = Object.assign({ submit: false }, JSON.parse(el.original), el.lcOpsEntity)
+          newel.verify_time = await getBlockchainTime(BlockchainTime, newel.verify_time?newel.verify_time:[])
+          let nowData = +new Date()
+          newel.verify_time.map(el => {
+            if(nowData > el.startTimestamp && nowData < el.endTimestamp){
+              newel.submit = true
+            }
           })
-          return newel
+          this.allListedMachine.push(newel)
         })
         loadingInstance.close();
-        console.log(this.allListedMachine, 'this.allListedMachine,');
         this.showMachines(
           this.allListedMachine,
           this.currentPage,
@@ -579,6 +586,7 @@ export default {
         );
       })
       .catch( err => {
+        console.log(err, 'ere');
         this.$message({
           showClose: true,
           message: this.$t('audit.errormsg'),
@@ -624,10 +632,11 @@ export default {
               signature: res,
               wallet: this.wallet_address
             }
-            GetResultHash(parmas)
+            GetGrabbingHash(parmas)
               .then(res => {
                 this.formInline =  res?res:{}
                 this.select = true
+                this.select1 = true
                 this.formInline.is_support = res?String(res.is_support):''
                 this.sclectItem.gpu_type = res.gpu_type
               })
@@ -664,7 +673,6 @@ export default {
       }
     },
     selectCPU(val){
-      console.log(val , 'val');
       this.select = true
       this.sclectItem = val
       this.GPUmodelList.map(el => {
@@ -672,6 +680,15 @@ export default {
           this.formInline = {...this.formInline, ...el}
         }
       })
+    },
+    selectCPUNum(val){
+      this.select1 = true
+      this.formInline.calc_point = getComputing_Power(
+        val, 
+        parseInt(this.formInline.gpu_mem), 
+        parseInt(this.formInline.cuda_core), 
+        parseInt(this.formInline.sys_disk / (1000 * 1000))
+      )
     },
     async commit(){
       if(this.formInline.passward == ''){
@@ -722,7 +739,7 @@ export default {
               wallet: this.wallet_address,
               signature: res
             }
-            Save_ResultHash(params).then(res1=>{
+            Save_GrabbingHash(params).then(res1=>{
               if(res1){
                 ConfirmHash(this.formInline, this.formInline.passward, (res)=>{
                   console.log(res, 'res');
