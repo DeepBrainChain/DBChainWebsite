@@ -192,29 +192,53 @@ export default {
       this.res_body.content = []
       res = [ ...res.booked_report, ...res.hashed_report, ...res.confirmed_report, ...res.online_machine ]
       let BlockchainTime = await getBlockTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
-      res.map( async (el, index) => {
-        let res1 = await committeeOps(this.wallet_address, el)
-        let res2 =  await reportInfo(el)
+      for(let i=0; i< res.length; i++){
+        let res1 = await committeeOps(this.wallet_address, res[i])
+        let res2 =  await reportInfo(res[i])
         res1.booked_time = await getCountDown(1, res1.booked_time, BlockchainTime)
         res2.confirm_start = await getCountDown(3, res2.confirm_start, BlockchainTime)
-        let report = { report_id: el, report_info: res1, report_order: res2 , btnloading1: false}
+        let report = { report_id: res[i], report_info: res1, report_order: res2 , btnloading1: false}
         this.res_body.content.push({ ...report })
         if(report.report_order.confirm_start > 0 ){
-          this.count(report.report_order.confirm_start, index, (msg)=>{
+          this.count(report.report_order.confirm_start, i, (msg)=>{
             report.report_order.confirm_start = msg;
           })
         }else{
           report.report_order.confirm_start = '00:00:00'
         }
         if(report.report_info.booked_time > 0 ){
-          this.count(res1.booked_time, index, (msg)=>{
+          this.count(res1.booked_time, i, (msg)=>{
             report.report_info.booked_time=msg;
           })
         }else{
           report.report_info.booked_time = '00:00:00'
         }
-        console.log(this.res_body.content,'this.res_body.content');
-      })
+      }
+      // await res.map( async (el, index) => {
+      //   console.log(11111111);
+      //   let res1 = await committeeOps(this.wallet_address, el)
+      //   let res2 =  await reportInfo(el)
+      //   res1.booked_time = await getCountDown(1, res1.booked_time, BlockchainTime)
+      //   res2.confirm_start = await getCountDown(3, res2.confirm_start, BlockchainTime)
+      //   let report = { report_id: el, report_info: res1, report_order: res2 , btnloading1: false}
+      //   this.res_body.content.push({ ...report })
+      //   if(report.report_order.confirm_start > 0 ){
+      //     this.count(report.report_order.confirm_start, index, (msg)=>{
+      //       report.report_order.confirm_start = msg;
+      //     })
+      //   }else{
+      //     report.report_order.confirm_start = '00:00:00'
+      //   }
+      //   if(report.report_info.booked_time > 0 ){
+      //     this.count(res1.booked_time, index, (msg)=>{
+      //       report.report_info.booked_time=msg;
+      //     })
+      //   }else{
+      //     report.report_info.booked_time = '00:00:00'
+      //   }
+      //   console.log(2222222);
+      // })
+      console.log(this.res_body.content,'this.res_body.content');
     })
   },
   deactivated() {

@@ -195,10 +195,10 @@ export default {
   created() {
     this.$store.commit('setNewWallet', 'true')
     this.initData()
-    this.si = setInterval(() => {
+    // this.si = setInterval(() => {
       //  this.initData();
       //this.exchangeCash = ;
-    }, 3000)
+    // }, 3000)
   },
   beforeDestroy() {
     if (this.si) {

@@ -174,6 +174,9 @@ export default {
     &:hover {
       text-decoration: underline;
     }
+    &:last-child {
+      margin-right: 0;
+    }
   }
 }
 .contact {

@@ -43,7 +43,7 @@
             <el-button v-else size="small" plain @click="seeDetails(true)">{{$t("audit.seeDetails2")}}</el-button>
           </div> -->
           <div v-if="item.first_book_time != ''">订单倒计时：{{item.first_book_time}}</div>
-          <div v-if="item.booked_committee.length != 0">抢单倒计时：</div>
+          <!-- <div v-if="item.booked_committee.length != 0">抢单倒计时：</div> -->
           <div>{{$t("audit.hasNum")}}: {{item.booked_committee.length}}</div>
           <div>{{$t("audit.status")}}:{{$t("audit.status1")}}</div>
           <el-button class="button" v-if="item.booked_committee.length < 3" size="small" :loading="item.btnloading" plain @click="start(item)">{{$t("audit.start")}}</el-button>
@@ -138,7 +138,6 @@ export default {
             this.res_body.content.push(
               {...report, ...res1}
             )
-            console.log(res1, index, 'index');
             if(res1.first_book_time > 0){
               this.count(res1.first_book_time, index, (msg)=>{
                 this.res_body.content[index].first_book_time = msg

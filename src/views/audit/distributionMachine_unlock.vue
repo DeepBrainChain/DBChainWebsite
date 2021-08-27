@@ -222,11 +222,11 @@
           <span>{{ formInline.data_disk }}</span>
         </el-form-item>
         <el-form-item v-show="select1" :label="$t('audit.SGC_power')+':'">
-          <el-input size="small" style="width:200px" v-model="formInline.calc_point"></el-input>
+          <el-input :disabled='radioDisabled' size="small" style="width:200px" v-model="formInline.calc_point"></el-input>
         </el-form-item>
         <el-form-item :label="$t('audit.Vresults')+':'" prop="radio">
-          <el-radio :disabled='radioDisabled' v-model="formInline.is_support" label="1">有问题</el-radio>
-          <el-radio :disabled='radioDisabled' v-model="formInline.is_support" label="0">没问题</el-radio>
+          <el-radio :disabled='radioDisabled' v-model="formInline.is_support" label="1">{{$t('audit.hasproblem')}}</el-radio>
+          <el-radio :disabled='radioDisabled' v-model="formInline.is_support" label="0">{{$t('audit.noproblem')}}</el-radio>
         </el-form-item>
         <el-form-item :label="$t('verifyPassward')+':'" prop="passward">
           <el-input size="small" style="width:200px" v-model="formInline.passward" show-password :placeholder="$t('verifyPassward')"></el-input>
@@ -633,15 +633,22 @@ export default {
               wallet: this.wallet_address
             }
             GetGrabbingHash(parmas)
-              .then(res => {
-                this.formInline =  res?res:{}
-                this.select = true
-                this.select1 = true
-                this.formInline.is_support = res?String(res.is_support):''
-                this.sclectItem.gpu_type = res.gpu_type
-              })
-            this.dialogTableVisible1 = true
-            this.radioDisabled = true
+            .then(res1 => {
+              this.formInline =  res1?res1:{}
+              this.select = true
+              this.select1 = true
+              this.formInline.is_support = res1?String(res1.is_support):''
+              this.sclectItem.gpu_type = res1.gpu_type
+              this.dialogTableVisible1 = true
+              this.radioDisabled = true
+            })
+            .catch( err1 => {
+              this.$message({
+                showClose: true,
+                message: err1.message,
+                type: "error",
+              }); 
+            })
             item.btnloading1 = false
           })
           .catch( err => {
