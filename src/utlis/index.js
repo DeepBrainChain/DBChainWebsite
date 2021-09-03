@@ -678,7 +678,7 @@ export const getCountDown = async ( type, srt, BlockchainTime) => {
   }else if(type === 2){
     timeend = str1+360
   }else{
-    timeend = str1+470
+    timeend = str1
   }
   let endTime = (timeend - BlockchainTime)*30 // 获取秒数倒计时
   return endTime

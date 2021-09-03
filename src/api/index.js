@@ -1057,7 +1057,7 @@ export const getMachineList = params => {
 };
 
 /**
- * @description 保存派单机器hash
+ * @description 保存抢单机器hash
  * @param {object} params {machine_id, gpu, ....}
  */
  export const Save_GrabbingHash = params => {
@@ -1069,7 +1069,7 @@ export const getMachineList = params => {
 };
 
 /**
- * @description  获取派单机器hash提交原始值
+ * @description  获取抢单机器hash提交原始值
  * @param {object} params {machine_id, gpu, ....}
  */
  export const GetGrabbingHash = params => {
@@ -1083,7 +1083,7 @@ export const getMachineList = params => {
 
 
 /**
- * @description 保存抢单列表hash
+ * @description 保存派单列表hash
  * @param {object} params {machine_id, gpu, ....}
  */
  export const Save_ResultHash = params => {
@@ -1096,7 +1096,7 @@ export const getMachineList = params => {
 
 
 /**
- * @description 保存派单机器hash
+ * @description 获取派单机器hash
  * @param {object} params {machine_id, gpu, ....}
  */
 export const GetResultHash = params => {

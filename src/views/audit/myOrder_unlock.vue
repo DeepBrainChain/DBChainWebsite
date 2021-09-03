@@ -117,8 +117,8 @@ import {
   send_email_repeat,
   getMachineCommittee,
   getOriginal,
-  Save_ResultHash,
-  GetResultHash
+  Save_GrabbingHash,
+  GetGrabbingHash
 } from "@/api";
 
 import {
@@ -130,7 +130,7 @@ import { getCurrentPair ,getRand_str, naclSeal, naclOpen, getKeypair, CreateSign
 import { mapState, mapMutations } from "vuex"
 import { stringToU8a , u8aToHex, hexToU8a, hexToString, u8aToString } from '@polkadot/util';
 import { naclBoxKeypairFromSecret, decodeAddress, randomAsU8a } from '@polkadot/util-crypto';
-import { committeeOps, submitConfirmHash, submitConfirmRaw, committeeOrder, reportInfo, getTime, getBlockTime } from "@/utlis/dot/api"
+import { committeeOps, submitConfirmHash, submitConfirmRaw, committeeOrder, reportInfo, getTime, getBlockTime, reportMachineFault } from "@/utlis/dot/api"
 export default {
   name: "myOrder_unlock",
   components: {
@@ -167,8 +167,8 @@ export default {
         passward: '',
         report_id:'',
         machine_id:'',
-        reporter_rand_str:'',
-        committee_rand_str: '',
+        reporter_rand_str:'0x8d842da497f095e0d0afb969e3a7cb51e77d76dc97343dfc',
+        committee_rand_str: '0x8d842da497f095e0d0afb969e3a7cb51e77d76dc97343dfc',
         err_reason:'',
         support_report: "1",
       },
@@ -185,6 +185,9 @@ export default {
     }
   },
   activated() {
+    // reportMachineFault((res2)=>{
+    //   console.log(res2, 'res2');
+    // })
     // this.binding(isNewMail);
     this.stopInter()
     this.queryMail();
@@ -214,30 +217,6 @@ export default {
           report.report_info.booked_time = '00:00:00'
         }
       }
-      // await res.map( async (el, index) => {
-      //   console.log(11111111);
-      //   let res1 = await committeeOps(this.wallet_address, el)
-      //   let res2 =  await reportInfo(el)
-      //   res1.booked_time = await getCountDown(1, res1.booked_time, BlockchainTime)
-      //   res2.confirm_start = await getCountDown(3, res2.confirm_start, BlockchainTime)
-      //   let report = { report_id: el, report_info: res1, report_order: res2 , btnloading1: false}
-      //   this.res_body.content.push({ ...report })
-      //   if(report.report_order.confirm_start > 0 ){
-      //     this.count(report.report_order.confirm_start, index, (msg)=>{
-      //       report.report_order.confirm_start = msg;
-      //     })
-      //   }else{
-      //     report.report_order.confirm_start = '00:00:00'
-      //   }
-      //   if(report.report_info.booked_time > 0 ){
-      //     this.count(res1.booked_time, index, (msg)=>{
-      //       report.report_info.booked_time=msg;
-      //     })
-      //   }else{
-      //     report.report_info.booked_time = '00:00:00'
-      //   }
-      //   console.log(2222222);
-      // })
       console.log(this.res_body.content,'this.res_body.content');
     })
   },
@@ -398,15 +377,15 @@ export default {
           inputValue: this.passward
         })
         .then( ({ value }) => {
-          CreateSignature(item.report_order.machine_id, value)
+          CreateSignature(this.wallet_address, value)
           .then((res)=> {
             this.setPassWard(value)
             let parmas = { 
-              machine_id: item.report_order.machine_id,
+              machine_id: this.wallet_address,
               signature: res,
               wallet: this.wallet_address
             }
-            GetResultHash(parmas)
+            GetGrabbingHash(parmas)
             .then(res1 => {
               if( typeof res == 'string'){
                 this.$message({
@@ -459,7 +438,7 @@ export default {
               wallet: this.wallet_address,
               signature: res
             }
-            Save_ResultHash(params).then(res1=>{
+            Save_GrabbingHash(params).then(res1=>{
               if(typeof res1 != 'string'){
                 submitConfirmHash(this.formInline, this.formInline.passward, (res2)=>{
                   if(res2.success){
@@ -527,7 +506,6 @@ export default {
           cancelButtonText:  this.$t('cancel'),
           inputValue: this.passward
         }).then( ({ value }) => {
-          console.log(status, value);
           this.setPassWard(value)
           let KeyPair;
           try {
@@ -540,16 +518,16 @@ export default {
             return false
           }
           item.btnloading1 = true
-          console.log(KeyPair, 'KeyPair');
           let { secretKey , publicKey} = naclBoxKeypairFromSecret(decodeAddress(item.report_order.reporter));
-          this.formInline.err_reason = u8aToString(naclOpen( 
+          let message = u8aToString(naclOpen( 
             hexToU8a(item.report_info.encrypted_err_info), 
             hexToU8a('0x8d842da497f095e0d0afb969e3a7cb51e77d76dc97343dfc'), 
             publicKey, 
             KeyPair.secretKey 
           ))
-          this.formInline.machine_id = item.machine_id
-          this.formInline.report_id = item.report_id
+          this.formInline = {...this.formInline, ... JSON.parse(message)}
+          // this.formInline.machine_id = item.machine_id
+          // this.formInline.report_id = item.report_id
           this.dialogTableVisible = true
           item.btnloading1 = false
         })
@@ -558,13 +536,29 @@ export default {
           message: this.$t('audit.tipmsg'),
           type: "warning",
         });
+        // let KeyPair;
+        // try {
+        //   KeyPair = getKeypair('lynn123123')
+        // } catch (err) {
+        //   this.$message({
+        //     message: err.message,
+        //     type: "error",
+        //   });
+        //   return false
+        // }
         // console.log(KeyPair, 'KeyPair');
-        // let message = stringToU8a(this.formInline.err_reason);
+        // let perams = {
+        //   report_id:'21',
+        //   machine_id:'11111111111111111111111111111111111111111111',
+        //   err_reason:'测试Bug,通过一下',
+        // }
+        // let message = stringToU8a(JSON.stringify(perams));
         // let { secretKey , publicKey} = naclBoxKeypairFromSecret(decodeAddress("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"));
         // console.log(u8aToHex(secretKey), u8aToHex(publicKey), 'secretKey');
         // let nonce = hexToU8a('0x8d842da497f095e0d0afb969e3a7cb51e77d76dc97343dfc')
         // this.str_Sealed = naclSeal( message, secretKey, KeyPair.publicKey, nonce ); 
         // console.log(this.str_Sealed,'this.str_Sealed');
+        // str_Sealed： "0x9c86fffb12d3751b3a533a093b9af85257430bc0c44422ce0cd6ad9ad4edb416bc554ca5859e11a3ab0fda675ed20ae62aa15f848a5b6c92fde01c6c958c2007c4a2d0f0861abca00969aed6e7f60142365af9f9ab7047a5ac4d3afc3df56abc657022a8cf65fb4ea1a12430f2d11a989ea6ca7ff0d5203be2a21cba9e5650f86fca0772"
       }
     },
     confirm() {

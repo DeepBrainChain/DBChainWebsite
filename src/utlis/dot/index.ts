@@ -50,18 +50,25 @@ export const initNetwork = async (): Promise<Network> => {
     api = await ApiPromise.create({ 
       provider ,
       types: {
-        "PriceURL": "Text",
+        "Pubkey": "Vec<u8>",
         "ReportId": "u64",
         "SlashId": "u64",
         "BoxPubkey": "[u8; 32]",
         "ReportHash": "[u8; 16]",
+        "URL": "Text",
+        "MachineId": "Text",
+        "OrderId": "u64",
+        "TelecomName": "Text",
+        "AccountInfo": {
+          "nonce": "u32",
+          "consumers": "u32",
+          "providers": "u32",
+          "data": "AccountData"
+        },
         "StandardGpuPointPrice": {
           "gpu_point": "u64",
           "gpu_price": "u64"
         },
-        "URL": "Text",
-        "MachineId": "Text",
-        "OrderId": "u64",
         "LiveMachine": {
           "bonding_machine": "Vec<MachineId>",
           "confirmed_machine": "Vec<MachineId>",
@@ -70,7 +77,8 @@ export const initNetwork = async (): Promise<Network> => {
           "fulfilling_machine": "Vec<MachineId>",
           "refused_machine": "Vec<MachineId>",
           "rented_machine": "Vec<MachineId>",
-          "offline_machine": "Vec<MachineId>"
+          "offline_machine": "Vec<MachineId>",
+          "refused_mut_hardware_machine": "Vec<MachineId>"
         },
         "StashMachine": {
           "total_machine": "Vec<MachineId>",
@@ -78,12 +86,12 @@ export const initNetwork = async (): Promise<Network> => {
           "total_calc_points": "u64",
           "total_gpu_num": "u64",
           "total_rented_gpu": "u64",
+          "total_earned_reward": "Balance",
           "total_claimed_reward": "Balance",
           "can_claim_reward": "Balance",
           "total_rent_fee": "Balance",
           "total_burn_fee": "Balance"
         },
-        "BlockNumber": "u32",
         "SysInfoDetail": {
           "total_gpu_num": "u64",
           "total_rented_gpu": "u64",
@@ -125,7 +133,7 @@ export const initNetwork = async (): Promise<Network> => {
             "WaitingFulfill": null,
             "Online": null,
             "StakerReportOffline": "(BlockNumber, Box<MachineStatus>)",
-            "ReporterReportOffline": "(BlockNumber, Box<MachineStatus>, Vec<AccountId>)",
+            "ReporterReportOffline": "(StashSlashReason, Box<MachineStatus>, AccountId, Vec<AccountId>)",
             "Creating": null,
             "Rented": null
           }
@@ -170,16 +178,15 @@ export const initNetwork = async (): Promise<Network> => {
             "North": "u64"
           }
         },
-        "TelecomName": "Text",
-        "AccountInfo": {
-          "nonce": "u32",
-          "consumers": "u32",
-          "providers": "u32",
-          "data": "AccountData"
-        },
         "EraStashPoints": {
           "total": "u64",
           "staker_statistic": "BTreeMap<AccountId, StashMachineStatistics>"
+        },
+        "StashMachineStatistics": {
+          "online_gpu_num": "u64",
+          "inflation": "Perbill",
+          "machine_total_calc_point": "u64",
+          "rent_extra_grade": "u64"
         },
         "PosInfo": {
           "online_gpu": "u64",
@@ -192,102 +199,44 @@ export const initNetwork = async (): Promise<Network> => {
           "is_rented": "bool",
           "reward_account": "Vec<AccountId>"
         },
-        "StashMachineStatistics": {
-          "online_gpu_num": "u64",
-          "inflation": "Perbill",
-          "machine_total_calc_point": "u64",
-          "rent_extra_grade": "u64"
-        },
-        "CommitteeMachine": {
-          "machine_id": "Vec<MachineId>",
-          "total_calc_points": "u64",
-          "total_gpu_num": "u64",
-          "total_reward": "Balance"
-        },
         "CommitteeList": {
           "normal": "Vec<AccountId>",
           "chill_list": "Vec<AccountId>",
           "waiting_box_pubkey": "Vec<AccountId>",
           "fulfilling_list": "Vec<AccountId>"
         },
-        "LCCommitteeMachineList": {
+        "OCCommitteeMachineList": {
           "booked_machine": "Vec<MachineId>",
           "hashed_machine": "Vec<MachineId>",
           "confirmed_machine": "Vec<MachineId>",
           "online_machine": "Vec<MachineId>"
         },
-        "LCCommitteeOps": {
+        "OCCommitteeOps": {
           "staked_dbc": "Balance",
           "verify_time": "Vec<BlockNumber>",
           "confirm_hash": "[u8; 16]",
           "hash_time": "BlockNumber",
           "confirm_time": "BlockNumber",
-          "machine_status": "LCMachineStatus",
+          "machine_status": "OCMachineStatus",
           "machine_info": "CommitteeUploadInfo"
         },
-        "LCMachineStatus": {
+        "OCMachineStatus": {
           "_enum": ["Booked", "Hashed", "Confirmed"]
         },
-        "LCMachineCommitteeList": {
+        "OCMachineCommitteeList": {
           "book_time": "BlockNumber",
           "booked_committee": "Vec<AccountId>",
           "hashed_committee": "Vec<AccountId>",
           "confirm_start_time": "BlockNumber",
           "confirmed_committee": "Vec<AccountId>",
           "onlined_committee": "Vec<AccountId>",
-          "status": "LCVerifyStatus"
+          "status": "OCVerifyStatus"
         },
-        "LCVerifyStatus": {
+        "OCVerifyStatus": {
           "_enum": ["SubmittingHash", "SubmittingRaw", "Summarizing", "Finished"]
         },
-        "CommitteeMachineList": {
-          "booked_order": "Vec<OrderId>",
-          "hashed_order": "Vec<OrderId>",
-          "confirmed_order": "Vec<Order>",
-          "online_machine": "Vec<MachineId>"
-        },
-        "CommitteeMachineOps": {
-          "booked_time": "BlockNumber",
-          "encrypted_err_info": "Option<Vec<u8>>",
-          "encrypted_login_info": "Option<Vec<u8>>",
-          "encrypted_time": "BlockNumber",
-          "confirm_hash": "[u8; 16]",
-          "hash_time": "BlockNumber",
-          "confirm_raw": "Vec<u8>",
-          "confirm_time": "BlockNumber",
-          "confirm_result": "bool",
-          "machine_status": "MachineStatus"
-        },
-        "EraRewardBalance": {
-          "total": "Balance",
-          "individual": "BTreeMap<AccountId, Balance>"
-        },
-        "LiveOrderList": {
-          "reported_order": "Vec<OrderId>",
-          "fully_order": "Vec<OrderId>",
-          "fully_reporter_hashed": "Vec<OrderId>",
-          "fully_committee_hashed": "Vec<OrderId>",
-          "fully_raw": "Vec<OrderId>"
-        },
-        "MachineCommitteeList": {
-          "order_id": "OrderId",
-          "report_time": "BlockNumber",
-          "booked_committee": "Vec<AccountId>",
-          "hashed_committee": "Vec<AccountId>",
-          "confirm_start": "BlockNumber",
-          "confirmed_committee": "Vec<AccountId>",
-          "onlined_committee": "Vec<AccountId>"
-        },
-        "Pubkey": "Vec<u8>",
         "ReporterRecord": {
           "reported_id": "Vec<OrderId>"
-        },
-        "StakerList": {
-          "committee": "Vec<AccountId>",
-          "pubkey_list": "Vec<AccountId>",
-          "fulfill_list": "Vec<AccountId>",
-          "chill_list": "Vec<AccountId>",
-          "black_list": "Vec<AccountId>"
         },
         "MTCommitteeOpsDetail": {
           "booked_time": "BlockNumber",
@@ -345,18 +294,44 @@ export const initNetwork = async (): Promise<Network> => {
         },
         "MachineFaultType": {
           "_enum": {
-            "HardwareFault": "(ReportHash, BoxPubkey)",
-            "MachineOffline": "(ReportHash, BoxPubkey)",
-            "MachineUnrentable": "MachineId"
+            "RentedInaccessible": "(ReportHash, BoxPubkey)",
+            "RentedHardwareMalfunction": "(ReportHash, BoxPubkey)",
+            "RentedHardwareCounterfeit": "(ReportHash, BoxPubkey)",
+            "OnlineRentFailed": "MachineId"
           }
         },
-        "PendingSlashInfo": {
+        "CMPendingSlashInfo": {
           "slash_who": "AccountId",
           "slash_time": "BlockNumber",
-          "unlock_amount": "Balance",
           "slash_amount": "Balance",
           "slash_exec_time": "BlockNumber",
           "reward_to": "Vec<AccountId>"
+        },
+        "OnlineStakeParamsInfo": {
+          "online_stake_per_gpu": "Balance",
+          "online_stake_usd_limit": "u64",
+          "min_free_stake_percent": "Perbill",
+          "reonline_stake": "u64"
+        },
+        "OPPendingSlashInfo": {
+          "slash_who": "AccountId",
+          "slash_time": "BlockNumber",
+          "slash_amount": "Balance",
+          "slash_exec_time": "Option<BlockNumber>",
+          "reward_to": "Option<Vec<AccountId>>",
+          "slash_reason": "OPSlashReason"
+        },
+        "OPSlashReason": {
+          "_enum": {
+            "RentedReportOffline": "BlockNumber",
+            "OnlineReportOffline": "BlockNumber",
+            "RentedInaccessible": "BlockNumber",
+            "RentedHardwareMalfunction": "BlockNumber",
+            "RentedHardwareCounterfeit": "BlockNumber",
+            "OnlineRentFailed": "BlockNumber",
+            "CommitteeRefusedOnline": null,
+            "CommitteeRefusedMutHardware": null
+          }
         },
         "RentOrderDetail": {
           "renter": "AccountId",
@@ -387,7 +362,6 @@ export const initNetwork = async (): Promise<Network> => {
           "min_free_stake_percent": "Perbill"
         },
         "ReporterStakeInfo": {
-          "box_pubkey": "[u8; 32]",
           "staked_amount": "Balance",
           "used_stake": "Balance",
           "can_claim_reward": "Balance",
@@ -746,17 +720,37 @@ export const CreateSignature = async (message: string , password: string ): Prom
   const signature = signUrl.sign(stringToU8a(message));
   return u8aToHex(signature)
 }
-// CreateSignature('test message', 'Lynn123123').then(res=>{
-//   console.log(u8aToHex(res), 'ers');
+// CreateSignature('33333333333333fffff', 'lynn123123').then(res=>{
+//   console.log( res, 'ers');
 // })
 // CreateSignature(message, '123456789').then((res)=>{
-//   console.log(signatureVerify( message, res, '5DhFCVhtxZkz1mXWQcGv67tPvGzqXjEcF1q1DPUdCAJEX7vm' ), 'signatureVerify2' );
+  
 // })
+// addFromUri addFromSeed
+// const Create = async (mes: string, seed: string) => {
+//   await cryptoWaitReady();
+//   let signUrl = keyring.addFromUri(seed);
+//   const signature = signUrl.sign(stringToU8a(mes));
+//   return u8aToHex(signature)
+// }
+// Create('1111111', '0x3b60f97f51a31fe87493d8c33b8c504da39e04431065b3a8763e301f644453c5').then(res=>{
+//   console.log( res, 'wwwwwwwww');
+// })
+
+const Verify = async (msg: string, sign: string, wallet: string, ver: string) => {
+  await cryptoWaitReady();
+  console.log(signatureVerify( msg, sign, wallet ), ver );
+}
+// Verify(
+//   '11111111111111111111111111111111111111111111',
+//   '0x7ceb75e15f73884b5d82fcaf22f07cda255e740f7cb4e6100ff41954a593124b69f8761bdeeaff51383fb6872c97f1d8376fef29e47148b8f1f92f7c91b75980',
+//   '5HL92dTnQrZSJZy7ckDVYVt9mMX3NsjShWsYDquB3eB3yb5R',
+//   'Verify1'
+// )
 /**
  * 生成HASH值
  * blake2AsHex(data: Uint8Array | string, bitLength?: number = 128)
  */
-
 
 let machine_id = "2gfpp3MAB4Aq2ZPEU72neZTVcZkbzDzX96op9d3fvi3",
 gpu_type = "GeForceRTX2080Ti",
