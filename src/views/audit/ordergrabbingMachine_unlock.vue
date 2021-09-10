@@ -46,7 +46,7 @@
           <!-- <div v-if="item.booked_committee.length != 0">抢单倒计时：</div> -->
           <div>{{$t("audit.hasNum")}}: {{item.booked_committee.length}}</div>
           <div>{{$t("audit.status")}}:{{$t("audit.status1")}}</div>
-          <el-button class="button" v-if="item.booked_committee.length < 3" size="small" :loading="item.btnloading" plain @click="start(item)">{{$t("audit.start")}}</el-button>
+          <el-button class="button" v-if="(item.report_status == 'Reported' || item.report_status == 'WaitingBook')" size="small" :loading="item.btnloading" plain @click="start(item)">{{$t("audit.start")}}</el-button>
           <el-button class="button" v-else size="small" disabled plain>{{$t("audit.start1")}}</el-button>
         </div>
       </div>
@@ -113,7 +113,8 @@ export default {
       send_email_repeat_index: -1,
       // 查询问题描述
       dialogTableVisible: false,
-      timer:[]
+      timer:[],
+      setInt: null
     };
   },
   watch: {
@@ -125,34 +126,15 @@ export default {
   },
   activated() {
     // this.binding(isNewMail);
-    // this.queryMail();
-    getOrder().then(
-      async res => {
-        this.res_body.content = []
-        res = [...res.bookable_report, ...res.verifying_report, ...res.waiting_raw_report, ...res.waiting_rechecked_report]
-        let BlockchainTime = await getBlockTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
-        res.map((el, index) => {
-          let report = { report_id: el, btnloading: false }
-          reportInfo(el).then( async (res1) => {
-            res1.first_book_time = await getCountDown(2, res1.first_book_time, BlockchainTime)
-            this.res_body.content.push(
-              {...report, ...res1}
-            )
-            if(res1.first_book_time > 0){
-              this.count(res1.first_book_time, index, (msg)=>{
-                this.res_body.content[index].first_book_time = msg
-                // res1.first_book_time = msg;
-              })
-            }else{
-              this.res_body.content[index].first_book_time = ''
-            }
-          })
-        })
-      } 
-    );
+    this.queryMail();
+    this.getOrderList();
+    this.setInt = setInterval(()=>{
+      this.getOrderList()
+    }, 30000)
   },
   deactivated() {
     this.stopInter()
+    clearInterval(this.setInt)
   },
 
   computed: {
@@ -296,7 +278,32 @@ export default {
       this.isBinding = false;
       this.queryMail();
     },
-
+    // 获取列表
+    getOrderList(){
+      this.stopInter();
+      getOrder().then(async res => {
+        this.res_body.content = []
+        res = [...res.bookable_report, ...res.verifying_report, ...res.waiting_raw_report, ...res.finished_report]
+        let BlockchainTime = await getBlockTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
+        res.map((el, index) => {
+          let report = { report_id: el, btnloading: false }
+          reportInfo(el).then( async (res1) => {
+            res1.first_book_time = await getCountDown(2, res1.first_book_time, BlockchainTime)
+            this.res_body.content.push(
+              {...report, ...res1}
+            )
+            if(res1.first_book_time > 0){
+              this.count(res1.first_book_time, index, (msg)=>{
+                this.res_body.content[index].first_book_time = msg
+              })
+            }else{
+              this.res_body.content[index].first_book_time = ''
+            }
+          })
+        })
+      });
+      console.log(this.res_body.content, 'this.res_body.content');
+    },
     // 开时抢单
     start(item){
       this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
@@ -308,7 +315,8 @@ export default {
         item.btnloading = true
         getCommitteeList(this.wallet_address).then(res=>{
           if(res){
-            bookFaultOrder(item.id, value, res=>{
+            clearInterval(this.setInt)
+            bookFaultOrder(item.report_id, value, res=>{
               if(res.success){
                 this.$message({
                   showClose: true,
@@ -324,6 +332,9 @@ export default {
                 });
                 item.btnloading = false
               }
+              this.setInt = setInterval(()=>{
+                this.getOrderList()
+              }, 10000)
             })
           }else{
             this.$message({
@@ -335,15 +346,13 @@ export default {
           }
         })
       }).catch(() => {
-        this.$message({
-          showClose: true,
-          message: this.$t('verifyPassward'),
-          type: "error",
-        });  
+        // this.$message({
+        //   showClose: true,
+        //   message: this.$t('verifyPassward'),
+        //   type: "warning",
+        // });  
+        console.log('取消抢单');
       });
-      
-      // let list = bookFaultOrder(0);
-      
     },
     // 查看问题描述
     seeDetails(status){

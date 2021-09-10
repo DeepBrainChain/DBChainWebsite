@@ -15,7 +15,7 @@ import axios from "@/utlis/axios";
 //const host = "https://otherinfo.dbchain.ai";
 //const host = "https://info.dbchain.ai";
 //const host = "https://infodata.dbchain.ai";
-const host = "https://infotest.dbchain.ai";
+const host = "https://dbchaininfo.congtu.cloud";
 //const host = 'http://116.85.24.172:8031'
 //const host = "http://192.168.1.186:8080";
 //const host = "http://192.168.31.241:8080";
@@ -802,11 +802,13 @@ export const get_address_abstracts = ({ address, page }) => {
     url: `https://api.neoscan.io/api/main_net/v1/get_address_abstracts/${address}/${page}`
   });
 };
+
+
 // 获取新钱包当前人的订单列表
 export const get_address_abstracts1 = data => {
   return axios({
     method: "post",
-    url: 'https://dbc.subscan.io/api/scan/transfers',
+    url: 'https://dbc.webapi.subscan.io/api/scan/transfers',
     data: data
   });
 };
@@ -814,7 +816,7 @@ export const get_address_abstracts1 = data => {
 export const getsearch = data => {
   return axios({
     method: "post",
-    url: 'https://dbc.subscan.io/api/v2/scan/search',
+    url: 'https://dbc.webapi.subscan.io/api/v2/scan/search',
     data: data
   });
 };
@@ -1063,7 +1065,7 @@ export const getMachineList = params => {
  export const Save_GrabbingHash = params => {
   return axios({
     method: "post",
-    url: "https://identifier.congtu.cloud/Save_GrabbingHash",
+    url: "/identifier/Save_GrabbingHash",
     params
   });
 };
@@ -1075,7 +1077,7 @@ export const getMachineList = params => {
  export const GetGrabbingHash = params => {
   return axios({
     method: "post",
-    url: "https://identifier.congtu.cloud/GetGrabbingHash",
+    url: "/identifier/GetGrabbingHash",
     params
   });
 };

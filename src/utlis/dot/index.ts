@@ -11,7 +11,7 @@ import {
   naclBoxKeypairFromSecret,
   signatureVerify,
   blake2AsHex} from '@polkadot/util-crypto'
-import { BN_TEN, formatBalance, isHex, stringToU8a , u8aToHex, hexToU8a, hexToString } from '@polkadot/util';
+import { BN_TEN, formatBalance, isHex, stringToU8a , u8aToHex, hexToU8a, hexToString, stringToHex } from '@polkadot/util';
 import { decodePair } from "@polkadot/keyring/pair/decode";
 import BN from 'bn.js'
 import { KeyringPair, KeyringPair$Json } from '@polkadot/keyring/types'
@@ -113,8 +113,7 @@ export const initNetwork = async (): Promise<Network> => {
           "bonding_height": "BlockNumber",
           "online_height": "BlockNumber",
           "last_online_height": "BlockNumber",
-          "init_stake_amount": "Balance",
-          "current_stake_amount": "Balance",
+          "stake_amount": "Balance",
           "machine_status": "MachineStatus",
           "total_rented_duration": "u64",
           "total_rented_times": "u64",
@@ -235,8 +234,11 @@ export const initNetwork = async (): Promise<Network> => {
         "OCVerifyStatus": {
           "_enum": ["SubmittingHash", "SubmittingRaw", "Summarizing", "Finished"]
         },
-        "ReporterRecord": {
-          "reported_id": "Vec<OrderId>"
+        "ReporterReportList": {
+          "processing_report": "Vec<ReportId>",
+          "canceled_report": "Vec<ReportId>",
+          "succeed_report": "Vec<ReportId>",
+          "failed_report": "Vec<ReportId>"
         },
         "MTCommitteeOpsDetail": {
           "booked_time": "BlockNumber",
@@ -253,17 +255,28 @@ export const initNetwork = async (): Promise<Network> => {
         "MTOrderStatus": {
           "_enum": ["WaitingEncrypt", "Verifying", "WaitingRaw", "Finished"]
         },
-        "MTCommitteeReportList": {
+        "MTCommitteeOrderList": {
           "booked_report": "Vec<ReportId>",
           "hashed_report": "Vec<ReportId>",
           "confirmed_report": "Vec<ReportId>",
-          "online_machine": "Vec<MachineId>"
+          "finished_report": "Vec<ReportId>"
         },
         "MTLiveReportList": {
           "bookable_report": "Vec<ReportId>",
           "verifying_report": "Vec<ReportId>",
           "waiting_raw_report": "Vec<ReportId>",
-          "waiting_rechecked_report": "Vec<ReportId>"
+          "finished_report": "Vec<ReportId>"
+        },
+        "MTPendingSlashInfo": {
+          "slash_who": "AccountId",
+          "slash_time": "BlockNumber",
+          "slash_amount": "Balance",
+          "slash_exec_time": "BlockNumber",
+          "reward_to": "Vec<AccountId>",
+          "slash_reason": "MTReporterSlashReason"
+        },
+        "MTReporterSlashReason": {
+          "_enum": ["ReportRefused", "NotSubmitEncryptedInfo"]
         },
         "MTReportInfoDetail": {
           "reporter": "AccountId",
@@ -294,10 +307,10 @@ export const initNetwork = async (): Promise<Network> => {
         },
         "MachineFaultType": {
           "_enum": {
-            "RentedInaccessible": "(ReportHash, BoxPubkey)",
+            "RentedInaccessible": "MachineId",
             "RentedHardwareMalfunction": "(ReportHash, BoxPubkey)",
             "RentedHardwareCounterfeit": "(ReportHash, BoxPubkey)",
-            "OnlineRentFailed": "MachineId"
+            "OnlineRentFailed": "(ReportHash, BoxPubkey)"
           }
         },
         "CMPendingSlashInfo": {
@@ -307,10 +320,19 @@ export const initNetwork = async (): Promise<Network> => {
           "slash_exec_time": "BlockNumber",
           "reward_to": "Vec<AccountId>"
         },
+        "CMSlashReason": {
+          "_enum": [
+            "OCNotSubmitHash",
+            "OCNotSubmitRaw",
+            "OCInconsistentSubmit",
+            "MCNotSubmitHash",
+            "MCNotSubmitRaw",
+            "MCInconsistentSubmit"
+          ]
+        },
         "OnlineStakeParamsInfo": {
           "online_stake_per_gpu": "Balance",
           "online_stake_usd_limit": "u64",
-          "min_free_stake_percent": "Perbill",
           "reonline_stake": "u64"
         },
         "OPPendingSlashInfo": {
@@ -752,45 +774,61 @@ const Verify = async (msg: string, sign: string, wallet: string, ver: string) =>
  * blake2AsHex(data: Uint8Array | string, bitLength?: number = 128)
  */
 
-let machine_id = "2gfpp3MAB4Aq2ZPEU72neZTVcZkbzDzX96op9d3fvi3",
-gpu_type = "GeForceRTX2080Ti",
-gpu_num = "4",
-cuda_core = "4352",
-gpu_mem = "11283456",
-calc_point = "6825",
-hard_disk = "3905110864",
-cpu_type = "Intel(R) Xeon(R) Silver 4110 CPU",
-cpu_core_num = "32",
-cpu_rate = "26",
-mem_num = "527988672",
+// let machine_id = "222222222222222222222222222222222",
+// reporter_rand_str='1',
+// err_reason = "测试Bug,通过一下"
 
-upload_net = "22948504" , //不确定的数值
-download_net = "30795411" , // 不确定的数值
-longitude = "3122222" , // 经度, 不确定值，存储平均值
-latitude = "12145806" , // 纬度, 不确定值，存储平均值
+// let raw_input = (
+//     machine_id
+//     + reporter_rand_str
+//     + err_reason
+// )
+// console.log(blake2AsHex(raw_input ,128), 'raw_input ,256');
 
-rand_str = "abcdefg",
-is_support = "true"
-
-let raw_input = (
-    machine_id
-    + gpu_type
-    + gpu_num
-    + cuda_core
-    + gpu_mem
-    + calc_point
-    + hard_disk
-    + cpu_type
-    + cpu_core_num
-    + cpu_rate
-    + mem_num
-    + upload_net
-    + download_net
-    + longitude
-    + latitude
-    + rand_str
-    + is_support
-)
-console.log(blake2AsHex('测试bug，请通过一下' ,256), 'raw_input ,256');
+// let machine_id = "222222222222222222222222222222222",
+// reporter_rand_str= "1",
+// committee_rand_str = '1',
+// support_report= "1",
+// err_reason= "测试Bug,通过一下",
+// extra_err_info = "";
 
 
+
+// console.log( blake2AsHex((machine_id+reporter_rand_str+committee_rand_str+support_report+err_reason+extra_err_info) ,128), 'raw_input ,256');
+
+
+let formInline = {
+  machine_id:'c2ad03b01cb72857978f7e18527afddb671c8354c72c46523405334be23c3701',
+  gpu_type:'GeForceGTX2080Ti',
+  gpu_num:'4',
+  cuda_core:'8704',
+  gpu_mem: '10',
+  calc_point:'59589',
+  sys_disk:'500',
+  data_disk:'3905',
+  cpu_type: 'Intel(R) Xeon(R) Silver 4214R',
+  cpu_core_num:'46',
+  cpu_rate:'2400',
+  mem_num:'440',
+  rand_str: '1',
+  is_support: '1',
+  passward:'',
+}
+
+let raw_input = blake2AsHex(
+  formInline.machine_id
+  + formInline.gpu_type
+  + formInline.gpu_num
+  + formInline.cuda_core
+  + formInline.gpu_mem
+  + formInline.calc_point
+  + formInline.sys_disk
+  + formInline.data_disk
+  + formInline.cpu_type
+  + formInline.cpu_core_num
+  + formInline.cpu_rate
+  + formInline.mem_num
+  + formInline.rand_str
+  + formInline.is_support
+  , 128)
+  console.log(raw_input , 'blake2AsHex ,128');

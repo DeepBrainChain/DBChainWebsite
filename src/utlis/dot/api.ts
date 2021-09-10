@@ -1,6 +1,6 @@
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { cryptoWaitReady, blake2AsHex, randomAsU8a } from '@polkadot/util-crypto'
-import { isHex,stringToU8a, u8aToHex, hexToU8a } from '@polkadot/util';
+import { isHex, stringToU8a, u8aToHex, hexToU8a, stringToHex } from '@polkadot/util';
 import { getCurrentPair } from './index' // 获取kerPair
 
 const node = {
@@ -83,8 +83,7 @@ export const GetApi = async (): Promise<Network> =>{
           "bonding_height": "BlockNumber",
           "online_height": "BlockNumber",
           "last_online_height": "BlockNumber",
-          "init_stake_amount": "Balance",
-          "current_stake_amount": "Balance",
+          "stake_amount": "Balance",
           "machine_status": "MachineStatus",
           "total_rented_duration": "u64",
           "total_rented_times": "u64",
@@ -205,8 +204,11 @@ export const GetApi = async (): Promise<Network> =>{
         "OCVerifyStatus": {
           "_enum": ["SubmittingHash", "SubmittingRaw", "Summarizing", "Finished"]
         },
-        "ReporterRecord": {
-          "reported_id": "Vec<OrderId>"
+        "ReporterReportList": {
+          "processing_report": "Vec<ReportId>",
+          "canceled_report": "Vec<ReportId>",
+          "succeed_report": "Vec<ReportId>",
+          "failed_report": "Vec<ReportId>"
         },
         "MTCommitteeOpsDetail": {
           "booked_time": "BlockNumber",
@@ -223,17 +225,28 @@ export const GetApi = async (): Promise<Network> =>{
         "MTOrderStatus": {
           "_enum": ["WaitingEncrypt", "Verifying", "WaitingRaw", "Finished"]
         },
-        "MTCommitteeReportList": {
+        "MTCommitteeOrderList": {
           "booked_report": "Vec<ReportId>",
           "hashed_report": "Vec<ReportId>",
           "confirmed_report": "Vec<ReportId>",
-          "online_machine": "Vec<MachineId>"
+          "finished_report": "Vec<ReportId>"
         },
         "MTLiveReportList": {
           "bookable_report": "Vec<ReportId>",
           "verifying_report": "Vec<ReportId>",
           "waiting_raw_report": "Vec<ReportId>",
-          "waiting_rechecked_report": "Vec<ReportId>"
+          "finished_report": "Vec<ReportId>"
+        },
+        "MTPendingSlashInfo": {
+          "slash_who": "AccountId",
+          "slash_time": "BlockNumber",
+          "slash_amount": "Balance",
+          "slash_exec_time": "BlockNumber",
+          "reward_to": "Vec<AccountId>",
+          "slash_reason": "MTReporterSlashReason"
+        },
+        "MTReporterSlashReason": {
+          "_enum": ["ReportRefused", "NotSubmitEncryptedInfo"]
         },
         "MTReportInfoDetail": {
           "reporter": "AccountId",
@@ -264,10 +277,10 @@ export const GetApi = async (): Promise<Network> =>{
         },
         "MachineFaultType": {
           "_enum": {
-            "RentedInaccessible": "(ReportHash, BoxPubkey)",
+            "RentedInaccessible": "MachineId",
             "RentedHardwareMalfunction": "(ReportHash, BoxPubkey)",
             "RentedHardwareCounterfeit": "(ReportHash, BoxPubkey)",
-            "OnlineRentFailed": "MachineId"
+            "OnlineRentFailed": "(ReportHash, BoxPubkey)"
           }
         },
         "CMPendingSlashInfo": {
@@ -277,10 +290,19 @@ export const GetApi = async (): Promise<Network> =>{
           "slash_exec_time": "BlockNumber",
           "reward_to": "Vec<AccountId>"
         },
+        "CMSlashReason": {
+          "_enum": [
+            "OCNotSubmitHash",
+            "OCNotSubmitRaw",
+            "OCInconsistentSubmit",
+            "MCNotSubmitHash",
+            "MCNotSubmitRaw",
+            "MCInconsistentSubmit"
+          ]
+        },
         "OnlineStakeParamsInfo": {
           "online_stake_per_gpu": "Balance",
           "online_stake_usd_limit": "u64",
-          "min_free_stake_percent": "Perbill",
           "reonline_stake": "u64"
         },
         "OPPendingSlashInfo": {
@@ -440,7 +462,7 @@ export const getCommitteeList = async (wallet: string): Promise<any> => {
     return;
   }
   await cryptoWaitReady();
-  await api?.tx.leaseCommittee
+  await api?.tx.onlineCommittee
   .submitConfirmHash( machine_id, raw_input)
   .signAndSend( kering! , ( { events = [], status } ) => {
     if (status.isFinalized) {
@@ -477,14 +499,14 @@ export const ConfirmRaw = async (permas: any, passward: string, callback: (arr: 
   let { machine_id, gpu_type, gpu_num, cuda_core, gpu_mem, calc_point, sys_disk, data_disk, cpu_type, cpu_core_num, cpu_rate, mem_num, rand_str, is_support } = permas
   let machine_info_detail = {
     machine_id, 
-    gpu_type: u8aToHex(stringToU8a(gpu_type)), 
+    gpu_type, 
     gpu_num, 
     cuda_core, 
     gpu_mem, 
     calc_point, 
     sys_disk, 
     data_disk, 
-    cpu_type: u8aToHex(stringToU8a(cpu_type)), 
+    cpu_type, 
     cpu_core_num, 
     cpu_rate,
     mem_num, 
@@ -504,7 +526,7 @@ export const ConfirmRaw = async (permas: any, passward: string, callback: (arr: 
     return;
   }
   await cryptoWaitReady()
-  await api?.tx.leaseCommittee
+  await api?.tx.onlineCommittee
   .submitConfirmRaw( machine_info_detail )
   .signAndSend( kering! , ( { events = [], status  } ) => {
     if (status.isFinalized) {
@@ -579,6 +601,7 @@ export const bookFaultOrder = async (reportid: number, passward:string, callback
     callback(CallBack_data)
     return;
   }
+  console.log(reportid, 'reportid' );
   await cryptoWaitReady()
   await api?.tx.maintainCommittee
   .bookFaultOrder(reportid)
@@ -637,15 +660,15 @@ export const committeeOps = async (AccountId: number, ReportId:number):Promise<a
  * @return callback 回调函数，返回数组信息
  */
 export const submitConfirmHash = async ( permas: any,  passward: string, callback: (data: Object) => void) => {
-  let { report_id, machine_id, reporter_rand_str, committee_rand_str, err_reason, support_report } = permas
+  let { report_id, machine_id, reporter_rand_str, committee_rand_str, err_reason, extra_err_info, support_report } = permas
   let raw_input = blake2AsHex(
-    report_id
-    + machine_id
+    machine_id
     + reporter_rand_str
     + committee_rand_str
-    + err_reason
     + support_report
-    , 256)
+    + err_reason
+    + extra_err_info
+    , 128)
   await GetApi();
   let kering = await getCurrentPair()
   try {
@@ -695,7 +718,7 @@ export const submitConfirmHash = async ( permas: any,  passward: string, callbac
  * @return callback 回调函数，返回数组信息
  */
 export const submitConfirmRaw = async ( permas: any, passward: string, callback: (data: Object) => void) => {
-  let { report_id, machine_id, reporter_rand_str, committee_rand_str, err_reason, support_report } = permas
+  let { report_id, machine_id, reporter_rand_str, committee_rand_str, err_reason, extra_err_info, support_report } = permas
   await GetApi();
   let kering = await getCurrentPair()
   try {
@@ -710,7 +733,7 @@ export const submitConfirmRaw = async ( permas: any, passward: string, callback:
   }
   await cryptoWaitReady();
   await api?.tx.maintainCommittee
-  .submitConfirmRaw(report_id, machine_id, reporter_rand_str, committee_rand_str, err_reason, support_report )
+  .submitConfirmRaw(report_id, machine_id, reporter_rand_str, committee_rand_str, err_reason, extra_err_info, support_report )
   .signAndSend( kering! , ( { events = [], status  } ) => {
     if (status.isFinalized) {
       events.forEach(({ event: { method, data: [error] }}) => {

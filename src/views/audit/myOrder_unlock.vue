@@ -38,18 +38,22 @@
         <div class="order-list">
           <div>{{$t("audit.order")}}: {{item.report_id}}</div>
           <div>
-            <el-button v-if="item.report_info.encrypted_err_info == null" size="small" plain @click="seeDetails(false, '')">{{$t("audit.seeDetails1")}}</el-button>
+            <el-button v-if="item.report_info.encrypted_err_info == null" size="small" plain @click="seeDetails(false, item)">{{$t("audit.seeDetails1")}}</el-button>
             <el-button v-else size="small" plain @click="seeDetails(true, item)" :loading='item.btnloading1'>{{$t("audit.seeDetails2")}}</el-button>
           </div>
-          <el-button class="button" v-if="item.report_info.hash_time == 0" size="small" plain @click="start(1, '')">{{$t("audit.verification1")}}</el-button>
-          <el-button class="button" v-else size="small" plain @click="start(2, item)">{{$t("audit.verification2")}}</el-button>
+          <el-button class="button" v-if="item.report_info.hash_time == 0" size="small" plain @click="start(1, item)">{{$t("audit.verification1")}}</el-button>
+          <el-button class="button" :disabled='item.report_info.order_status == "Finished"' v-else size="small" plain @click="start(2, item)">{{$t("audit.verification2")}}</el-button>
         </div>
         <div class="order-list mt20">
           <div>{{$t("audit.hasNum")}}:{{ item.report_order.booked_committee.length }}</div>
+          <!-- 显示提交Hash倒计时 -->
           <div v-if="item.report_info.hash_time == 0">{{$t("audit.verification1_time")}}：{{ item.report_info.booked_time}}</div>
-          <div v-else>{{$t("audit.verification2_time")}}：{{ item.report_order.confirm_start}}</div>
-          <div v-if="item.report_info.order_status == 'Finished'">{{$t("audit.myResult")}}:{{ item.report_info.order_status != 'Finished'? '' :$t("audit.hasError")}}</div>
-          <div v-if="item.report_info.order_status == 'Finished'">{{$t("audit.finalResult")}}:{{ item.report_order.support_committee.length.length > item.report_order.against_committee.length? $t("audit.noError") :$t("audit.hasError")}}</div>
+          <!-- 显示提交结果倒计时 -->
+          <div v-if="item.report_info.hash_time != 0 && item.report_info.order_status != 'Finished'">{{$t("audit.verification2_time")}}：{{ item.report_order.confirm_start}}</div>
+          <!-- 当order_status 等于 'Finished' 显示我的验证结果 -->
+          <div v-if="item.report_info.order_status == 'Finished'">{{$t("audit.myResult")}}:{{ item.report_order.support_committee.indexOf(wallet_address) >= 0 ? $t("audit.hasError") : $t("audit.noError") }}</div>
+          <!-- 当提交hash的length 等于 提交原始值的length时，显示最终验证结果 -->
+          <div v-if="item.report_order.confirmed_committee.length === item.report_order.hashed_committee.length">{{$t("audit.finalResult")}}:{{ item.report_order.support_committee.length.length > item.report_order.against_committee.length? $t("audit.noError") :$t("audit.hasError")}}</div>
           <div>{{ $t("audit.proportion") }}: {{item.report_order.support_committee.length}}/{{item.report_order.against_committee.length}}</div>
         </div>
       </div>
@@ -167,8 +171,9 @@ export default {
         passward: '',
         report_id:'',
         machine_id:'',
-        reporter_rand_str:'0x8d842da497f095e0d0afb969e3a7cb51e77d76dc97343dfc',
-        committee_rand_str: '0x8d842da497f095e0d0afb969e3a7cb51e77d76dc97343dfc',
+        reporter_rand_str:'1',
+        committee_rand_str: '1',
+        extra_err_info:'',
         err_reason:'',
         support_report: "1",
       },
@@ -185,40 +190,10 @@ export default {
     }
   },
   activated() {
-    // reportMachineFault((res2)=>{
-    //   console.log(res2, 'res2');
-    // })
-    // this.binding(isNewMail);
+    this.binding(this.isNewMail);
     this.stopInter()
     this.queryMail();
-    committeeOrder(this.wallet_address).then( async res=> {
-      this.res_body.content = []
-      res = [ ...res.booked_report, ...res.hashed_report, ...res.confirmed_report, ...res.online_machine ]
-      let BlockchainTime = await getBlockTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
-      for(let i=0; i< res.length; i++){
-        let res1 = await committeeOps(this.wallet_address, res[i])
-        let res2 =  await reportInfo(res[i])
-        res1.booked_time = await getCountDown(1, res1.booked_time, BlockchainTime)
-        res2.confirm_start = await getCountDown(3, res2.confirm_start, BlockchainTime)
-        let report = { report_id: res[i], report_info: res1, report_order: res2 , btnloading1: false}
-        this.res_body.content.push({ ...report })
-        if(report.report_order.confirm_start > 0 ){
-          this.count(report.report_order.confirm_start, i, (msg)=>{
-            report.report_order.confirm_start = msg;
-          })
-        }else{
-          report.report_order.confirm_start = '00:00:00'
-        }
-        if(report.report_info.booked_time > 0 ){
-          this.count(res1.booked_time, i, (msg)=>{
-            report.report_info.booked_time=msg;
-          })
-        }else{
-          report.report_info.booked_time = '00:00:00'
-        }
-      }
-      console.log(this.res_body.content,'this.res_body.content');
-    })
+    this.getList()
   },
   deactivated() {
     this.stopInter()
@@ -361,9 +336,42 @@ export default {
       this.isBinding = false;
       this.queryMail();
     },
-    
+
+    // 获取列表
+    getList(){
+      committeeOrder(this.wallet_address).then( async res=> {
+        this.res_body.content = []
+        res = [ ...res.booked_report, ...res.hashed_report, ...res.confirmed_report, ...res.finished_report ]
+        let BlockchainTime = await getBlockTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
+        for(let i=0; i< res.length; i++){
+          let res1 = await committeeOps(this.wallet_address, res[i])
+          let res2 =  await reportInfo(res[i])
+          res1.booked_time = await getCountDown(1, res1.booked_time, BlockchainTime)
+          res2.confirm_start = await getCountDown(3, res2.confirm_start, BlockchainTime)
+          let report = { report_id: res[i], report_info: res1, report_order: res2 , btnloading1: false}
+          this.res_body.content.push({ ...report })
+          if(report.report_order.confirm_start > 0 ){
+            this.count(report.report_order.confirm_start, i, (msg)=>{
+              report.report_order.confirm_start = msg;
+            })
+          }else{
+            report.report_order.confirm_start = '00:00:00'
+          }
+          if(report.report_info.booked_time > 0 ){
+            this.count(res1.booked_time, i, (msg)=>{
+              report.report_info.booked_time=msg;
+            })
+          }else{
+            report.report_info.booked_time = '00:00:00'
+          }
+        }
+        console.log(this.res_body.content,'this.res_body.content');
+      })
+    },
     // 提交结果
     start(num, item){
+      this.formInline.report_id = item.report_id
+      // this.formInline.extra_err_info = item.report_info.encrypted_err_info
       if(num == 1){
         this.radioDisabled = false
         this.isHex = true
@@ -381,21 +389,22 @@ export default {
           .then((res)=> {
             this.setPassWard(value)
             let parmas = { 
-              machine_id: this.wallet_address,
+              only_key: this.wallet_address + item.report_id,
               signature: res,
               wallet: this.wallet_address
             }
             GetGrabbingHash(parmas)
             .then(res1 => {
-              if( typeof res == 'string'){
+              if( typeof res1 == 'string'){
                 this.$message({
                   showClose: true,
                   message: res1,
                   type: "error",
                 });
               }else{
-                this.formInline = res1?res1:{}
-                this.formInline.is_support = res?String(res1.is_support):''
+                this.formInline = {...this.formInline, ...res1}
+                this.formInline.support_report = res1?String(res1.support_report):''
+                this.formInline.passward = this.passward
                 this.dialogTableVisible1 = true
               }
             })
@@ -414,6 +423,7 @@ export default {
       }
     },
     commit(){
+      console.log(this.formInline, 'this.formInline.');
       if(this.formInline.passward == ''){
         this.$message({
           showClose: true,
@@ -426,15 +436,17 @@ export default {
           this.setPassWard(this.formInline.passward)
         }
         if(this.isHex){
-          CreateSignature(this.formInline.machine_id, this.formInline.passward)
+          CreateSignature(this.wallet_address, this.formInline.passward)
           .then((res) =>{
             let params = {
+              only_key: this.wallet_address + this.formInline.report_id,
               machine_id: this.formInline.machine_id,
               report_id: this.formInline.report_id, 
               reporter_rand_str: this.formInline.reporter_rand_str, 
               committee_rand_str: this.formInline.committee_rand_str, 
               err_reason: this.formInline.err_reason, 
-              is_support: this.formInline.is_support,
+              support_report: this.formInline.support_report,
+              extra_err_info: this.formInline.extra_err_info,
               wallet: this.wallet_address,
               signature: res
             }
@@ -455,6 +467,7 @@ export default {
                     });
                   }
                   this.btnloading = false;
+                  this.getList()
                 })
               }else{
                 this.$message({
@@ -490,6 +503,7 @@ export default {
               });
             }
             this.btnloading = false;
+            this.getList()
           })
         }
       }
@@ -525,9 +539,10 @@ export default {
             publicKey, 
             KeyPair.secretKey 
           ))
+          console.log(message, 'message');
           this.formInline = {...this.formInline, ... JSON.parse(message)}
-          // this.formInline.machine_id = item.machine_id
-          // this.formInline.report_id = item.report_id
+          this.formInline.report_id = item.report_id
+          // this.formInline.extra_err_info = item.report_info.encrypted_err_info
           this.dialogTableVisible = true
           item.btnloading1 = false
         })
@@ -536,29 +551,26 @@ export default {
           message: this.$t('audit.tipmsg'),
           type: "warning",
         });
-        // let KeyPair;
-        // try {
-        //   KeyPair = getKeypair('lynn123123')
-        // } catch (err) {
-        //   this.$message({
-        //     message: err.message,
-        //     type: "error",
-        //   });
-        //   return false
-        // }
-        // console.log(KeyPair, 'KeyPair');
-        // let perams = {
-        //   report_id:'21',
-        //   machine_id:'11111111111111111111111111111111111111111111',
-        //   err_reason:'测试Bug,通过一下',
-        // }
-        // let message = stringToU8a(JSON.stringify(perams));
-        // let { secretKey , publicKey} = naclBoxKeypairFromSecret(decodeAddress("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"));
-        // console.log(u8aToHex(secretKey), u8aToHex(publicKey), 'secretKey');
-        // let nonce = hexToU8a('0x8d842da497f095e0d0afb969e3a7cb51e77d76dc97343dfc')
-        // this.str_Sealed = naclSeal( message, secretKey, KeyPair.publicKey, nonce ); 
-        // console.log(this.str_Sealed,'this.str_Sealed');
-        // str_Sealed： "0x9c86fffb12d3751b3a533a093b9af85257430bc0c44422ce0cd6ad9ad4edb416bc554ca5859e11a3ab0fda675ed20ae62aa15f848a5b6c92fde01c6c958c2007c4a2d0f0861abca00969aed6e7f60142365af9f9ab7047a5ac4d3afc3df56abc657022a8cf65fb4ea1a12430f2d11a989ea6ca7ff0d5203be2a21cba9e5650f86fca0772"
+        let KeyPair;
+        try {
+          KeyPair = getKeypair(this.passward)
+        } catch (err) {
+          this.$message({
+            message: err.message,
+            type: "error",
+          });
+          return false
+        }
+        console.log(KeyPair, 'KeyPair');
+        let perams = {
+          machine_id:'222222222222222222222222222222222',
+          err_reason:'测试Bug,通过一下',
+        }
+        let message = stringToU8a(JSON.stringify(perams));
+        let { secretKey , publicKey} = naclBoxKeypairFromSecret(decodeAddress(item.report_order.reporter));
+        let nonce = hexToU8a('0x8d842da497f095e0d0afb969e3a7cb51e77d76dc97343dfc')
+        this.str_Sealed = naclSeal( message, secretKey, KeyPair.publicKey, nonce ); 
+        console.log(this.str_Sealed,'this.str_Sealed');
       }
     },
     confirm() {

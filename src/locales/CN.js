@@ -944,7 +944,7 @@ export default {
     status2:'已被抢完',
     hasNum:'已抢单人数',
     start:'开时抢单',
-    start1:'已抢单',
+    start1:'验证中',
     tipmsg:'抢单以后等待提名人发送相关信息后方可查看信息',
     tipmsg1:'抢单成功',
     tipmsg2:'抢单失败',

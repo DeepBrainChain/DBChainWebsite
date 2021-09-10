@@ -51,11 +51,11 @@
               >{{ $t("audit.verification") }}</el-button
             >
             <el-button
-              v-else-if="item.machine_status == 'booked'"
+              v-else-if="item.machine_status !== 'booked'"
               style="width: 155px"
               type="primary"
               size="mini"
-              :disabled='!item.submit'
+              :disabled='item.submit'
               @click="verification(item, 1)"
               >{{ $t("audit.verification1") }}</el-button
             >
@@ -279,35 +279,6 @@ export default {
       isNewMail: false,
       isBinding: false,
       bindMail: "",
-      req_body: {
-        country: "all",
-        dbcVersion: "0",
-        have_ip: 0,
-        idle_status: 1,
-        totalTime: 0,
-        reliability: 0.9,
-        diskSpace: 0,
-        diskPrice: 0.00001,
-        lengthOfAvailableTime: 1,
-        gpuPrice: 0.00001,
-        gpuCount: 1,
-        tflops: 0,
-        gpuRamSize: 0,
-        gpuRamBandwidth: 0,
-        piceBandwidth: 0,
-        cpuCores: 0,
-        cpuRamSize: 0,
-        diskBandwidth: 0,
-        inetUp: 0,
-        inetDown: 0,
-        total_rent_count: 0,
-        error_rent_count: 0,
-        disk_GB_perhour_dollar: 0,
-        tensor_cores: 0,
-        half_precision_tflops: 0,
-        single_precision_tflops: 0,
-        double_precision_tflops: 0,
-      },
       language: undefined,
       send_email_repeatLoading: false,
       send_email_repeat_index: -1,
@@ -320,19 +291,19 @@ export default {
         content: [],
       },
       formInline: {
-        machine_id:'',
-        gpu_type:'',
-        gpu_num:'',
-        cuda_core:'',
-        gpu_mem: '',
-        calc_point:'',
-        sys_disk:'',
-        data_disk:'',
-        cpu_type: '',
-        cpu_core_num:'',
-        cpu_rate:'',
-        mem_num:'',
-        rand_str: getRand_str(),
+        machine_id:'c2ad03b01cb72857978f7e18527afddb671c8354c72c46523405334be23c3701',
+        gpu_type:'GeForceGTX2080Ti',
+        gpu_num:'4',
+        cuda_core:'8704',
+        gpu_mem: '10',
+        calc_point:'59589',
+        sys_disk:'500',
+        data_disk:'3905',
+        cpu_type: 'Intel(R) Xeon(R) Silver 4214R',
+        cpu_core_num:'46',
+        cpu_rate:'2400',
+        mem_num:'440',
+        rand_str: '1',
         is_support: '1',
         passward:'',
       },
@@ -725,10 +696,11 @@ export default {
             }
           })
         }else{
-          await CreateSignature(this.formInline.machine_id, this.formInline.passward)
-          .then(res=>{
-            this.setPassWard(this.formInline.passward)
+          // await CreateSignature(this.formInline.machine_id, this.formInline.passward)
+          // .then(res=>{
+          //   this.setPassWard(this.formInline.passward)
             let params = {
+              only_key: this.wallet_address + this.formInline.machine_id,
               machine_id: this.formInline.machine_id,
               gpu_type: this.formInline.gpu_type, 
               gpu_num: this.formInline.gpu_num, 
@@ -744,10 +716,11 @@ export default {
               rand_str: this.formInline.rand_str, 
               is_support: this.formInline.is_support,
               wallet: this.wallet_address,
-              signature: res
+              // signature: res
             }
-            Save_GrabbingHash(params).then(res1=>{
-              if(res1){
+            
+            // Save_GrabbingHash(params).then(res1=>{
+            //   if(res1){
                 ConfirmHash(this.formInline, this.formInline.passward, (res)=>{
                   console.log(res, 'res');
                   this.btnloading = false;
@@ -765,23 +738,23 @@ export default {
                     });
                   }
                 })
-              }else{
-                this.$message({
-                  showClose: true,
-                  message: res,
-                  type: "error",
-                });
-              }
-            })
-          })
-          .catch( err=> {
-            this.$message({
-              showClose: true,
-              message: err.message,
-              type: "error",
-            });
-            this.btnloading = false;
-          })
+            //   }else{
+            //     this.$message({
+            //       showClose: true,
+            //       message: res,
+            //       type: "error",
+            //     });
+            //   }
+            // })
+          // })
+          // .catch( err=> {
+          //   this.$message({
+          //     showClose: true,
+          //     message: err.message,
+          //     type: "error",
+          //   });
+          //   this.btnloading = false;
+          // })
         }
       }
       
