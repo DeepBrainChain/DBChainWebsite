@@ -1108,3 +1108,43 @@ export const GetResultHash = params => {
     params
   });
 };
+
+
+
+
+
+/**
+ * @description 获取Gpu列表
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const GetGpu_Info = () => {
+  return axios({
+    method: "get",
+    url: "https://identifier.congtu.cloud/GetGpu_Info",
+  });
+};
+
+
+/**
+ * @description 获取单个Gpu详细信息
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const GetMachine_Details = (params) => {
+  return axios({
+    method: "get",
+    url: "https://identifier.congtu.cloud/GetMachine_Details",
+    params
+  });
+};
+
+/**
+ * @description 获取单个Gpu下机器总和
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const Count_Details = (params) => {
+  return axios({
+    method: "get",
+    url: "https://identifier.congtu.cloud/Count_Details",
+    params
+  });
+};

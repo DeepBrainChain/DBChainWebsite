@@ -26,6 +26,11 @@
       <!--      <router-link class="item" to="/network">{{$t('heads.network')}}</router-link>-->
       <a
         class="item"
+        :class="{active: menuName === 'virtual'}"
+        @click="pushMenu('virtual')"
+      >{{$t('heads.virtual')}}</a>
+      <a
+        class="item"
         :class="{active: menuName === 'miner'}"
         @click="pushMenu('miner')"
       >{{$t('heads.miner')}}</a>

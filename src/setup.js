@@ -27,6 +27,7 @@ import {
   Select,
   Option,
   Input,
+  InputNumber,
   Calendar,
   ButtonGroup,
   TimePicker,
@@ -36,7 +37,9 @@ import {
   Tooltip,
   Pagination,
   Table,
-  TableColumn
+  TableColumn,
+  Checkbox,
+  CheckboxGroup
 } from 'element-ui'
 import ElementLocale from 'element-ui/lib/locale'
 import {
@@ -76,6 +79,7 @@ Vue.use(Rate)
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(Input)
+Vue.use(InputNumber)
 Vue.use(Calendar)
 Vue.use(ButtonGroup)
 Vue.use(Form)
@@ -84,6 +88,8 @@ Vue.use(Autocomplete)
 Vue.use(Tooltip)
 Vue.use(Table)
 Vue.use(TableColumn)
+Vue.use(Checkbox)
+Vue.use(CheckboxGroup)
 Vue.use(Pagination)
 Vue.component(Message)
 

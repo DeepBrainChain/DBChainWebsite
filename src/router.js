@@ -91,6 +91,11 @@ const router = new Router({
       ]
     },
     {
+      path: '/virtual',
+      name: 'virtual',
+      component: resolve => require(['./views/virtual'] , resolve),
+    },
+    {
       path: '/miner',
       name: 'miner',
       component: resolve => require(['./views/miner'] , resolve),
@@ -210,7 +215,13 @@ const router = new Router({
           path: 'myMachine_stopped',
           component: resolve => require(['./views/mymachine/myMachine_stopped'] , resolve)
         },
-
+        {
+          meta: {
+            menuIndex: 3
+          },
+          path: 'myMachine_gpuVirtual',
+          component: resolve => require(['./views/mymachine/myMachine_gpuVirtual'] , resolve)
+        },
         {
           meta: {
             menuIndex: 0
@@ -231,8 +242,14 @@ const router = new Router({
           },
           path: 'myMachineUnlockStopped',
           component: resolve => require(['./views/mymachine/myMachine_unlock_stopped'] , resolve)
-        }
-
+        },
+        {
+          meta: {
+            menuIndex: 3
+          },
+          path: 'myMachineUnlockGpuVirtual',
+          component: resolve => require(['./views/mymachine/myMachine_unlock_gpuVirtual'] , resolve)
+        },
       ]
     },
     {

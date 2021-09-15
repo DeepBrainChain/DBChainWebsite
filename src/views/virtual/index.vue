@@ -1,0 +1,736 @@
+<template>
+  <div class="virtual" ref="virtualBox">
+    <Header v-if="this.$store.state.webtype" :underlineStyle="underlineStyle" />
+    <div class="box">
+      <el-container>
+        <el-aside class="left-wrap">
+          <div class="navi">
+            <ul class="btn-list">
+              <li v-for="(item,idx) in tableData" :key="idx">
+                <el-button
+                  class="lg naviBtn"
+                  :class="{active: active === item.type}"
+                  v-on:click="choose(item)"
+                >
+                  <span>{{String(item.type).slice(7)}}</span>
+                </el-button>
+              </li>
+            </ul>
+          </div>
+        </el-aside>
+        <el-main class="right-wrap">
+          <div class="right_con">
+            <div class="topcon">
+              <div class="topcon_left">
+                <div class="topitem">
+                  {{$t('virtual.Machine_status')}}: 
+                  <el-select class='select' v-model="Machine_status" size='mini' @change='SelectStatus' placeholder="">
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </div>
+                <div class="topitem">
+                  {{$t('virtual.GPU_Num')}}: 
+                  <el-select class='select' v-model="GPU_Num" size='mini' @change='SelectNum' placeholder="">
+                    <el-option
+                      v-for="item in options1"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </div>
+                <div class="topitem">
+                  {{$t('virtual.All_Machine')}}: {{All_Machine}}
+                </div>
+                <div class="topitem">
+                  {{$t('virtual.Idle_Machine')}}: {{Idle_Machine}}
+                </div>
+              </div>
+              <div class="topcon_right">
+                <el-button
+                  class="batch"
+                  size="mini"
+                  plain
+                  @click="batch"
+                >
+                  {{ $t('virtual.batch') }}
+                </el-button>
+              </div>
+            </div>
+            <div class="table">
+              <div v-if="openCheck" class="checkAll">
+                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">{{$t('virtual.choose')}}</el-checkbox>
+                <el-button class="batch" size="mini" plain @click="commit()">
+                  {{ $t('virtual.commit') }} {{checkedCities.length}}
+                </el-button>
+              </div>
+              <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+                <div class="tableli" v-for="el in Machine_info" :key="el.machine_id">
+                  <div class="li_list1">
+                    <div>
+                      <el-checkbox v-if="openCheck" :label="el.machine_id" :key="el.machine_id">{{''}}</el-checkbox>
+                      <span class="Machine_id">{{$t('virtual.Machine_ID')}}: {{el.machine_id}}</span>
+                    </div>
+                    <span v-if="el.server_room">{{$t('virtual.Room_number')}}: {{String(el.server_room).substring(0,10)+'...'}}</span>
+                    <span>{{$t('virtual.Machine_sta')}}: {{el.machine_status == 'rented'?$t('virtual.Rented'):$t('virtual.Idle')}}</span>
+                    <span v-if="!openCheck">
+                      <el-button class="batch" size="mini" plain @click="batch_Mac(el)">
+                        {{ $t('virtual.batch_Mac') }}
+                      </el-button>
+                    </span>
+                  </div>
+                  <div class="li_list2">
+                    <span class="bold">{{$t('virtual.GPU_Num')}}: {{el.gpu_num}}</span>
+                    <span class="bold">{{$t('virtual.GPU_memory')}}: {{el.gpu_mem}}G</span>
+                    <span class="width30 bold">{{$t('virtual.GPU_type')}}: {{el.gpu_type}}</span>
+                    <span class="width30 bold">{{$t('virtual.Daily_Rent')}}: 
+                      <i class="color"> {{getnum2(Number(el.calc_point)/100*0.028229)}}$≈{{getnum2(Number(el.calc_point)/100*0.028229/dbc_price)}}DBC </i>
+                    </span>
+                    <span>{{$t('virtual.Country')}}: {{el.country}}</span>
+                    <span>{{$t('virtual.City')}}: {{el.city}}</span>
+                    <span>
+                      {{$t('virtual.lable_two2')}}: 
+                      <i :title="el.machine_owner" v-if='!el.machine_name'>{{String(el.machine_owner).substring(0,10)+'...'}}</i>
+                      <i :title="el.machine_owner" v-else>{{el.machine_name}}</i> 
+                    </span> 
+                    <span>{{$t('virtual.Cumulative_DBC_rent')}}: {{getnum1(el.total_rent_fee)}}</span>
+                    <span class="operators">{{$t('virtual.Network_operators')}}:
+                      <span class="opera">
+                        <i v-for="(operators,index) in el.telecom_operators" :key='index'>
+                          {{operators}}
+                        </i>
+                      </span>
+                    </span>
+                    <span>{{$t('virtual.Online_time')}}: {{el.online}}</span>
+                    <span>{{$t('virtual.Memory_num')}}: {{Math.ceil(Number(el.mem_num))}}G</span>
+                    <span>{{$t('virtual.System_hd')}}: {{el.sys_disk}}G</span>
+                    <span>{{$t('virtual.Data_hd')}}: {{Number(el.data_disk)/1000}}T</span>
+                    <span>{{$t('virtual.Bandwidth1')}}: {{el.upload_net}}Mbps</span>
+                    <span>{{$t('virtual.Bandwidth2')}}: {{el.download_net}}Mbps</span>
+                    <span>{{$t('virtual.CPU_cores')}}: {{el.cpu_core_num}}</span>
+                    <span>{{$t('virtual.CPU_frequency')}}: {{getnum2(Number(el.cpu_rate)/1000)}}Ghz</span>
+                    <span class="width40">{{$t('virtual.CPU_type')}}: {{el.cpu_type}}</span>
+                  </div>
+                </div>
+              </el-checkbox-group>
+            </div>
+            <div class="paging">
+              <el-pagination
+                :current-page="currentPage"
+                :page-sizes="[5, 10, 20, 50]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total"
+                @size-change="handleChangepageSize"
+                @current-change="handleCurrentChang"
+              />
+            </div>
+          </div>
+        </el-main>
+      </el-container>
+    </div>
+    <el-dialog width='40%' :title="$t('virtual.batch_Mac')" :visible.sync="dialogFormVisible">
+      <div v-if="openCheck">
+        <p><span class="bold">{{$t('virtual.Machine_num')}}:</span> {{checkedCities.length}}</p>
+      </div>
+      <div class="useTime">
+        <div>
+          <span class="bold">{{$t('virtual.useTime')}}: </span>
+          <el-input-number :precision="0" size="mini" v-model="useTime" @change="inputNum" :min="30" :max="90"></el-input-number>
+           {{$t('day')}}
+        </div>
+        <div v-if="!openCheck">{{$t('virtual.Daily_Rent')}}: <span class="color">{{getnum2(Number(chooseMac.calc_point)/100*0.028229)}}$≈{{getnum2(Number(chooseMac.calc_point)/100*0.028229/dbc_price)}}DBC</span></div>
+      </div>
+      <div class="fs12">{{$t('virtual.tip1')}}</div>
+      <div>
+        <p v-if="!openCheck"><span class="bold">{{$t('virtual.Max_disk_Num')}}:</span> {{Number(chooseMac.data_disk)}}T</p>
+        <p v-if="!openCheck"><span class="bold">{{$t('virtual.Max_Mem')}}:</span> {{Math.ceil(Number(chooseMac.mem_num))}}G</p>
+        <p><span class="bold">{{$t('virtual.total')}}:</span> {{totalMoney}} $</p>
+        <p><span class="bold">{{$t('virtual.equivalent')}}:</span> {{totalDbc}}</p>
+      </div>
+      <div>
+        <p>{{$t('virtual.tip2')}}</p>
+        <p>{{$t('virtual.tip3')}}</p>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button class="batch" size="mini" plain  @click="confirm">{{$t('virtual.confirm')}}</el-button>
+        <el-button class="batch" size="mini" plain  @click="dialogFormVisible = false">{{$t('virtual.cancal')}}</el-button>
+      </div>
+    </el-dialog>
+    <Footer class="footer" v-if="this.$store.state.webtype" />
+  </div>
+</template>
+
+<script>
+
+import BigNumber from "bignumber.js";
+import Header from "@/congTuCloud/components/header/SubHeader.vue";
+import Footer from "@/congTuCloud/components/footer/Footer.vue";
+import { dbc_info, GetGpu_Info, GetMachine_Details, Count_Details } from "@/api"
+export default {
+  name: "virtual",
+  data() {
+    return {
+      active: '',
+      Computing_Power: 0,
+      dbc_price: 0,
+      currentPage: 0,
+      pageSize: 20,
+      total: 0,
+      Gpu_Type:[
+        {
+          type: "GeForceGTX1660S",
+          power: 42.08
+        },
+        {
+          type: "GeForceRTX2070S",
+          power: 0
+        },
+        {
+          type: "GeForceRTX2080",
+          power: 0
+        },
+        {
+          type: "GeForceRTX2080S",
+          power: 0
+        },
+        {
+          type: "GeForceRTX3060",
+          power: 65.67
+        },
+        {
+          type: "GeForceRTX2080Ti",
+          power: 68.25
+        },
+        {
+          type: "GeForceRTX3060Ti",
+          power: 68.79
+        },
+        {
+          type: "GeForceRTX3070",
+          power: 74.39
+        },
+        {
+          type: "GeForceRTX3070Ti",
+          power: 75.71
+        },
+        {
+          type: "GeForceRTX3080",
+          power: 89.96
+        },
+        {
+          type: "GeForceRTX3080Ti",
+          power: 99.01
+        },
+        {
+          type: "NVIDIA A5000",
+          power: 103.51
+        },
+        {
+          type: "GeForceRTX3090",
+          power: 115.45
+        },
+
+        {
+          type: "NVIDIA A100",
+          power: 0
+        },
+        {
+          type: "NVIDIA P100",
+          power: 0
+        },
+        {
+          type: "NVIDIA V100 16G",
+          power: 0
+        },
+        {
+          type: "NVIDIA V100 32G",
+          power: 0
+        },
+        {
+          type: "NVIDIA T4",
+          power: 0
+        },
+        {
+          type: "NVIDIA P40",
+          power: 0
+        },
+        {
+          type: "NVIDIA P4",
+          power: 0
+        },
+        {
+          type: "NVIDIA TITAN V",
+          power: 0
+        }
+      ],
+      options:[
+        {
+          value: '',
+          label: this.$t('virtual.All')
+        }, {
+          value: 'rented',
+          label: this.$t('virtual.Rented')
+        }, {
+          value: 'online',
+          label: this.$t('virtual.Idle')
+        }
+      ],
+      options1:[
+        {
+          value: '',
+          label: this.$t('virtual.All')
+        }, {
+          value: '1',
+          label: '1'
+        }, {
+          value: '2',
+          label: '2'
+        }, {
+          value: '3',
+          label: '3'
+        }, {
+          value: '4',
+          label: '4'
+        }, {
+          value: '5',
+          label: '5'
+        }, {
+          value: '6',
+          label: '6'
+        }, {
+          value: '7',
+          label: '7'
+        }, {
+          value: '8',
+          label: '8'
+        }, {
+          value: '9',
+          label: '9'
+        }, {
+          value: '10',
+          label: '10'
+        }
+      ],
+      tableData: [],
+      Machine_info: [],
+      All_Machine: 0,
+      Idle_Machine: 0,
+      GPU_Num: '',
+      Machine_status: '',
+      checkAll: false,
+      checkedCities: [],
+      isIndeterminate: false,
+      openCheck: false,
+      dialogFormVisible: false,
+      useTime: 30,
+      totalMoney: 0,
+      totalDbc: 0,
+      chooseMac: {},
+      underlineStyle: {
+        width: "65px",
+        left: "92px",
+      },
+    };
+  },
+  beforeMount() {
+    dbc_info().then( res => {
+      this.dbc_price = res.content.dbc_price
+    })
+  },
+  mounted() {
+    if (this.$t("website_name") === "congTuCloud") {
+      this.$refs.virtualBox.style.marginBottom = "0px";
+    }
+    this.getGpuList()
+  },
+  watch: {
+    
+  },
+  computed:{
+
+  },
+  methods: {
+    getGpuList(){
+      GetGpu_Info().then(res => {
+        console.log(res);
+        this.Gpu_Type.map( el1 =>{
+          res.map(el => {
+            if( el == el1.type){
+              this.tableData.push(el1)
+            }
+          })
+        })
+        this.active = this.tableData[0] ? this.tableData[0].type : ''
+        this.Computing_Power = this.tableData[0] ? this.tableData[0].power : 0
+        this.getList(this.active , this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
+      })
+    },
+    getList(str = '', status = '', num = '', type , pageNum = 1, pageSize = 20 ) {
+      this.isIndeterminate = false;
+      this.checkedCities = [];
+      this.checkAll = false;
+      this.openCheck = false;
+      let data = {
+        gpu_type: str,
+        machine_status: status,
+        gpu_num: num,
+        pageNum: pageNum,
+        pageSize: pageSize
+      }
+      if(status == ''){
+        delete data['machine_status']
+      }
+      GetMachine_Details(data).then( async (res) => {
+        console.log(res);
+        res.list.map( (el, i) => {
+          if(el.operator){
+            el.machine_name = this.byteToStr(JSON.parse(el.operator))
+          }
+          el.online = '···'
+        })
+        this.Machine_info = res.list
+        this.total = res.total
+        if(type == 'first'){
+          Count_Details({ gpu_type: str }).then( res1 => {
+            this.All_Machine = res1.count[str]?res1.count[str]:0
+            this.Idle_Machine = res1.sum[str]?res1.sum[str]:0
+          })
+        }else{
+
+        }
+        // online_block = await getBlock();
+        // this.$propsMachine_info.map( (el) => {
+        //   el.online = minsToHourMins(Math.floor((online_block-el.bonding_height)/2))
+        // })
+      })
+    },
+    choose(str) {
+      this.active = str.type
+      this.Computing_Power = str.power
+      this.Idle_Machine = 0
+      this.All_Machine = 0
+      this.Machine_info = []
+      this.Machine_status = ''
+      this.GPU_Num = ''
+      this.getList(this.active , this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
+    },
+    byteToStr(arr) {
+      if (typeof arr === "string") {
+        return arr;
+      }
+      var str = "", _arr = arr;
+      for (var i = 0; i < _arr.length; i++) {
+        var one = _arr[i].toString(2),
+          v = one.match(/^1+?(?=0)/);
+        if (v && one.length == 8) {
+          var bytesLength = v[0].length;
+          var store = _arr[i].toString(2).slice(7 - bytesLength);
+          for (var st = 1; st < bytesLength; st++) {
+            store += _arr[st + i].toString(2).slice(2);
+          }
+          str += String.fromCharCode(parseInt(store, 2));
+          i += bytesLength - 1;
+        } else {
+          str += String.fromCharCode(_arr[i]);
+        }
+      }
+      return str;
+    },
+    getnum2(num) {
+      let num1 = String(num)
+      let hasPoint;
+      num1.indexOf(".") >= 0? hasPoint = true: hasPoint = false
+      return num1.substring(0,num1.indexOf(".")+3);
+    },
+    getnum1(num) {
+      const num1 = new BigNumber(Number(num)/ Math.pow(10,15)).toFormat()
+      let hasPoint;
+      num1.indexOf(".") >= 0? hasPoint = true: hasPoint = false
+      return num1.substring(0,num1.indexOf(".")+3);
+    },
+    SelectStatus() {
+      this.currentPage = 1
+      this.getList(this.active , this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+    },
+    SelectNum() {
+      this.currentPage = 1
+      this.getList(this.active , this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+    },
+    handleChangepageSize(num) {
+      this.pageSize = num
+      this.getList(this.active , this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+    },
+    handleCurrentChang(num) {
+      this.currentPage = num
+      this.getList(this.active , this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+    },
+    batch() {
+      this.openCheck = !this.openCheck;
+      this.isIndeterminate = false;
+      this.checkedCities = [];
+      this.checkAll = false;
+      this.chooseMac = {};
+      this.totalMoney = 0;
+      this.totalDbc = 0;
+    },
+    batch_Mac(el){
+      this.chooseMac = el;
+      this.useTime = 30;
+      this.dialogFormVisible = true;
+      this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*30)
+      this.totalDbc = this.getnum2(this.totalMoney/this.dbc_price)
+    },
+    inputNum(val){
+      if(!this.openCheck){
+        this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*val)
+        this.totalDbc = this.getnum2(this.totalMoney/this.dbc_price)
+      }else{
+        this.totalMoney = 0;
+        this.totalDbc = 0;
+      }
+    },
+    handleCheckAllChange(val) {
+      this.checkedCities = []
+      this.Machine_info.map( el => {
+        if(val){
+          this.checkedCities.push(el.machine_id)
+        }else{
+          this.checkedCities = []
+        }
+      })
+      this.isIndeterminate = false;
+    },
+    handleCheckedCitiesChange(value) {
+      let checkedCount = value.length;
+      this.checkAll = checkedCount === this.Machine_info.length;
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.Machine_info.length;
+    },
+    commit(){
+      if(this.checkedCities.length > 0){
+        this.useTime = 30;
+        this.dialogFormVisible = true;
+      }else{
+        this.$message({
+          showClose: true,
+          message: this.$t('virtual.tip0'),
+          type: "error",
+        });
+      }
+    },
+    confirm(){
+      this.$message({
+        showClose: true,
+        message: '下单成功，即将跳转我的机器页面',
+        type: "success",
+      });
+      this.dialogFormVisible = false
+    }
+  },
+  components: {
+    Header,
+    Footer,
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+@import "~@/assets/css/variables.scss";
+
+.virtual {
+  margin-bottom: 22px;
+}
+.right-wrap {
+  margin-left: 10px;
+}
+
+.btn-list {
+  padding-top: 20px;
+  li {
+    margin-bottom: 40px;
+    text-align: center;
+    .naviBtn {
+      width: 280px;
+      color: $textColor_gray;
+      border-color: $textColor_gray;
+      &.active,
+      &:hover {
+        background-color: rgb(
+          25,
+          93,
+          145
+        ); ////dbchain:#008BF3, yousanai,aicv:rgb(243, 186, 0),aionego:#c5c325,deepshare:rgb(25, 93,145),yalecloud:#008bf3,
+        //panchuangai,alpha-dbchain:#008bf3
+        //sharegpu:rgb( 25, 93, 145),52lm:rgb(25,93,145);mayi:rgb(25,93,145);windywinter\dimi\52cv\ainlp\1024lab\litaai,redstonewill\snbt:rgb(25,93,145);
+        color: #fff;
+        border-color: rgb(
+          25,
+          93,
+          145
+        ); ////dbchain:#008BF3, yousanai:rgb(243, 186, 0);aionego:#b4b645,deepshare:rgb(25, 93,145),yalecloud:#008bf3,
+        //panchuangai,alpha-dbchain:#008bf3
+      } // //sharegpu:rgb( 25, 93, 145),52lm:rgb(25,93,145);,mayi:rgb(25,93,145);windywinter\dimi\52cv\ainlp\1024lab\litaai,redstonewill\snbt:rgb(25,93,145);
+      i {
+        margin-right: 10px;
+        vertical-align: middle;
+      }
+      span {
+        vertical-align: middle;
+      }
+    }
+  }
+}
+
+.bold{
+  font-weight: bold;
+}
+
+.right_con{
+  width: 100%;
+  padding: 15px 10px;
+  box-sizing: border-box;
+  .topcon{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .topcon_left{
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      .topitem{
+        font-size: 14px;
+        margin-right: 40px;
+        margin-bottom: 20px;
+        .select{
+          width: 90px;
+        }
+        span{
+          color: #f56c6c;
+        }
+      }
+    }
+    .batch{
+      margin-bottom: 20px;
+      border-color: $primaryColor;
+    }
+  }
+  .table{
+    width: 100%;
+    margin: 0 0 20px;
+    .checkAll{
+      width: 100%;
+      padding: 10px;
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      .batch{
+        margin-left: 20px;
+      }
+    }
+    .tableli{
+      width: 100%;
+      padding: 10px;
+      font-size: 12px;
+      box-sizing: border-box;
+      border: 1px solid #999;
+      margin-bottom: 15px;
+      .li_list1{
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        &:first-child{
+          justify-content: space-between;
+        }
+        span{
+          margin-bottom: 10px;
+          word-break: break-all;
+          display: inline-block;
+          &.Machine_id{
+            padding: 10px 5px;
+            box-sizing: border-box;
+            border: 1px solid #999;
+          }
+          i{
+            font-style: normal;
+            color: #195d91;
+          }
+        }
+      }
+      .li_list2{
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        span{
+          width: 20%;
+          margin-bottom: 12px;
+          word-break: break-all;
+          &.width50{
+            width: 50%;
+          }
+          &.width40{
+            width: 40%;
+          }
+          &.width30{
+            width: 30%;
+          }
+          &.bold{
+            font-size: 18px;
+            font-weight: bold;
+          }
+          .color{
+            color: #f56c6c;
+          }
+          i{
+            font-style: normal;
+            color: #195d91;
+          }
+          &.operators{
+            display: flex;
+            align-items: center;
+            .opera{
+              flex: 1;
+              display: flex;
+              margin: 0 0 0 5px;
+              flex-direction: column;
+            }
+          }
+        }
+      }
+    }
+    // .machine_nifo{
+    //   width: 90%;
+    //   margin: auto;
+    //   display: flex;
+    //   font-size: 16px;
+    //   flex-wrap: wrap;
+    //   align-items: center;
+    //   justify-content: space-between;
+    // }
+  }
+  .paging {
+    .el-pagination {
+      display: flex;
+      justify-content: center;
+    }
+  }
+}
+.useTime{
+  width: 100%;
+  display: flex;
+  margin-bottom: 5px;
+  align-items: center;
+  justify-content: space-between;
+  .el-input{
+    margin: 0 10px;
+    width: 80px;
+  }
+  span.color{
+    color: #f56c6c;
+  }
+}
+</style>

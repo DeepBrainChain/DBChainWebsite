@@ -613,6 +613,8 @@ export function getHref(url){
   const urlstr = url.toLocaleLowerCase()
   if (urlstr.indexOf('gpu') != -1) { // gpu
     return 'gpu'
+  }else if (urlstr.indexOf('virtual') != -1) { // miner
+    return 'virtual'
   }else if (urlstr.indexOf('miner') != -1) { // miner
     return 'miner'
   } else if (urlstr.indexOf('machine') != -1) { // mymachine
@@ -621,7 +623,7 @@ export function getHref(url){
     return 'mywallet'
   } else if (urlstr.indexOf('help') != -1) { // help
     return 'help'
-  } else if (urlstr.indexOf('audit') != -1) { // help
+  } else if (urlstr.indexOf('audit') != -1) { // audit
     return 'audit'
   } 
 }
