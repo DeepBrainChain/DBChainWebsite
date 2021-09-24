@@ -125,7 +125,7 @@ module.exports = {
         changeOrigin: true
       },
       "/identifier": {
-        target: "http://10.1.8.224:8080",
+        target: "http://10.1.9.133:8080",
         ws: true,
         changeOrigin: true,
         pathRewrite: {

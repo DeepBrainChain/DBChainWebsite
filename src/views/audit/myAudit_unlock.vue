@@ -3,7 +3,7 @@
     <div class="title flex between vCenter">
       <div class="fw600 all_profit">{{ $t("audit.all_profit") }}: 5000 DBC</div>
       <div class="fw600 today_profit">{{ $t("audit.today_profit") }}: 500 DBC</div>
-      <div class="fw600 all_machine">{{ $t("audit.all_machine") }}: 7 <span class="fs12 cRed">{{ $t("audit.machineTips") }}</span></div>
+      <div class="fw600 all_machine">{{ $t("audit.all_machine") }}: {{res_body.content.length}} <span class="fs12 cRed">{{ $t("audit.machineTips") }}</span></div>
       <div
         v-if="!isBinding && bindMail && $t('website_name') !== 'congTuCloud'"
         class="binding"
@@ -38,17 +38,17 @@
       >
         <div class="flex vCenter profit">
           <div class="today_profit">{{ $t("audit.today_profit") }}: 100 DBC</div>
-          <div class="total_profit">{{ $t("audit.total_profit") }}: 2000 DBC</div>
+          <div class="total_profit">{{ $t("audit.total_profit") }}: {{item[2].total_rent_fee}}</div>
         </div>
         <div class="flex status-title">
           <div class="machineIdBox" @click="Record">
-            {{ item.machine_id }}
+            {{ item[1].machine_info.machine_id }}
           </div>
-          <div>{{ $t("audit.machineStatus") }}: {{ $t("audit.machineStatus1") }}</div>
-          <div>{{ $t("audit.verificationTime") }}: 1/3</div>
-          <div>{{ $t("audit.myResult") }}: {{ $t("audit.adopt") }}</div>
-          <div>{{ $t("audit.finalResult") }}: {{ $t("audit.adopt") }}</div>
-          <div>{{ $t("audit.proportion") }}: 1:2</div>
+          <!-- <div>{{ $t("audit.machineStatus") }}: {{ $t("audit.machineStatus1") }}</div> -->
+          <div>{{ $t("audit.verificationTime") }}: {{item[2].reward_committee.length}}</div>
+          <div>{{ $t("audit.myResult") }}: {{ item[1].machine_info.is_support ? $t("audit.adopt") : $t("audit.failed") }}</div>
+          <div>{{ $t("audit.finalResult") }}: {{ item[2].machine_info_detail.committee_upload_info.is_support ? $t("audit.adopt") : $t("audit.failed")}}</div>
+          <!-- <div>{{ $t("audit.proportion") }}: 1:2</div> -->
         </div>
         <div class="flex">
           <div class="td2">
@@ -58,186 +58,97 @@
               :content="$t('list_gpu_count_tip')"
             >
               <span class="fs28">
-                <a class="cPrimaryColor">{{ item.gpu_type }}</a>
-                <a class="cRedbig">x{{ item.gpu_count }} GPU</a>
+                <a class="cPrimaryColor">{{ item[2].machine_info_detail.committee_upload_info.gpu_type }}</a>
+                <a class="cRedbig">x{{ item[2].machine_info_detail.committee_upload_info.gpu_num }} GPU</a>
               </span>
             </el-tooltip>
           </div>
-          <div class="td2">
+          <!-- <div class="td2">
             <span class="fs28">
               <a class="cPrimaryColor">{{ item.country }}</a>
             </span>
-          </div>
-          <div class="td" v-if="item.can_rent_start_time_later < 0">
-            <span class="fs16">
-              <a class="cPrimaryColor">{{ -item.can_rent_start_time_later }}</a>
-              {{ $t("list_start_rentout") }}
-            </span>
-          </div>
+          </div> -->
         </div>
         <div class="flex">
           <div class="td">
             <span class="fs16">
-              {{ $t("list_idle_gpus") }}:
-              <a class="cPrimaryColor">{{
-                item.gpu_count - item.gpu_be_used
-              }}</a>
-            </span>
-          </div>
-          <div class="td">
-            <span class="fs16">
-              {{ $t("list_length_of_available_time") }}：
+              {{ $t("audit.Shd_space") }}：
               <a class="cPrimaryColor"
-                >{{ Math.floor(item.length_of_available_time)
-                }}{{ $t("my_machine_hour") }}</a
+                >{{ item[2].machine_info_detail.committee_upload_info.sys_disk }}GB</a
               >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{ $t("list_total_time_be_used") }}：
-              <a class="cPrimaryColor">{{
-                $minsToHourMins(item.total_time_be_used)
-              }}</a>
+              {{ $t("audit.Dhd_space") }}：
+              <a class="cPrimaryColor"
+                >{{ item[2].machine_info_detail.committee_upload_info.data_disk }}GB</a
+              >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
               {{ $t("list_total_rent_count") }}：
-              <a class="cPrimaryColor">{{ item.total_rent_count }}</a>
+              <a class="cPrimaryColor">{{ item[2].total_rented_times }}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
-              {{ $t("list_error_rent_count") }}：
-              <a class="cPrimaryColor">{{ item.error_rent_count }}</a>
+              {{ $t("audit.Memory") }}：
+              <a class="cPrimaryColor"
+                >{{ item[2].machine_info_detail.committee_upload_info.mem_num }}GB</a
+              >
             </span>
           </div>
+          <div class="td">
+            <span class="fs16">
+              {{ $t("list_gpu_ram_size") }}：
+              <a class="cPrimaryColor"
+                >{{ item[2].machine_info_detail.committee_upload_info.gpu_mem }}GB</a
+              >
+            </span>
+          </div>
+
         </div>
         <div class="flex">
-          <div v-if="item.tensor_cores > 0" class="td">
-            <span class="fs16">
-              Tensor Cores：
-              <a class="cPrimaryColor">{{ item.tensor_cores }}</a>
-            </span>
-          </div>
           <div class="td">
             <span class="fs16">
-              {{ $t("list_cuda_version") }}：
-              <a class="cPrimaryColor">{{ item.cuda_version }}</a>
-            </span>
-          </div>
-          <div class="td">
-            <span v-if="item.disk_space" class="fs16">
-              {{ $t("list_disk_space") }}：
+              {{ $t("audit.CPUcores") }}：
               <a class="cPrimaryColor"
-                >{{ parseInt(item.disk_space / (1024 * 1024)) }}GB</a
+                >{{ item[2].machine_info_detail.committee_upload_info.cpu_core_num }}</a
               >
-              <a class="cPrimaryColor">&nbsp;&nbsp;{{ item.disk_type }}</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{ $t("audit.CPUfrequency") }}：
+              <a class="cPrimaryColor"
+                >{{ item[2].machine_info_detail.committee_upload_info.cpu_rate }}GHz</a
+              >
             </span>
           </div>
           <div class="td3">
             <span class="fs16">
               {{ $t("list_cpu_type") }}：
-              <a class="cPrimaryColor">{{ item.cpu_type }}</a>
+              <a class="cPrimaryColor">{{ item[2].machine_info_detail.committee_upload_info.cpu_type }}</a>
             </span>
           </div>
         </div>
         <div class="flex">
-          <div v-if="item.half_precision_tflops > 0" class="td">
-            <span class="fs16">
-              {{ $t("list_half_precision_tflops") }}：
-              <a class="cPrimaryColor"
-                >{{ item.half_precision_tflops }}TFLOPS</a
-              >
-            </span>
-          </div>
-          <div v-if="item.gpu_ram_size > 0" class="td">
-            <span class="fs16">
-              {{ $t("list_gpu_ram_size") }}：
-              <a class="cPrimaryColor"
-                >{{ parseInt(item.gpu_ram_size / (1000 * 1000)) }}GB</a
-              >
-            </span>
-          </div>
-          <div v-if="item.disk_bandwidth > 0" class="td">
-            <span class="fs16">
-              {{ $t("list_disk_bandwidth") }}：
-              <a class="cPrimaryColor"
-                >{{ parseInt(item.disk_bandwidth / 1024) }}MB/s</a
-              >
-            </span>
-          </div>
-          <div v-if="item.cpu_numbers > 0" class="td">
-            <span class="fs16">
-              {{ $t("list_cpu_numbers") }}：
-              <a class="cPrimaryColor">{{ item.cpu_numbers }}</a>
-            </span>
-          </div>
-        </div>
-        <div class="flex">
-          <div v-if="item.single_precision_tflops > 0" class="td">
-            <span class="fs16">
-              {{ $t("list_single_precision_tflops") }}：
-              <a class="cPrimaryColor"
-                >{{ item.single_precision_tflops }}TFLOPS</a
-              >
-            </span>
-          </div>
-          <div v-if="item.gpu_ram_bandwidth > 0" class="td">
-            <span class="fs16">
-              {{ $t("list_gpu_ram_bandwidth") }}：
-              <a class="cPrimaryColor"
-                >{{ parseInt(item.gpu_ram_bandwidth / (1024 * 1024)) }}GB/s</a
-              >
-            </span>
-          </div>
-          <div v-if="item.inet_up > 0" class="td">
+          <div class="td">
             <span class="fs16">
               {{ $t("list_inet_up") }}：
               <a class="cPrimaryColor"
-                >{{ parseInt(item.inet_up / 1024) }}Mbps</a
+                >{{ item[2].machine_info_detail.staker_customize_info.upload_net }}Mbps</a
               >
             </span>
           </div>
-          <div v-if="item.ram_size > 0" class="td">
-            <span class="fs16">
-              {{ $t("list_ram_size") }}：
-              <a class="cPrimaryColor"
-                >{{ parseInt(item.ram_size / (1024 * 1024)) }}GB</a
-              >
-            </span>
-          </div>
-        </div>
-        <div class="flex">
-          <div v-if="item.double_precision_tflops > 0" class="td">
-            <span class="fs16">
-              {{ $t("list_double_precision_tflops") }}：
-              <a class="cPrimaryColor"
-                >{{ item.double_precision_tflops }}TFLOPS</a
-              >
-            </span>
-          </div>
-          <div v-if="item.pcie_bandwidth > 0" class="td">
-            <span class="fs16">
-              {{ $t("list_pcie_bandwidth") }}：
-              <a class="cPrimaryColor"
-                >{{ parseInt(item.pcie_bandwidth / (1024 * 1024)) }}GB/s</a
-              >
-            </span>
-          </div>
-          <div v-if="item.inet_down > 0" class="td">
+          <div class="td">
             <span class="fs16">
               {{ $t("list_inet_down") }}：
               <a class="cPrimaryColor"
-                >{{ parseInt(item.inet_down / 1024) }}Mbps</a
+                >{{ item[2].machine_info_detail.staker_customize_info.download_net }}Mbps</a
               >
-            </span>
-          </div>
-          <div class="td3">
-            <span class="fs16">
-              {{ $t("list_os") }}：
-              <a class="cPrimaryColor">{{ item.os }}</a>
             </span>
           </div>
         </div>
@@ -301,6 +212,7 @@ import {
 
 import { getCurrentPair } from "@/utlis/dot"
 import { mapState } from "vuex"
+import { leaseCommitteeOps, machinesInfo, batch } from "@/utlis/dot/api"
 export default {
   name: "myAudit_unlock",
   components: {
@@ -387,8 +299,12 @@ export default {
   },
   activated() {
     this.language = this.$i18n.locale;
-    this.queryMc();
+    // this.queryMc();
     this.queryMail();
+    this.getList();
+    batch().then( res => {
+      console.log(res);
+    })
   },
   deactivated() {
     
@@ -536,6 +452,17 @@ export default {
     },
 
     // 查询机器
+    async getList(){
+      let machinesList =  await leaseCommitteeOps();
+      await machinesList.map( async el => {
+        el[2] = await machinesInfo(el[0][1])
+      })
+      this.res_body.content = machinesList
+      console.log(this.res_body.content, 'this.res_body.content');
+    },
+
+
+
     arrangeAllMachines(res) {
       let machines = []; //所有可展示机器
       for (let item of res.content) {
@@ -767,7 +694,7 @@ export default {
       display: inline-flex;
       justify-content: center;
       align-items: center;
-      width: 396.67px;
+      width: 510px;
       height: 50px;
       border: 1px solid #195d91;
       border-radius: 2px;

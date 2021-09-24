@@ -73,13 +73,13 @@
                 <div class="tableli" v-for="el in Machine_info" :key="el.machine_id">
                   <div class="li_list1">
                     <div>
-                      <el-checkbox v-if="openCheck" :label="el.machine_id" :key="el.machine_id">{{''}}</el-checkbox>
+                      <el-checkbox v-if="openCheck" :disabled="el.machine_status == 'rented'" :label="el.machine_id" :key="el.machine_id">{{''}}</el-checkbox>
                       <span class="Machine_id">{{$t('virtual.Machine_ID')}}: {{el.machine_id}}</span>
                     </div>
                     <span v-if="el.server_room">{{$t('virtual.Room_number')}}: {{String(el.server_room).substring(0,10)+'...'}}</span>
                     <span>{{$t('virtual.Machine_sta')}}: {{el.machine_status == 'rented'?$t('virtual.Rented'):$t('virtual.Idle')}}</span>
                     <span v-if="!openCheck">
-                      <el-button class="batch" size="mini" plain @click="batch_Mac(el)">
+                      <el-button class="batch" :disabled='el.machine_status == "rented"' size="mini" plain @click="batch_Mac(el)">
                         {{ $t('virtual.batch_Mac') }}
                       </el-button>
                     </span>
@@ -171,11 +171,16 @@
 import BigNumber from "bignumber.js";
 import Header from "@/congTuCloud/components/header/SubHeader.vue";
 import Footer from "@/congTuCloud/components/footer/Footer.vue";
-import { dbc_info, GetGpu_Info, GetMachine_Details, Count_Details } from "@/api"
+import { getCurrentPair } from "@/utlis/dot";
+import { getAccount, getBalance } from "@/utlis";
+import { mapState, mapMutations } from "vuex";
+import { transfer } from '@/utlis/dot/api';
+import { dbc_info, GetGpu_Info, GetMachine_Details, Count_Details, CreateWallet, Get_ByWif, My_Virtual } from "@/api"
 export default {
   name: "virtual",
   data() {
     return {
+      wallet_address: (getAccount() && getAccount().address) || (getCurrentPair() && getCurrentPair().address),
       active: '',
       Computing_Power: 0,
       dbc_price: 0,
@@ -226,6 +231,10 @@ export default {
         {
           type: "GeForceRTX3080Ti",
           power: 99.01
+        },
+        {
+          type: "NVIDIA A4000",
+          power: 103.51
         },
         {
           type: "NVIDIA A5000",
@@ -352,13 +361,13 @@ export default {
   watch: {
     
   },
-  computed:{
-
+  computed: {
+    ...mapState(["isNewWallet", "passward"]),
   },
   methods: {
+    ...mapMutations(['setPassWard']),
     getGpuList(){
       GetGpu_Info().then(res => {
-        console.log(res);
         this.Gpu_Type.map( el1 =>{
           res.map(el => {
             if( el == el1.type){
@@ -480,16 +489,19 @@ export default {
       this.totalDbc = 0;
     },
     batch_Mac(el){
+      CreateWallet( { only_key : el.machine_id+this.wallet_address } ).then(res => {
+        console.log(res, 'res');
+      })
       this.chooseMac = el;
       this.useTime = 30;
       this.dialogFormVisible = true;
       this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*30)
-      this.totalDbc = this.getnum2(this.totalMoney/this.dbc_price)
+      this.totalDbc = Math.ceil(this.getnum2(this.totalMoney/this.dbc_price))
     },
     inputNum(val){
       if(!this.openCheck){
         this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*val)
-        this.totalDbc = this.getnum2(this.totalMoney/this.dbc_price)
+        this.totalDbc = Math.ceil(this.getnum2(this.totalMoney/this.dbc_price))
       }else{
         this.totalMoney = 0;
         this.totalDbc = 0;
@@ -499,9 +511,9 @@ export default {
       this.checkedCities = []
       this.Machine_info.map( el => {
         if(val){
-          this.checkedCities.push(el.machine_id)
-        }else{
-          this.checkedCities = []
+          if(el.machine_status != 'rented'){
+            this.checkedCities.push(el.machine_id)
+          }
         }
       })
       this.isIndeterminate = false;
@@ -524,12 +536,54 @@ export default {
       }
     },
     confirm(){
-      this.$message({
-        showClose: true,
-        message: '下单成功，即将跳转我的机器页面',
-        type: "success",
-      });
-      this.dialogFormVisible = false
+      Get_ByWif({ only_key: this.chooseMac.machine_id+this.wallet_address } ).then(res=> {
+        console.log(res, 'res');
+        console.log(`向${res.wallet}转账${this.totalDbc-85810}.${res.random_number}DBC`);
+        this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
+          confirmButtonText: this.$t('confirm'),
+          cancelButtonText:  this.$t('cancel'),
+          inputValue: this.passward
+        })
+        .then( ({ value }) => {
+          this.setPassWard(value)
+          transfer(res.wallet, `${this.totalDbc-85810}.${res.random_number}`, value, (res1) => {
+            console.log(res1, 'res');
+            if(res1.success){
+              let permas = {
+                machine_id: this.chooseMac.machine_id,
+                dollar: this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229),
+                day: this.useTime,
+                count: this.totalMoney,
+                dbc: this.totalDbc,
+                wallet: this.wallet_address
+              }
+              console.log(permas, 'permas');
+              My_Virtual(permas).then(res => {
+                console.log(res, 'res');
+              })
+              // this.$message({
+              //   showClose: true,
+              //   message: '下单成功，即将跳转我的机器页面',
+              //   type: "success",
+              // });
+            }else{
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: "error",
+              });
+            }
+          })
+        }).catch(() => {
+          // this.$message({
+          //   showClose: true,
+          //   message: this.$t('verifyPassward'),
+          //   type: "warning",
+          // });  
+          console.log('取消下单');
+        });
+      })
+      // this.dialogFormVisible = false
     }
   },
   components: {

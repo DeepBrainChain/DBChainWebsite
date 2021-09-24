@@ -764,8 +764,8 @@ const Verify = async (msg: string, sign: string, wallet: string, ver: string) =>
   console.log(signatureVerify( msg, sign, wallet ), ver );
 }
 // Verify(
-//   '11111111111111111111111111111111111111111111',
-//   '0x7ceb75e15f73884b5d82fcaf22f07cda255e740f7cb4e6100ff41954a593124b69f8761bdeeaff51383fb6872c97f1d8376fef29e47148b8f1f92f7c91b75980',
+//   '0x4f087b7e464904c59adb29f8bc296144fd6072a5c8937cf876350aaf9e5463a4',
+//   '0xca2221ab1574d210df9da0258f86d45d5b5932b247ac92d57a3fe15ef024e46de8d8fb017d5ea794c5d027bda36d236e029fd0592d77e37da168aeca7a85b785',
 //   '5HL92dTnQrZSJZy7ckDVYVt9mMX3NsjShWsYDquB3eB3yb5R',
 //   'Verify1'
 // )

@@ -1148,3 +1148,51 @@ export const GetResultHash = params => {
     params
   });
 };
+
+/**
+ * @description 生成支付钱包地址和四位随机数
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const CreateWallet = (params) => {
+  return axios({
+    method: "post",
+    url: "/identifier/CreateWalletAddressByWif",
+    params
+  });
+};
+
+/**
+ * @description 获取支付钱包地址和四位随机数
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const Get_ByWif = (params) => {
+  return axios({
+    method: "post",
+    url: "/identifier/Get_ByWif",
+    params
+  });
+};
+
+/**
+ * @description 添加订单信息
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const My_Virtual = (params) => {
+  return axios({
+    method: "post",
+    url: "/identifier/My_Virtual",
+    params
+  });
+};
+
+/**
+ * @description 添加订单信息
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const get_Virtual = (params) => {
+  return axios({
+    method: "post",
+    url: "/identifier/get_Virtual",
+    params
+  });
+};

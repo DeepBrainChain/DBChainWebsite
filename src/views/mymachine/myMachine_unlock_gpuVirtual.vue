@@ -349,6 +349,7 @@ import {
   send_email_repeat,
   dbc_info,
   GetMachine_Details,
+  get_Virtual
 } from "@/api";
 
 import {
@@ -644,22 +645,27 @@ export default {
       return num1.substring(0,num1.indexOf(".")+3);
     },
     getMyVirtual() {
-      let data = {
-        gpu_type: 'GeForceRTX2070S',
-        gpu_num: '',
-        pageNum: 0,
-        pageSize: 20
-      }
-      GetMachine_Details(data).then( async (res) => {
-        res.list.map( (el, i) => {
-          if(el.operator){
-            el.machine_name = this.byteToStr(JSON.parse(el.operator))
-          }
-          el.online = '···'
-        })
-        this.Machine_info = res.list
-        this.orderNumber = res.total
+      get_Virtual({ wallet: this.wallet_address }).then(res => {
+        console.log(res, 'res');
+        this.Machine_info = res.content
+        this.orderNumber = res.content.length
       })
+      // let data = {
+      //   gpu_type: 'GeForceRTX2070S',
+      //   gpu_num: '',
+      //   pageNum: 0,
+      //   pageSize: 20
+      // }
+      // GetMachine_Details(data).then( async (res) => {
+      //   res.list.map( (el, i) => {
+      //     if(el.operator){
+      //       el.machine_name = this.byteToStr(JSON.parse(el.operator))
+      //     }
+      //     el.online = '···'
+      //   })
+      //   this.Machine_info = res.list
+      //   this.orderNumber = res.total
+      // })
     },
     handleChangepageSize(num) {
       this.pageSize = num

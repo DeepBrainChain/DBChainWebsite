@@ -365,32 +365,6 @@ export const GetApi = async (): Promise<Network> =>{
   return { api }
 }
 
-/**
- * transfer 测试交易
- * @return callback 回调函数，返回结果信息
- */
- export const transfer = async (dest: any, value: any,  passward: string, callback: (data: Object) => void) => {
-  await GetApi();
-  let kering = await getCurrentPair()
-  
-  await cryptoWaitReady();
-  await api?.tx.balances
-  .transfer( dest, value )
-  .signAndSend( kering! , ( { events = [], status , dispatchError  } ) => {
-    let data = {
-      msg:'',
-      success: false
-    };
-  })
-  .catch((res)=>{
-    let data1 = {
-      msg: res.message,
-      success: false
-    };
-    callback(data1)
-  })
-}
-
 // transfer('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY', 1, '123456789' , (res)=>{
 //   console.log(res, 'transfer');
 // })
@@ -465,7 +439,7 @@ export const getCommitteeList = async (wallet: string): Promise<any> => {
   await api?.tx.onlineCommittee
   .submitConfirmHash( machine_id, raw_input)
   .signAndSend( kering! , ( { events = [], status } ) => {
-    if (status.isFinalized) {
+    if (status.isInBlock) {
       events.forEach(({ event: { method, data: [error] } }) => {
         if (error.isModule && method == 'ExtrinsicFailed') {
           const decoded = api?.registry.findMetaError(error.asModule);
@@ -529,7 +503,7 @@ export const ConfirmRaw = async (permas: any, passward: string, callback: (arr: 
   await api?.tx.onlineCommittee
   .submitConfirmRaw( machine_info_detail )
   .signAndSend( kering! , ( { events = [], status  } ) => {
-    if (status.isFinalized) {
+    if (status.isInBlock) {
       events.forEach(({ event: { method, data: [error] } }) => {
         if (error.isModule && method == 'ExtrinsicFailed') {
           const decoded = api?.registry.findMetaError(error.asModule);
@@ -606,7 +580,7 @@ export const bookFaultOrder = async (reportid: number, passward:string, callback
   await api?.tx.maintainCommittee
   .bookFaultOrder(reportid)
   .signAndSend( kering! , ( { events = [], status  } ) => {
-    if (status.isFinalized) {
+    if (status.isInBlock) {
       events.forEach(({ event: { method, data: [error] } }) => {
         if (error.isModule && method == 'ExtrinsicFailed') {
           const decoded = api?.registry.findMetaError(error.asModule);
@@ -686,7 +660,7 @@ export const submitConfirmHash = async ( permas: any,  passward: string, callbac
   await api?.tx.maintainCommittee
   .submitConfirmHash( report_id, raw_input )
   .signAndSend( kering! , ( { events = [], status  } ) => {
-    if (status.isFinalized) {
+    if (status.isInBlock) {
       events.forEach(({ event: { method, data: [error] }}) => {
         if (error.isModule && method == 'ExtrinsicFailed') {
           const decoded = api?.registry.findMetaError(error.asModule);
@@ -735,7 +709,7 @@ export const submitConfirmRaw = async ( permas: any, passward: string, callback:
   await api?.tx.maintainCommittee
   .submitConfirmRaw(report_id, machine_id, reporter_rand_str, committee_rand_str, err_reason, extra_err_info, support_report )
   .signAndSend( kering! , ( { events = [], status  } ) => {
-    if (status.isFinalized) {
+    if (status.isInBlock) {
       events.forEach(({ event: { method, data: [error] }}) => {
         if (error.isModule && method == 'ExtrinsicFailed') {
           const decoded = api?.registry.findMetaError(error.asModule);
@@ -783,7 +757,7 @@ export const reportMachineFault = async ( callback: (data: Object) => void ) => 
   await api?.tx.maintainCommittee
   .reportMachineFault(perams)
   .signAndSend( kering! , ( { events = [], status  } ) => {
-    if (status.isFinalized) {
+    if (status.isInBlock) {
       events.forEach(({ event: { method, data: [error] }}) => {
         if (error.isModule && method == 'ExtrinsicFailed') {
           const decoded = api?.registry.findMetaError(error.asModule);
@@ -806,4 +780,192 @@ export const reportMachineFault = async ( callback: (data: Object) => void ) => 
     };
     callback(CallBack_data)
   })
+}
+
+
+
+/**
+ * leaseCommitteeOps 获取验证人验证的机器
+ * @param permas
+ * @return callback 回调函数，返回数组信息
+ */
+export const leaseCommitteeOps = async (): Promise<any> => {
+  // await GetApi();
+  // let de = await api?.query.leaseCommittee.committeeOps()
+  // console.log(de?.toHuman())
+  let data = [
+    [
+      [
+        '5HL92dTnQrZSJZy7ckDVYVt9mMX3NsjShWsYDquB3eB3yb5R',
+        '10bc6a648abc114620656fb912c0af5a50d37c2da5ccc8bcf85537bcd7706211'
+      ],
+      {
+        staked_dbc: '1.0000 kDBC',
+        verify_time: [
+          '18,272',
+          '19,712',
+          '21,152'
+        ],
+        confirm_hash: '0x96dd1ebd25fbe5fd20ba84d91db20532',
+        hash_time: '18,284',
+        confirm_time: '19,897',
+        machine_status: 'Confirmed',
+        machine_info: {
+          machine_id: '10bc6a648abc114620656fb912c0af5a50d37c2da5ccc8bcf85537bcd7706211',
+          gpu_type: 'GeForceRTX3080Ti',
+          gpu_num: 4,
+          cuda_core: '10,204',
+          gpu_mem: 12,
+          calc_point: '76,283',
+          sys_disk: 480,
+          data_disk: '2,000',
+          cpu_type: 'Intel(R) Xeon(R) Silver 4214R CPU @ 2.40GHz',
+          cpu_core_num: 48,
+          cpu_rate: '2,400',
+          mem_num: 768,
+          rand_str: '',
+          is_support: true
+        }
+      }
+    ]
+  ]
+  return data
+}
+
+/**
+ * machinesInfo 查询机器的详细信息
+ * @param permas
+ * @return callback 回调函数，返回数组信息
+ */
+export const machinesInfo = async (machineId: string): Promise<any> => {
+  // await GetApi();
+  // let de = await api?.query.onlineProfile.machinesInfo()
+  // console.log(de?.toHuman())
+  let data = {
+    controller: '5E4tsQdDiTY3FNTvfpJsoG8UXfM7B9TvSG77SQdFn9uJbckR',
+    machine_stash: '5E7123qZExgZaYKnmTcJacu68c2GbLeSHo9qNWmUWcaw4RSR',
+    last_machine_renter: '5EHuyFRjExKpEcduSvRykkKTRWo8DYqPR9ifYVe2wVcYxTo3',
+    last_machine_restake: '22,509',
+    bonding_height: '20,206',
+    online_height: '22,509',
+    last_online_height: '22,509',
+    init_stake_amount: '400.0000 kDBC',
+    current_stake_amount: '400.0000 kDBC',
+    machine_status: {
+      Rented: null
+    },
+    total_rented_duration: 0,
+    total_rented_times: 1,
+    total_rent_fee: '60.4808 kDBC',
+    total_burn_fee: 0,
+    machine_info_detail: {
+      committee_upload_info: {
+        machine_id: '0054ab938a6d9427656e2ca098dc6c6c755a4e47cd98c0cfa309f85c817b6e17',
+        gpu_type: 'GeForceRTX3080Ti',
+        gpu_num: 4,
+        cuda_core: '10,240',
+        gpu_mem: 12,
+        calc_point: '76,283',
+        sys_disk: 480,
+        data_disk: '2,000',
+        cpu_type: 'Intel(R) Xeon(R) Silver 4214R CPU @ 2.40GHz',
+        cpu_core_num: 48,
+        cpu_rate: '2,400',
+        mem_num: 768,
+        rand_str: '',
+        is_support: true
+      },
+      staker_customize_info: {
+        server_room: '0xc3a3289c1661b21fe15ac138a43745e817082081c1befd05e3ee72c73ac03473',
+        upload_net: 100,
+        download_net: 100,
+        longitude: {
+          East: '1,182,946'
+        },
+        latitude: {
+          North: '340,643'
+        },
+        telecom_operators: [
+          'China Telecom'
+        ]
+      }
+    },
+    reward_committee: [
+      '5Cyb1Tx992KdpAdAwMfg4JJNMmCpidPybcSZniyRaPnp5q8z',
+      '5HL92dTnQrZSJZy7ckDVYVt9mMX3NsjShWsYDquB3eB3yb5R',
+      '5HgjMd2iuiyzPvurozVydmwCcSbDZRgdA6UHtvtXi9KSr3A8'
+    ],
+    reward_deadline: 737
+  }
+  return data
+}
+
+
+
+
+/**
+ * transfer 测试交易
+ * @return callback 回调函数，返回结果信息
+ */
+export const transfer = async (dest: any, value: any,  passward: string, callback: (data: Object) => void) => {
+  console.log(dest, value, passward, 'passwardpassward');
+  await GetApi();
+  let kering = await getCurrentPair()
+  try {
+    await kering!.unlock(passward)
+  } catch (e: any) {
+    CallBack_data = {
+      msg: e.message,
+      success: false
+    };
+    callback(CallBack_data)
+    return;
+  }
+  await cryptoWaitReady();
+  await api?.tx.balances
+  .transfer( dest, value*Math.pow(10,15) )
+  .signAndSend( kering! , ( { events = [], status , dispatchError  } ) => {
+    returnFun(status, events, callback)
+    // if (status.isInBlock) {
+    //   events.forEach(({ event: { method, data: [error] } }) => {
+    //     if (error.isModule && method == 'ExtrinsicFailed') {
+    //       const decoded = api?.registry.findMetaError(error.asModule);
+    //       CallBack_data.msg = decoded!.method;
+    //       CallBack_data.success = false
+    //     }else if(method == 'ExtrinsicSuccess'){
+    //       CallBack_data.msg = method;
+    //       CallBack_data.success = true
+    //     }
+    //   });
+    //   if (callback) {
+    //     callback(CallBack_data)
+    //   }
+    // }
+  })
+  .catch((res)=>{
+    CallBack_data = {
+      msg: res.message,
+      success: false
+    };
+    callback(CallBack_data)
+  })
+}
+
+
+const returnFun = (status: any, events: any, callback: Function) => {
+  if (status.isInBlock) {
+    events.forEach(({ event: { method, data: [error] } }) => {
+      if (error.isModule && method == 'ExtrinsicFailed') {
+        const decoded = api?.registry.findMetaError(error.asModule);
+        CallBack_data.msg = decoded!.method;
+        CallBack_data.success = false
+      }else if(method == 'ExtrinsicSuccess'){
+        CallBack_data.msg = method;
+        CallBack_data.success = true
+      }
+    });
+    if (callback) {
+      callback(CallBack_data)
+    }
+  }
 }
