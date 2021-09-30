@@ -95,7 +95,7 @@
                     <span>{{$t('virtual.City')}}: {{el.city}}</span>
                     <span>
                       {{$t('virtual.lable_two2')}}: 
-                      <i :title="el.machine_owner" v-if='!el.machine_name'>{{String(el.machine_owner).substring(0,10)+'...'}}</i>
+                      <i :title="el.machine_owner" v-if='!el.machine_name'>{{String(el.machine_stash).substring(0,10)+'...'}}</i>
                       <i :title="el.machine_owner" v-else>{{el.machine_name}}</i> 
                     </span> 
                     <span>{{$t('virtual.Cumulative_DBC_rent')}}: {{getnum1(el.total_rent_fee)}}</span>
@@ -141,7 +141,7 @@
       <div class="useTime">
         <div>
           <span class="bold">{{$t('virtual.useTime')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="useTime" @change="inputNum" :min="30" :max="90"></el-input-number>
+          <el-input-number :precision="0" size="mini" v-model="useTime" @change="inputNum" :min="1" :max="90"></el-input-number>
            {{$t('day')}}
         </div>
         <div v-if="!openCheck">{{$t('virtual.Daily_Rent')}}: <span class="color">{{getnum2(Number(chooseMac.calc_point)/100*0.028229)}}$≈{{getnum2(Number(chooseMac.calc_point)/100*0.028229/dbc_price)}}DBC</span></div>
@@ -158,7 +158,7 @@
         <p>{{$t('virtual.tip3')}}</p>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button class="batch" size="mini" plain  @click="confirm">{{$t('virtual.confirm')}}</el-button>
+        <el-button class="batch" size="mini" plain :loading='btnloading'  @click="confirm">{{$t('virtual.confirm')}}</el-button>
         <el-button class="batch" size="mini" plain  @click="dialogFormVisible = false">{{$t('virtual.cancal')}}</el-button>
       </div>
     </el-dialog>
@@ -174,7 +174,7 @@ import Footer from "@/congTuCloud/components/footer/Footer.vue";
 import { getCurrentPair } from "@/utlis/dot";
 import { getAccount, getBalance } from "@/utlis";
 import { mapState, mapMutations } from "vuex";
-import { transfer } from '@/utlis/dot/api';
+import { transfer, getBlockTime } from '@/utlis/dot/api';
 import { dbc_info, GetGpu_Info, GetMachine_Details, Count_Details, CreateWallet, Get_ByWif, My_Virtual } from "@/api"
 export default {
   name: "virtual",
@@ -187,6 +187,7 @@ export default {
       currentPage: 0,
       pageSize: 20,
       total: 0,
+      btnloading: false,
       Gpu_Type:[
         {
           type: "GeForceGTX1660S",
@@ -337,7 +338,8 @@ export default {
       isIndeterminate: false,
       openCheck: false,
       dialogFormVisible: false,
-      useTime: 30,
+      useTime: 1,
+      totalCalc: 0,
       totalMoney: 0,
       totalDbc: 0,
       chooseMac: {},
@@ -410,13 +412,12 @@ export default {
             this.All_Machine = res1.count[str]?res1.count[str]:0
             this.Idle_Machine = res1.sum[str]?res1.sum[str]:0
           })
-        }else{
-
         }
-        // online_block = await getBlock();
-        // this.$propsMachine_info.map( (el) => {
-        //   el.online = minsToHourMins(Math.floor((online_block-el.bonding_height)/2))
-        // })
+        let online_block = await getBlockTime();
+        online_block = online_block.replace(/,/gi, '');
+        this.Machine_info.map( (el) => {
+          el.online = this.minsToHourMins(Math.floor((online_block-el.bonding_height)/2))
+        })
       })
     },
     choose(str) {
@@ -463,6 +464,15 @@ export default {
       num1.indexOf(".") >= 0? hasPoint = true: hasPoint = false
       return num1.substring(0,num1.indexOf(".")+3);
     },
+    minsToHourMins(mins){
+      if (mins < 60) {
+        return mins + 'm'
+      } else {
+        const h = Math.floor(mins / 60)
+        const m = mins % 60
+        return `${h}h${m}m`
+      }
+    },
     SelectStatus() {
       this.currentPage = 1
       this.getList(this.active , this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
@@ -480,6 +490,14 @@ export default {
       this.getList(this.active , this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
     },
     batch() {
+      if (!this.wallet_address) {
+        this.$message({
+          showClose: true,
+          message: this.$t("pleae_create_wallet"),
+          type: "error",
+        });
+        return;
+      }
       this.openCheck = !this.openCheck;
       this.isIndeterminate = false;
       this.checkedCities = [];
@@ -489,22 +507,30 @@ export default {
       this.totalDbc = 0;
     },
     batch_Mac(el){
+      if (!this.wallet_address) {
+        this.$message({
+          showClose: true,
+          message: this.$t("pleae_create_wallet"),
+          type: "error",
+        });
+        return;
+      }
       CreateWallet( { only_key : el.machine_id+this.wallet_address } ).then(res => {
         console.log(res, 'res');
       })
       this.chooseMac = el;
-      this.useTime = 30;
+      this.useTime = 1;
       this.dialogFormVisible = true;
-      this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*30)
-      this.totalDbc = Math.ceil(this.getnum2(this.totalMoney/this.dbc_price))
+      this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*this.useTime)
+      this.totalDbc = Math.ceil(this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*this.useTime/this.dbc_price))
     },
     inputNum(val){
       if(!this.openCheck){
         this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*val)
-        this.totalDbc = Math.ceil(this.getnum2(this.totalMoney/this.dbc_price))
+        this.totalDbc = Math.ceil(this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*val/this.dbc_price))
       }else{
-        this.totalMoney = 0;
-        this.totalDbc = 0;
+        this.totalMoney = this.getnum2(Number(this.totalCalc)/100*0.028229*val)
+        this.totalDbc = Math.ceil(this.getnum2(Number(this.totalCalc)/100*0.028229*val/this.dbc_price))
       }
     },
     handleCheckAllChange(val) {
@@ -517,6 +543,7 @@ export default {
         }
       })
       this.isIndeterminate = false;
+      console.log(this.checkedCities);
     },
     handleCheckedCitiesChange(value) {
       let checkedCount = value.length;
@@ -525,7 +552,21 @@ export default {
     },
     commit(){
       if(this.checkedCities.length > 0){
-        this.useTime = 30;
+        this.useTime = 1;
+        let machineList = []
+        this.checkedCities.map( el => {
+          this.Machine_info.map( res => {
+            if(res.machine_id == el){
+              machineList.push(res)
+            }
+          })
+        })
+        this.totalCalc = 0
+        machineList.map( el=>{
+          this.totalCalc += Number(el.calc_point)
+        })
+        this.totalMoney = this.getnum2(Number(this.totalCalc)/100*0.028229*this.useTime)
+        this.totalDbc = Math.ceil(this.getnum2(Number(this.totalCalc)/100*0.028229*this.useTime/this.dbc_price))
         this.dialogFormVisible = true;
       }else{
         this.$message({
@@ -536,9 +577,9 @@ export default {
       }
     },
     confirm(){
+      this.btnloading = true;
       Get_ByWif({ only_key: this.chooseMac.machine_id+this.wallet_address } ).then(res=> {
-        console.log(res, 'res');
-        console.log(`向${res.wallet}转账${this.totalDbc-85810}.${res.random_number}DBC`);
+        console.log(`向${res.wallet}转账${this.totalDbc}.${res.random_number}DBC`);
         this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
           confirmButtonText: this.$t('confirm'),
           cancelButtonText:  this.$t('cancel'),
@@ -546,10 +587,11 @@ export default {
         })
         .then( ({ value }) => {
           this.setPassWard(value)
-          transfer(res.wallet, `${this.totalDbc-85810}.${res.random_number}`, value, (res1) => {
+          transfer(res.wallet, `${this.totalDbc}.${res.random_number}`, value, (res1) => {
             console.log(res1, 'res');
             if(res1.success){
               let permas = {
+                only_key: this.chooseMac.machine_id+this.wallet_address,
                 machine_id: this.chooseMac.machine_id,
                 dollar: this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229),
                 day: this.useTime,
@@ -560,13 +602,18 @@ export default {
               console.log(permas, 'permas');
               My_Virtual(permas).then(res => {
                 console.log(res, 'res');
+                this.$message({
+                  showClose: true,
+                  message: '下单成功，即将跳转我的机器页面',
+                  type: "success",
+                });
+                this.btnloading = false;
+                setTimeout(() => {
+                  this.$router.push('/mymachine/myMachine_gpuVirtual')
+                }, 2000);
               })
-              // this.$message({
-              //   showClose: true,
-              //   message: '下单成功，即将跳转我的机器页面',
-              //   type: "success",
-              // });
             }else{
+              this.btnloading = false;
               this.$message({
                 showClose: true,
                 message: res.msg,
@@ -575,11 +622,7 @@ export default {
             }
           })
         }).catch(() => {
-          // this.$message({
-          //   showClose: true,
-          //   message: this.$t('verifyPassward'),
-          //   type: "warning",
-          // });  
+          this.btnloading = false;
           console.log('取消下单');
         });
       })

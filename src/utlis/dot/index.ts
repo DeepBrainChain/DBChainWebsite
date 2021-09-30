@@ -23,8 +23,9 @@ import nacl from 'tweetnacl'
 
 const node = {
   polkadot: 'wss://rpc.polkadot.io',
-  dbc: 'wss://innertest2.dbcwallet.io'
-  // dbc: 'wss://info.dbcwallet.io' 测试注释
+  // dbc: 'wss://innertest2.dbcwallet.io' // 测试网
+  dbc: 'wss://preinfo.dbcwallet.io' // 银河竞赛预主网
+  //dbc: 'wss://info.dbcwallet.io' // 主网
 }
 let api: ApiPromise | null = null
 
@@ -59,12 +60,6 @@ export const initNetwork = async (): Promise<Network> => {
         "MachineId": "Text",
         "OrderId": "u64",
         "TelecomName": "Text",
-        "AccountInfo": {
-          "nonce": "u32",
-          "consumers": "u32",
-          "providers": "u32",
-          "data": "AccountData"
-        },
         "StandardGpuPointPrice": {
           "gpu_point": "u64",
           "gpu_price": "u64"
@@ -113,6 +108,7 @@ export const initNetwork = async (): Promise<Network> => {
           "bonding_height": "BlockNumber",
           "online_height": "BlockNumber",
           "last_online_height": "BlockNumber",
+          "init_stake_per_gpu": "Balance",
           "stake_amount": "Balance",
           "machine_status": "MachineStatus",
           "total_rented_duration": "u64",
@@ -195,8 +191,7 @@ export const initNetwork = async (): Promise<Network> => {
         },
         "MachineGradeStatus": {
           "basic_grade": "u64",
-          "is_rented": "bool",
-          "reward_account": "Vec<AccountId>"
+          "is_rented": "bool"
         },
         "CommitteeList": {
           "normal": "Vec<AccountId>",
@@ -220,7 +215,11 @@ export const initNetwork = async (): Promise<Network> => {
           "machine_info": "CommitteeUploadInfo"
         },
         "OCMachineStatus": {
-          "_enum": ["Booked", "Hashed", "Confirmed"]
+          "_enum": [
+            "Booked",
+            "Hashed",
+            "Confirmed"
+          ]
         },
         "OCMachineCommitteeList": {
           "book_time": "BlockNumber",
@@ -232,7 +231,12 @@ export const initNetwork = async (): Promise<Network> => {
           "status": "OCVerifyStatus"
         },
         "OCVerifyStatus": {
-          "_enum": ["SubmittingHash", "SubmittingRaw", "Summarizing", "Finished"]
+          "_enum": [
+            "SubmittingHash",
+            "SubmittingRaw",
+            "Summarizing",
+            "Finished"
+          ]
         },
         "ReporterReportList": {
           "processing_report": "Vec<ReportId>",
@@ -253,7 +257,12 @@ export const initNetwork = async (): Promise<Network> => {
           "order_status": "MTOrderStatus"
         },
         "MTOrderStatus": {
-          "_enum": ["WaitingEncrypt", "Verifying", "WaitingRaw", "Finished"]
+          "_enum": [
+            "WaitingEncrypt",
+            "Verifying",
+            "WaitingRaw",
+            "Finished"
+          ]
         },
         "MTCommitteeOrderList": {
           "booked_report": "Vec<ReportId>",
@@ -276,7 +285,10 @@ export const initNetwork = async (): Promise<Network> => {
           "slash_reason": "MTReporterSlashReason"
         },
         "MTReporterSlashReason": {
-          "_enum": ["ReportRefused", "NotSubmitEncryptedInfo"]
+          "_enum": [
+            "ReportRefused",
+            "NotSubmitEncryptedInfo"
+          ]
         },
         "MTReportInfoDetail": {
           "reporter": "AccountId",
@@ -318,7 +330,8 @@ export const initNetwork = async (): Promise<Network> => {
           "slash_time": "BlockNumber",
           "slash_amount": "Balance",
           "slash_exec_time": "BlockNumber",
-          "reward_to": "Vec<AccountId>"
+          "reward_to": "Vec<AccountId>",
+          "slash_reason": "CMSlashReason"
         },
         "CMSlashReason": {
           "_enum": [
@@ -352,7 +365,8 @@ export const initNetwork = async (): Promise<Network> => {
             "RentedHardwareCounterfeit": "BlockNumber",
             "OnlineRentFailed": "BlockNumber",
             "CommitteeRefusedOnline": null,
-            "CommitteeRefusedMutHardware": null
+            "CommitteeRefusedMutHardware": null,
+            "ReonlineShouldReward": null
           }
         },
         "RentOrderDetail": {
@@ -364,7 +378,11 @@ export const initNetwork = async (): Promise<Network> => {
           "rent_status": "RentStatus"
         },
         "RentStatus": {
-          "_enum": ["WaitingVerifying", "Renting", "RentExpired"]
+          "_enum": [
+            "WaitingVerifying",
+            "Renting",
+            "RentExpired"
+          ]
         },
         "CommitteeStakeParamsInfo": {
           "stake_baseline": "Balance",

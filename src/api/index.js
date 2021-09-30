@@ -1,4 +1,5 @@
 import axios from "@/utlis/axios";
+import qs from 'querystring'
 // 聪图云转发后台本地环境
 // const host = "http://localhost:8080";
 
@@ -1193,6 +1194,30 @@ export const GetResultHash = params => {
   return axios({
     method: "post",
     url: "/identifier/get_Virtual",
+    params
+  });
+};
+
+/**
+ * @description 创建虚拟机
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const Create_VMS = (params) => {
+  return axios({
+    method: "post",
+    url: "/identifier/Create_VMS",
+    params
+  });
+};
+
+/**
+ * @description 查询虚拟机
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const VMS_details = (params) => {
+  return axios({
+    method: "post",
+    url: "/identifier/VMS_details",
     params
   });
 };

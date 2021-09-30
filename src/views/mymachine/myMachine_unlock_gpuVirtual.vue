@@ -33,25 +33,25 @@
         <div class="li_list1">
           <div>
             <span class="Machine_id">{{$t('virtual.Machine_ID')}}: {{el.machine_id}}</span>
-            <span>{{$t('myvirtual.time_left')}}: 0h0m </span>
+            <span v-if="el.orderStatus == '正在使用中'">{{$t('myvirtual.time_left')}}: {{el.time_left}} </span>
           </div>
-          <div class="countTime">
-            <div class="fs14"><span class="bold">{{$t('myvirtual.confirm_time')}}</span>: 00:00</div>
+          <div class="countTime" v-if="el.orderStatus == '待确认支付'">
+            <div class="fs14"><span class="bold">{{$t('myvirtual.confirm_time')}}</span>: {{el.confirmTime}}</div>
             <div>{{$t('myvirtual.tip1')}}</div>
           </div>
           <div class="order_status fs14 bold">
-            {{$t('myvirtual.order_status1')}}
+            <!-- {{$t('myvirtual.order_status1')}} -->{{ el.orderStatus }}
           </div>
         </div>
         <div class="pay-wrap">
-          <div><span>{{$t('gpu.payDBCs')}}</span>: 0</div>
-          <div><span>{{$t('gpu.userTime')}}</span>: 0</div>
-          <div><span>{{$t('memory_space')}}</span>: 0</div>
-          <div><span>{{$t('gpu.actualPrice')}}</span>: 0</div>
-          <div><span>{{$t('gpu.gpuBilling')}}</span>: 0</div>
-          <div><span>{{$t('diskspace_remaining')}}</span>: 0</div>
-          <div><span>{{$t('gpu.currentRemaining')}}</span>: 0</div>
-          <div><span>{{$t('gpu.payPrice')}}</span>: 0</div>
+          <div><span>{{$t('gpu.payDBCs')}}</span>: {{el.dbc}}</div>
+          <div><span>{{$t('gpu.gpuBilling')}}</span>: {{el.gpu_price?el.gpu_price:0}}$</div>
+          <!-- <div><span>{{$t('memory_space')}}</span>: 0</div> -->
+          <div><span>{{$t('gpu.userTime')}}</span>: {{el.userTime}}</div>
+          <div><span>{{$t('gpu.actualPrice')}}</span>: {{el.Actual_cost}}</div>
+          <!-- <div><span>{{$t('diskspace_remaining')}}</span>: 0</div> -->
+          <!-- <div><span>{{$t('gpu.currentRemaining')}}</span>: 0</div> -->
+          <div><span>{{$t('gpu.payPrice')}}</span>: {{ Math.round(el.dbc_price* 1000000)/1000000}}$</div>
         </div>
         <div class="li_list2">
           <span class="bold">{{$t('virtual.GPU_Num')}}: {{el.gpu_num}}</span>
@@ -62,12 +62,12 @@
           </span>
           <span>{{$t('virtual.Country')}}: {{el.country}}</span>
           <span>{{$t('virtual.City')}}: {{el.city}}</span>
-          <span>
+          <!-- <span>
             {{$t('virtual.lable_two2')}}: 
             <i :title="el.machine_owner" v-if='!el.machine_name'>{{String(el.machine_owner).substring(0,10)+'...'}}</i>
             <i :title="el.machine_owner" v-else>{{el.machine_name}}</i> 
           </span> 
-          <span>{{$t('virtual.Cumulative_DBC_rent')}}: {{getnum1(el.total_rent_fee)}}</span>
+          <span>{{$t('virtual.Cumulative_DBC_rent')}}: {{getnum1(el.total_rent_fee)}}</span> -->
           <span class="operators">{{$t('virtual.Network_operators')}}:
             <span class="opera">
               <i v-for="(operators,index) in el.telecom_operators" :key='index'>
@@ -84,8 +84,8 @@
           <span>{{$t('virtual.CPU_frequency')}}: {{getnum2(Number(el.cpu_rate)/1000)}}Ghz</span>
           <span class="width40">{{$t('virtual.CPU_type')}}: {{el.cpu_type}}</span>
         </div>
-        <div class="virtual">
-          <div class="v-list">
+        <div class="virtual" v-if="virtual_info.length">
+          <div class="v-list"  v-for="el in virtual_info" :key="el.machine_id">
             <div class="li-top">
               <div class="left fs14"><span class="bold">{{$t('myvirtual.virId')}}</span>: xXXXXXXXXXXX</div>
               <div>
@@ -129,7 +129,7 @@
         </div>
         <div class="tools-head">
           <div class="l-wrap">
-            {{$t('myvirtual.tip2')}}
+            <!-- {{$t('myvirtual.tip2')}} -->
           </div>
           <div class="r-warp">
             <!-- <el-tooltip
@@ -199,7 +199,7 @@
     <!-- 续费 -->
     <el-dialog width='30%' :title="$t('myvirtual.Renew')" :visible.sync="dialogFormVisible">
       <div>
-        <p><span class="bold">{{$t('myvirtual.time_left')}}:</span> 0h0m</p>
+        <p><span class="bold">{{$t('myvirtual.time_left')}}:</span> {{time_left}}</p>
       </div>
       <div class="useTime">
         <div>
@@ -216,7 +216,7 @@
         <p><span class="bold">{{$t('virtual.equivalent')}}:</span> {{totalDbc}}</p>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button class="batch" size="mini" plain  @click="dialogFormVisible = false">{{$t('virtual.confirm')}}</el-button>
+        <el-button class="batch" size="mini" plain :loading='btnloading'  @click="confirmRenew">{{$t('virtual.confirm')}}</el-button>
         <el-button class="batch" size="mini" plain  @click="dialogFormVisible = false">{{$t('virtual.cancal')}}</el-button>
       </div>
     </el-dialog>
@@ -255,7 +255,7 @@
         {{$t('myvirtual.tip7')}}
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button class="batch" size="mini" plain  @click="dialogFormVisible1 = false">{{$t('virtual.confirm')}}</el-button>
+        <el-button class="batch" size="mini" plain  @click="Createvirtual">{{$t('myvirtual.Confirm_create')}}</el-button>
         <el-button class="batch" size="mini" plain  @click="dialogFormVisible1 = false">{{$t('virtual.cancal')}}</el-button>
       </div>
     </el-dialog>
@@ -348,8 +348,11 @@ import {
   binding_is_ok_modify,
   send_email_repeat,
   dbc_info,
-  GetMachine_Details,
-  get_Virtual
+  get_Virtual,
+  Create_VMS,
+  VMS_details,
+  Get_ByWif,
+  My_Virtual
 } from "@/api";
 
 import {
@@ -357,9 +360,9 @@ import {
   getBalance,
   getUsdToRmb,
 } from "@/utlis";
-
-import { initFromLocalstorage, getCurrentPair , onGetBalance } from "@/utlis/dot"
-import { mapState } from "vuex"
+import { transfer } from '@/utlis/dot/api';
+import { getCurrentPair } from "@/utlis/dot"
+import { mapState, mapMutations } from "vuex"
 export default {
   name: "myMachine_unlock_gpuVirtual",
   components: {
@@ -398,6 +401,7 @@ export default {
       wallet_address: (getAccount() && getAccount().address) || (getCurrentPair() && getCurrentPair().address),
 
       // 新增
+      timer: [],
       dbc_price: 0,
       currentPage: 0,
       pageSize: 20,
@@ -407,12 +411,15 @@ export default {
       total: 0,
       orderNumber: 0,
       Machine_info: [],
+      virtual_info: [],
       // 续费
       dialogFormVisible: false,
       useTime: 7,
       chooseMac: {},
       totalMoney: 0,
       totalDbc: 0,
+      time_left: '0h0m',
+      btnloading: false,
       // 创建、修改 虚拟机
       title:'',
       dialogFormVisible1: false,
@@ -455,8 +462,9 @@ export default {
   },
   activated() {
     // this.binding(isNewMail);
+    clearInterval(this.si);
     this.queryMail();
-
+    this.stopInter()
     this.getMyVirtual();
   },
   deactivated() {
@@ -466,12 +474,14 @@ export default {
     if (this.si) {
       clearInterval(this.si);
     }
+    this.stopInter()
   },
 
   computed: {
-    ...mapState(["isNewWallet"]),
+    ...mapState(["isNewWallet", "passward"]),
   },
   methods: {
+    ...mapMutations(['setPassWard']),
     openDlgMail(isNewMail) {
       getBalance().then((res) => {
         this.balance = res.balance;
@@ -646,26 +656,42 @@ export default {
     },
     getMyVirtual() {
       get_Virtual({ wallet: this.wallet_address }).then(res => {
-        console.log(res, 'res');
+        res.content.map((el) => {
+          let nowTime = + new Date();
+          let startTime = + new Date(el.time)
+          let endTime = startTime + el.day*24*60*60*1000
+          el.time = startTime
+          if(endTime - nowTime > 0 ){
+            el.time_left = this.minsToHourMins(Math.ceil((endTime - nowTime)/60000))
+            el.userTime = this.minsToHourMins(Math.ceil((nowTime - el.time)/60000))
+            el.Actual_cost = Math.ceil((Number(el.dbc)/Number(el.day)/24/60)*((nowTime - el.time)/60000))
+          }else{
+            el.time_left = '0h0m'
+            el.userTime = this.minsToHourMins(Math.ceil((endTime - el.time)/60000))
+            el.Actual_cost = el.dbc
+          }
+          el.confirmTime = (el.time+1800000 -nowTime)/1000
+          // 获取虚拟机信息
+          VMS_details({ only_key: el.id, machine_id: el.machine_id }).then(res=>{
+            console.log(res, 'res');
+          }).catch( err => {console.log(err.message) })
+        })
         this.Machine_info = res.content
         this.orderNumber = res.content.length
+        this.total = res.content.length
+        this.Machine_info.map((el, index) => {
+          if(el.confirmTime  > 0){
+            this.count( el.confirmTime, index, (msg)=>{
+              this.$set(this.Machine_info[index], 'confirmTime', msg)
+            })
+          }else{
+            el.confirmTime = '00:00'
+          }
+        })
+        // this.si = setInterval( ()=> {
+        //   this.getMyVirtual()
+        // }, 60000)
       })
-      // let data = {
-      //   gpu_type: 'GeForceRTX2070S',
-      //   gpu_num: '',
-      //   pageNum: 0,
-      //   pageSize: 20
-      // }
-      // GetMachine_Details(data).then( async (res) => {
-      //   res.list.map( (el, i) => {
-      //     if(el.operator){
-      //       el.machine_name = this.byteToStr(JSON.parse(el.operator))
-      //     }
-      //     el.online = '···'
-      //   })
-      //   this.Machine_info = res.list
-      //   this.orderNumber = res.total
-      // })
     },
     handleChangepageSize(num) {
       this.pageSize = num
@@ -694,17 +720,68 @@ export default {
     },
     // 续费
     Renew(el) {
-      this.dialogFormVisible = true
       this.chooseMac = el
+      // let nowTime = + new Date();
+      // let startTime = + new Date(this.chooseMac.time)
+      // let endTime = startTime + this.chooseMac.day*24*60*60*1000
+      this.useTime = 7
+      this.time_left = this.chooseMac.time_left
+      this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*this.useTime)
+      this.totalDbc = Math.ceil(this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*this.useTime/this.dbc_price))
+      this.dialogFormVisible = true
     },
     inputNum(val){
-      if(!this.openCheck){
-        this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*val)
-        this.totalDbc = this.getnum2(this.totalMoney/this.dbc_price)
-      }else{
-        this.totalMoney = 0;
-        this.totalDbc = 0;
-      }
+      this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*val)
+      this.totalDbc = Math.ceil(this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*val/this.dbc_price))
+    },
+    confirmRenew(){
+      this.btnloading = true;
+      Get_ByWif({ only_key: this.chooseMac.machine_id+this.wallet_address } ).then(res=> {
+        console.log(`向${res.wallet}转账${this.totalDbc}.${res.random_number}DBC`);
+        this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
+          confirmButtonText: this.$t('confirm'),
+          cancelButtonText:  this.$t('cancel'),
+          inputValue: this.passward
+        })
+        .then( ({ value }) => {
+          this.setPassWard(value)
+          transfer(res.wallet, `${this.totalDbc}.${res.random_number}`, value, (res1) => {
+            console.log(res1, 'res');
+            if(res1.success){
+              let permas = {
+                only_key: this.chooseMac.machine_id+this.wallet_address,
+                machine_id: this.chooseMac.machine_id,
+                dollar: this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229),
+                day: this.useTime,
+                count: this.totalMoney,
+                dbc: this.totalDbc,
+                wallet: this.wallet_address
+              }
+              console.log(permas, 'permas');
+              My_Virtual(permas).then(res => {
+                console.log(res, 'res');
+                this.$message({
+                  showClose: true,
+                  message: '续费成功',
+                  type: "success",
+                });
+                this.btnloading = false;
+              })
+            }else{
+              this.btnloading = false;
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: "error",
+              });
+            }
+          })
+        }).catch(() => {
+          this.btnloading = false;
+          console.log('取消续租');
+        });
+      })
+      this.dialogFormVisible = false
     },
     // 创建、修改 虚拟机
     operateVirtual(str, el) {
@@ -715,6 +792,22 @@ export default {
       }else{
         this.title = this.$t('myvirtual.change')
       }
+    },
+    Createvirtual(){
+      let perams = {
+        only_key: this.chooseMac.id,
+        machine_id: this.chooseMac.machine_id,
+        ssh_port: `${this.port_min}~${this.port_max}`,
+        gpu_count: this.vir_gpu_num,
+        cpu_cores: this.vir_cpu_num,
+        mem_rate: this.vir_mem
+      }
+      Create_VMS(perams).then( res=> {
+        console.log(res ,'res');
+        if(res.result_code == 0){
+          this.virtual_info.push(res.result_message)
+        }
+      })
     },
     // 重启虚拟机
     reboot() {
@@ -764,6 +857,52 @@ export default {
     },
     refund() {
       this.$message.success('退币成功')
+    },
+
+    minsToHourMins(mins){
+      if (mins < 60) {
+        return mins + 'm'
+      } else {
+        const h = Math.floor(mins / 60)
+        const m = mins % 60
+        return `${h}h${m}m`
+      }
+    },
+    // 倒计时
+    count(time, i, fn){
+      let t=this;
+      let times=time>0?time:0;
+      ti()
+      t.timer[i] = setInterval(ti,1000)
+      function ti(){
+        times--
+        // 定义变量 h,m,s保存倒计时的时间  
+        let h,m,s;  
+        if (times>=0) {
+          // 时分秒
+          h = Math.floor(times/60/60);  
+          m = Math.floor(times/60%60);  
+          s = Math.floor(times%60);
+          let msg=t.repair(h)+':'+t.repair(m)+':'+t.repair(s);
+          fn(msg);
+        }else{
+          // 关闭定时器
+          clearInterval(t.timer[i]);
+          return false
+        }
+      }
+    },
+    // 数字补0
+    repair(o){
+      let x=o;
+      let t=x > 9 ? x : '0' + x
+      return t
+    },
+    // 关闭定时器
+    stopInter(){
+      this.timer.map((item)=>{
+        clearInterval(item);
+      })
     }
   },
 };
@@ -839,7 +978,7 @@ export default {
           padding: 10px 5px;
           box-sizing: border-box;
           border: 1px solid #999;
-          margin-right: 20px;
+          // margin-right: 20px;
         }
         i{
           font-style: normal;

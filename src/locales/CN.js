@@ -1077,6 +1077,7 @@ export default {
     order_status4:'订单中断',
     order_status5:'订单结束',
     Confirm_rental: '确认租用',
+    Confirm_create: '确认创建',
     Renew:'续费',
     Build:'创建GPU虚拟机',
     virId: '虚拟机ID',

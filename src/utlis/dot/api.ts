@@ -1,18 +1,22 @@
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { cryptoWaitReady, blake2AsHex, randomAsU8a } from '@polkadot/util-crypto'
-import { isHex, stringToU8a, u8aToHex, hexToU8a, stringToHex } from '@polkadot/util';
+import { formatBalance, BN_TEN, isHex, stringToU8a, u8aToHex, hexToU8a, stringToHex } from '@polkadot/util';
 import { getCurrentPair } from './index' // 获取kerPair
+import BN from 'bn.js'
+import { initNetwork } from './index'
+
 
 const node = {
   polkadot: 'wss://rpc.polkadot.io',
-  dbc: 'wss://innertest2.dbcwallet.io'
+  // dbc: 'wss://innertest2.dbcwallet.io' // 测试网
+  dbc: 'wss://preinfo.dbcwallet.io' // 银河竞赛预主网
+  //dbc: 'wss://info.dbcwallet.io' // 主网
 }
 let api: ApiPromise | null = null
 
 declare interface Network {
   api: ApiPromise,
 }
-
 // 链上交互
 export const GetApi = async (): Promise<Network> =>{
   if (!api) {
@@ -29,12 +33,6 @@ export const GetApi = async (): Promise<Network> =>{
         "MachineId": "Text",
         "OrderId": "u64",
         "TelecomName": "Text",
-        "AccountInfo": {
-          "nonce": "u32",
-          "consumers": "u32",
-          "providers": "u32",
-          "data": "AccountData"
-        },
         "StandardGpuPointPrice": {
           "gpu_point": "u64",
           "gpu_price": "u64"
@@ -83,6 +81,7 @@ export const GetApi = async (): Promise<Network> =>{
           "bonding_height": "BlockNumber",
           "online_height": "BlockNumber",
           "last_online_height": "BlockNumber",
+          "init_stake_per_gpu": "Balance",
           "stake_amount": "Balance",
           "machine_status": "MachineStatus",
           "total_rented_duration": "u64",
@@ -165,8 +164,7 @@ export const GetApi = async (): Promise<Network> =>{
         },
         "MachineGradeStatus": {
           "basic_grade": "u64",
-          "is_rented": "bool",
-          "reward_account": "Vec<AccountId>"
+          "is_rented": "bool"
         },
         "CommitteeList": {
           "normal": "Vec<AccountId>",
@@ -190,7 +188,11 @@ export const GetApi = async (): Promise<Network> =>{
           "machine_info": "CommitteeUploadInfo"
         },
         "OCMachineStatus": {
-          "_enum": ["Booked", "Hashed", "Confirmed"]
+          "_enum": [
+            "Booked",
+            "Hashed",
+            "Confirmed"
+          ]
         },
         "OCMachineCommitteeList": {
           "book_time": "BlockNumber",
@@ -202,7 +204,12 @@ export const GetApi = async (): Promise<Network> =>{
           "status": "OCVerifyStatus"
         },
         "OCVerifyStatus": {
-          "_enum": ["SubmittingHash", "SubmittingRaw", "Summarizing", "Finished"]
+          "_enum": [
+            "SubmittingHash",
+            "SubmittingRaw",
+            "Summarizing",
+            "Finished"
+          ]
         },
         "ReporterReportList": {
           "processing_report": "Vec<ReportId>",
@@ -223,7 +230,12 @@ export const GetApi = async (): Promise<Network> =>{
           "order_status": "MTOrderStatus"
         },
         "MTOrderStatus": {
-          "_enum": ["WaitingEncrypt", "Verifying", "WaitingRaw", "Finished"]
+          "_enum": [
+            "WaitingEncrypt",
+            "Verifying",
+            "WaitingRaw",
+            "Finished"
+          ]
         },
         "MTCommitteeOrderList": {
           "booked_report": "Vec<ReportId>",
@@ -246,7 +258,10 @@ export const GetApi = async (): Promise<Network> =>{
           "slash_reason": "MTReporterSlashReason"
         },
         "MTReporterSlashReason": {
-          "_enum": ["ReportRefused", "NotSubmitEncryptedInfo"]
+          "_enum": [
+            "ReportRefused",
+            "NotSubmitEncryptedInfo"
+          ]
         },
         "MTReportInfoDetail": {
           "reporter": "AccountId",
@@ -288,7 +303,8 @@ export const GetApi = async (): Promise<Network> =>{
           "slash_time": "BlockNumber",
           "slash_amount": "Balance",
           "slash_exec_time": "BlockNumber",
-          "reward_to": "Vec<AccountId>"
+          "reward_to": "Vec<AccountId>",
+          "slash_reason": "CMSlashReason"
         },
         "CMSlashReason": {
           "_enum": [
@@ -322,7 +338,8 @@ export const GetApi = async (): Promise<Network> =>{
             "RentedHardwareCounterfeit": "BlockNumber",
             "OnlineRentFailed": "BlockNumber",
             "CommitteeRefusedOnline": null,
-            "CommitteeRefusedMutHardware": null
+            "CommitteeRefusedMutHardware": null,
+            "ReonlineShouldReward": null
           }
         },
         "RentOrderDetail": {
@@ -334,7 +351,11 @@ export const GetApi = async (): Promise<Network> =>{
           "rent_status": "RentStatus"
         },
         "RentStatus": {
-          "_enum": ["WaitingVerifying", "Renting", "RentExpired"]
+          "_enum": [
+            "WaitingVerifying",
+            "Renting",
+            "RentExpired"
+          ]
         },
         "CommitteeStakeParamsInfo": {
           "stake_baseline": "Balance",
@@ -372,7 +393,7 @@ export const GetApi = async (): Promise<Network> =>{
 let CallBack_data = {
   msg:'',
   success: false
-}
+} 
 /**
  * getBlockTime 查询链上时间
  * 
@@ -381,8 +402,8 @@ let CallBack_data = {
  
 export const getBlockTime = async (): Promise<any> => {
   await GetApi();
-  let de = await api?.rpc.chain.getBlock()
-  return de?.block.header.number.toHuman()
+  let de = await api?.query.system.number();
+  return de?.toHuman();
 }
 
 /**
@@ -439,21 +460,22 @@ export const getCommitteeList = async (wallet: string): Promise<any> => {
   await api?.tx.onlineCommittee
   .submitConfirmHash( machine_id, raw_input)
   .signAndSend( kering! , ( { events = [], status } ) => {
-    if (status.isInBlock) {
-      events.forEach(({ event: { method, data: [error] } }) => {
-        if (error.isModule && method == 'ExtrinsicFailed') {
-          const decoded = api?.registry.findMetaError(error.asModule);
-          CallBack_data.msg = decoded!.method;
-          CallBack_data.success = false
-        }else if(method == 'ExtrinsicSuccess'){
-          CallBack_data.msg = method;
-          CallBack_data.success = true
-        }
-      });
-      if (callback) {
-        callback(CallBack_data)
-      }
-    }
+    returnFun(status, events, callback)
+    // if (status.isInBlock) {
+    //   events.forEach(({ event: { method, data: [error] } }) => {
+    //     if (error.isModule && method == 'ExtrinsicFailed') {
+    //       const decoded = api?.registry.findMetaError(error.asModule);
+    //       CallBack_data.msg = decoded!.method;
+    //       CallBack_data.success = false
+    //     }else if(method == 'ExtrinsicSuccess'){
+    //       CallBack_data.msg = method;
+    //       CallBack_data.success = true
+    //     }
+    //   });
+    //   if (callback) {
+    //     callback(CallBack_data)
+    //   }
+    // }
   })
   .catch((res)=>{
     CallBack_data = {
@@ -503,21 +525,22 @@ export const ConfirmRaw = async (permas: any, passward: string, callback: (arr: 
   await api?.tx.onlineCommittee
   .submitConfirmRaw( machine_info_detail )
   .signAndSend( kering! , ( { events = [], status  } ) => {
-    if (status.isInBlock) {
-      events.forEach(({ event: { method, data: [error] } }) => {
-        if (error.isModule && method == 'ExtrinsicFailed') {
-          const decoded = api?.registry.findMetaError(error.asModule);
-          CallBack_data.msg = decoded!.method;
-          CallBack_data.success = false
-        }else if(method == 'ExtrinsicSuccess'){
-          CallBack_data.msg = method;
-          CallBack_data.success = true
-        }
-      });
-      if (callback) {
-        callback(CallBack_data)
-      }
-    }
+    returnFun(status, events, callback)
+    // if (status.isInBlock) {
+    //   events.forEach(({ event: { method, data: [error] } }) => {
+    //     if (error.isModule && method == 'ExtrinsicFailed') {
+    //       const decoded = api?.registry.findMetaError(error.asModule);
+    //       CallBack_data.msg = decoded!.method;
+    //       CallBack_data.success = false
+    //     }else if(method == 'ExtrinsicSuccess'){
+    //       CallBack_data.msg = method;
+    //       CallBack_data.success = true
+    //     }
+    //   });
+    //   if (callback) {
+    //     callback(CallBack_data)
+    //   }
+    // }
   })
   .catch((res)=>{
     CallBack_data = {
@@ -580,21 +603,22 @@ export const bookFaultOrder = async (reportid: number, passward:string, callback
   await api?.tx.maintainCommittee
   .bookFaultOrder(reportid)
   .signAndSend( kering! , ( { events = [], status  } ) => {
-    if (status.isInBlock) {
-      events.forEach(({ event: { method, data: [error] } }) => {
-        if (error.isModule && method == 'ExtrinsicFailed') {
-          const decoded = api?.registry.findMetaError(error.asModule);
-          CallBack_data.msg = decoded!.method;
-          CallBack_data.success = false
-        }else if(method == 'ExtrinsicSuccess'){
-          CallBack_data.msg = method;
-          CallBack_data.success = true
-        }
-      });
-      if (callback) {
-        callback(CallBack_data)
-      }
-    }
+    returnFun(status, events, callback)
+    // if (status.isInBlock) {
+    //   events.forEach(({ event: { method, data: [error] } }) => {
+    //     if (error.isModule && method == 'ExtrinsicFailed') {
+    //       const decoded = api?.registry.findMetaError(error.asModule);
+    //       CallBack_data.msg = decoded!.method;
+    //       CallBack_data.success = false
+    //     }else if(method == 'ExtrinsicSuccess'){
+    //       CallBack_data.msg = method;
+    //       CallBack_data.success = true
+    //     }
+    //   });
+    //   if (callback) {
+    //     callback(CallBack_data)
+    //   }
+    // }
   })
   .catch((res)=>{
     CallBack_data = {
@@ -660,21 +684,22 @@ export const submitConfirmHash = async ( permas: any,  passward: string, callbac
   await api?.tx.maintainCommittee
   .submitConfirmHash( report_id, raw_input )
   .signAndSend( kering! , ( { events = [], status  } ) => {
-    if (status.isInBlock) {
-      events.forEach(({ event: { method, data: [error] }}) => {
-        if (error.isModule && method == 'ExtrinsicFailed') {
-          const decoded = api?.registry.findMetaError(error.asModule);
-          CallBack_data.msg = decoded!.method;
-          CallBack_data.success = false
-        }else if(method == 'ExtrinsicSuccess'){
-          CallBack_data.msg = method;
-          CallBack_data.success = true
-        }
-      });
-      if (callback) {
-        callback(CallBack_data)
-      }
-    }
+    returnFun(status, events, callback)
+    // if (status.isInBlock) {
+    //   events.forEach(({ event: { method, data: [error] }}) => {
+    //     if (error.isModule && method == 'ExtrinsicFailed') {
+    //       const decoded = api?.registry.findMetaError(error.asModule);
+    //       CallBack_data.msg = decoded!.method;
+    //       CallBack_data.success = false
+    //     }else if(method == 'ExtrinsicSuccess'){
+    //       CallBack_data.msg = method;
+    //       CallBack_data.success = true
+    //     }
+    //   });
+    //   if (callback) {
+    //     callback(CallBack_data)
+    //   }
+    // }
   })
   .catch((res)=>{
     CallBack_data = {
@@ -709,21 +734,22 @@ export const submitConfirmRaw = async ( permas: any, passward: string, callback:
   await api?.tx.maintainCommittee
   .submitConfirmRaw(report_id, machine_id, reporter_rand_str, committee_rand_str, err_reason, extra_err_info, support_report )
   .signAndSend( kering! , ( { events = [], status  } ) => {
-    if (status.isInBlock) {
-      events.forEach(({ event: { method, data: [error] }}) => {
-        if (error.isModule && method == 'ExtrinsicFailed') {
-          const decoded = api?.registry.findMetaError(error.asModule);
-          CallBack_data.msg = decoded!.method;
-          CallBack_data.success = false
-        }else if(method == 'ExtrinsicSuccess'){
-          CallBack_data.msg = method;
-          CallBack_data.success = true
-        }
-      });
-      if (callback) {
-        callback(CallBack_data)
-      }
-    }
+    returnFun(status, events, callback)
+    // if (status.isInBlock) {
+    //   events.forEach(({ event: { method, data: [error] }}) => {
+    //     if (error.isModule && method == 'ExtrinsicFailed') {
+    //       const decoded = api?.registry.findMetaError(error.asModule);
+    //       CallBack_data.msg = decoded!.method;
+    //       CallBack_data.success = false
+    //     }else if(method == 'ExtrinsicSuccess'){
+    //       CallBack_data.msg = method;
+    //       CallBack_data.success = true
+    //     }
+    //   });
+    //   if (callback) {
+    //     callback(CallBack_data)
+    //   }
+    // }
   })
   .catch((res)=>{
     CallBack_data = {
@@ -757,21 +783,22 @@ export const reportMachineFault = async ( callback: (data: Object) => void ) => 
   await api?.tx.maintainCommittee
   .reportMachineFault(perams)
   .signAndSend( kering! , ( { events = [], status  } ) => {
-    if (status.isInBlock) {
-      events.forEach(({ event: { method, data: [error] }}) => {
-        if (error.isModule && method == 'ExtrinsicFailed') {
-          const decoded = api?.registry.findMetaError(error.asModule);
-          CallBack_data.msg = decoded!.method;
-          CallBack_data.success = false
-        }else if(method == 'ExtrinsicSuccess'){
-          CallBack_data.msg = method;
-          CallBack_data.success = true
-        }
-      });
-      if (callback) {
-        callback(CallBack_data)
-      }
-    }
+    returnFun(status, events, callback)
+    // if (status.isInBlock) {
+    //   events.forEach(({ event: { method, data: [error] }}) => {
+    //     if (error.isModule && method == 'ExtrinsicFailed') {
+    //       const decoded = api?.registry.findMetaError(error.asModule);
+    //       CallBack_data.msg = decoded!.method;
+    //       CallBack_data.success = false
+    //     }else if(method == 'ExtrinsicSuccess'){
+    //       CallBack_data.msg = method;
+    //       CallBack_data.success = true
+    //     }
+    //   });
+    //   if (callback) {
+    //     callback(CallBack_data)
+    //   }
+    // }
   })
   .catch((res)=>{
     CallBack_data = {
@@ -904,12 +931,39 @@ export const machinesInfo = async (machineId: string): Promise<any> => {
 
 
 /**
- * transfer 测试交易
+ * transfer 交易
  * @return callback 回调函数，返回结果信息
  */
-export const transfer = async (dest: any, value: any,  passward: string, callback: (data: Object) => void) => {
-  console.log(dest, value, passward, 'passwardpassward');
-  await GetApi();
+
+// 输入的值转BN
+export const inputToBn = (input: string, siPower: BN, basePower: number) => {
+  const isDecimalValue = input.match(/^(\d+)\.(\d+)$/);
+
+  let result;
+
+  if (isDecimalValue) {
+    const div = new BN(input.replace(/\.\d*$/, ''));
+    const modString = input.replace(/^\d+\./, '').substr(0, api?.registry.chainDecimals[0]);
+    const mod = new BN(modString);
+    result = div
+      .mul(BN_TEN.pow(siPower))
+      .add(mod.mul(BN_TEN.pow(new BN(basePower - modString.length))));
+    console.log('[modString]->', modString)
+  } else {
+    result = new BN(input.replace(/[^\d]/g, ''))
+      .mul(BN_TEN.pow(siPower));
+  }
+
+  return result
+}
+
+export const transfer = async (dest: any, value: string,  passward: string, callback: (data: Object) => void) => {
+  await initNetwork();
+  const basePower: number = formatBalance.getDefaults().decimals // 小数位数
+  console.log(basePower, 'basePower');
+  const siPower: BN = new BN(basePower)
+  const bob = inputToBn(value, siPower, basePower)
+  console.log(bob,'bob');
   let kering = await getCurrentPair()
   try {
     await kering!.unlock(passward)
@@ -923,7 +977,7 @@ export const transfer = async (dest: any, value: any,  passward: string, callbac
   }
   await cryptoWaitReady();
   await api?.tx.balances
-  .transfer( dest, value*Math.pow(10,15) )
+  .transfer( dest, bob )
   .signAndSend( kering! , ( { events = [], status , dispatchError  } ) => {
     returnFun(status, events, callback)
     // if (status.isInBlock) {

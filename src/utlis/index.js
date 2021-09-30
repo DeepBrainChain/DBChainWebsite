@@ -726,3 +726,21 @@ export const getComputing_Power = (Gpu_Num, Mem, Cuda, M_value) => {
   var num = (Math.sqrt(Gpu_Num)*50+ Mem/3.5 + Math.sqrt(Cuda) * Math.sqrt(M_value/10)*Gpu_Num).toFixed(2)
   return num
 }
+
+
+
+
+// 随机数
+export const randomWord = () => {
+  let str = "",
+  arr = [
+    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l','m', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L','M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+  ];
+  for (let i = 0; i < 55; i++) {
+    let pos = Math.round(Math.random() * (arr.length - 1));
+    str += arr[pos];
+  }
+  return str;
+}
