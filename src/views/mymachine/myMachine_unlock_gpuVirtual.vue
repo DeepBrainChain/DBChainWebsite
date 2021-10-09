@@ -33,7 +33,7 @@
         <div class="li_list1">
           <div>
             <span class="Machine_id">{{$t('virtual.Machine_ID')}}: {{el.machine_id}}</span>
-            <span v-if="el.orderStatus == '正在使用中'">{{$t('myvirtual.time_left')}}: {{el.time_left}} </span>
+            <span class="time_left" v-if="el.orderStatus == '正在使用中'">{{$t('myvirtual.time_left')}}: {{el.time_left}} </span>
           </div>
           <div class="countTime" v-if="el.orderStatus == '待确认支付'">
             <div class="fs14"><span class="bold">{{$t('myvirtual.confirm_time')}}</span>: {{el.confirmTime}}</div>
@@ -149,7 +149,7 @@
               plain
               class="tool-btn"
               size="mini"
-              @click="Confirm_rental"
+              @click="Confirm_rental(el)"
               >{{ $t("myvirtual.Confirm_rental") }}</el-button
             >
             <el-button
@@ -211,7 +211,7 @@
       </div>
       <div class="fs12">{{$t('myvirtual.tip6')}}</div>
       <div>
-        <p><span class="bold">{{$t('myvirtual.balance')}}:</span> 0</p>
+        <p><span class="bold">{{$t('myvirtual.balance')}}:</span> {{balance}} DBC</p>
         <p><span class="bold">{{$t('virtual.total')}}:</span> {{totalMoney}} $</p>
         <p><span class="bold">{{$t('virtual.equivalent')}}:</span> {{totalDbc}}</p>
       </div>
@@ -255,8 +255,8 @@
         {{$t('myvirtual.tip7')}}
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button class="batch" size="mini" plain  @click="Createvirtual">{{$t('myvirtual.Confirm_create')}}</el-button>
-        <el-button class="batch" size="mini" plain  @click="dialogFormVisible1 = false">{{$t('virtual.cancal')}}</el-button>
+        <el-button class="batch" size="mini" plain :loading='btnloading1' @click="Createvirtual">{{$t('myvirtual.Confirm_create')}}</el-button>
+        <el-button class="batch" size="mini" plain @click="dialogFormVisible1 = false">{{$t('virtual.cancal')}}</el-button>
       </div>
     </el-dialog>
 
@@ -271,7 +271,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button class="batch" size="mini" plain  @click="dialogFormVisible2 = false">{{$t('confirm')}}</el-button>
+        <el-button class="batch" size="mini" plain :loading='btnloading2' @click="dialogFormVisible2 = false">{{$t('confirm')}}</el-button>
         <el-button class="batch" size="mini" plain  @click="resetForm('ruleForm')">{{$t('virtual.cancal')}}</el-button>
       </div>
     </el-dialog>
@@ -352,7 +352,8 @@ import {
   Create_VMS,
   VMS_details,
   Get_ByWif,
-  My_Virtual
+  My_Virtual,
+  ConFirm_Rent
 } from "@/api";
 
 import {
@@ -360,7 +361,7 @@ import {
   getBalance,
   getUsdToRmb,
 } from "@/utlis";
-import { transfer } from '@/utlis/dot/api';
+import { transfer, getAccountBalance } from '@/utlis/dot/api';
 import { getCurrentPair } from "@/utlis/dot"
 import { mapState, mapMutations } from "vuex"
 export default {
@@ -399,7 +400,9 @@ export default {
       send_email_repeatLoading: false,
       send_email_repeat_index: -1,
       wallet_address: (getAccount() && getAccount().address) || (getCurrentPair() && getCurrentPair().address),
-
+      // 余额
+      unsubBalance: null,
+      balance: 0,
       // 新增
       timer: [],
       dbc_price: 0,
@@ -420,6 +423,9 @@ export default {
       totalDbc: 0,
       time_left: '0h0m',
       btnloading: false,
+      btnloading1: false,
+      btnloading2: false,
+      btnloading3: false,
       // 创建、修改 虚拟机
       title:'',
       dialogFormVisible1: false,
@@ -466,6 +472,9 @@ export default {
     this.queryMail();
     this.stopInter()
     this.getMyVirtual();
+    this.si = setInterval( ()=> {
+      this.getMyVirtual()
+    }, 60000)
   },
   deactivated() {
     if (this.queryOrderListSi) {
@@ -501,6 +510,7 @@ export default {
     queryMail() {
       this.bindMail = cookie.get("mail");
       let address = "tmp";
+      console.log(this.wallet_address, 'this.wallet_address');
       if (this.$t("website_name") != "congTuCloud") {
         address = this.wallet_address
       }
@@ -618,7 +628,6 @@ export default {
       this.queryMail();
     },
 
-
     // 新增 
     byteToStr(arr) {
       if (typeof arr === "string") {
@@ -652,9 +661,10 @@ export default {
       const num1 = new BigNumber(Number(num)/ Math.pow(10,15)).toFormat()
       let hasPoint;
       num1.indexOf(".") >= 0? hasPoint = true: hasPoint = false
-      return num1.substring(0,num1.indexOf(".")+3);
+      return num1.substring(0,num1.indexOf(".")+5);
     },
     getMyVirtual() {
+      this.stopInter()
       get_Virtual({ wallet: this.wallet_address }).then(res => {
         res.content.map((el) => {
           let nowTime = + new Date();
@@ -688,9 +698,6 @@ export default {
             el.confirmTime = '00:00'
           }
         })
-        // this.si = setInterval( ()=> {
-        //   this.getMyVirtual()
-        // }, 60000)
       })
     },
     handleChangepageSize(num) {
@@ -701,16 +708,24 @@ export default {
     },
 
     // 确认租用
-    Confirm_rental() {
+    Confirm_rental(el) {
+      console.log(el, 'el');
       this.$confirm(this.$t('myvirtual.tip4'), this.$t('myvirtual.Confirm_rental'), {
         confirmButtonText: this.$t('confirm'),
         cancelButtonText: this.$t('cancel'),
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '租用成功!'
-        });
+        let perams = {
+          only_key: el.id,
+          machine_id: el.machine_id
+        }
+        ConFirm_Rent(perams).then(res => {
+          console.log(res, 'res');
+          this.$message({
+            type: 'success',
+            message: '租用成功!'
+          });
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -719,11 +734,13 @@ export default {
       });
     },
     // 续费
-    Renew(el) {
+    async Renew(el) {
+      // getBalance().then((res) => {
+      //   this.balance = res.balance;
+      // });
+      this.unsubBalance = await getAccountBalance(this.wallet_address)
+      this.balance = this.getnum1(this.unsubBalance.data.free)
       this.chooseMac = el
-      // let nowTime = + new Date();
-      // let startTime = + new Date(this.chooseMac.time)
-      // let endTime = startTime + this.chooseMac.day*24*60*60*1000
       this.useTime = 7
       this.time_left = this.chooseMac.time_left
       this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*this.useTime)
@@ -794,6 +811,7 @@ export default {
       }
     },
     Createvirtual(){
+      this.btnloading1 = true
       let perams = {
         only_key: this.chooseMac.id,
         machine_id: this.chooseMac.machine_id,
@@ -804,6 +822,7 @@ export default {
       }
       Create_VMS(perams).then( res=> {
         console.log(res ,'res');
+        this.btnloading1 = false
         if(res.result_code == 0){
           this.virtual_info.push(res.result_message)
         }
@@ -974,11 +993,13 @@ export default {
       span{
         word-break: break-all;
         display: inline-block;
-        &.Machine_id{
+        &.Machine_id {
           padding: 10px 5px;
           box-sizing: border-box;
           border: 1px solid #999;
-          // margin-right: 20px;
+        }
+        &.time_left {
+          margin-left: 20px;
         }
         i{
           font-style: normal;

@@ -83,12 +83,12 @@ import {
   binding_is_ok_modify,
   send_email_repeat
 } from "@/api";
-
 import {
   getAccount,
   getBalance,
   getCountDown
 } from "@/utlis";
+import { Error_Reason } from "@/utlis/error_desc"
 import { getOrder, reportInfo, getCommitteeList, bookFaultOrder, getBlockTime } from '@/utlis/dot/api'
 import { getCurrentPair } from "@/utlis/dot"
 import { mapState, mapMutations } from "vuex"
@@ -327,7 +327,7 @@ export default {
               }else{
                 this.$message({
                   showClose: true,
-                  message: res.msg,
+                  message: ( res.index == 0 || res.index ) ? Error_Reason[res.section][res.index] : res.msg,
                   type: "error",
                 });
                 item.btnloading = false

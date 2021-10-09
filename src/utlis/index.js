@@ -13,6 +13,7 @@ import {
   get_address_abstracts1
 } from "@/api/index";
 import { getCurrentPair } from './dot'
+import { getAccountBalance } from './dot/api'
 import {
   dbc_balance,
   getsearch,
@@ -156,14 +157,23 @@ export function getBalance() {
   return new Promise((resolve, reject) => {
     if (account) {
       if(store.state.isNewWallet == 'true'){
-        getsearch({ key: account.address , page: 0, row: 1 }).then(res => {
+        getAccountBalance(account.address).then(res=> {
+          let balance = res.data?Number(res.data.free)/Math.pow(10,15):0
           resolve({
             symbol: DBC_NAME,
-            balance: res.data?res.data.account.balance:0
+            balance: balance
           });
         }).catch(err => {
           console.log(err, 'getsearch_Err');
         })
+        // getsearch({ key: account.address , page: 0, row: 1 }).then(res => {
+        //   resolve({
+        //     symbol: DBC_NAME,
+        //     balance: res.data?res.data.account.balance:0
+        //   });
+        // }).catch(err => {
+        //   console.log(err, 'getsearch_Err');
+        // })
       }else{
         dbc_balance({
           user_wallet_address: account.address,

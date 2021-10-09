@@ -5,7 +5,6 @@ import { getCurrentPair } from './index' // 获取kerPair
 import BN from 'bn.js'
 import { initNetwork } from './index'
 
-
 const node = {
   polkadot: 'wss://rpc.polkadot.io',
   // dbc: 'wss://innertest2.dbcwallet.io' // 测试网
@@ -386,20 +385,45 @@ export const GetApi = async (): Promise<Network> =>{
   return { api }
 }
 
-// transfer('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY', 1, '123456789' , (res)=>{
-//   console.log(res, 'transfer');
-// })
 // 定义信息返回
 let CallBack_data = {
+  index: 0,
   msg:'',
+  section:'',
   success: false
 } 
+let CallBack_data1 = {
+  msg:'',
+  success: false
+}
+// 定义回调函数
+const returnFun = (status: any, events: any, callback: Function) => {
+  if (status.isInBlock) {
+    events.forEach(({ event: { method, data: [error] } }) => {
+      if (error.isModule && method == 'ExtrinsicFailed') {
+        const decoded = api?.registry.findMetaError(error.asModule);
+        console.log(JSON.stringify(decoded));
+        CallBack_data.msg = decoded!.method;
+        CallBack_data.success = false
+        CallBack_data.index = decoded!.index;
+        CallBack_data.section = decoded!.section;
+      }else if(method == 'ExtrinsicSuccess'){
+        CallBack_data.msg = method;
+        CallBack_data.success = true
+      }
+    });
+    if (callback) {
+      callback(CallBack_data)
+    }
+  }
+}
+
+
 /**
  * getBlockTime 查询链上时间
  * 
  * @return time:链上时间块
  */
- 
 export const getBlockTime = async (): Promise<any> => {
   await GetApi();
   let de = await api?.query.system.number();
@@ -407,11 +431,21 @@ export const getBlockTime = async (): Promise<any> => {
 }
 
 /**
+ * getAccountBalance 查询账户余额
+ * 
+ * @return balance:链上时间块
+ */
+ export const getAccountBalance = async (wallet: string): Promise<any> => {
+  await GetApi();
+  let de = await api?.query.system.account(wallet);
+  return de?.toJSON();
+}
+
+/**
  * getCommitteeList 查询是否为理事会成员
  * 
  * @return list: boolen 理事会成员列表
  */
-
 export const getCommitteeList = async (wallet: string): Promise<any> => {
   await GetApi();
   let de = await api?.query.committee.committee()
@@ -449,11 +483,11 @@ export const getCommitteeList = async (wallet: string): Promise<any> => {
   try {
     await kering!.unlock(passward)
   } catch (e: any) {
-    CallBack_data = {
+    CallBack_data1 = {
       msg: e.message,
       success: false
     };
-    callback(CallBack_data)
+    callback(CallBack_data1)
     return;
   }
   await cryptoWaitReady();
@@ -461,28 +495,13 @@ export const getCommitteeList = async (wallet: string): Promise<any> => {
   .submitConfirmHash( machine_id, raw_input)
   .signAndSend( kering! , ( { events = [], status } ) => {
     returnFun(status, events, callback)
-    // if (status.isInBlock) {
-    //   events.forEach(({ event: { method, data: [error] } }) => {
-    //     if (error.isModule && method == 'ExtrinsicFailed') {
-    //       const decoded = api?.registry.findMetaError(error.asModule);
-    //       CallBack_data.msg = decoded!.method;
-    //       CallBack_data.success = false
-    //     }else if(method == 'ExtrinsicSuccess'){
-    //       CallBack_data.msg = method;
-    //       CallBack_data.success = true
-    //     }
-    //   });
-    //   if (callback) {
-    //     callback(CallBack_data)
-    //   }
-    // }
   })
   .catch((res)=>{
-    CallBack_data = {
+    CallBack_data1 = {
       msg: res.message,
       success: false
     };
-    callback(CallBack_data)
+    callback(CallBack_data1)
   })
 }
 
@@ -514,11 +533,11 @@ export const ConfirmRaw = async (permas: any, passward: string, callback: (arr: 
   try {
     await kering!.unlock(passward)
   } catch (e: any) {
-    CallBack_data = {
+    CallBack_data1 = {
       msg: e.message,
       success: false
     };
-    callback(CallBack_data)
+    callback(CallBack_data1)
     return;
   }
   await cryptoWaitReady()
@@ -526,28 +545,13 @@ export const ConfirmRaw = async (permas: any, passward: string, callback: (arr: 
   .submitConfirmRaw( machine_info_detail )
   .signAndSend( kering! , ( { events = [], status  } ) => {
     returnFun(status, events, callback)
-    // if (status.isInBlock) {
-    //   events.forEach(({ event: { method, data: [error] } }) => {
-    //     if (error.isModule && method == 'ExtrinsicFailed') {
-    //       const decoded = api?.registry.findMetaError(error.asModule);
-    //       CallBack_data.msg = decoded!.method;
-    //       CallBack_data.success = false
-    //     }else if(method == 'ExtrinsicSuccess'){
-    //       CallBack_data.msg = method;
-    //       CallBack_data.success = true
-    //     }
-    //   });
-    //   if (callback) {
-    //     callback(CallBack_data)
-    //   }
-    // }
   })
   .catch((res)=>{
-    CallBack_data = {
+    CallBack_data1 = {
       msg: res.message,
       success: false
     };
-    callback(CallBack_data)
+    callback(CallBack_data1)
   })
 }
 
@@ -556,7 +560,6 @@ export const ConfirmRaw = async (permas: any, passward: string, callback: (arr: 
  * 
  * @return [] 抢单列表
  */
- 
 export const getOrder = async (): Promise<any> => {
   await GetApi();
   let de = await api?.query.maintainCommittee.liveReport()
@@ -591,11 +594,11 @@ export const bookFaultOrder = async (reportid: number, passward:string, callback
   try {
     await kering!.unlock(passward)
   } catch (e: any) {
-    CallBack_data = {
+    CallBack_data1 = {
       msg: e.message,
       success: false
     };
-    callback(CallBack_data)
+    callback(CallBack_data1)
     return;
   }
   console.log(reportid, 'reportid' );
@@ -604,28 +607,13 @@ export const bookFaultOrder = async (reportid: number, passward:string, callback
   .bookFaultOrder(reportid)
   .signAndSend( kering! , ( { events = [], status  } ) => {
     returnFun(status, events, callback)
-    // if (status.isInBlock) {
-    //   events.forEach(({ event: { method, data: [error] } }) => {
-    //     if (error.isModule && method == 'ExtrinsicFailed') {
-    //       const decoded = api?.registry.findMetaError(error.asModule);
-    //       CallBack_data.msg = decoded!.method;
-    //       CallBack_data.success = false
-    //     }else if(method == 'ExtrinsicSuccess'){
-    //       CallBack_data.msg = method;
-    //       CallBack_data.success = true
-    //     }
-    //   });
-    //   if (callback) {
-    //     callback(CallBack_data)
-    //   }
-    // }
   })
   .catch((res)=>{
-    CallBack_data = {
+    CallBack_data1 = {
       msg: res.message,
       success: false
     };
-    callback(CallBack_data)
+    callback(CallBack_data1)
   })
 }
 
@@ -672,11 +660,11 @@ export const submitConfirmHash = async ( permas: any,  passward: string, callbac
   try {
     await kering!.unlock(passward)
   } catch (e: any) {
-    CallBack_data = {
+    CallBack_data1 = {
       msg: e.message,
       success: false
     };
-    callback(CallBack_data)
+    callback(CallBack_data1)
     return;
   }
   await cryptoWaitReady();
@@ -685,28 +673,13 @@ export const submitConfirmHash = async ( permas: any,  passward: string, callbac
   .submitConfirmHash( report_id, raw_input )
   .signAndSend( kering! , ( { events = [], status  } ) => {
     returnFun(status, events, callback)
-    // if (status.isInBlock) {
-    //   events.forEach(({ event: { method, data: [error] }}) => {
-    //     if (error.isModule && method == 'ExtrinsicFailed') {
-    //       const decoded = api?.registry.findMetaError(error.asModule);
-    //       CallBack_data.msg = decoded!.method;
-    //       CallBack_data.success = false
-    //     }else if(method == 'ExtrinsicSuccess'){
-    //       CallBack_data.msg = method;
-    //       CallBack_data.success = true
-    //     }
-    //   });
-    //   if (callback) {
-    //     callback(CallBack_data)
-    //   }
-    // }
   })
   .catch((res)=>{
-    CallBack_data = {
+    CallBack_data1 = {
       msg: res.message,
       success: false
     };
-    callback(CallBack_data)
+    callback(CallBack_data1)
   })
 }
 
@@ -723,11 +696,11 @@ export const submitConfirmRaw = async ( permas: any, passward: string, callback:
   try {
     await kering!.unlock(passward)
   } catch (e: any) {
-    CallBack_data = {
+    CallBack_data1 = {
       msg: e.message,
       success: false
     };
-    callback(CallBack_data)
+    callback(CallBack_data1)
     return;
   }
   await cryptoWaitReady();
@@ -735,28 +708,13 @@ export const submitConfirmRaw = async ( permas: any, passward: string, callback:
   .submitConfirmRaw(report_id, machine_id, reporter_rand_str, committee_rand_str, err_reason, extra_err_info, support_report )
   .signAndSend( kering! , ( { events = [], status  } ) => {
     returnFun(status, events, callback)
-    // if (status.isInBlock) {
-    //   events.forEach(({ event: { method, data: [error] }}) => {
-    //     if (error.isModule && method == 'ExtrinsicFailed') {
-    //       const decoded = api?.registry.findMetaError(error.asModule);
-    //       CallBack_data.msg = decoded!.method;
-    //       CallBack_data.success = false
-    //     }else if(method == 'ExtrinsicSuccess'){
-    //       CallBack_data.msg = method;
-    //       CallBack_data.success = true
-    //     }
-    //   });
-    //   if (callback) {
-    //     callback(CallBack_data)
-    //   }
-    // }
   })
   .catch((res)=>{
-    CallBack_data = {
+    CallBack_data1 = {
       msg: res.message,
       success: false
     };
-    callback(CallBack_data)
+    callback(CallBack_data1)
   })
 }
 
@@ -771,11 +729,11 @@ export const reportMachineFault = async ( callback: (data: Object) => void ) => 
   try {
     await kering!.unlock('lynn123123')
   } catch (e: any) {
-    CallBack_data = {
+    CallBack_data1 = {
       msg: e.message,
       success: false
     };
-    callback(CallBack_data)
+    callback(CallBack_data1)
     return;
   }
   perams[type] = `(${Hash}, ${Pub})`
@@ -784,28 +742,13 @@ export const reportMachineFault = async ( callback: (data: Object) => void ) => 
   .reportMachineFault(perams)
   .signAndSend( kering! , ( { events = [], status  } ) => {
     returnFun(status, events, callback)
-    // if (status.isInBlock) {
-    //   events.forEach(({ event: { method, data: [error] }}) => {
-    //     if (error.isModule && method == 'ExtrinsicFailed') {
-    //       const decoded = api?.registry.findMetaError(error.asModule);
-    //       CallBack_data.msg = decoded!.method;
-    //       CallBack_data.success = false
-    //     }else if(method == 'ExtrinsicSuccess'){
-    //       CallBack_data.msg = method;
-    //       CallBack_data.success = true
-    //     }
-    //   });
-    //   if (callback) {
-    //     callback(CallBack_data)
-    //   }
-    // }
   })
   .catch((res)=>{
-    CallBack_data = {
+    CallBack_data1 = {
       msg: res.message,
       success: false
     };
-    callback(CallBack_data)
+    callback(CallBack_data1)
   })
 }
 
@@ -816,47 +759,10 @@ export const reportMachineFault = async ( callback: (data: Object) => void ) => 
  * @param permas
  * @return callback 回调函数，返回数组信息
  */
-export const leaseCommitteeOps = async (): Promise<any> => {
-  // await GetApi();
-  // let de = await api?.query.leaseCommittee.committeeOps()
-  // console.log(de?.toHuman())
-  let data = [
-    [
-      [
-        '5HL92dTnQrZSJZy7ckDVYVt9mMX3NsjShWsYDquB3eB3yb5R',
-        '10bc6a648abc114620656fb912c0af5a50d37c2da5ccc8bcf85537bcd7706211'
-      ],
-      {
-        staked_dbc: '1.0000 kDBC',
-        verify_time: [
-          '18,272',
-          '19,712',
-          '21,152'
-        ],
-        confirm_hash: '0x96dd1ebd25fbe5fd20ba84d91db20532',
-        hash_time: '18,284',
-        confirm_time: '19,897',
-        machine_status: 'Confirmed',
-        machine_info: {
-          machine_id: '10bc6a648abc114620656fb912c0af5a50d37c2da5ccc8bcf85537bcd7706211',
-          gpu_type: 'GeForceRTX3080Ti',
-          gpu_num: 4,
-          cuda_core: '10,204',
-          gpu_mem: 12,
-          calc_point: '76,283',
-          sys_disk: 480,
-          data_disk: '2,000',
-          cpu_type: 'Intel(R) Xeon(R) Silver 4214R CPU @ 2.40GHz',
-          cpu_core_num: 48,
-          cpu_rate: '2,400',
-          mem_num: 768,
-          rand_str: '',
-          is_support: true
-        }
-      }
-    ]
-  ]
-  return data
+export const leaseCommitteeOps = async (wallet: string): Promise<any> => {
+  await GetApi();
+  let de = await api?.query.onlineCommittee.committeeMachine(wallet)
+  return de!.toHuman()
 }
 
 /**
@@ -865,67 +771,11 @@ export const leaseCommitteeOps = async (): Promise<any> => {
  * @return callback 回调函数，返回数组信息
  */
 export const machinesInfo = async (machineId: string): Promise<any> => {
-  // await GetApi();
-  // let de = await api?.query.onlineProfile.machinesInfo()
-  // console.log(de?.toHuman())
-  let data = {
-    controller: '5E4tsQdDiTY3FNTvfpJsoG8UXfM7B9TvSG77SQdFn9uJbckR',
-    machine_stash: '5E7123qZExgZaYKnmTcJacu68c2GbLeSHo9qNWmUWcaw4RSR',
-    last_machine_renter: '5EHuyFRjExKpEcduSvRykkKTRWo8DYqPR9ifYVe2wVcYxTo3',
-    last_machine_restake: '22,509',
-    bonding_height: '20,206',
-    online_height: '22,509',
-    last_online_height: '22,509',
-    init_stake_amount: '400.0000 kDBC',
-    current_stake_amount: '400.0000 kDBC',
-    machine_status: {
-      Rented: null
-    },
-    total_rented_duration: 0,
-    total_rented_times: 1,
-    total_rent_fee: '60.4808 kDBC',
-    total_burn_fee: 0,
-    machine_info_detail: {
-      committee_upload_info: {
-        machine_id: '0054ab938a6d9427656e2ca098dc6c6c755a4e47cd98c0cfa309f85c817b6e17',
-        gpu_type: 'GeForceRTX3080Ti',
-        gpu_num: 4,
-        cuda_core: '10,240',
-        gpu_mem: 12,
-        calc_point: '76,283',
-        sys_disk: 480,
-        data_disk: '2,000',
-        cpu_type: 'Intel(R) Xeon(R) Silver 4214R CPU @ 2.40GHz',
-        cpu_core_num: 48,
-        cpu_rate: '2,400',
-        mem_num: 768,
-        rand_str: '',
-        is_support: true
-      },
-      staker_customize_info: {
-        server_room: '0xc3a3289c1661b21fe15ac138a43745e817082081c1befd05e3ee72c73ac03473',
-        upload_net: 100,
-        download_net: 100,
-        longitude: {
-          East: '1,182,946'
-        },
-        latitude: {
-          North: '340,643'
-        },
-        telecom_operators: [
-          'China Telecom'
-        ]
-      }
-    },
-    reward_committee: [
-      '5Cyb1Tx992KdpAdAwMfg4JJNMmCpidPybcSZniyRaPnp5q8z',
-      '5HL92dTnQrZSJZy7ckDVYVt9mMX3NsjShWsYDquB3eB3yb5R',
-      '5HgjMd2iuiyzPvurozVydmwCcSbDZRgdA6UHtvtXi9KSr3A8'
-    ],
-    reward_deadline: 737
-  }
-  return data
+  await GetApi();
+  let de = await api!.query.onlineProfile.machinesInfo(machineId)
+  return de!.toHuman()
 }
+
 
 
 
@@ -934,7 +784,6 @@ export const machinesInfo = async (machineId: string): Promise<any> => {
  * transfer 交易
  * @return callback 回调函数，返回结果信息
  */
-
 // 输入的值转BN
 export const inputToBn = (input: string, siPower: BN, basePower: number) => {
   const isDecimalValue = input.match(/^(\d+)\.(\d+)$/);
@@ -968,11 +817,11 @@ export const transfer = async (dest: any, value: string,  passward: string, call
   try {
     await kering!.unlock(passward)
   } catch (e: any) {
-    CallBack_data = {
+    CallBack_data1 = {
       msg: e.message,
       success: false
     };
-    callback(CallBack_data)
+    callback(CallBack_data1)
     return;
   }
   await cryptoWaitReady();
@@ -980,46 +829,12 @@ export const transfer = async (dest: any, value: string,  passward: string, call
   .transfer( dest, bob )
   .signAndSend( kering! , ( { events = [], status , dispatchError  } ) => {
     returnFun(status, events, callback)
-    // if (status.isInBlock) {
-    //   events.forEach(({ event: { method, data: [error] } }) => {
-    //     if (error.isModule && method == 'ExtrinsicFailed') {
-    //       const decoded = api?.registry.findMetaError(error.asModule);
-    //       CallBack_data.msg = decoded!.method;
-    //       CallBack_data.success = false
-    //     }else if(method == 'ExtrinsicSuccess'){
-    //       CallBack_data.msg = method;
-    //       CallBack_data.success = true
-    //     }
-    //   });
-    //   if (callback) {
-    //     callback(CallBack_data)
-    //   }
-    // }
   })
   .catch((res)=>{
-    CallBack_data = {
+    CallBack_data1 = {
       msg: res.message,
       success: false
     };
-    callback(CallBack_data)
+    callback(CallBack_data1)
   })
-}
-
-
-const returnFun = (status: any, events: any, callback: Function) => {
-  if (status.isInBlock) {
-    events.forEach(({ event: { method, data: [error] } }) => {
-      if (error.isModule && method == 'ExtrinsicFailed') {
-        const decoded = api?.registry.findMetaError(error.asModule);
-        CallBack_data.msg = decoded!.method;
-        CallBack_data.success = false
-      }else if(method == 'ExtrinsicSuccess'){
-        CallBack_data.msg = method;
-        CallBack_data.success = true
-      }
-    });
-    if (callback) {
-      callback(CallBack_data)
-    }
-  }
 }

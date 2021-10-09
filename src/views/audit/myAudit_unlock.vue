@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="myAudit">
     <div class="title flex between vCenter">
       <div class="fw600 all_profit">{{ $t("audit.all_profit") }}: 5000 DBC</div>
       <div class="fw600 today_profit">{{ $t("audit.today_profit") }}: 500 DBC</div>
-      <div class="fw600 all_machine">{{ $t("audit.all_machine") }}: {{res_body.content.length}} <span class="fs12 cRed">{{ $t("audit.machineTips") }}</span></div>
+      <div class="fw600 all_machine">{{ $t("audit.all_machine") }}: {{allListedMachine.length}} <span class="fs12 cRed">{{ $t("audit.machineTips") }}</span></div>
       <div
         v-if="!isBinding && bindMail && $t('website_name') !== 'congTuCloud'"
         class="binding"
@@ -37,17 +37,17 @@
         :key='index'
       >
         <div class="flex vCenter profit">
-          <div class="today_profit">{{ $t("audit.today_profit") }}: 100 DBC</div>
-          <div class="total_profit">{{ $t("audit.total_profit") }}: {{item[2].total_rent_fee}}</div>
+          <!-- <div class="today_profit">{{ $t("audit.today_profit") }}: 100 DBC</div> -->
+          <div class="total_profit">{{ $t("audit.total_profit") }}: {{item.total_rent_fee}}</div>
         </div>
         <div class="flex status-title">
           <div class="machineIdBox" @click="Record">
-            {{ item[1].machine_info.machine_id }}
+            {{ item.machine_info_detail.committee_upload_info.machine_id }}
           </div>
           <!-- <div>{{ $t("audit.machineStatus") }}: {{ $t("audit.machineStatus1") }}</div> -->
-          <div>{{ $t("audit.verificationTime") }}: {{item[2].reward_committee.length}}</div>
-          <div>{{ $t("audit.myResult") }}: {{ item[1].machine_info.is_support ? $t("audit.adopt") : $t("audit.failed") }}</div>
-          <div>{{ $t("audit.finalResult") }}: {{ item[2].machine_info_detail.committee_upload_info.is_support ? $t("audit.adopt") : $t("audit.failed")}}</div>
+          <div>{{ $t("audit.verificationTime") }}: {{item.reward_committee.length}}</div>
+          <div>{{ $t("audit.myResult") }}: {{ item.machine_info_detail.committee_upload_info.is_support ? $t("audit.adopt") : $t("audit.failed") }}</div>
+          <div>{{ $t("audit.finalResult") }}: {{ item.machine_info_detail.committee_upload_info.is_support ? $t("audit.adopt") : $t("audit.failed")}}</div>
           <!-- <div>{{ $t("audit.proportion") }}: 1:2</div> -->
         </div>
         <div class="flex">
@@ -58,8 +58,8 @@
               :content="$t('list_gpu_count_tip')"
             >
               <span class="fs28">
-                <a class="cPrimaryColor">{{ item[2].machine_info_detail.committee_upload_info.gpu_type }}</a>
-                <a class="cRedbig">x{{ item[2].machine_info_detail.committee_upload_info.gpu_num }} GPU</a>
+                <a class="cPrimaryColor">{{ item.machine_info_detail.committee_upload_info.gpu_type }}</a>
+                <a class="cRedbig">x{{ item.machine_info_detail.committee_upload_info.gpu_num }} GPU</a>
               </span>
             </el-tooltip>
           </div>
@@ -74,7 +74,7 @@
             <span class="fs16">
               {{ $t("audit.Shd_space") }}：
               <a class="cPrimaryColor"
-                >{{ item[2].machine_info_detail.committee_upload_info.sys_disk }}GB</a
+                >{{ item.machine_info_detail.committee_upload_info.sys_disk }}GB</a
               >
             </span>
           </div>
@@ -82,21 +82,21 @@
             <span class="fs16">
               {{ $t("audit.Dhd_space") }}：
               <a class="cPrimaryColor"
-                >{{ item[2].machine_info_detail.committee_upload_info.data_disk }}GB</a
+                >{{ item.machine_info_detail.committee_upload_info.data_disk }}GB</a
               >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
               {{ $t("list_total_rent_count") }}：
-              <a class="cPrimaryColor">{{ item[2].total_rented_times }}</a>
+              <a class="cPrimaryColor">{{ item.total_rented_times }}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
               {{ $t("audit.Memory") }}：
               <a class="cPrimaryColor"
-                >{{ item[2].machine_info_detail.committee_upload_info.mem_num }}GB</a
+                >{{ item.machine_info_detail.committee_upload_info.mem_num }}GB</a
               >
             </span>
           </div>
@@ -104,7 +104,7 @@
             <span class="fs16">
               {{ $t("list_gpu_ram_size") }}：
               <a class="cPrimaryColor"
-                >{{ item[2].machine_info_detail.committee_upload_info.gpu_mem }}GB</a
+                >{{ item.machine_info_detail.committee_upload_info.gpu_mem }}GB</a
               >
             </span>
           </div>
@@ -115,7 +115,7 @@
             <span class="fs16">
               {{ $t("audit.CPUcores") }}：
               <a class="cPrimaryColor"
-                >{{ item[2].machine_info_detail.committee_upload_info.cpu_core_num }}</a
+                >{{ item.machine_info_detail.committee_upload_info.cpu_core_num }}</a
               >
             </span>
           </div>
@@ -123,14 +123,14 @@
             <span class="fs16">
               {{ $t("audit.CPUfrequency") }}：
               <a class="cPrimaryColor"
-                >{{ item[2].machine_info_detail.committee_upload_info.cpu_rate }}GHz</a
+                >{{ item.machine_info_detail.committee_upload_info.cpu_rate }}GHz</a
               >
             </span>
           </div>
           <div class="td3">
             <span class="fs16">
               {{ $t("list_cpu_type") }}：
-              <a class="cPrimaryColor">{{ item[2].machine_info_detail.committee_upload_info.cpu_type }}</a>
+              <a class="cPrimaryColor">{{ item.machine_info_detail.committee_upload_info.cpu_type }}</a>
             </span>
           </div>
         </div>
@@ -139,7 +139,7 @@
             <span class="fs16">
               {{ $t("list_inet_up") }}：
               <a class="cPrimaryColor"
-                >{{ item[2].machine_info_detail.staker_customize_info.upload_net }}Mbps</a
+                >{{ item.machine_info_detail.staker_customize_info.upload_net }}Mbps</a
               >
             </span>
           </div>
@@ -147,7 +147,7 @@
             <span class="fs16">
               {{ $t("list_inet_down") }}：
               <a class="cPrimaryColor"
-                >{{ item[2].machine_info_detail.staker_customize_info.download_net }}Mbps</a
+                >{{ item.machine_info_detail.staker_customize_info.download_net }}Mbps</a
               >
             </span>
           </div>
@@ -212,7 +212,7 @@ import {
 
 import { getCurrentPair } from "@/utlis/dot"
 import { mapState } from "vuex"
-import { leaseCommitteeOps, machinesInfo, batch } from "@/utlis/dot/api"
+import { leaseCommitteeOps, machinesInfo } from "@/utlis/dot/api"
 export default {
   name: "myAudit_unlock",
   components: {
@@ -299,12 +299,8 @@ export default {
   },
   activated() {
     this.language = this.$i18n.locale;
-    // this.queryMc();
     this.queryMail();
     this.getList();
-    batch().then( res => {
-      console.log(res);
-    })
   },
   deactivated() {
     
@@ -453,30 +449,21 @@ export default {
 
     // 查询机器
     async getList(){
-      let machinesList =  await leaseCommitteeOps();
-      await machinesList.map( async el => {
-        el[2] = await machinesInfo(el[0][1])
-      })
-      this.res_body.content = machinesList
+      let loadingInstance = this.$loading({target:'.myAudit'});
+      let machinesList =  await leaseCommitteeOps('5D1vwMoK1DjBF7pfApKjT9Gi5C4DKHvZMztFRhTsMqo71B8r');
+      // await machinesList.map( async el => {
+      //   el[2] = await machinesInfo(el[0][1])
+      // })
+      let list = machinesList.online_machine
+      for(let i = 0; i< list.length; i++){
+        list[i] = await machinesInfo(list[i])
+      }
+      this.allListedMachine = list
+      this.showMachines(this.allListedMachine, this.currentPage, this.pageSize)
+      loadingInstance.close();
       console.log(this.res_body.content, 'this.res_body.content');
     },
 
-
-
-    arrangeAllMachines(res) {
-      let machines = []; //所有可展示机器
-      for (let item of res.content) {
-        // console.log(item);
-        if (item.online_status) {
-          machines.push(item);
-        }
-      }
-      // console.log(machines);
-      this.res_body.code = res.code; //原始返回数据
-      this.res_body.msg = res.msg; //原始返回数据
-      this.res_body.status = res.status; //原始返回数据
-      this.allListedMachine = machines; //所有可展示机器
-    },
     showMachines(machines, currentPage, pageSize) {
       let needMachines = []; //需要展示的机器
       // 循环页面要显示的机器数量次
@@ -490,47 +477,6 @@ export default {
       }
       this.res_body.content = needMachines; //需要展示的机器
       this.machineCount = machines.length; //展示的机器总数
-    },
-    queryMc() {
-      let params = {
-        machine_type: 0,
-        country: this.req_body.country,
-        idle_status: this.req_body.idle_status,
-        total_time: this.req_body.totalTime,
-        total_rent_count: this.req_body.total_rent_count,
-        error_rent_count: this.req_body.error_rent_count,
-        disk_GB_perhour_dollar: this.req_body.disk_GB_perhour_dollar,
-        length_of_available_time: this.req_body.lengthOfAvailableTime,
-        gpu_price_dollar: this.req_body.gpuPrice,
-        gpu_count: this.req_body.gpuCount,
-        gpu_ram_size: this.req_body.gpuRamSize,
-        gpu_ram_bandwidth: this.req_body.gpuRamBandwidth,
-        pcie_bandwidth: this.req_body.piceBandwidth,
-        cpu_numbers: this.req_body.cpuCores,
-        ram_size: this.req_body.cpuRamSize,
-        disk_bandwidth: this.req_body.diskBandwidth,
-        inet_up: this.req_body.inetUp,
-        inet_down: this.req_body.inetDown,
-        have_ip: this.req_body.have_ip,
-        onlines_tatus: 0,
-        disk_space: this.req_body.diskSpace,
-        tensor_cores: this.req_body.tensor_cores,
-        half_precision_tflops: this.req_body.half_precision_tflops,
-        single_precision_tflops: this.req_body.single_precision_tflops,
-        double_precision_tflops: this.req_body.double_precision_tflops,
-        dbc_version: this.req_body.dbcVersion,
-        user_name_platform: this.$t("website_name"),
-        language: this.language,
-      };
-      query_machines_by_machine_type(params).then((res) => {
-        // this.res_body = res;
-        this.arrangeAllMachines(res);
-        this.showMachines(
-          this.allListedMachine,
-          this.currentPage,
-          this.pageSize
-        );
-      });
     },
     handleSizeChange(pageSize) {
       console.log(`每页 ${pageSize} 条`);

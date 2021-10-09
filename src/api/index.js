@@ -1221,3 +1221,15 @@ export const GetResultHash = params => {
     params
   });
 };
+
+/**
+ * @description 确认租用虚拟机
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const ConFirm_Rent = (params) => {
+  return axios({
+    method: "post",
+    url: "/identifier/ConFirm_Rent",
+    params
+  });
+};

@@ -43,7 +43,7 @@
           </div>
           <div class="center">
             <el-button 
-              v-if="item.machine_status == 'CommitteeVerifying'"
+              v-if="item.machine_status !== 'booked'"
               style="width: 120px"
               type="primary"
               size="mini"
@@ -51,7 +51,7 @@
               >{{ $t("audit.verification") }}</el-button
             >
             <el-button
-              v-else-if="item.machine_status !== 'booked'"
+              v-if="item.machine_status !== 'booked'"
               style="width: 155px"
               type="primary"
               size="mini"
@@ -260,6 +260,7 @@ import {
   getComputing_Power
 } from "@/utlis";
 
+import { Error_Reason } from "@/utlis/error_desc"
 import { getCurrentPair, getRand_str, CreateSignature } from "@/utlis/dot"
 import { ConfirmHash, ConfirmRaw, getBlockTime } from "@/utlis/dot/api"
 import { mapState, mapMutations } from "vuex"
@@ -690,7 +691,7 @@ export default {
             }else{
               this.$message({
                 showClose: true,
-                message: res.msg,
+                message: ( res.index == 0 || res.index ) ? Error_Reason[res.section][res.index] : res.msg,
                 type: "error",
               });
             }
@@ -733,7 +734,7 @@ export default {
                   }else{
                     this.$message({
                       showClose: true,
-                      message: res.msg,
+                      message: ( res.index == 0 || res.index ) ? Error_Reason[res.section][res.index] : res.msg,
                       type: "error",
                     });
                   }
@@ -823,7 +824,7 @@ export default {
       font-weight: bold;
     }
     .center{
-      width: 250px;
+      // width: 250px;
       text-align: right;
     }
     .verification_tips{

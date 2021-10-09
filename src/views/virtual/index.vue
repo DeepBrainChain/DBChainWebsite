@@ -578,7 +578,8 @@ export default {
     },
     confirm(){
       this.btnloading = true;
-      Get_ByWif({ only_key: this.chooseMac.machine_id+this.wallet_address } ).then(res=> {
+      Get_ByWif({ only_key: this.chooseMac.machine_id+this.wallet_address } )
+      .then(res=> {
         console.log(`向${res.wallet}转账${this.totalDbc}.${res.random_number}DBC`);
         this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
           confirmButtonText: this.$t('confirm'),
@@ -626,7 +627,9 @@ export default {
           console.log('取消下单');
         });
       })
-      // this.dialogFormVisible = false
+      .catch(() => {
+        this.btnloading = false;
+      })
     }
   },
   components: {

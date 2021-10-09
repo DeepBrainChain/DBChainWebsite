@@ -130,6 +130,7 @@ import {
   getBalance,
   getCountDown
 } from "@/utlis";
+import { Error_Reason } from "@/utlis/error_desc"
 import { getCurrentPair ,getRand_str, naclSeal, naclOpen, getKeypair, CreateSignature } from "@/utlis/dot"
 import { mapState, mapMutations } from "vuex"
 import { stringToU8a , u8aToHex, hexToU8a, hexToString, u8aToString } from '@polkadot/util';
@@ -462,7 +463,7 @@ export default {
                   }else{
                     this.$message({
                       showClose: true,
-                      message: res2.msg,
+                      message: ( res2.index == 0 || res2.index ) ? Error_Reason[res2.section][res2.index] : res2.msg,
                       type: "error",
                     });
                   }
@@ -498,7 +499,7 @@ export default {
             }else{
               this.$message({
                 showClose: true,
-                message: res.msg,
+                message: ( res.index == 0 || res.index ) ? Error_Reason[res.section][res.index] : res.msg,
                 type: "error",
               });
             }
