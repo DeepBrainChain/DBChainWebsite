@@ -1187,7 +1187,7 @@ export const GetResultHash = params => {
 };
 
 /**
- * @description 添加订单信息
+ * @description 获取订单信息
  * @param {object} params {machine_id, gpu, ....}
  */
  export const get_Virtual = (params) => {
@@ -1230,6 +1230,18 @@ export const GetResultHash = params => {
   return axios({
     method: "post",
     url: "/identifier/ConFirm_Rent",
+    params
+  });
+};
+
+/**
+ * @description 续费
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const Renew_Rent = (params) => {
+  return axios({
+    method: "post",
+    url: "/identifier/Renew_Rent",
     params
   });
 };

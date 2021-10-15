@@ -45,13 +45,13 @@
         </div>
         <div class="pay-wrap">
           <div><span>{{$t('gpu.payDBCs')}}</span>: {{el.dbc}}</div>
-          <div><span>{{$t('gpu.gpuBilling')}}</span>: {{el.gpu_price?el.gpu_price:0}}$</div>
+          <!-- <div><span>{{$t('gpu.gpuBilling')}}</span>: {{el.gpu_price?el.gpu_price:0}}$</div> -->
           <!-- <div><span>{{$t('memory_space')}}</span>: 0</div> -->
           <div><span>{{$t('gpu.userTime')}}</span>: {{el.userTime}}</div>
-          <div><span>{{$t('gpu.actualPrice')}}</span>: {{el.Actual_cost}}</div>
+          <!-- <div><span>{{$t('gpu.actualPrice')}}</span>: {{el.Actual_cost}}</div> -->
           <!-- <div><span>{{$t('diskspace_remaining')}}</span>: 0</div> -->
           <!-- <div><span>{{$t('gpu.currentRemaining')}}</span>: 0</div> -->
-          <div><span>{{$t('gpu.payPrice')}}</span>: {{ Math.round(el.dbc_price* 1000000)/1000000}}$</div>
+          <!-- <div><span>{{$t('gpu.payPrice')}}</span>: {{ Math.round(el.dbc_price* 1000000)/1000000}}$</div> -->
         </div>
         <div class="li_list2">
           <span class="bold">{{$t('virtual.GPU_Num')}}: {{el.gpu_num}}</span>
@@ -84,10 +84,10 @@
           <span>{{$t('virtual.CPU_frequency')}}: {{getnum2(Number(el.cpu_rate)/1000)}}Ghz</span>
           <span class="width40">{{$t('virtual.CPU_type')}}: {{el.cpu_type}}</span>
         </div>
-        <div class="virtual" v-if="virtual_info.length">
-          <div class="v-list"  v-for="el in virtual_info" :key="el.machine_id">
+        <div class="virtual" v-if="el.virtual_info.length">
+          <div class="v-list"  v-for="item in el.virtual_info" :key="item.task_id">
             <div class="li-top">
-              <div class="left fs14"><span class="bold">{{$t('myvirtual.virId')}}</span>: xXXXXXXXXXXX</div>
+              <div class="left fs14"><span class="bold">{{$t('myvirtual.virId')}}</span>: {{item.task_id}}</div>
               <div>
                 <el-button
                   plain
@@ -113,17 +113,17 @@
               </div>
             </div>
             <div class="li-bottom">
-              <span>{{$t('myvirtual.mirror_name')}}: demo</span>
-              <span>{{$t('myvirtual.IP_address')}}: 192.168.1.10</span>
-              <span>{{$t('myvirtual.user_name')}}: user</span>
-              <span>{{$t('myvirtual.password')}}: 1234567</span>
-              <span>{{$t('myvirtual.ssh_port')}}: 123123</span>
-              <span>{{$t('myvirtual.port_range')}}: 600~6000</span>
-              <span>{{$t('myvirtual.vir_mem')}}: 250G</span>
-              <span >{{$t('myvirtual.vir_sys')}}: 250G</span>
-              <span>{{$t('myvirtual.vir_data')}}: 250G</span>
-              <span>{{$t('myvirtual.vir_gpu_num')}}: 4</span>
-              <span >{{$t('myvirtual.vir_cpu_num')}}: 4</span>
+              <span>{{$t('myvirtual.mirror_name')}}: {{item.user_name}}</span>
+              <span>{{$t('myvirtual.IP_address')}}: {{item.ssh_ip}}</span>
+              <span>{{$t('myvirtual.user_name')}}: {{item.user_name}}</span>
+              <span>{{$t('myvirtual.password')}}: {{item.login_password}}</span>
+              <span>{{$t('myvirtual.ssh_port')}}: {{item.ssh_port}}</span>
+              <!-- <span>{{$t('myvirtual.port_range')}}: 600~6000</span> -->
+              <span>{{$t('myvirtual.vir_mem')}}: {{item.mem_size}}</span>
+              <span >{{$t('myvirtual.vir_sys')}}: {{item.disk_system}}</span>
+              <span>{{$t('myvirtual.vir_data')}}: {{item.disk_data}}</span>
+              <span>{{$t('myvirtual.vir_gpu_num')}}: {{item.gpu_count}}</span>
+              <span >{{$t('myvirtual.vir_cpu_num')}}: {{item.cpu_cores}}</span>
             </div>
           </div>
         </div>
@@ -204,7 +204,7 @@
       <div class="useTime">
         <div>
           <span class="bold">{{$t('myvirtual.renew_time')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="useTime" @change="inputNum" :min="7" :max="90"></el-input-number>
+          <el-input-number :precision="0" size="mini" v-model="useTime" @change="inputNum" :min="1" :max="90"></el-input-number>
            {{$t('day')}}
         </div>
         <div>{{$t('virtual.Daily_Rent')}}: <span class="color">{{getnum2(Number(chooseMac.calc_point)/100*0.028229)}}$≈{{getnum2(Number(chooseMac.calc_point)/100*0.028229/dbc_price)}}DBC</span></div>
@@ -247,8 +247,9 @@
       <div class="useTime">
         <div>
           <span class="width12 bold">{{$t('myvirtual.port_range')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="port_min" :min="6000" :max="port_max-1"></el-input-number> -
-          <el-input-number :precision="0" size="mini" v-model="port_max" :min="port_min+1" :max="60000"></el-input-number>
+          <el-input-number :precision="0" size="mini" v-model="port_min" :min="5000" :max="port_max-1"></el-input-number>
+           <!-- -
+          <el-input-number :precision="0" size="mini" v-model="port_max" :min="port_min+1" :max="60000"></el-input-number> -->
         </div>
       </div>
       <div class="fs12">
@@ -352,8 +353,8 @@ import {
   Create_VMS,
   VMS_details,
   Get_ByWif,
-  My_Virtual,
-  ConFirm_Rent
+  ConFirm_Rent,
+  Renew_Rent
 } from "@/api";
 
 import {
@@ -414,10 +415,9 @@ export default {
       total: 0,
       orderNumber: 0,
       Machine_info: [],
-      virtual_info: [],
       // 续费
       dialogFormVisible: false,
-      useTime: 7,
+      useTime: 1,
       chooseMac: {},
       totalMoney: 0,
       totalDbc: 0,
@@ -432,8 +432,8 @@ export default {
       vir_mem: 1,
       vir_cpu_num: 1,
       vir_gpu_num: 1,
-      port_min: 6000,
-      port_max: 60000,
+      port_min: 5000,
+      port_max: 6000,
       // 充值密码
       dialogFormVisible2: false,
       ruleForm: {
@@ -665,27 +665,59 @@ export default {
     },
     getMyVirtual() {
       this.stopInter()
-      get_Virtual({ wallet: this.wallet_address }).then(res => {
-        res.content.map((el) => {
+      get_Virtual({ wallet: this.wallet_address }).then( async res => {
+        // res.content.map( async (el) => {
+        //   let nowTime = + new Date();
+        //   let startTime = + new Date(el.time)
+        //   let endTime = startTime + el.day*24*60*60*1000
+        //   el.time = startTime
+        //   if(endTime - nowTime > 0 ){
+        //     el.time_left = this.minsToHourMins(Math.ceil((endTime - nowTime)/60000))
+        //     el.userTime = this.minsToHourMins(Math.ceil((nowTime - el.time)/60000))
+        //     el.Actual_cost = Math.ceil((Number(el.dbc)/Number(el.day)/24/60)*((nowTime - el.time)/60000))
+        //   }else{
+        //     el.time_left = '0h0m'
+        //     el.userTime = this.minsToHourMins(Math.ceil((endTime - el.time)/60000))
+        //     el.Actual_cost = el.dbc
+        //   }
+        //   el.virtual_info = []
+        //   el.confirmTime = (el.time+1800000 -nowTime)/1000
+        //   // 获取虚拟机信息
+        //   await VMS_details({ only_key: el.id, machine_id: el.machine_id }).then(res=>{
+        //     if(res.status == 0){
+        //       el.virtual_info.push(res.message)
+        //     }else{
+        //       el.virtual_info = []
+        //     }
+        //   }).catch( err => {console.log(err.message) })
+        // })
+        
+        for(let i = 0; i< res.content.length; i++){
           let nowTime = + new Date();
-          let startTime = + new Date(el.time)
-          let endTime = startTime + el.day*24*60*60*1000
-          el.time = startTime
+          let startTime = + new Date(res.content[i].time)
+          let endTime = startTime + res.content[i].day*24*60*60*1000
+          res.content[i].time = startTime
           if(endTime - nowTime > 0 ){
-            el.time_left = this.minsToHourMins(Math.ceil((endTime - nowTime)/60000))
-            el.userTime = this.minsToHourMins(Math.ceil((nowTime - el.time)/60000))
-            el.Actual_cost = Math.ceil((Number(el.dbc)/Number(el.day)/24/60)*((nowTime - el.time)/60000))
+            res.content[i].time_left = this.minsToHourMins(Math.ceil((endTime - nowTime)/60000))
+            res.content[i].userTime = this.minsToHourMins(Math.ceil((nowTime - res.content[i].time)/60000))
+            res.content[i].Actual_cost = Math.ceil((Number(res.content[i].dbc)/Number(res.content[i].day)/24/60)*((nowTime - res.content[i].time)/60000))
           }else{
-            el.time_left = '0h0m'
-            el.userTime = this.minsToHourMins(Math.ceil((endTime - el.time)/60000))
-            el.Actual_cost = el.dbc
+            res.content[i].time_left = '0h0m'
+            res.content[i].userTime = this.minsToHourMins(Math.ceil((endTime - res.content[i].time)/60000))
+            res.content[i].Actual_cost = res.content[i].dbc
           }
-          el.confirmTime = (el.time+1800000 -nowTime)/1000
+          res.content[i].virtual_info = []
+          res.content[i].confirmTime = (res.content[i].time+1800000 -nowTime)/1000
           // 获取虚拟机信息
-          VMS_details({ only_key: el.id, machine_id: el.machine_id }).then(res=>{
-            console.log(res, 'res');
+          await VMS_details({ only_key: res.content[i].id, machine_id: res.content[i].machine_id }).then(res1=>{
+            if(res1.status == 0){
+              res.content[i].virtual_info.push(res1.message)
+            }else{
+              res.content[i].virtual_info = []
+            }
           }).catch( err => {console.log(err.message) })
-        })
+        }
+        
         this.Machine_info = res.content
         this.orderNumber = res.content.length
         this.total = res.content.length
@@ -768,14 +800,11 @@ export default {
               let permas = {
                 only_key: this.chooseMac.machine_id+this.wallet_address,
                 machine_id: this.chooseMac.machine_id,
-                dollar: this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229),
-                day: this.useTime,
-                count: this.totalMoney,
+                add_day: this.useTime,
                 dbc: this.totalDbc,
-                wallet: this.wallet_address
               }
               console.log(permas, 'permas');
-              My_Virtual(permas).then(res => {
+              Renew_Rent(permas).then(res => {
                 console.log(res, 'res');
                 this.$message({
                   showClose: true,
@@ -783,6 +812,7 @@ export default {
                   type: "success",
                 });
                 this.btnloading = false;
+                this.dialogFormVisible = false
               })
             }else{
               this.btnloading = false;
@@ -798,7 +828,6 @@ export default {
           console.log('取消续租');
         });
       })
-      this.dialogFormVisible = false
     },
     // 创建、修改 虚拟机
     operateVirtual(str, el) {
@@ -815,17 +844,18 @@ export default {
       let perams = {
         only_key: this.chooseMac.id,
         machine_id: this.chooseMac.machine_id,
-        ssh_port: `${this.port_min}~${this.port_max}`,
+        ssh_port: this.port_min,
+        // ssh_port: `${this.port_min}~${this.port_max}`,
         gpu_count: this.vir_gpu_num,
         cpu_cores: this.vir_cpu_num,
         mem_rate: this.vir_mem
       }
       Create_VMS(perams).then( res=> {
         console.log(res ,'res');
+        if(res.status&&res.status == 0)
+        this.$message.success('创建成功')
         this.btnloading1 = false
-        if(res.result_code == 0){
-          this.virtual_info.push(res.result_message)
-        }
+        this.dialogFormVisible1 = false
       })
     },
     // 重启虚拟机

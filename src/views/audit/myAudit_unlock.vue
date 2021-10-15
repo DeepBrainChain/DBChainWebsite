@@ -1,9 +1,9 @@
 <template>
   <div class="myAudit">
     <div class="title flex between vCenter">
-      <div class="fw600 all_profit">{{ $t("audit.all_profit") }}: 5000 DBC</div>
-      <div class="fw600 today_profit">{{ $t("audit.today_profit") }}: 500 DBC</div>
-      <div class="fw600 all_machine">{{ $t("audit.all_machine") }}: {{allListedMachine.length}} <span class="fs12 cRed">{{ $t("audit.machineTips") }}</span></div>
+      <div class="fw600 all_profit">{{ $t("audit.all_profit") }}: {{totalReward}} DBC</div>
+      <div class="fw600 today_profit">{{ $t("audit.today_profit") }}: {{getnum1(todayReward)}} DBC</div>
+      <div class="fw600 all_machine">{{ $t("audit.all_machine") }}: {{machineCount}} <span class="fs12 cRed">{{ $t("audit.machineTips") }}</span></div>
       <div
         v-if="!isBinding && bindMail && $t('website_name') !== 'congTuCloud'"
         class="binding"
@@ -37,17 +37,17 @@
         :key='index'
       >
         <div class="flex vCenter profit">
-          <!-- <div class="today_profit">{{ $t("audit.today_profit") }}: 100 DBC</div> -->
-          <div class="total_profit">{{ $t("audit.total_profit") }}: {{item.total_rent_fee}}</div>
+          <div class="today_profit">{{ $t("audit.today_profit") }}: {{getnum1(item.todayReward/99/item.info.reward_committee.length)}} DBC</div>
+          <div class="total_profit">{{ $t("audit.total_profit") }}: {{item.totalReward}} DBC</div>
         </div>
         <div class="flex status-title">
-          <div class="machineIdBox" @click="Record">
-            {{ item.machine_info_detail.committee_upload_info.machine_id }}
+          <div class="machineIdBox" @click="Record(item)">
+            {{ item.info.machine_info_detail.committee_upload_info.machine_id }}
           </div>
           <!-- <div>{{ $t("audit.machineStatus") }}: {{ $t("audit.machineStatus1") }}</div> -->
-          <div>{{ $t("audit.verificationTime") }}: {{item.reward_committee.length}}</div>
-          <div>{{ $t("audit.myResult") }}: {{ item.machine_info_detail.committee_upload_info.is_support ? $t("audit.adopt") : $t("audit.failed") }}</div>
-          <div>{{ $t("audit.finalResult") }}: {{ item.machine_info_detail.committee_upload_info.is_support ? $t("audit.adopt") : $t("audit.failed")}}</div>
+          <div>{{ $t("audit.verificationTime") }}: {{item.info.reward_committee.length}}</div>
+          <div>{{ $t("audit.myResult") }}: {{ item.info.machine_info_detail.committee_upload_info.is_support ? $t("audit.adopt") : $t("audit.failed") }}</div>
+          <div>{{ $t("audit.finalResult") }}: {{ item.info.machine_info_detail.committee_upload_info.is_support ? $t("audit.adopt") : $t("audit.failed")}}</div>
           <!-- <div>{{ $t("audit.proportion") }}: 1:2</div> -->
         </div>
         <div class="flex">
@@ -58,23 +58,18 @@
               :content="$t('list_gpu_count_tip')"
             >
               <span class="fs28">
-                <a class="cPrimaryColor">{{ item.machine_info_detail.committee_upload_info.gpu_type }}</a>
-                <a class="cRedbig">x{{ item.machine_info_detail.committee_upload_info.gpu_num }} GPU</a>
+                <a class="cPrimaryColor">{{ item.info.machine_info_detail.committee_upload_info.gpu_type }}</a>
+                <a class="cRedbig">x{{ item.info.machine_info_detail.committee_upload_info.gpu_num }} GPU</a>
               </span>
             </el-tooltip>
           </div>
-          <!-- <div class="td2">
-            <span class="fs28">
-              <a class="cPrimaryColor">{{ item.country }}</a>
-            </span>
-          </div> -->
         </div>
         <div class="flex">
           <div class="td">
             <span class="fs16">
               {{ $t("audit.Shd_space") }}：
               <a class="cPrimaryColor"
-                >{{ item.machine_info_detail.committee_upload_info.sys_disk }}GB</a
+                >{{ item.info.machine_info_detail.committee_upload_info.sys_disk }}GB</a
               >
             </span>
           </div>
@@ -82,21 +77,21 @@
             <span class="fs16">
               {{ $t("audit.Dhd_space") }}：
               <a class="cPrimaryColor"
-                >{{ item.machine_info_detail.committee_upload_info.data_disk }}GB</a
+                >{{ item.info.machine_info_detail.committee_upload_info.data_disk }}GB</a
               >
             </span>
           </div>
           <div class="td">
             <span class="fs16">
               {{ $t("list_total_rent_count") }}：
-              <a class="cPrimaryColor">{{ item.total_rented_times }}</a>
+              <a class="cPrimaryColor">{{ item.info.total_rented_times }}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
               {{ $t("audit.Memory") }}：
               <a class="cPrimaryColor"
-                >{{ item.machine_info_detail.committee_upload_info.mem_num }}GB</a
+                >{{ item.info.machine_info_detail.committee_upload_info.mem_num }}GB</a
               >
             </span>
           </div>
@@ -104,7 +99,7 @@
             <span class="fs16">
               {{ $t("list_gpu_ram_size") }}：
               <a class="cPrimaryColor"
-                >{{ item.machine_info_detail.committee_upload_info.gpu_mem }}GB</a
+                >{{ item.info.machine_info_detail.committee_upload_info.gpu_mem }}GB</a
               >
             </span>
           </div>
@@ -115,7 +110,7 @@
             <span class="fs16">
               {{ $t("audit.CPUcores") }}：
               <a class="cPrimaryColor"
-                >{{ item.machine_info_detail.committee_upload_info.cpu_core_num }}</a
+                >{{ item.info.machine_info_detail.committee_upload_info.cpu_core_num }}</a
               >
             </span>
           </div>
@@ -123,14 +118,14 @@
             <span class="fs16">
               {{ $t("audit.CPUfrequency") }}：
               <a class="cPrimaryColor"
-                >{{ item.machine_info_detail.committee_upload_info.cpu_rate }}GHz</a
+                >{{ item.info.machine_info_detail.committee_upload_info.cpu_rate }}GHz</a
               >
             </span>
           </div>
           <div class="td3">
             <span class="fs16">
               {{ $t("list_cpu_type") }}：
-              <a class="cPrimaryColor">{{ item.machine_info_detail.committee_upload_info.cpu_type }}</a>
+              <a class="cPrimaryColor">{{ item.info.machine_info_detail.committee_upload_info.cpu_type }}</a>
             </span>
           </div>
         </div>
@@ -139,7 +134,7 @@
             <span class="fs16">
               {{ $t("list_inet_up") }}：
               <a class="cPrimaryColor"
-                >{{ item.machine_info_detail.staker_customize_info.upload_net }}Mbps</a
+                >{{ item.info.machine_info_detail.staker_customize_info.upload_net }}Mbps</a
               >
             </span>
           </div>
@@ -147,7 +142,7 @@
             <span class="fs16">
               {{ $t("list_inet_down") }}：
               <a class="cPrimaryColor"
-                >{{ item.machine_info_detail.staker_customize_info.download_net }}Mbps</a
+                >{{ item.info.machine_info_detail.staker_customize_info.download_net }}Mbps</a
               >
             </span>
           </div>
@@ -181,14 +176,14 @@
         header-align='center'
         style="width: 100%">
         <el-table-column
-          prop="date"
+          prop="index"
           align='center'
           label="日期">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="reward"
           align='center'
-          label="收益">
+          label="收益(DBC)">
         </el-table-column>
       </el-table>
     </el-dialog>
@@ -209,10 +204,10 @@ import {
   getAccount,
   getBalance,
 } from "@/utlis";
-
+import BigNumber from "bignumber.js";
 import { getCurrentPair } from "@/utlis/dot"
 import { mapState } from "vuex"
-import { leaseCommitteeOps, machinesInfo } from "@/utlis/dot/api"
+import { leaseCommitteeOps, machinesInfo, currentEra, erasMachineReleasedReward } from "@/utlis/dot/api"
 export default {
   name: "myAudit_unlock",
   components: {
@@ -260,31 +255,15 @@ export default {
       send_email_repeat_index: -1,
       dialogTableVisible: false,
       machineCount: 0,
+      todayReward: 0,
+      totalReward: 0,
       pageSize: 10,
       currentPage: 1,
       allListedMachine: [],
       res_body: {
         content: [],
       },
-      tableData:[
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ]
+      tableData:[]
     };
   },
   watch: {
@@ -448,23 +427,46 @@ export default {
     },
 
     // 查询机器
+    getnum1(num) {
+      const num1 = new BigNumber(Number(num)/ Math.pow(10,15)).toFormat()
+      let hasPoint;
+      num1.indexOf(".") >= 0? hasPoint = true: hasPoint = false
+      return num1.substring(0,num1.indexOf(".")+3);
+    },
     async getList(){
       let loadingInstance = this.$loading({target:'.myAudit'});
       let machinesList =  await leaseCommitteeOps('5D1vwMoK1DjBF7pfApKjT9Gi5C4DKHvZMztFRhTsMqo71B8r');
-      // await machinesList.map( async el => {
-      //   el[2] = await machinesInfo(el[0][1])
-      // })
-      let list = machinesList.online_machine
+      let list = machinesList.online_machine // 获取当前委员会验证上线的机器
+      let nowDay = await currentEra() // 获取当前链上第几天，用于计算当天的收益以及累计收益（当天收益为当前天数减一）
       for(let i = 0; i< list.length; i++){
-        list[i] = await machinesInfo(list[i])
+        this.allListedMachine[i] = await machinesInfo( nowDay - 1, list[i] ) // 通过机器id获取机器详细信息
+        this.allListedMachine[i].totalReward = '···'
+        this.allListedMachine[i].reward = []
+        this.allListedMachine[i].online_day = 0
+        this.todayReward += (this.allListedMachine[i].todayReward/99/this.allListedMachine[i].info.reward_committee.length)
       }
-      this.allListedMachine = list
       this.showMachines(this.allListedMachine, this.currentPage, this.pageSize)
       loadingInstance.close();
-      console.log(this.res_body.content, 'this.res_body.content');
+      // for(let i = 0; i< this.allListedMachine.length; i++){
+      //   this.allListedMachine[i].totalReward = '···'
+      //   this.allListedMachine[i].reward = []
+      //   this.allListedMachine[i].online_day = parseInt((this.allListedMachine[i].info.online_height.replace(',',''))/2880) // 获取机器第几天上线
+      //   let day = this.allListedMachine[i].online_day
+      //   while( day < nowDay ){
+      //     this.allListedMachine[i].reward.push( await erasMachineReleasedReward(day, list[i]) ) // 计算从上线以后每一天的收益
+      //     day ++ 
+      //   }
+      // }
+      // for(let i = 0; i< this.allListedMachine.length; i++){
+      //   let reward = this.allListedMachine[i].reward.reduce(function(a, b) { 
+      //     return a + b;
+      //   })
+      //   this.$set(this.allListedMachine[i], 'totalReward', this.getnum1(reward/99/this.allListedMachine[i].info.reward_committee.length)) // 计算累计收益
+      // }
     },
 
-    showMachines(machines, currentPage, pageSize) {
+    async showMachines(machines, currentPage, pageSize) {
+      let loadingInstance = this.$loading({target:'.myAudit'});
       let needMachines = []; //需要展示的机器
       // 循环页面要显示的机器数量次
       for (
@@ -475,8 +477,25 @@ export default {
       ) {
         needMachines.push(machines[machineIndex]);
       }
+      let nowDay = await currentEra();
+      for(let i = 0; i< needMachines.length; i++){
+        needMachines[i].online_day = parseInt((needMachines[i].info.online_height.replace(',',''))/2880) // 获取机器第几天上线
+        let day = needMachines[i].online_day + 1
+        while( day < nowDay ){
+          needMachines[i].reward.push( await erasMachineReleasedReward(day, needMachines[i].info.machine_info_detail.committee_upload_info.machine_id) ) // 计算从上线以后每一天的收益
+          day ++ 
+        }
+      }
+      for(let i = 0; i< needMachines.length; i++){
+        let reward = needMachines[i].reward.reduce(function(a, b) { 
+          return a + b;
+        })
+        this.$set(needMachines[i], 'totalReward', this.getnum1(reward/99/needMachines[i].info.reward_committee.length)) // 计算累计收益
+      }
+      console.log(needMachines, 'needMachines');
       this.res_body.content = needMachines; //需要展示的机器
       this.machineCount = machines.length; //展示的机器总数
+      loadingInstance.close();
     },
     handleSizeChange(pageSize) {
       console.log(`每页 ${pageSize} 条`);
@@ -489,7 +508,10 @@ export default {
       this.showMachines(this.allListedMachine, this.currentPage, this.pageSize);
     },
     // 查询历史记录
-    Record(){
+    Record(data){
+      this.tableData = data.reward.map( (el, index) => {
+        return { index: (index+1), reward: this.getnum1(el/99/data.info.reward_committee.length) }
+      })
       this.dialogTableVisible = true
     }
   },

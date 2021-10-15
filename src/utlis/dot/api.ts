@@ -433,7 +433,7 @@ export const getBlockTime = async (): Promise<any> => {
 /**
  * getAccountBalance 查询账户余额
  * 
- * @return balance:链上时间块
+ * @return balance:余额
  */
  export const getAccountBalance = async (wallet: string): Promise<any> => {
   await GetApi();
@@ -448,8 +448,8 @@ export const getBlockTime = async (): Promise<any> => {
  */
 export const getCommitteeList = async (wallet: string): Promise<any> => {
   await GetApi();
-  let de = await api?.query.committee.committee()
-  let list  = de?.normal.toHuman().indexOf(wallet) > -1? true : false
+  let de = await api!.query.committee.committee()
+  let list  = de.normal.toHuman().indexOf(wallet) > -1? true : false
   return list
 }
 
@@ -764,20 +764,40 @@ export const leaseCommitteeOps = async (wallet: string): Promise<any> => {
   let de = await api?.query.onlineCommittee.committeeMachine(wallet)
   return de!.toHuman()
 }
-
 /**
  * machinesInfo 查询机器的详细信息
  * @param permas
  * @return callback 回调函数，返回数组信息
  */
-export const machinesInfo = async (machineId: string): Promise<any> => {
+export const machinesInfo = async ( day: string |number, machineId: string): Promise<any> => {
   await GetApi();
   let de = await api!.query.onlineProfile.machinesInfo(machineId)
-  return de!.toHuman()
+  let reward = await erasMachineReleasedReward( day, machineId )
+  let data = {
+    todayReward: Number(reward),
+    info: de!.toHuman()
+  }
+  return data
 }
-
-
-
+/**
+ * 查询当前是链上第几天
+ * currentEra
+*/
+export const currentEra = async ():Promise<any> => {
+  await GetApi()
+  let nowDay = await api!.query.onlineProfile.currentEra()
+  console.log(nowDay.toHuman(), 'currentEra')
+  return nowDay.toHuman()
+}
+/**
+ * 查询机器在指定的某天获得的具体收益
+ * erasMachineReleasedReward
+*/
+export const erasMachineReleasedReward = async ( EraIndex: string|number, MachineId: string ):Promise<any> => {
+  await GetApi()
+  let totalReward = await api!.query.onlineProfile.erasMachineReleasedReward(EraIndex, MachineId)
+  return Number(totalReward.toJSON())
+}
 
 
 /**
