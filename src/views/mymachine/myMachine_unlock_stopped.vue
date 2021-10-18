@@ -24,9 +24,9 @@
       </div>-->
     </div>
     <div
-      v-if="res_body.content.length > 0"
       v-for="(item, index) in res_body.content"
       class="border-content"
+      :key='index'
     >
       <div class="tools-head">
         <div class="l-wrap">
@@ -527,7 +527,7 @@ import {
   getCookie,
   getUsdToRmb,
 } from "@/utlis";
-
+import { getCurrentPair } from "@/utlis/dot"
 export default {
   name: "myMachine_unlock_stopped",
   components: {
@@ -547,6 +547,7 @@ export default {
   },
   data() {
     return {
+      wallet_address: (getAccount() && getAccount().address) || (getCurrentPair() && getCurrentPair().address),
       orderCount: 0,
       usdToRmb: getUsdToRmb(),
       styleHidden: {},
@@ -719,7 +720,7 @@ export default {
             this.rentLoading_index = -1;
           });
       } else {
-        if (!getAccount()) {
+        if (!this.wallet_address) {
           this.$message({
             showClose: true,
             message: this.$t("pleae_create_wallet"),
@@ -736,7 +737,7 @@ export default {
         place_order_stop_to_gpu_new({
           machine_type: item.orderData.machine_type,
           machine_id: item.orderData.machine_id,
-          wallet_address_user: getAccount().address,
+          wallet_address_user: this.wallet_address,
           order_id_pre: item.orderData.order_id,
           user_name_platform,
           language,
@@ -798,7 +799,7 @@ export default {
         item.switch_cpu_mode = "payment";
         this.switch_cpu_mode(item);
       } else {
-        if (!getAccount()) {
+        if (!this.wallet_address) {
           // this.$router.push(`/openWallet/${type}`);
           this.$message({
             showClose: true,
@@ -886,7 +887,7 @@ export default {
             this.rentLoading_index = -1;
           });
       } else {
-        if (!getAccount()) {
+        if (!this.wallet_address) {
           // this.$router.push(`/openWallet/${type}`);
           this.$message({
             showClose: true,
@@ -902,7 +903,7 @@ export default {
         place_order_stop_to_cpu_new({
           machine_type: item.machine_type,
           machine_id: item.machine_id,
-          wallet_address_user: getAccount().address,
+          wallet_address_user: this.wallet_address,
           mode: "payment",
           order_id_pre: item.order_id,
           user_name_platform,
@@ -957,7 +958,7 @@ export default {
       place_order_stop_to_cpu_new({
         machine_type: item.machine_type,
         machine_id: item.machine_id,
-        wallet_address_user: getAccount().address,
+        wallet_address_user: this.wallet_address,
         order_id_pre: item.order_id,
         user_name_platform,
         mode: "deposit",
@@ -1542,11 +1543,11 @@ export default {
             }
           });
       } else {
-        if (!getAccount()) {
+        if (!this.wallet_address) {
           this.$router.push(`/openWallet/${type}`);
           return;
         }
-        let wallet_address_user = getAccount().address;
+        let wallet_address_user = this.wallet_address;
         const user_name_platform = this.$t("website_name");
         const language = this.$i18n.locale;
         const promiseList = [
@@ -1618,7 +1619,7 @@ export default {
       this.bindMail = cookie.get("mail");
       let address = "tmp";
       if (this.$t("website_name") != "congTuCloud") {
-        address = getAccount().address;
+        address = this.wallet_address;
       }
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
@@ -1662,7 +1663,7 @@ export default {
           if (isNewMail) {
             binding = false;
             const res = await binding_is_ok({
-              wallet_address: getAccount().address,
+              wallet_address: this.wallet_address,
               user_name_platform,
               language,
             });
@@ -1673,7 +1674,7 @@ export default {
           } else {
             binding = false;
             const res = await binding_is_ok_modify({
-              wallet_address: getAccount().address,
+              wallet_address: this.wallet_address,
               user_name_platform,
               language,
             });

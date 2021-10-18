@@ -622,7 +622,7 @@ export default {
                   console.log(res, 'res');
                   this.$message({
                     showClose: true,
-                    message: '下单成功，即将跳转我的机器页面',
+                    message: this.$t('virtual.tip4'),
                     type: "success",
                   });
                   this.btnloading = false;

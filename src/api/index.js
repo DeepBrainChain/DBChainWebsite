@@ -1245,3 +1245,16 @@ export const GetResultHash = params => {
     params
   });
 };
+
+/**
+ * @description 重启虚拟机
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const VMS_restart = (params) => {
+  return axios({
+    method: "post",
+    url: "/identifier/VMS_restart",
+    params
+  });
+};
+

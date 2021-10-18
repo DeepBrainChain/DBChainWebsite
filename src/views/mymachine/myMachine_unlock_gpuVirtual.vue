@@ -93,20 +93,24 @@
                   plain
                   class="tool-btn"
                   size="mini"
-                  @click="reboot"
+                  v-if="el.orderStatus == '正在使用中' || el.orderStatus == '待确认支付' "
+                  @click="reboot(el)"
+                  :loading='el.btnloading3'
                   >{{ $t("myvirtual.reboot") }}</el-button
                 >
                 <el-button
                   plain
                   class="tool-btn"
                   size="mini"
-                  @click="reset"
+                  v-if="el.orderStatus == '正在使用中' || el.orderStatus == '待确认支付' "
+                  @click="reset(el)"
                   >{{ $t("myvirtual.reset") }}</el-button
                 >
                 <el-button
                   plain
                   class="tool-btn"
                   size="mini"
+                  v-if="el.orderStatus == '正在使用中' || el.orderStatus == '待确认支付' "
                   @click="operateVirtual('revise', el)"
                   >{{ $t("myvirtual.change") }}</el-button
                 >
@@ -149,6 +153,8 @@
               plain
               class="tool-btn"
               size="mini"
+              :loading='el.btnloading1'
+              v-if="el.orderStatus == '待确认支付'"
               @click="Confirm_rental(el)"
               >{{ $t("myvirtual.Confirm_rental") }}</el-button
             >
@@ -156,23 +162,26 @@
               plain
               class="tool-btn"
               size="mini"
+              :loading='el.btnloading2'
               @click="Renew(el)"
+              v-if="el.orderStatus == '正在使用中'"
               >{{ $t("myvirtual.Renew") }}</el-button
             >
             <el-button
               plain
               class="tool-btn"
               size="mini"
+              v-if="el.orderStatus == '正在使用中'"
               @click="operateVirtual('create', el)"
               >{{ $t("myvirtual.Build") }}</el-button
             >
-            <el-button
+            <!-- <el-button
               plain
               class="tool-btn"
               size="mini"
               @click="orderDetails(el)"
               >{{ $t("myvirtual.order_details") }}</el-button
-            >
+            > -->
           </div>
         </div>
       </div>
@@ -354,7 +363,8 @@ import {
   VMS_details,
   Get_ByWif,
   ConFirm_Rent,
-  Renew_Rent
+  Renew_Rent,
+  VMS_restart
 } from "@/api";
 
 import {
@@ -666,37 +676,14 @@ export default {
     getMyVirtual() {
       this.stopInter()
       get_Virtual({ wallet: this.wallet_address }).then( async res => {
-        // res.content.map( async (el) => {
-        //   let nowTime = + new Date();
-        //   let startTime = + new Date(el.time)
-        //   let endTime = startTime + el.day*24*60*60*1000
-        //   el.time = startTime
-        //   if(endTime - nowTime > 0 ){
-        //     el.time_left = this.minsToHourMins(Math.ceil((endTime - nowTime)/60000))
-        //     el.userTime = this.minsToHourMins(Math.ceil((nowTime - el.time)/60000))
-        //     el.Actual_cost = Math.ceil((Number(el.dbc)/Number(el.day)/24/60)*((nowTime - el.time)/60000))
-        //   }else{
-        //     el.time_left = '0h0m'
-        //     el.userTime = this.minsToHourMins(Math.ceil((endTime - el.time)/60000))
-        //     el.Actual_cost = el.dbc
-        //   }
-        //   el.virtual_info = []
-        //   el.confirmTime = (el.time+1800000 -nowTime)/1000
-        //   // 获取虚拟机信息
-        //   await VMS_details({ only_key: el.id, machine_id: el.machine_id }).then(res=>{
-        //     if(res.status == 0){
-        //       el.virtual_info.push(res.message)
-        //     }else{
-        //       el.virtual_info = []
-        //     }
-        //   }).catch( err => {console.log(err.message) })
-        // })
-        
         for(let i = 0; i< res.content.length; i++){
           let nowTime = + new Date();
           let startTime = + new Date(res.content[i].time)
           let endTime = startTime + res.content[i].day*24*60*60*1000
           res.content[i].time = startTime
+          res.content[i].btnloading1 = false
+          res.content[i].btnloading2 = false
+          res.content[i].btnloading3 = false
           if(endTime - nowTime > 0 ){
             res.content[i].time_left = this.minsToHourMins(Math.ceil((endTime - nowTime)/60000))
             res.content[i].userTime = this.minsToHourMins(Math.ceil((nowTime - res.content[i].time)/60000))
@@ -742,26 +729,44 @@ export default {
     // 确认租用
     Confirm_rental(el) {
       console.log(el, 'el');
+      el.btnloading1 = true
       this.$confirm(this.$t('myvirtual.tip4'), this.$t('myvirtual.Confirm_rental'), {
         confirmButtonText: this.$t('confirm'),
         cancelButtonText: this.$t('cancel'),
         type: 'warning'
       }).then(() => {
+        clearInterval(this.si);
         let perams = {
           only_key: el.id,
           machine_id: el.machine_id
         }
         ConFirm_Rent(perams).then(res => {
           console.log(res, 'res');
+          this.getMyVirtual();
+          this.si = setInterval( ()=> {
+            this.getMyVirtual()
+          }, 60000)
+          el.btnloading1 = false
           this.$message({
             type: 'success',
-            message: '租用成功!'
+            message: this.$t('myvirtual.rental_success')
           });
         })
+        .catch((err)=>{
+          this.si = setInterval( ()=> {
+            this.getMyVirtual()
+          }, 60000)
+          this.$message({
+            type: 'error',
+            message: this.$t('myvirtual.rental_fails')
+          });
+          el.btnloading1 = false
+        })
       }).catch(() => {
+        el.btnloading1 = false
         this.$message({
           type: 'info',
-          message: '已取消'
+          message: this.$t('cancel')
         });          
       });
     },
@@ -770,6 +775,7 @@ export default {
       // getBalance().then((res) => {
       //   this.balance = res.balance;
       // });
+      el.btnloading2 = true
       this.unsubBalance = await getAccountBalance(this.wallet_address)
       this.balance = this.getnum1(this.unsubBalance.data.free)
       this.chooseMac = el
@@ -777,6 +783,7 @@ export default {
       this.time_left = this.chooseMac.time_left
       this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*this.useTime)
       this.totalDbc = Math.ceil(this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*this.useTime/this.dbc_price))
+      el.btnloading2 = false
       this.dialogFormVisible = true
     },
     inputNum(val){
@@ -806,9 +813,10 @@ export default {
               console.log(permas, 'permas');
               Renew_Rent(permas).then(res => {
                 console.log(res, 'res');
+                this.getMyVirtual();
                 this.$message({
                   showClose: true,
-                  message: '续费成功',
+                  message: this.$t('myvirtual.renew_success'),
                   type: "success",
                 });
                 this.btnloading = false;
@@ -825,7 +833,7 @@ export default {
           })
         }).catch(() => {
           this.btnloading = false;
-          console.log('取消续租');
+          console.log(this.$t('cancel'));
         });
       })
     },
@@ -852,27 +860,42 @@ export default {
       }
       Create_VMS(perams).then( res=> {
         console.log(res ,'res');
-        if(res.status&&res.status == 0)
-        this.$message.success('创建成功')
+        if(res.status&&res.status == 0){
+          this.$message.success(this.$t('myvirtual.Build_success'))
+        }else{
+          this.$message.error(this.$t('myvirtual.Build_fails'))
+        }
         this.btnloading1 = false
         this.dialogFormVisible1 = false
       })
     },
     // 重启虚拟机
-    reboot() {
+    reboot(el) {
+      el.btnloading3 = true
       this.$confirm(this.$t('myvirtual.tip5'), this.$t('myvirtual.reboot'), {
         confirmButtonText: this.$t('confirm'),
         cancelButtonText: this.$t('cancel'),
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '重启成功!'
-        });
+        VMS_restart({machine_id: el.machine_id, only_key: el.id}).then( res => {
+          if(res.result_code != 0){
+            this.$message({
+              type: 'error',
+              message: res.result_message
+            });
+          }else{
+            this.$message({
+              type: 'success',
+              message: this.$t('myvirtual.reboot_success')
+            });
+          }
+          el.btnloading3 = false
+        })
       }).catch(() => {
+        el.btnloading3 = false
         this.$message({
           type: 'info',
-          message: '已取消'
+          message: this.$t('cancel')
         });          
       });
     },

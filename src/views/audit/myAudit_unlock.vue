@@ -1,7 +1,7 @@
 <template>
   <div class="myAudit">
     <div class="title flex between vCenter">
-      <div class="fw600 all_profit">{{ $t("audit.all_profit") }}: {{totalReward}} DBC</div>
+      <!-- <div class="fw600 all_profit">{{ $t("audit.all_profit") }}: {{totalReward}} DBC</div> -->
       <div class="fw600 today_profit">{{ $t("audit.today_profit") }}: {{getnum1(todayReward)}} DBC</div>
       <div class="fw600 all_machine">{{ $t("audit.all_machine") }}: {{machineCount}} <span class="fs12 cRed">{{ $t("audit.machineTips") }}</span></div>
       <div

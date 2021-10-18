@@ -1061,6 +1061,7 @@ export default {
       renewal_order_id_prefix: getCongtuGpuRenewalOrderIdPrefix(),
       renewal_trade_no_pre: getCongtuGpuRenewalTradeNoPrefix(),
       usdToRmb: getUsdToRmb(),
+      wallet_address: (getAccount() && getAccount().address) || (getCurrentPair() && getCurrentPair().address),
       dlgRestart_open: false,
       styleHidden: {},
       rateValue: undefined,
@@ -1105,7 +1106,6 @@ export default {
       getAlipayStatusTimer: "",
       getDbcResCodeTimer: "",
       orderCount: 0,
-      wallet_address: (getAccount() && getAccount().address) || (getCurrentPair() && getCurrentPair().address)
     };
   },
 
