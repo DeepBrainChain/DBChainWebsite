@@ -98,7 +98,7 @@
                   :loading='el.btnloading3'
                   >{{ $t("myvirtual.reboot") }}</el-button
                 >
-                <el-button
+                <!-- <el-button
                   plain
                   class="tool-btn"
                   size="mini"
@@ -113,11 +113,11 @@
                   v-if="el.orderStatus == '正在使用中' || el.orderStatus == '待确认支付' "
                   @click="operateVirtual('revise', el)"
                   >{{ $t("myvirtual.change") }}</el-button
-                >
+                > -->
               </div>
             </div>
             <div class="li-bottom">
-              <span>{{$t('myvirtual.mirror_name')}}: {{item.user_name}}</span>
+              <span>{{$t('myvirtual.mirror_name')}}: ubuntu.qcow2</span>
               <span>{{$t('myvirtual.IP_address')}}: {{item.ssh_ip}}</span>
               <span>{{$t('myvirtual.user_name')}}: {{item.user_name}}</span>
               <span>{{$t('myvirtual.password')}}: {{item.login_password}}</span>
@@ -235,42 +235,48 @@
       <div class="useTime">
         <div>
           <span class="width12 bold">{{$t('myvirtual.vir_mem')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="vir_mem" :min="1" :max="Number(chooseMac.mem_num)"></el-input-number> G
+          <el-input-number :precision="2" size="mini" v-model="vir_mem" :min="0" :max="1" :step="0.1"></el-input-number> G
         </div>
-        <div>{{$t('myvirtual.max_set')}}: {{chooseMac.mem_num}}G</div>
+        <div>{{$t('myvirtual.max_set')}}: {{max_vir_mem}}G</div>
       </div>
       <div class="useTime">
         <div>
           <span class="width12 bold">{{$t('myvirtual.vir_cpu_num')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="vir_cpu_num" :min="1" :max="Number(chooseMac.cpu_core_num)"></el-input-number> G
+          <el-input-number :precision="0" size="mini" v-model="vir_cpu_num" :min="4" :max="Number(max_cpu_num - max_cpu_num%4)" :step="4" step-strictly></el-input-number> G
         </div>
-        <div>{{$t('myvirtual.max_set')}}: {{chooseMac.cpu_core_num}}G</div>
+        <div>{{$t('myvirtual.max_set')}}: {{max_cpu_num}}G</div>
       </div>
       <div class="useTime">
         <div>
           <span class="width12 bold">{{$t('myvirtual.vir_gpu_num')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="vir_gpu_num" :min="1" :max="Number(chooseMac.gpu_num)"></el-input-number> G
+          <el-input-number :precision="0" size="mini" v-model="vir_gpu_num" :min="1" :max="Number(max_gpu_num)"></el-input-number> G
         </div>
-        <div>{{$t('myvirtual.max_set')}}: {{chooseMac.gpu_num}}G</div>
+        <div>{{$t('myvirtual.max_set')}}: {{max_gpu_num}}G</div>
       </div>
       <div class="useTime">
         <div>
           <span class="width12 bold">{{$t('myvirtual.port_range')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="port_min" :min="5000" :max="port_max-1"></el-input-number>
-           <!-- -
-          <el-input-number :precision="0" size="mini" v-model="port_max" :min="port_min+1" :max="60000"></el-input-number> -->
+          <el-input-number :precision="0" size="mini" v-model="port_range" :min="5000" :max="6000"></el-input-number>
+        </div>
+      </div>
+      <!-- <div class="useTime">
+        <div>
+          <span class="width12 bold">{{$t('myvirtual.open_port_range')}}: </span>
+          <el-input-number :precision="0" size="mini" v-model="port_min" :min="6000" :max="port_max-1"></el-input-number>
+           -
+          <el-input-number :precision="0" size="mini" v-model="port_max" :min="port_min+1" :max="60000"></el-input-number>
         </div>
       </div>
       <div class="fs12">
         {{$t('myvirtual.tip7')}}
-      </div>
+      </div> -->
       <div slot="footer" class="dialog-footer">
         <el-button class="batch" size="mini" plain :loading='btnloading1' @click="Createvirtual">{{$t('myvirtual.Confirm_create')}}</el-button>
         <el-button class="batch" size="mini" plain @click="dialogFormVisible1 = false">{{$t('virtual.cancal')}}</el-button>
       </div>
     </el-dialog>
 
-    <!-- 充值密码 -->
+    <!-- 重置密码 -->
     <el-dialog width='30%' :title="$t('myvirtual.reset')" :visible.sync="dialogFormVisible2">
       <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="ruleForm">
         <el-form-item :label="$t('myvirtual.pass1')" prop="pass">
@@ -415,6 +421,7 @@ export default {
       unsubBalance: null,
       balance: 0,
       // 新增
+      firstLoading: true,
       timer: [],
       dbc_price: 0,
       currentPage: 0,
@@ -439,11 +446,16 @@ export default {
       // 创建、修改 虚拟机
       title:'',
       dialogFormVisible1: false,
-      vir_mem: 1,
-      vir_cpu_num: 1,
+      vir_mem: 0.1,
+      vir_cpu_num: 4,
       vir_gpu_num: 1,
-      port_min: 5000,
-      port_max: 6000,
+      max_vir_mem: 0,
+      max_cpu_num: 0,
+      max_gpu_num: 0,
+      port_range: 5000,
+      port_min: 6000,
+      port_max: 60000,
+      Vir_info: [],
       // 充值密码
       dialogFormVisible2: false,
       ruleForm: {
@@ -695,16 +707,22 @@ export default {
           }
           res.content[i].virtual_info = []
           res.content[i].confirmTime = (res.content[i].time+1800000 -nowTime)/1000
-          // 获取虚拟机信息
-          await VMS_details({ only_key: res.content[i].id, machine_id: res.content[i].machine_id }).then(res1=>{
-            if(res1.status == 0){
-              res.content[i].virtual_info.push(res1.message)
-            }else{
-              res.content[i].virtual_info = []
-            }
-          }).catch( err => {console.log(err.message) })
+          if(this.firstLoading){
+            this.Vir_info[i] = []
+            // 获取虚拟机信息
+            await VMS_details({ only_key: res.content[i].id, machine_id: res.content[i].machine_id }).then(res1=>{
+              if(res1.status == 0){
+                this.Vir_info[i].push(res1.message)
+                // res.content[i].virtual_info.push(res1.message)
+              }else{
+                this.Vir_info[i] = []
+                // res.content[i].virtual_info = []
+              }
+            }).catch( err => {console.log(err.message) })
+          }
+          res.content[i].virtual_info = this.Vir_info[i]
         }
-        
+        this.firstLoading = false
         this.Machine_info = res.content
         this.orderNumber = res.content.length
         this.total = res.content.length
@@ -838,9 +856,21 @@ export default {
       })
     },
     // 创建、修改 虚拟机
-    operateVirtual(str, el) {
+    operateVirtual(str, data) {
       this.dialogFormVisible1 = true
-      this.chooseMac = el
+      this.chooseMac = data
+      console.log(data, 'data');
+      let chooseVirtualMem = 0;
+      let chooseVirtualCpu = 0;
+      let chooseVirtualGpu = 0;
+      data.virtual_info.map(el => {
+        chooseVirtualMem +=  parseFloat(el.mem_size)
+        chooseVirtualCpu += el.cpu_cores
+        chooseVirtualGpu += el.gpu_count
+      })
+      this.max_vir_mem = data.mem_num - chooseVirtualMem
+      this.max_cpu_num = data.cpu_core_num - chooseVirtualCpu
+      this.max_gpu_num = data.gpu_num - chooseVirtualGpu
       if(str == 'create'){
         this.title = this.$t('myvirtual.Build')
       }else{
@@ -852,7 +882,7 @@ export default {
       let perams = {
         only_key: this.chooseMac.id,
         machine_id: this.chooseMac.machine_id,
-        ssh_port: this.port_min,
+        ssh_port: this.port_range,
         // ssh_port: `${this.port_min}~${this.port_max}`,
         gpu_count: this.vir_gpu_num,
         cpu_cores: this.vir_cpu_num,

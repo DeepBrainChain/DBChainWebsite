@@ -1258,3 +1258,17 @@ export const GetResultHash = params => {
   });
 };
 
+
+
+/**
+ * @description 获取累计收益信息
+ * @param {object} params {machine_id, gpu, ....}
+ */
+
+export const searchMachine = params => {
+  return axios({
+    method: "get",
+    url: "http://localhost:8080/select/searchMachine",
+    params
+  });
+};

@@ -1,8 +1,8 @@
 <template>
   <div class="myAudit">
     <div class="title flex between vCenter">
-      <!-- <div class="fw600 all_profit">{{ $t("audit.all_profit") }}: {{totalReward}} DBC</div> -->
-      <div class="fw600 today_profit">{{ $t("audit.today_profit") }}: {{getnum1(todayReward)}} DBC</div>
+      <div class="fw600 all_profit">{{ $t("audit.all_profit") }}: {{totalReward}} DBC</div>
+      <div class="fw600 today_profit">{{ $t("audit.today_profit") }}: {{todayReward}} DBC</div>
       <div class="fw600 all_machine">{{ $t("audit.all_machine") }}: {{machineCount}} <span class="fs12 cRed">{{ $t("audit.machineTips") }}</span></div>
       <div
         v-if="!isBinding && bindMail && $t('website_name') !== 'congTuCloud'"
@@ -37,8 +37,8 @@
         :key='index'
       >
         <div class="flex vCenter profit">
-          <div class="today_profit">{{ $t("audit.today_profit") }}: {{getnum1(item.todayReward/99/item.info.reward_committee.length)}} DBC</div>
-          <div class="total_profit">{{ $t("audit.total_profit") }}: {{item.totalReward}} DBC</div>
+          <div class="today_profit">{{ $t("audit.today_profit") }}: {{getnum1(item.today_reward)}} DBC</div>
+          <div class="total_profit">{{ $t("audit.total_profit") }}: {{getnum1(item.total_reward)}} DBC</div>
         </div>
         <div class="flex status-title">
           <div class="machineIdBox" @click="Record(item)">
@@ -199,6 +199,7 @@ import {
   binding_is_ok_modify,
   send_email_repeat,
   query_machines_by_machine_type,
+  searchMachine
 } from "@/api";
 import {
   getAccount,
@@ -257,6 +258,9 @@ export default {
       machineCount: 0,
       todayReward: 0,
       totalReward: 0,
+      
+      pageSize1: 1,
+      pageNum: 10,
       pageSize: 10,
       currentPage: 1,
       allListedMachine: [],
@@ -435,18 +439,30 @@ export default {
     },
     async getList(){
       let loadingInstance = this.$loading({target:'.myAudit'});
-      let machinesList =  await leaseCommitteeOps('5D1vwMoK1DjBF7pfApKjT9Gi5C4DKHvZMztFRhTsMqo71B8r');
-      let list = machinesList.online_machine // 获取当前委员会验证上线的机器
-      let nowDay = await currentEra() // 获取当前链上第几天，用于计算当天的收益以及累计收益（当天收益为当前天数减一）
-      for(let i = 0; i< list.length; i++){
-        this.allListedMachine[i] = await machinesInfo( nowDay - 1, list[i] ) // 通过机器id获取机器详细信息
-        this.allListedMachine[i].totalReward = '···'
-        this.allListedMachine[i].reward = []
-        this.allListedMachine[i].online_day = 0
-        this.todayReward += (this.allListedMachine[i].todayReward/99/this.allListedMachine[i].info.reward_committee.length)
-      }
-      this.showMachines(this.allListedMachine, this.currentPage, this.pageSize)
+      // this.res_body.content = []
+      searchMachine({pageSize: this.pageSize1, pageNum: this.pageNum}).then(res => {
+        this.todayReward = this.getnum1(res.tdRed)
+        this.totalReward = this.getnum1(res.tlRed)
+        this.machineCount = res.total
+        this.res_body.content = res.machine_info.map((ele) => {
+          return {...ele, ...JSON.parse(ele.machine_info)}
+        });
+      })
+      // 只获取分页收益信息
+      // let machinesList =  await leaseCommitteeOps('5D1vwMoK1DjBF7pfApKjT9Gi5C4DKHvZMztFRhTsMqo71B8r');
+      // let list = machinesList.online_machine // 获取当前委员会验证上线的机器
+      // let nowDay = await currentEra() // 获取当前链上第几天，用于计算当天的收益以及累计收益（当天收益为当前天数减一）
+      // for(let i = 0; i< list.length; i++){
+      //   this.allListedMachine[i] = await machinesInfo( nowDay - 1, list[i] ) // 通过机器id获取机器详细信息
+      //   this.allListedMachine[i].totalReward = '···'
+      //   this.allListedMachine[i].reward = []
+      //   this.allListedMachine[i].online_day = 0
+      //   this.todayReward += (this.allListedMachine[i].todayReward/99/this.allListedMachine[i].info.reward_committee.length)
+      // }
+      // this.showMachines(this.allListedMachine, this.currentPage, this.pageSize)
       loadingInstance.close();
+
+      // 获取全部总收益
       // for(let i = 0; i< this.allListedMachine.length; i++){
       //   this.allListedMachine[i].totalReward = '···'
       //   this.allListedMachine[i].reward = []
@@ -487,7 +503,7 @@ export default {
         }
       }
       for(let i = 0; i< needMachines.length; i++){
-        let reward = needMachines[i].reward.reduce(function(a, b) { 
+        let reward = needMachines[i].reward.length&&needMachines[i].reward.reduce(function(a, b) { 
           return a + b;
         })
         this.$set(needMachines[i], 'totalReward', this.getnum1(reward/99/needMachines[i].info.reward_committee.length)) // 计算累计收益
@@ -499,13 +515,17 @@ export default {
     },
     handleSizeChange(pageSize) {
       console.log(`每页 ${pageSize} 条`);
-      this.pageSize = pageSize;
-      this.showMachines(this.allListedMachine, this.currentPage, this.pageSize);
+      this.pageNum = pageSize;
+      this.getList()
+      // this.pageSize = pageSize;
+      // this.showMachines(this.allListedMachine, this.currentPage, this.pageSize);
     },
     handleCurrentChange(currentPage) {
       console.log(`当前页: ${currentPage}`);
-      this.currentPage = currentPage;
-      this.showMachines(this.allListedMachine, this.currentPage, this.pageSize);
+      this.pageSize1 = currentPage;
+      this.getList()
+      // this.currentPage = currentPage;
+      // this.showMachines(this.allListedMachine, this.currentPage, this.pageSize);
     },
     // 查询历史记录
     Record(data){
