@@ -1,5 +1,33 @@
 <template>
   <div>
+    <!-- <div class="title">
+      <div></div>
+      <div
+        v-if="!isBinding && bindMail && $t('website_name') !== 'congTuCloud'"
+        class="binding"
+      >
+        <span class="bindingInfo"
+          >{{ $t("my_machine_binding_email") }}:{{ bindMail }}</span
+        >
+        <el-button class="ml10" size="mini" plain @click="openDlgMail(false)">{{
+          $t("gpu.modifyMail")
+        }}</el-button>
+      </div>
+      <div
+        v-else-if="!isBinding && this.$t('website_name') != 'congTuCloud'"
+        class="bind"
+      >
+        <el-button size="small" plain @click="openDlgMail(true)">{{
+          $t("gpu.bindMail")
+        }}</el-button>
+        <span class="bindInfo ml10" v-html="$t('gpu.bindMailInfo')"></span>
+      </div>
+      <div v-else-if="isBinding">
+        <span v-if="isBinding" class="bindInfo">{{
+          $t("my_machine_vocing")
+        }}</span>
+      </div>
+    </div> -->
     <div class="title">
       <div></div>
       <div
@@ -191,7 +219,7 @@ export default {
     }
   },
   activated() {
-    this.binding(this.isNewMail);
+    // this.binding(this.isNewMail);
     this.stopInter()
     this.queryMail();
     this.getList()

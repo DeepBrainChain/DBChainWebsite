@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="gpuVirtual">
     <div class="title">
       <span>{{$t("myvirtual.title")}}：{{ orderNumber }} {{$t("myvirtual.tower")}}</span>
       <div
@@ -171,7 +171,7 @@
               plain
               class="tool-btn"
               size="mini"
-              v-if="el.orderStatus == '正在使用中'"
+              v-if="el.orderStatus == '正在使用中' || el.orderStatus == '待确认支付'"
               @click="operateVirtual('create', el)"
               >{{ $t("myvirtual.Build") }}</el-button
             >
@@ -687,6 +687,10 @@ export default {
     },
     getMyVirtual() {
       this.stopInter()
+      let loadingInstance;
+      if(this.firstLoading){
+        loadingInstance = this.$loading({target:'.gpuVirtual'});
+      }
       get_Virtual({ wallet: this.wallet_address }).then( async res => {
         for(let i = 0; i< res.content.length; i++){
           let nowTime = + new Date();
@@ -721,6 +725,9 @@ export default {
             }).catch( err => {console.log(err.message) })
           }
           res.content[i].virtual_info = this.Vir_info[i]
+        }
+        if(this.firstLoading){
+          loadingInstance.close();
         }
         this.firstLoading = false
         this.Machine_info = res.content
@@ -890,7 +897,7 @@ export default {
       }
       Create_VMS(perams).then( res=> {
         console.log(res ,'res');
-        if(res.status&&res.status == 0){
+        if(res.status == 0){
           this.$message.success(this.$t('myvirtual.Build_success'))
         }else{
           this.$message.error(this.$t('myvirtual.Build_fails'))

@@ -991,7 +991,8 @@ export default {
     problem: '机器是否有问题',
     hasproblem:'有问题',
     noproblem:'没问题',
-
+    err_tip1:'钱包地址不能为空',
+    err_tip2:'服务器异常，请稍后再试',
     GPUmodel:'GPU型号',
     CC_num:'CUDA core数量',
     Memoryvalue:'显存值',

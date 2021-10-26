@@ -159,7 +159,7 @@
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button class="batch" size="mini" plain :loading='btnloading'  @click="confirm">{{$t('virtual.confirm')}}</el-button>
-        <el-button class="batch" size="mini" plain  @click="dialogFormVisible = false">{{$t('virtual.cancal')}}</el-button>
+        <el-button class="batch" size="mini" plain  @click="dialogFormVisible = false;btnloading=false">{{$t('virtual.cancal')}}</el-button>
       </div>
     </el-dialog>
     <Footer class="footer" v-if="this.$store.state.webtype" />
@@ -174,7 +174,7 @@ import Footer from "@/congTuCloud/components/footer/Footer.vue";
 import { getCurrentPair } from "@/utlis/dot";
 import { getAccount, getBalance } from "@/utlis";
 import { mapState, mapMutations } from "vuex";
-import { transfer, getBlockTime } from '@/utlis/dot/api';
+import { transfer, getBlockTime, batchTransfer } from '@/utlis/dot/api';
 import { dbc_info, GetGpu_Info, GetMachine_Details, Count_Details, CreateWallet, Get_ByWif, My_Virtual } from "@/api"
 export default {
   name: "virtual",
@@ -515,7 +515,7 @@ export default {
         });
         return;
       }
-      CreateWallet( { only_key : el.machine_id+this.wallet_address } ).then(res => {
+      CreateWallet( { only_key : el.machine_id+this.wallet_address, machine_id: el.machine_id } ).then(res => {
         console.log(res, 'res');
       })
       this.chooseMac = el;
@@ -588,12 +588,59 @@ export default {
         console.log('批量租用')
         let walletInfo = [] // 需要转账的钱包信息
         for(let i =0; i< this.checkedCities.length; i++){
-          walletInfo.push(await Get_ByWif({ only_key: this.checkedCities[i].machine_id+this.wallet_address }))
+          let wallet_info = await Get_ByWif({ only_key: this.checkedCities[i].machine_id+this.wallet_address })
+          wallet_info.machine_id = this.checkedCities[i].machine_id
+          wallet_info.calc_point = this.checkedCities[i].calc_point
+          wallet_info.totalMoney = this.getnum2(Number(this.checkedCities[i].calc_point)/100*0.028229*this.useTime)
+          wallet_info.totalDbc = Math.ceil(this.getnum2(Number(this.checkedCities[i].calc_point)/100*0.028229*this.useTime/this.dbc_price))
+          walletInfo.push(wallet_info)
         }
-        // this.checkedCities.map( async (el, idx) => {
-        //   walletInfo.push(await Get_ByWif({ only_key: el.machine_id+this.wallet_address }))
-        // })
         console.log(walletInfo, 'walletInfo');
+        if(walletInfo.length){
+          this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
+            confirmButtonText: this.$t('confirm'),
+            cancelButtonText:  this.$t('cancel'),
+            inputValue: this.passward
+          })
+          .then( ({ value }) => {
+            this.setPassWard(value)
+            batchTransfer( walletInfo, value, (res1) => {
+              console.log(res1, 'res');
+              if(res1.success){
+                for(let j =0; j< walletInfo.length; j++){
+                  let permas = {
+                    only_key: walletInfo[j].machine_id+this.wallet_address,
+                    machine_id: walletInfo[j].machine_id,
+                    dollar: this.getnum2(Number(walletInfo[j].calc_point)/100*0.028229),
+                    day: this.useTime,
+                    count: walletInfo[j].totalMoney,
+                    dbc: walletInfo[j].totalDbc,
+                    wallet: this.wallet_address
+                  }
+                  console.log(permas, 'permas'+j);
+                  My_Virtual(permas).then(res => {
+                    console.log(res, 'res');
+                    this.$message({
+                      showClose: true,
+                      message: walletInfo[j].machine_id + this.$t('virtual.tip4'),
+                      type: "success",
+                    });
+                  })
+                }
+              }else{
+                this.btnloading = false;
+                this.$message({
+                  showClose: true,
+                  message: res1.msg,
+                  type: "error",
+                });
+              }
+            })
+          }).catch(() => {
+            this.btnloading = false;
+            console.log('取消下单');
+          });
+        }
       }else{
         Get_ByWif({ only_key: this.chooseMac.machine_id+this.wallet_address } )
         .then(res=> {

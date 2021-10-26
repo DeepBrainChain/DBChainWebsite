@@ -1268,7 +1268,7 @@ export const GetResultHash = params => {
 export const searchMachine = params => {
   return axios({
     method: "get",
-    url: "http://localhost:8080/select/searchMachine",
+    url: "http://111.44.254.181:8090/select/searchMachine",
     params
   });
 };

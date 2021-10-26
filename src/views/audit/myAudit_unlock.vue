@@ -37,8 +37,8 @@
         :key='index'
       >
         <div class="flex vCenter profit">
-          <div class="today_profit">{{ $t("audit.today_profit") }}: {{getnum1(item.today_reward)}} DBC</div>
-          <div class="total_profit">{{ $t("audit.total_profit") }}: {{getnum1(item.total_reward)}} DBC</div>
+          <div class="today_profit">{{ $t("audit.today_profit") }}: {{getnum1(item.todayReward)}} DBC</div>
+          <div class="total_profit">{{ $t("audit.total_profit") }}: {{getnum1(item.totalReward)}} DBC</div>
         </div>
         <div class="flex status-title">
           <div class="machineIdBox" @click="Record(item)">
@@ -440,13 +440,23 @@ export default {
     async getList(){
       let loadingInstance = this.$loading({target:'.myAudit'});
       // this.res_body.content = []
-      searchMachine({pageSize: this.pageSize1, pageNum: this.pageNum}).then(res => {
-        this.todayReward = this.getnum1(res.tdRed)
-        this.totalReward = this.getnum1(res.tlRed)
-        this.machineCount = res.total
-        this.res_body.content = res.machine_info.map((ele) => {
-          return {...ele, ...JSON.parse(ele.machine_info)}
-        });
+      searchMachine({pageSize: this.pageSize1, pageNum: this.pageNum, wallet: this.wallet_address}).then(res => {
+        if(res.success){
+          this.todayReward = this.getnum1(res.todayReward)
+          this.totalReward = this.getnum1(res.totalReward)
+          this.machineCount = res.total
+          this.res_body.content = res.count
+        }else{
+          if(res.code == 10001){
+            this.$message.error(this.$t('audit.err_tip1'))
+          }else{
+            this.$message.error(this.$t('audit.err_tip2'))
+          }
+          this.todayReward = 0
+          this.totalReward = 0
+          this.machineCount = 0
+          this.res_body.content = []
+        }
       })
       // 只获取分页收益信息
       // let machinesList =  await leaseCommitteeOps('5D1vwMoK1DjBF7pfApKjT9Gi5C4DKHvZMztFRhTsMqo71B8r');

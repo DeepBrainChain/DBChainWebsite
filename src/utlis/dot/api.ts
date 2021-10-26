@@ -825,7 +825,7 @@ export const inputToBn = (input: string, siPower: BN, basePower: number) => {
 
   return result
 }
-
+// 转账
 export const transfer = async (dest: any, value: string,  passward: string, callback: (data: Object) => void) => {
   await initNetwork();
   const basePower: number = formatBalance.getDefaults().decimals // 小数位数
@@ -849,6 +849,62 @@ export const transfer = async (dest: any, value: string,  passward: string, call
   .transfer( dest, bob )
   .signAndSend( kering! , ( { events = [], status , dispatchError  } ) => {
     returnFun(status, events, callback)
+  })
+  .catch((res)=>{
+    CallBack_data1 = {
+      msg: res.message,
+      success: false
+    };
+    callback(CallBack_data1)
+  })
+}
+
+// 批量转账
+export const batchTransfer = async (walletList: Array<any>, passward: string, callback: (data: Object) => void) => {
+  await initNetwork();
+  const basePower: number = formatBalance.getDefaults().decimals // 小数位数
+  console.log(basePower, 'basePower');
+  const siPower: BN = new BN(basePower)
+  let tsArray: Array<any> = []
+  for(let i =0; i< walletList.length; i++){
+    let money = `${walletList[i].totalDbc}.${walletList[i].random_number}`
+    let bob = inputToBn(money, siPower, basePower)
+    tsArray.push(api?.tx.balances.transfer( walletList[i].wallet, bob ))
+  }
+  let kering = await getCurrentPair()
+  try {
+    await kering!.unlock(passward)
+  } catch (e: any) {
+    CallBack_data1 = {
+      msg: e.message,
+      success: false
+    };
+    callback(CallBack_data1)
+    return;
+  }
+  await cryptoWaitReady();
+  await api?.tx.utility
+  .batch(tsArray)
+  .signAndSend( kering! , ( { events = [], status , dispatchError  } ) => {
+    if (status.isInBlock) {
+      events.forEach(({ event: { method, data: [error] } }) => {
+        console.log(error, method, 'method');
+        if (method == 'ExtrinsicFailed') {
+          const decoded = api?.registry.findMetaError(error.asModule);
+          console.log(JSON.stringify(decoded));
+          CallBack_data.msg = decoded!.method;
+          CallBack_data.success = false
+          CallBack_data.index = decoded!.index;
+          CallBack_data.section = decoded!.section;
+        }else if(method == 'ExtrinsicSuccess'){
+          CallBack_data.msg = method;
+          CallBack_data.success = true
+        }
+      });
+      if (callback) {
+        callback(CallBack_data)
+      }
+    }
   })
   .catch((res)=>{
     CallBack_data1 = {
