@@ -73,13 +73,13 @@
                 <div class="tableli" v-for="el in Machine_info" :key="el.machine_id">
                   <div class="li_list1">
                     <div>
-                      <el-checkbox v-if="openCheck" :disabled="el.machine_status == 'rented'" :label="el.machine_id" :key="el.machine_id">{{''}}</el-checkbox>
+                      <el-checkbox v-if="openCheck" :disabled="el.machine_status != 'online'" :label="el.machine_id" :key="el.machine_id">{{''}}</el-checkbox>
                       <span class="Machine_id">{{$t('virtual.Machine_ID')}}: {{el.machine_id}}</span>
                     </div>
                     <span v-if="el.server_room">{{$t('virtual.Room_number')}}: {{String(el.server_room).substring(0,10)+'...'}}</span>
-                    <span>{{$t('virtual.Machine_sta')}}: {{el.machine_status == 'rented'?$t('virtual.Rented'):$t('virtual.Idle')}}</span>
+                    <span>{{$t('virtual.Machine_sta')}}: {{el.machine_status != 'online'?$t('virtual.Rented'):$t('virtual.Idle')}}</span>
                     <span v-if="!openCheck">
-                      <el-button class="batch" :disabled='el.machine_status == "rented"' size="mini" plain @click="batch_Mac(el)">
+                      <el-button class="batch" :disabled='el.machine_status != "online"' size="mini" plain @click="batch_Mac(el)">
                         {{ $t('virtual.batch_Mac') }}
                       </el-button>
                     </span>
@@ -537,7 +537,7 @@ export default {
       this.checkedCities = []
       this.Machine_info.map( el => {
         if(val){
-          if(el.machine_status != 'rented'){
+          if(el.machine_status == 'online'){
             this.checkedCities.push(el.machine_id)
           }
         }
@@ -560,7 +560,7 @@ export default {
               this.checkedCities[index] = res
               // machineList.push(res)
               // 获取每个机器对应的临时钱包
-              CreateWallet( { only_key : res.machine_id+this.wallet_address } ).then(res1 => {
+              CreateWallet( { only_key : res.machine_id+this.wallet_address, machine_id: res.machine_id } ).then(res1 => {
                 console.log(res1, 'CreateWallet');
               })
             }
@@ -589,6 +589,15 @@ export default {
         let walletInfo = [] // 需要转账的钱包信息
         for(let i =0; i< this.checkedCities.length; i++){
           let wallet_info = await Get_ByWif({ only_key: this.checkedCities[i].machine_id+this.wallet_address })
+          if(!wallet_info.wallet){
+            this.btnloading = false;
+            this.$message({
+              showClose: true,
+              message: this.$t('virtual.tip6'),
+              type: "error",
+            });
+            return false
+          }
           wallet_info.machine_id = this.checkedCities[i].machine_id
           wallet_info.calc_point = this.checkedCities[i].calc_point
           wallet_info.totalMoney = this.getnum2(Number(this.checkedCities[i].calc_point)/100*0.028229*this.useTime)
@@ -604,9 +613,10 @@ export default {
           })
           .then( ({ value }) => {
             this.setPassWard(value)
-            batchTransfer( walletInfo, value, (res1) => {
+            batchTransfer( walletInfo, value, async (res1) => {
               console.log(res1, 'res');
               if(res1.success){
+                let request = []
                 for(let j =0; j< walletInfo.length; j++){
                   let permas = {
                     only_key: walletInfo[j].machine_id+this.wallet_address,
@@ -618,15 +628,26 @@ export default {
                     wallet: this.wallet_address
                   }
                   console.log(permas, 'permas'+j);
-                  My_Virtual(permas).then(res => {
-                    console.log(res, 'res');
-                    this.$message({
-                      showClose: true,
-                      message: walletInfo[j].machine_id + this.$t('virtual.tip4'),
-                      type: "success",
-                    });
-                  })
+                  request.push(await My_Virtual(permas))
                 }
+                Promise.all(request).then(res => {
+                  this.$message({
+                    showClose: true,
+                    message: this.$t('virtual.tip4'),
+                    type: "success",
+                  });
+                  setTimeout(() => {
+                    this.$router.push('/mymachine/myMachine_gpuVirtual')
+                  }, 2000);
+                })
+                .catch(err => {
+                  this.btnloading = false;
+                  this.$message({
+                    showClose: true,
+                    message: this.$t('virtual.tip5'),
+                    type: "error",
+                  });
+                })
               }else{
                 this.btnloading = false;
                 this.$message({
@@ -644,58 +665,66 @@ export default {
       }else{
         Get_ByWif({ only_key: this.chooseMac.machine_id+this.wallet_address } )
         .then(res=> {
-          console.log(`向${res.wallet}转账${this.totalDbc}.${res.random_number}DBC`);
-          this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
-            confirmButtonText: this.$t('confirm'),
-            cancelButtonText:  this.$t('cancel'),
-            inputValue: this.passward
-          })
-          .then( ({ value }) => {
-            this.setPassWard(value)
-            transfer(res.wallet, `${this.totalDbc}.${res.random_number}`, value, (res1) => {
-              console.log(res1, 'res');
-              if(res1.success){
-                let permas = {
-                  only_key: this.chooseMac.machine_id+this.wallet_address,
-                  machine_id: this.chooseMac.machine_id,
-                  dollar: this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229),
-                  day: this.useTime,
-                  count: this.totalMoney,
-                  dbc: this.totalDbc,
-                  wallet: this.wallet_address
-                }
-                console.log(permas, 'permas');
-                My_Virtual(permas).then(res => {
-                  console.log(res, 'res');
+          if (res.wallet) {
+            console.log(`向${res.wallet}转账${this.totalDbc}.${res.random_number}DBC`);
+            this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
+              confirmButtonText: this.$t('confirm'),
+              cancelButtonText:  this.$t('cancel'),
+              inputValue: this.passward
+            })
+            .then( ({ value }) => {
+              this.setPassWard(value)
+              transfer(res.wallet, `${this.totalDbc}.${res.random_number}`, value, (res1) => {
+                console.log(res1, 'res');
+                if(res1.success){
+                  let permas = {
+                    only_key: this.chooseMac.machine_id+this.wallet_address,
+                    machine_id: this.chooseMac.machine_id,
+                    dollar: this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229),
+                    day: this.useTime,
+                    count: this.totalMoney,
+                    dbc: this.totalDbc,
+                    wallet: this.wallet_address
+                  }
+                  console.log(permas, 'permas');
+                  My_Virtual(permas).then(res => {
+                    console.log(res, 'res');
+                    this.$message({
+                      showClose: true,
+                      message: this.$t('virtual.tip4'),
+                      type: "success",
+                    });
+                    this.btnloading = false;
+                    setTimeout(() => {
+                      this.$router.push('/mymachine/myMachine_gpuVirtual')
+                    }, 2000);
+                  })
+                }else{
+                  this.btnloading = false;
                   this.$message({
                     showClose: true,
-                    message: this.$t('virtual.tip4'),
-                    type: "success",
+                    message: res1.msg,
+                    type: "error",
                   });
-                  this.btnloading = false;
-                  setTimeout(() => {
-                    this.$router.push('/mymachine/myMachine_gpuVirtual')
-                  }, 2000);
-                })
-              }else{
-                this.btnloading = false;
-                this.$message({
-                  showClose: true,
-                  message: res1.msg,
-                  type: "error",
-                });
-              }
-            })
-          }).catch(() => {
+                }
+              })
+            }).catch(() => {
+              this.btnloading = false;
+              console.log('取消下单');
+            });
+          } else {
             this.btnloading = false;
-            console.log('取消下单');
-          });
+            this.$message({
+              showClose: true,
+              message: this.$t('virtual.tip6'),
+              type: "error",
+            });
+          }
         })
         .catch(() => {
           this.btnloading = false;
         })
       }
-      
     }
   },
   components: {

@@ -1066,7 +1066,7 @@ export const getMachineList = params => {
  export const Save_GrabbingHash = params => {
   return axios({
     method: "post",
-    url: "/identifier/Save_GrabbingHash",
+    url: "https://identifier.congtu.cloud/Save_GrabbingHash",
     params
   });
 };
@@ -1078,7 +1078,7 @@ export const getMachineList = params => {
  export const GetGrabbingHash = params => {
   return axios({
     method: "post",
-    url: "/identifier/GetGrabbingHash",
+    url: "https://identifier.congtu.cloud/GetGrabbingHash",
     params
   });
 };
@@ -1157,7 +1157,7 @@ export const GetResultHash = params => {
  export const CreateWallet = (params) => {
   return axios({
     method: "post",
-    url: "/identifier/CreateWalletAddressByWif",
+    url: "https://identifier.congtu.cloud/CreateWalletAddressByWif",
     params
   });
 };
@@ -1169,7 +1169,7 @@ export const GetResultHash = params => {
  export const Get_ByWif = (params) => {
   return axios({
     method: "post",
-    url: "/identifier/Get_ByWif",
+    url: "https://identifier.congtu.cloud/Get_ByWif",
     params
   });
 };
@@ -1181,7 +1181,7 @@ export const GetResultHash = params => {
  export const My_Virtual = (params) => {
   return axios({
     method: "post",
-    url: "/identifier/My_Virtual",
+    url: "https://identifier.congtu.cloud/My_Virtual",
     params
   });
 };
@@ -1193,7 +1193,7 @@ export const GetResultHash = params => {
  export const get_Virtual = (params) => {
   return axios({
     method: "post",
-    url: "/identifier/get_Virtual",
+    url: "https://identifier.congtu.cloud/get_Virtual",
     params
   });
 };
@@ -1205,7 +1205,7 @@ export const GetResultHash = params => {
  export const Create_VMS = (params) => {
   return axios({
     method: "post",
-    url: "/identifier/Create_VMS",
+    url: "https://identifier.congtu.cloud/Create_VMS",
     params
   });
 };
@@ -1217,7 +1217,7 @@ export const GetResultHash = params => {
  export const VMS_details = (params) => {
   return axios({
     method: "post",
-    url: "/identifier/VMS_details",
+    url: "https://identifier.congtu.cloud/VMS_details",
     params
   });
 };
@@ -1229,7 +1229,7 @@ export const GetResultHash = params => {
  export const ConFirm_Rent = (params) => {
   return axios({
     method: "post",
-    url: "/identifier/ConFirm_Rent",
+    url: "https://identifier.congtu.cloud/ConFirm_Rent",
     params
   });
 };
@@ -1241,7 +1241,7 @@ export const GetResultHash = params => {
  export const Renew_Rent = (params) => {
   return axios({
     method: "post",
-    url: "/identifier/Renew_Rent",
+    url: "https://identifier.congtu.cloud/Renew_Rent",
     params
   });
 };
@@ -1253,7 +1253,7 @@ export const GetResultHash = params => {
  export const VMS_restart = (params) => {
   return axios({
     method: "post",
-    url: "/identifier/VMS_restart",
+    url: "https://identifier.congtu.cloud/VMS_restart",
     params
   });
 };
