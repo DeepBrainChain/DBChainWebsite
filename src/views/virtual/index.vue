@@ -175,7 +175,7 @@ import { getCurrentPair } from "@/utlis/dot";
 import { getAccount, getBalance } from "@/utlis";
 import { mapState, mapMutations } from "vuex";
 import { transfer, getBlockTime, batchTransfer } from '@/utlis/dot/api';
-import { dbc_info, GetGpu_Info, GetMachine_Details, Count_Details, CreateWallet, Get_ByWif, My_Virtual } from "@/api"
+import { dbc_info, GetGpu_Info, GetMachine_Details, Count_Details, CreateWallet, Get_ByWif, My_Virtual, My_Chain } from "@/api"
 export default {
   name: "virtual",
   data() {
@@ -663,66 +663,92 @@ export default {
           });
         }
       }else{
-        Get_ByWif({ only_key: this.chooseMac.machine_id+this.wallet_address } )
-        .then(res=> {
-          if (res.wallet) {
-            console.log(`向${res.wallet}转账${this.totalDbc}.${res.random_number}DBC`);
-            this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
-              confirmButtonText: this.$t('confirm'),
-              cancelButtonText:  this.$t('cancel'),
-              inputValue: this.passward
-            })
-            .then( ({ value }) => {
-              this.setPassWard(value)
-              transfer(res.wallet, `${this.totalDbc}.${res.random_number}`, value, (res1) => {
-                console.log(res1, 'res');
-                if(res1.success){
-                  let permas = {
-                    only_key: this.chooseMac.machine_id+this.wallet_address,
-                    machine_id: this.chooseMac.machine_id,
-                    dollar: this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229),
-                    day: this.useTime,
-                    count: this.totalMoney,
-                    dbc: this.totalDbc,
-                    wallet: this.wallet_address
-                  }
-                  console.log(permas, 'permas');
-                  My_Virtual(permas).then(res => {
-                    console.log(res, 'res');
-                    this.$message({
-                      showClose: true,
-                      message: this.$t('virtual.tip4'),
-                      type: "success",
-                    });
-                    this.btnloading = false;
-                    setTimeout(() => {
-                      this.$router.push('/mymachine/myMachine_gpuVirtual')
-                    }, 2000);
+        let permas = {
+          only_key: this.chooseMac.machine_id+this.wallet_address,
+          machine_id: this.chooseMac.machine_id,
+          dollar: this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229),
+          day: this.useTime,
+          count: this.totalMoney,
+          dbc: this.totalDbc,
+          wallet: this.wallet_address
+        }
+        My_Virtual(permas).then(res => { 
+          console.log(res, 'res');
+          if(res){
+            Get_ByWif({ only_key: this.chooseMac.machine_id+this.wallet_address } )
+            .then(res=> {
+              if (res.wallet) {
+                console.log(`向${res.wallet}转账${this.totalDbc}.${res.random_number}DBC`);
+                this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
+                  confirmButtonText: this.$t('confirm'),
+                  cancelButtonText:  this.$t('cancel'),
+                  inputValue: this.passward
+                })
+                .then( ({ value }) => {
+                  this.setPassWard(value)
+                  transfer(res.wallet, `${this.totalDbc}.${res.random_number}`, value, (res1) => {
+                    console.log(res1, 'res');
+                    if(res1.success){
+                      let permas = {
+                        only_key: this.chooseMac.machine_id+this.wallet_address,
+                        machine_id: this.chooseMac.machine_id,
+                        day: this.useTime,
+                        wallet: this.wallet_address
+                      }
+                      console.log(permas, 'permas');
+                      My_Chain(permas).then(res => { 
+                        console.log(res, 'res');
+                        this.$message({
+                          showClose: true,
+                          message: this.$t('virtual.tip4'),
+                          type: "success",
+                        });
+                        this.btnloading = false;
+                        setTimeout(() => {
+                          this.$router.push('/mymachine/myMachine_gpuVirtual')
+                        }, 2000);
+                      })
+                    }else{
+                      this.btnloading = false;
+                      this.$message({
+                        showClose: true,
+                        message: res1.msg,
+                        type: "error",
+                      });
+                    }
                   })
-                }else{
+                }).catch(() => {
                   this.btnloading = false;
-                  this.$message({
-                    showClose: true,
-                    message: res1.msg,
-                    type: "error",
-                  });
-                }
-              })
-            }).catch(() => {
+                  console.log('取消下单');
+                });
+              } else {
+                this.btnloading = false;
+                this.$message({
+                  showClose: true,
+                  message: this.$t('virtual.tip6'),
+                  type: "error",
+                });
+              }
+            })
+            .catch(() => {
               this.btnloading = false;
-              console.log('取消下单');
-            });
-          } else {
-            this.btnloading = false;
+            })
+            // this.$message({
+            //   showClose: true,
+            //   message: this.$t('virtual.tip4'),
+            //   type: "success",
+            // });
+            // this.btnloading = false;
+            // setTimeout(() => {
+            //   this.$router.push('/mymachine/myMachine_gpuVirtual')
+            // }, 2000);
+          }else{
             this.$message({
               showClose: true,
-              message: this.$t('virtual.tip6'),
+              message: this.$t('virtual.tip5'),
               type: "error",
             });
           }
-        })
-        .catch(() => {
-          this.btnloading = false;
         })
       }
     }

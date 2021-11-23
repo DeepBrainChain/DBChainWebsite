@@ -376,10 +376,10 @@ import {
 import {
   getAccount,
   getBalance,
-  getUsdToRmb,
+  getUsdToRmb
 } from "@/utlis";
 import { transfer, getAccountBalance } from '@/utlis/dot/api';
-import { getCurrentPair } from "@/utlis/dot"
+import { getCurrentPair, getRand_str, CreateSignature } from "@/utlis/dot"
 import { mapState, mapMutations } from "vuex"
 export default {
   name: "myMachine_unlock_gpuVirtual",
@@ -513,6 +513,30 @@ export default {
   },
   methods: {
     ...mapMutations(['setPassWard']),
+    getSign() {
+      if( this.passward != '' ) {
+        this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
+          confirmButtonText: this.$t('confirm'),
+          cancelButtonText:  this.$t('cancel'),
+          inputValue: this.passward
+        })
+        .then( async ({ value }) => {
+          try {
+            let nonce = await getRand_str()
+            let sign = await CreateSignature(nonce, value)
+          } catch (err) {
+            this.$message({
+              showClose: true,
+              message: err.message,
+              type: "error",
+            });
+          }
+        })
+        .catch( err => {
+          console.log(err, 'err');
+        })
+      }
+    },
     openDlgMail(isNewMail) {
       getBalance().then((res) => {
         this.balance = res.balance;

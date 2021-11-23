@@ -725,7 +725,7 @@ export const GetRTime = (t) => {
 
 /**
  * getComputing_Power 时间戳倒计时 天 时分秒
- * 整机算力值=50*√（卡数）+内存/3.5+(√(cuda数量)*√（显存/10））*卡数
+ * 整机算力值=25*（卡数）+内存/3.5+(√(cuda数量)*√（显存/10））*卡数
  * @param Gpu_Num 卡数
  * @param Mem 内存
  * @param Cuda cuda数量
@@ -733,7 +733,7 @@ export const GetRTime = (t) => {
  */
  
 export const getComputing_Power = (Gpu_Num, Mem, Cuda, M_value) => {
-  var num = (Math.sqrt(Gpu_Num)*50+ Mem/3.5 + Math.sqrt(Cuda) * Math.sqrt(M_value/10)*Gpu_Num).toFixed(2)
+  var num = (Gpu_Num*25+ Mem/3.5 + Math.sqrt(Cuda) * Math.sqrt(M_value/10)*Gpu_Num).toFixed(2)
   return num
 }
 

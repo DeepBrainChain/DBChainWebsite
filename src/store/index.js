@@ -45,7 +45,7 @@ export default new Vuex.Store({
     transferList: [],
     listTotal: 0,
     dbcToUS: 0, // DBC对美金汇率
-    passward: '', // 钱包密码，默认为空，刷新页面需要重新输入
+    passward: sessionStorage.getItem('passward'), // 钱包密码，默认为空，刷新页面需要重新输入
     menuName: sessionStorage.getItem('menuName'),
     webtype: "",
     isNewWallet: localStorage.getItem('isNewWallet') // true: 是新钱包 false或''：不是新钱包
@@ -103,6 +103,7 @@ export default new Vuex.Store({
     },
     setPassWard(state, data){
       state.passward = data
+      sessionStorage.setItem('passward',data)
     }
   },
   actions: {
