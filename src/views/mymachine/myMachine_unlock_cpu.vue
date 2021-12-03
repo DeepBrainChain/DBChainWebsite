@@ -887,6 +887,7 @@ import {
   getCongtuCpuRenewalTradeNoPrefix,
 } from "@/utlis";
 
+import { getCurrentPair } from "@/utlis/dot"
 export default {
   name: "myMachine_unlock_cpu",
   components: {
@@ -904,6 +905,7 @@ export default {
   },
   data() {
     return {
+      wallet_address: (getAccount() && getAccount().address) || (getCurrentPair() && getCurrentPair().address),
       opengpuloading: undefined,
       renewal_order_id_prefix: getCongtuCpuRenewalOrderIdPrefix(),
       renewal_trade_no_pre: getCongtuCpuRenewalTradeNoPrefix(),
@@ -1213,7 +1215,7 @@ export default {
         place_order_cpu_to_gpu_new({
           machine_type: item.orderData.machine_type,
           machine_id: item.orderData.machine_id,
-          wallet_address_user: getAccount().address,
+          wallet_address_user: this.wallet_address,
           order_id_pre: item.orderData.order_id,
           user_name_platform,
           language,
@@ -2376,7 +2378,7 @@ export default {
           // this.$router.push(`/openWallet/${type}`);
           return;
         }
-        let wallet_address_user = getAccount().address;
+        let wallet_address_user = this.wallet_address;
         const user_name_platform = this.$t("website_name");
         const language = this.$i18n.locale;
         const promiseList = [
@@ -2464,7 +2466,7 @@ export default {
       this.bindMail = cookie.get("mail");
       let address = "tmp";
       if (this.$t("website_name") != "congTuCloud") {
-        address = getAccount().address;
+        address = this.wallet_address;
       }
       const user_name_platform = this.$t("website_name");
       const language = this.$i18n.locale;
@@ -2508,7 +2510,7 @@ export default {
           if (isNewMail) {
             binding = false;
             const res = await binding_is_ok({
-              wallet_address: getAccount().address,
+              wallet_address: this.wallet_address,
               user_name_platform,
               language,
             });
@@ -2519,7 +2521,7 @@ export default {
           } else {
             binding = false;
             const res = await binding_is_ok_modify({
-              wallet_address: getAccount().address,
+              wallet_address: this.wallet_address,
               user_name_platform,
               language,
             });

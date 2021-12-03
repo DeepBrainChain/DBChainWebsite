@@ -224,6 +224,13 @@ const router = new Router({
         },
         {
           meta: {
+            menuIndex: 4
+          },
+          path: 'myVerify_gpuVirtual',
+          component: resolve => require(['./views/mymachine/myVerify_gpuVirtual'] , resolve)
+        },
+        {
+          meta: {
             menuIndex: 0
           },
           path: 'myMachineUnlock',

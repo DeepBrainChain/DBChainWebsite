@@ -28,7 +28,9 @@
 import Navi from "@/components/naviMenu";
 import Header from "@/congTuCloud/components/header/SubHeader.vue";
 import Footer from "@/congTuCloud/components/footer/Footer.vue";
-
+import { getAccount } from "@/utlis";
+import { getCommitteeList } from '@/utlis/dot/api';
+import { getCurrentPair } from "@/utlis/dot"
 export default {
   name: "mymachine",
   components: {
@@ -38,6 +40,7 @@ export default {
   },
   data() {
     return {
+      wallet_address: (getAccount() && getAccount().address) || (getCurrentPair() && getCurrentPair().address),
       // 缓存组件列表
       cacheList: [
         "myMachine_unlock",
@@ -65,13 +68,12 @@ export default {
           index: 2,
           iconClass: "iconmachine",
         },
-        
         {
           title: undefined, //this.$t("gpu.machineList"),
           to: "myMachine_gpuVirtual",
           index: 3,
           iconClass: "iconmachine",
-        },
+        }
       ],
       underlineStyle: {
         width: "65px",
@@ -86,8 +88,18 @@ export default {
   },
   created() {
     // const curRoute = this.$route.matched.find(item => item.path === this.$route.path)
-    this.curNavIndex = this.$route.meta.menuIndex;
-    this.init_menus();
+    getCommitteeList(this.wallet_address).then(res => {
+      if (res) {
+        this.menus.push({
+          title: undefined, //this.$t("gpu.machineList"),
+          to: "myVerify_gpuVirtual",
+          index: 4,
+          iconClass: "iconmachine",
+        })
+      }
+      this.curNavIndex = this.$route.meta.menuIndex;
+      this.init_menus();
+    })
   },
   mounted() {
     if (this.$t("website_name") === "congTuCloud") {
@@ -105,7 +117,9 @@ export default {
       this.menus[1].title = this.$t("gpu.myMachine_cpu");
       this.menus[2].title = this.$t("gpu.myMachine_stopped");
       this.menus[3].title = this.$t("gpu.myMachine_gpuVirtual");
-
+      if (this.menus[4]) {
+        this.menus[4].title = this.$t("gpu.myVerify_gpuVirtual");
+      }
       // if (this.$t("website_name") === "congTuCloud") {
       //   this.menus.splice(2, 1);
       // }

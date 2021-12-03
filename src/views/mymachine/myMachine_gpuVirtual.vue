@@ -47,9 +47,9 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState, mapMutations } from "vuex";
 import { getAccount } from "@/utlis";
-import { initFromLocalstorage } from '@/utlis/dot'
+import { initFromLocalstorage, getRand_str, CreateSignature } from '@/utlis/dot'
 export default {
   name: "myWallet",
  data(){
@@ -65,9 +65,10 @@ export default {
     this.initData();
   },
   computed: {
-    ...mapState(['isNewWallet'])
+    ...mapState(['isNewWallet', "passward"])
   },
   methods: {
+    ...mapMutations(['setPassWard']),
     ...mapActions(["getAccountState", "getTransferList"]),
     initData() {
       if (this.$t("website_name") == "congTuCloud") {
@@ -80,6 +81,40 @@ export default {
           this.$router.push("myMachineUnlockGpuVirtual");
         }
       }
+    },
+    getSign() {
+      this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
+        confirmButtonText: this.$t('confirm'),
+        cancelButtonText:  this.$t('cancel'),
+        inputValue: this.passward
+      })
+      .then( async ({ value }) => {
+        try {
+          let nonce = await getRand_str()
+          let sign = await CreateSignature(nonce, value)
+          console.log(sign, 'sign');
+          this.setPassWard(value)
+          if (this.$t("website_name") == "congTuCloud") {
+            this.$router.replace("myMachineUnlockGpuVirtual");
+          } else {
+            if (this.isNewWallet  == 'true' || this.isNewWallet  == 'false') {
+              this.$router.push("myMachineUnlockGpuVirtual");
+            }
+          }
+        } catch (err) {
+          this.$message({
+            showClose: true,
+            message: err.message,
+            type: "error",
+          });
+          this.getSign()
+        }
+      })
+      .catch( err => {
+        console.log(err, 'err');
+        this.getSign()
+        return false
+      })
     },
     // openCreateWallet() {
     //   const type = this.$route.path.search("gpu") !== -1 ? "gpu" : "miner";

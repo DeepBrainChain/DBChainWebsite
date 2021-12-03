@@ -766,6 +766,7 @@ export default {
   },
   data() {
     return {
+      wallet_address: (getAccount() && getAccount().address) || (getCurrentPair() && getCurrentPair().address),
       rateValue: undefined,
       dlgReload_open: false,
       dlgHD_open: false,
@@ -1131,7 +1132,7 @@ export default {
       const user_name_platform = this.$t("website_name")
       const language = this.$i18n.locale
       rentout_get_machines_list({
-        wallet_address: getAccount().address,
+        wallet_address: this.wallet_address,
         user_name_platform,
         language,
       }).then((res) => {
@@ -1155,7 +1156,7 @@ export default {
     //
     queryMail() {
       this.bindMail = cookie.get("mail")
-      const address = getAccount().address
+      const address = this.wallet_address
       const user_name_platform = this.$t("website_name")
       const language = this.$i18n.locale
       queryBindMail_rent({
@@ -1197,7 +1198,7 @@ export default {
           if (isNewMail) {
             binding = false
             const res = await binding_is_ok({
-              wallet_address: getAccount().address,
+              wallet_address: this.wallet_address,
               user_name_platform,
               language,
             })
@@ -1208,7 +1209,7 @@ export default {
           } else {
             binding = false
             const res = await binding_is_ok_modify({
-              wallet_address: getAccount().address,
+              wallet_address: this.wallet_address,
               user_name_platform,
               language,
             })

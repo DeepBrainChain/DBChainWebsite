@@ -303,9 +303,17 @@ export function transfer({
 }) {
   if(store.state.isNewWallet == 'true'){
     let pair;
-    return getsearch({ key: account.address , page: 0, row: 1 })
+    // getAccountBalance(account.address).then(res=> {
+    //       let balance = res.data?Number(res.data.free)/Math.pow(10,15):0
+    //       resolve({
+    //         symbol: DBC_NAME,
+    //         balance: balance
+    //       });
+    //     })
+    return getAccountBalance(account.address)
     .then( async (res) => {
-      if (res.data.account.balance > amount) {
+      let balance = res.data?Number(res.data.free)/Math.pow(10,15):0
+      if (balance > amount) {
         await initNetwork();
         // 获取地址
         if (getPairs().length > 0) {
@@ -656,7 +664,7 @@ function getdate(time) {
 }
 
 /**
- * getBlockchainTime 区块验证时间换算，返回派单验证时间段  以6S一个块计算
+ * getBlockchainTime 区块验证时间换算，返回派单验证时间段  以30S一个块计算
  * @param arr 开始时间时间块数组
  */
 export const getBlockchainTime = async (BlockchainTime, arr) => {
@@ -673,6 +681,16 @@ export const getBlockchainTime = async (BlockchainTime, arr) => {
     }
   })
   return newarr
+}
+
+/**
+ * getBlockchainTime 提交原始信息结果时间
+ * @param str 提交开始时间
+ */
+ export const getBlockConfirm = async (BlockchainTime, ConfirmTime) => {
+  let nowDate = Date.parse(new Date()) // 获取当前时间的秒数
+  let time = (ConfirmTime - BlockchainTime)*30000 + nowDate
+  return getdate(time)
 }
 
 /**

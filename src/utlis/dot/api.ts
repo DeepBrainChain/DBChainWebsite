@@ -4,11 +4,12 @@ import { formatBalance, BN_TEN, isHex, stringToU8a, u8aToHex, hexToU8a, stringTo
 import { getCurrentPair } from './index' // 获取kerPair
 import BN from 'bn.js'
 import { initNetwork } from './index'
+import { ExtrinsicStatus, EventRecord } from '@polkadot/types/interfaces';
 
 const node = {
   polkadot: 'wss://rpc.polkadot.io',
   // dbc: 'wss://innertest2.dbcwallet.io' // 测试网
-  dbc: 'wss://preinfo.dbcwallet.io' // 银河竞赛预主网
+  dbc: 'wss://infotest.dbcwallet.io' // 银河竞赛预主网
   //dbc: 'wss://info.dbcwallet.io' // 主网
 }
 let api: ApiPromise | null = null
@@ -397,11 +398,12 @@ let CallBack_data1 = {
   success: false
 }
 // 定义回调函数
-const returnFun = (status: any, events: any, callback: Function) => {
+const returnFun = (status: ExtrinsicStatus, events: EventRecord[], callback: Function) => {
   if (status.isInBlock) {
     events.forEach(({ event: { method, data: [error] } }) => {
-      if (error.isModule && method == 'ExtrinsicFailed') {
-        const decoded = api?.registry.findMetaError(error.asModule);
+      if (method == 'ExtrinsicFailed') {
+        let returnError:any = error
+        const decoded = api?.registry.findMetaError(returnError.asModule);
         console.log(JSON.stringify(decoded));
         CallBack_data.msg = decoded!.method;
         CallBack_data.success = false
@@ -448,7 +450,7 @@ export const getBlockTime = async (): Promise<any> => {
  */
 export const getCommitteeList = async (wallet: string): Promise<any> => {
   await GetApi();
-  let de = await api!.query.committee.committee()
+  let de: any = await api!.query.committee.committee()
   let list  = de.normal.toHuman().indexOf(wallet) > -1? true : false
   return list
 }
@@ -889,8 +891,9 @@ export const batchTransfer = async (walletList: Array<any>, passward: string, ca
     if (status.isInBlock) {
       events.forEach(({ event: { method, data: [error] } }) => {
         console.log(error, method, 'method');
+        let returnError: any = error
         if (method == 'ExtrinsicFailed') {
-          const decoded = api?.registry.findMetaError(error.asModule);
+          const decoded = api?.registry.findMetaError(returnError.asModule);
           console.log(JSON.stringify(decoded));
           CallBack_data.msg = decoded!.method;
           CallBack_data.success = false

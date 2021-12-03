@@ -43,15 +43,16 @@
           </div>
           <div class="center">
             <el-button 
-              v-if="item.machine_status !== 'booked'"
+              v-if="item.status == 'booked'"
               style="width: 120px"
               type="primary"
               size="mini"
+              :disabled='item.submit'
               @click="verification(item, 0)"
               >{{ $t("audit.verification") }}</el-button
             >
             <el-button
-              v-if="item.machine_status !== 'booked'"
+              v-if="item.status == 'booked'"
               style="width: 155px"
               type="primary"
               size="mini"
@@ -60,16 +61,17 @@
               >{{ $t("audit.verification1") }}</el-button
             >
             <el-button
-              v-else
+              v-if="item.status == 'hashed'"
               style="width: 155px"
               type="primary"
               size="mini"
+              :disabled="item.canConfirm"
               :loading="item.btnloading1"
               @click="verification(item, 2)"
               >{{ $t("audit.verification2") }}</el-button
             >
-            <div v-if="item.machine_status == 'booked'" class="verification_tips">{{ $t("audit.verification_tips") }}</div>
-            <div v-else-if="item.machine_status == 'CommitteeVerifying'" class="verification_tips">{{ $t("audit.verification_tips1") }}</div>
+            <div v-if="item.status == 'booked'" class="verification_tips">{{ $t("audit.verification_tips") }}</div>
+            <div v-else class="verification_tips">{{ item.confirm_start_time }}{{ $t("audit.verification_tips1") }}</div>
           </div>
         </div>
         <div class="flex">
@@ -94,60 +96,60 @@
         <div class="flex">
           <div class="td">
             <span class="fs16">
-              Cuda_core：
-              <a class="cPrimaryColor">{{ item.cuda_core }}</a>
+              {{$t('list_ram_size')}}：
+              <a class="cPrimaryColor">{{ item.mem && item.mem.free }}</a>
             </span>
           </div>
-          <div class="td">
-            <span class="fs16">
-              {{ $t("list_gpu_ram_size") }}：
-              <a class="cPrimaryColor"
-                >{{ parseInt(item.gpu_mem / (1000 * 1000)) }}GB</a
-              >
-            </span>
-          </div>
-          <div class="td">
-            <span class="fs16">
-              {{$t("audit.SGC_power")}}：
-              <a class="cPrimaryColor">{{ item.calc_point }}</a>
-            </span>
-          </div>
-          <div class="td">
-            <span class="fs16">
-              {{$t("audit.Shd_space")}}：
-              <a class="cPrimaryColor">{{ parseInt(item.sys_disk / (1000 * 1000)) }}GB</a>
-            </span>
-          </div>
-          <div class="td">
-            <span class="fs16">
-              {{$t("audit.Dhd_space")}}：
-              <a class="cPrimaryColor">{{ item.data && item.data.disk.size }}</a>
-            </span>
-          </div>
-        </div>
-        <div class="flex">
           <div class="td">
             <span class="fs16">
               {{ $t('list_cpu_numbers')}}：
-              <a class="cPrimaryColor">{{ item.data && item.data.cpu.num }}</a>
+              <a class="cPrimaryColor">{{ item.cpu && item.cpu.cores }}</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
               {{ $t('audit.CPUfrequency')}}：
-              <a class="cPrimaryColor">{{ item.cpu_rate }}</a>
-            </span>
-          </div>
-          <div class="td">
-            <span class="fs16">
-              {{$t('list_ram_size')}}：
-              <a class="cPrimaryColor">{{ item.data && item.data.mem }}</a>
+              <a class="cPrimaryColor">{{ item.cpu && item.cpu.hz }}</a>
             </span>
           </div>
           <div class="td3">
             <span class="fs16">
               {{ $t("list_cpu_type") }}：
-              <a class="cPrimaryColor">{{ item.data && item.data.cpu.type }}</a>
+              <a class="cPrimaryColor">{{ item.cpu && item.cpu.type }}</a>
+            </span>
+          </div>
+        </div>
+        <div class="flex">
+          <!-- <div class="td">
+            <span class="fs16">
+              Cuda_core：
+              <a class="cPrimaryColor">{{ item.cpu.cores }}</a>
+            </span>
+          </div> -->
+          <!-- <div class="td">
+            <span class="fs16">
+              {{ $t("list_gpu_ram_size") }}：
+              <a class="cPrimaryColor"
+                >{{ item.mem.free }}</a
+              >
+            </span>
+          </div> -->
+          <!-- <div class="td">
+            <span class="fs16">
+              {{$t("audit.SGC_power")}}：
+              <a class="cPrimaryColor">{{ item.calc_point }}</a>
+            </span>
+          </div> -->
+          <div class="td">
+            <span class="fs16">
+              {{$t("audit.Shd_space")}}：
+              <a class="cPrimaryColor">{{ item.disk_system && item.disk_system.size }}</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{$t("audit.Dhd_space")}}：
+              <a class="cPrimaryColor">{{ item.disk_data && item.disk_data.free }}</a>
             </span>
           </div>
         </div>
@@ -191,7 +193,7 @@
           <span>{{formInline.cuda_core}}</span>
         </el-form-item>
         <el-form-item v-show="select" :label="$t('audit.Memoryvalue')+':'">
-          <span>{{ formInline.gpu_mem }}GB</span>
+          <span>{{ formInline.gpu_mem }}</span>
         </el-form-item>
         <el-form-item v-show="select" :label="$t('audit.GPUnumber')+':'">
           <el-select :disabled='radioDisabled' size="small" @change="selectCPUNum" v-model="formInline.gpu_num" placeholder="请选择">
@@ -216,7 +218,7 @@
           <span>{{ formInline.mem_num }}</span>
         </el-form-item>
         <el-form-item :label="$t('audit.Shd_space')+':'">
-          <span>{{ parseInt(formInline.sys_disk / (1000 * 1000)) }}GB</span>
+          <span>{{ formInline.sys_disk }}</span>
         </el-form-item>
         <el-form-item :label="$t('audit.Dhd_space')+':'">
           <span>{{ formInline.data_disk }}</span>
@@ -250,18 +252,20 @@ import {
   send_email_repeat,
   getGPUList,
   getMachineList,
-  Save_GrabbingHash,
-  GetGrabbingHash
+  Save_ResultHash,
+  GetResultHash
 } from "@/api";
 import {
   getAccount,
   getBalance,
   getBlockchainTime,
-  getComputing_Power
+  getBlockConfirm,
+  getComputing_Power,
+  randomWord
 } from "@/utlis";
 
 import { Error_Reason } from "@/utlis/error_desc"
-import { getCurrentPair, getRand_str, CreateSignature } from "@/utlis/dot"
+import { getCurrentPair, CreateSignature } from "@/utlis/dot"
 import { ConfirmHash, ConfirmRaw, getBlockTime } from "@/utlis/dot/api"
 import { mapState, mapMutations } from "vuex"
 export default {
@@ -292,19 +296,19 @@ export default {
         content: [],
       },
       formInline: {
-        machine_id:'c2ad03b01cb72857978f7e18527afddb671c8354c72c46523405334be23c3701',
-        gpu_type:'GeForceGTX2080Ti',
-        gpu_num:'4',
-        cuda_core:'8704',
-        gpu_mem: '10',
-        calc_point:'59589',
-        sys_disk:'500',
-        data_disk:'3905',
-        cpu_type: 'Intel(R) Xeon(R) Silver 4214R',
-        cpu_core_num:'46',
-        cpu_rate:'2400',
-        mem_num:'440',
-        rand_str: '1',
+        machine_id:'',
+        gpu_type:'',
+        gpu_num:'',
+        cuda_core:'',
+        gpu_mem: '',
+        calc_point:'',
+        sys_disk:'',
+        data_disk:'',
+        cpu_type: '',
+        cpu_core_num:'',
+        cpu_rate:'',
+        mem_num:'',
+        rand_str: randomWord(),
         is_support: '1',
         passward:'',
       },
@@ -536,29 +540,43 @@ export default {
       };
       getMachineList(params)
       .then( async (res) => {
-        let BlockchainTime = await getBlockTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
+        let BlockchainTime = await getBlockTime().then((res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
         this.allListedMachine = []
-        await res.content.map( async el=>{ 
-          el.lcOpsEntity == null ? el.lcOpsEntity = {btnloading1: false} : el.lcOpsEntity.btnloading1 = false;
-          let newel = Object.assign({ submit: false }, JSON.parse(el.original), el.lcOpsEntity)
-          newel.verify_time = await getBlockchainTime(BlockchainTime, newel.verify_time?newel.verify_time:[])
-          let nowData = +new Date()
-          newel.verify_time.map(el => {
-            if(nowData > el.startTimestamp && nowData < el.endTimestamp){
-              newel.submit = true
+        if (res) {
+          for(let i=0; i< res.content.length; i++){
+            if ( res.content[i].booked_machine ) {
+              res.content[i].lcOpsEntity = { ...res.content[i].booked_machine, btnloading1: false, status: 'booked' }
+            } else {
+              res.content[i].lcOpsEntity = { ...res.content[i].hashed_machine, btnloading1: false, status: 'hashed' }
             }
-          })
-          this.allListedMachine.push(newel)
-        })
-        loadingInstance.close();
-        this.showMachines(
-          this.allListedMachine,
-          this.currentPage,
-          this.pageSize
-        );
+            let original = JSON.parse(res.content[i].original)
+            let newel = Object.assign({ submit: true, canConfirm: true }, original.result_code == 0?original.result_message: {} , res.content[i].lcOpsEntity)
+            newel.confirm_start_time = await getBlockConfirm(BlockchainTime, res.content[i].confirm_start_time)
+            if (res.content[i].confirm_start_time - BlockchainTime <= 0) { //验证是否到提交原始值的时间
+              newel.canConfirm = false
+            }
+            newel.verify_time = await getBlockchainTime(BlockchainTime, newel.verify_time_high?newel.verify_time_high:[])
+            let nowData = +new Date()
+            newel.verify_time.map(el => {
+              if(nowData > el.startTimestamp && nowData < el.endTimestamp){
+                newel.submit = false
+              }
+            })
+            this.allListedMachine.push(newel)
+          }
+          loadingInstance.close();
+          console.log(this.allListedMachine, 'all');
+          this.showMachines(
+            this.allListedMachine,
+            this.currentPage,
+            this.pageSize
+          );
+        } else {
+          loadingInstance.close();
+        }
       })
       .catch( err => {
-        console.log(err, 'ere');
+        console.log(err, 'err')
         this.$message({
           showClose: true,
           message: this.$t('audit.errormsg'),
@@ -579,16 +597,19 @@ export default {
     },
     // 开时验证
     verification(item,index){
-      if(index == 1){ // 提交原始结果hash值
+      if (index == 1) { // 提交原始结果hash值
         this.formInline.machine_id = item.booked_committee
-        this.formInline.data_disk = item.data && item.data.disk.size
-        this.formInline.cpu_type =  item.data && item.data.cpu.type
-        this.formInline.cpu_core_num =  item.data && item.data.cpu.num
-        this.formInline.mem_num = item.data && item.data.mem
+        this.formInline.data_disk = item.disk_data && item.disk_data.free
+        this.formInline.cpu_type =  item.cpu && item.cpu.type
+        this.formInline.cpu_core_num =  item.cpu && item.cpu.cores
+        this.formInline.mem_num = item.mem && item.mem.free
+        this.formInline.cpu_rate = item.cpu && item.cpu.hz
+        this.formInline.passward = this.passward
+        this.formInline.sys_disk = item.disk_system && item.disk_system.size
         this.formInline.is_support = '1'
         this.dialogTableVisible1 = true
         this.radioDisabled = false
-      }else if(index == 2 ){
+      } else if (index == 2) {
         item.btnloading1 = true
         this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
           confirmButtonText: this.$t('confirm'),
@@ -596,21 +617,25 @@ export default {
           inputValue: this.passward
         })
         .then( ({ value }) => {
-          CreateSignature(item.booked_committee, value)
+          const signaturemsg = randomWord()
+          CreateSignature(signaturemsg, value)
           .then(res=>{
             this.setPassWard(value)
             let parmas = { 
               machine_id: item.booked_committee,
               signature: res,
+              signaturemsg: signaturemsg,
               wallet: this.wallet_address
             }
-            GetGrabbingHash(parmas)
+            GetResultHash(parmas)
             .then(res1 => {
               this.formInline =  res1?res1:{}
+              this.formInline.passward = this.passward
+              this.formInline.machine_id = item.booked_committee
               this.select = true
               this.select1 = true
               this.formInline.is_support = res1?String(res1.is_support):''
-              this.sclectItem.gpu_type = res1.gpu_type
+              this.sclectItem.gpu_type = res1?res1.gpu_type: ''
               this.dialogTableVisible1 = true
               this.radioDisabled = true
             })
@@ -635,20 +660,13 @@ export default {
         .catch( err => {
           item.btnloading1 = false
         })
-      }else{
-        if(!this.isBinding){
-          this.$message({
-            showClose: true,
-            message: this.$t('audit.bindEmail'),
-            type: "error",
-          });
-        }else{
-          this.$message({
-            showClose: true,
-            message: this.$t('audit.tipmsg3'),
-            type: "success",
-          });
-        }
+      } else {
+        this.$message({
+          showClose: true,
+          message: this.$t('audit.tipmsg3'),
+          type: "success",
+        });
+        this.$router.push('/mymachine/myVerify_gpuVirtual')
       }
     },
     selectCPU(val){
@@ -666,7 +684,7 @@ export default {
         val, 
         parseInt(this.formInline.gpu_mem), 
         parseInt(this.formInline.cuda_core), 
-        parseInt(this.formInline.sys_disk / (1000 * 1000))
+        parseInt(this.formInline.sys_disk)
       )
     },
     async commit(){
@@ -688,6 +706,8 @@ export default {
                 message: this.$t('audit.Op_Successful'),
                 type: "success",
               });
+              this.dialogTableVisible1 = false
+              this.queryMc()
             }else{
               this.$message({
                 showClose: true,
@@ -697,9 +717,10 @@ export default {
             }
           })
         }else{
-          // await CreateSignature(this.formInline.machine_id, this.formInline.passward)
-          // .then(res=>{
-          //   this.setPassWard(this.formInline.passward)
+          const signaturemsg = randomWord()
+          await CreateSignature(signaturemsg, this.formInline.passward)
+          .then(res=>{
+            this.setPassWard(this.formInline.passward)
             let params = {
               only_key: this.wallet_address + this.formInline.machine_id,
               machine_id: this.formInline.machine_id,
@@ -717,11 +738,12 @@ export default {
               rand_str: this.formInline.rand_str, 
               is_support: this.formInline.is_support,
               wallet: this.wallet_address,
-              // signature: res
+              signature: res,
+              signaturemsg: signaturemsg
             }
             
-            // Save_GrabbingHash(params).then(res1=>{
-            //   if(res1){
+            Save_ResultHash(params).then(res1=>{
+              if(res1){
                 ConfirmHash(this.formInline, this.formInline.passward, (res)=>{
                   console.log(res, 'res');
                   this.btnloading = false;
@@ -731,6 +753,8 @@ export default {
                       message: this.$t('audit.Op_Successful'),
                       type: "success",
                     });
+                    this.dialogTableVisible1 = false
+                    this.queryMc()
                   }else{
                     this.$message({
                       showClose: true,
@@ -739,23 +763,23 @@ export default {
                     });
                   }
                 })
-            //   }else{
-            //     this.$message({
-            //       showClose: true,
-            //       message: res,
-            //       type: "error",
-            //     });
-            //   }
-            // })
-          // })
-          // .catch( err=> {
-          //   this.$message({
-          //     showClose: true,
-          //     message: err.message,
-          //     type: "error",
-          //   });
-          //   this.btnloading = false;
-          // })
+              }else{
+                this.$message({
+                  showClose: true,
+                  message: res,
+                  type: "error",
+                });
+              }
+            })
+          })
+          .catch( err=> {
+            this.$message({
+              showClose: true,
+              message: err.message,
+              type: "error",
+            });
+            this.btnloading = false;
+          })
         }
       }
       
@@ -935,11 +959,11 @@ export default {
       font-family: "Helvetica Neue", Helvetica, "PingFang SC",
         "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
     }
-    .machineIdBox:hover {
-      background: #195d91;
-      color: #ffffff;
-      opacity: 0.7;
-    }
+    // .machineIdBox:hover {
+    //   background: #195d91;
+    //   color: #ffffff;
+    //   opacity: 0.7;
+    // }
   }
 }
 .paging {

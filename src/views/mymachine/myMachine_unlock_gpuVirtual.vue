@@ -84,7 +84,7 @@
           <span>{{$t('virtual.CPU_frequency')}}: {{getnum2(Number(el.cpu_rate)/1000)}}Ghz</span>
           <span class="width40">{{$t('virtual.CPU_type')}}: {{el.cpu_type}}</span>
         </div>
-        <div class="virtual" v-if="el.virtual_info.length">
+        <div class="virtual" v-if="el.virtual_info&&el.virtual_info.length">
           <div class="v-list"  v-for="item in el.virtual_info" :key="item.task_id">
             <div class="li-top">
               <div class="left fs14"><span class="bold">{{$t('myvirtual.virId')}}</span>: {{item.task_id}}</div>
@@ -174,6 +174,14 @@
               v-if="el.orderStatus == '正在使用中' || el.orderStatus == '待确认支付'"
               @click="operateVirtual('create', el)"
               >{{ $t("myvirtual.Build") }}</el-button
+            >
+            <el-button
+              plain
+              class="tool-btn"
+              size="mini"
+              :loading='el.btnloading4'
+              @click="SeeVirtual(el)"
+              >{{ $t("myvirtual.SeeVirtual") }}</el-button
             >
             <!-- <el-button
               plain
@@ -376,10 +384,11 @@ import {
 import {
   getAccount,
   getBalance,
-  getUsdToRmb
+  getUsdToRmb,
+  randomWord
 } from "@/utlis";
 import { transfer, getAccountBalance } from '@/utlis/dot/api';
-import { getCurrentPair, getRand_str, CreateSignature } from "@/utlis/dot"
+import { getCurrentPair, CreateSignature } from "@/utlis/dot"
 import { mapState, mapMutations } from "vuex"
 export default {
   name: "myMachine_unlock_gpuVirtual",
@@ -513,30 +522,6 @@ export default {
   },
   methods: {
     ...mapMutations(['setPassWard']),
-    getSign() {
-      if( this.passward != '' ) {
-        this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
-          confirmButtonText: this.$t('confirm'),
-          cancelButtonText:  this.$t('cancel'),
-          inputValue: this.passward
-        })
-        .then( async ({ value }) => {
-          try {
-            let nonce = await getRand_str()
-            let sign = await CreateSignature(nonce, value)
-          } catch (err) {
-            this.$message({
-              showClose: true,
-              message: err.message,
-              type: "error",
-            });
-          }
-        })
-        .catch( err => {
-          console.log(err, 'err');
-        })
-      }
-    },
     openDlgMail(isNewMail) {
       getBalance().then((res) => {
         this.balance = res.balance;
@@ -720,10 +705,11 @@ export default {
           let nowTime = + new Date();
           let startTime = + new Date(res.content[i].time)
           let endTime = startTime + res.content[i].day*24*60*60*1000
-          res.content[i].time = startTime
           res.content[i].btnloading1 = false
           res.content[i].btnloading2 = false
           res.content[i].btnloading3 = false
+          res.content[i].btnloading4 = false
+          res.content[i].time = startTime
           if(endTime - nowTime > 0 ){
             res.content[i].time_left = this.minsToHourMins(Math.ceil((endTime - nowTime)/60000))
             res.content[i].userTime = this.minsToHourMins(Math.ceil((nowTime - res.content[i].time)/60000))
@@ -733,22 +719,16 @@ export default {
             res.content[i].userTime = this.minsToHourMins(Math.ceil((endTime - res.content[i].time)/60000))
             res.content[i].Actual_cost = res.content[i].dbc
           }
-          res.content[i].virtual_info = []
           res.content[i].confirmTime = (res.content[i].time+1800000 -nowTime)/1000
           if(this.firstLoading){
-            this.Vir_info[i] = []
-            // 获取虚拟机信息
-            await VMS_details({ only_key: res.content[i].id, machine_id: res.content[i].machine_id }).then(res1=>{
-              if(res1.status == 0){
-                this.Vir_info[i].push(res1.message)
-                // res.content[i].virtual_info.push(res1.message)
-              }else{
-                this.Vir_info[i] = []
-                // res.content[i].virtual_info = []
-              }
-            }).catch( err => {console.log(err.message) })
+            res.content[i].virtual_info = []
+          }else{
+            if(this.Machine_info[i].virtual_info.length){
+              res.content[i].virtual_info = this.Machine_info[i].virtual_info
+            }else{
+              res.content[i].virtual_info = []
+            }
           }
-          res.content[i].virtual_info = this.Vir_info[i]
         }
         if(this.firstLoading){
           loadingInstance.close();
@@ -909,25 +889,85 @@ export default {
       }
     },
     Createvirtual(){
-      this.btnloading1 = true
-      let perams = {
-        only_key: this.chooseMac.id,
-        machine_id: this.chooseMac.machine_id,
-        ssh_port: this.port_range,
-        // ssh_port: `${this.port_min}~${this.port_max}`,
-        gpu_count: this.vir_gpu_num,
-        cpu_cores: this.vir_cpu_num,
-        mem_rate: this.vir_mem
-      }
-      Create_VMS(perams).then( res=> {
-        console.log(res ,'res');
-        if(res.status == 0){
-          this.$message.success(this.$t('myvirtual.Build_success'))
-        }else{
-          this.$message.error(this.$t('myvirtual.Build_fails'))
+      this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
+        confirmButtonText: this.$t('confirm'),
+        cancelButtonText:  this.$t('cancel'),
+        inputValue: this.passward
+      })
+      .then( async ({ value }) => {
+        try {
+          let nonce = await randomWord()
+          let sign = await CreateSignature(nonce, value)
+          console.log( nonce, sign, '333333' );
+          this.btnloading1 = true
+          let perams = {
+            only_key: this.chooseMac.id,
+            machine_id: this.chooseMac.machine_id,
+            ssh_port: this.port_range,
+            // ssh_port: `${this.port_min}~${this.port_max}`,
+            gpu_count: this.vir_gpu_num,
+            cpu_cores: this.vir_cpu_num,
+            mem_rate: this.vir_mem,
+            nonce: nonce,
+            sign: sign,
+            wallet: this.wallet_address
+          }
+          Create_VMS(perams).then( res=> {
+            console.log(res ,'res');
+            if(res.status == 0){
+              this.$message.success(this.$t('myvirtual.Build_success'))
+            }else{
+              this.$message.error(this.$t('myvirtual.Build_fails'))
+            }
+            this.btnloading1 = false
+            this.dialogFormVisible1 = false
+          })
+        } catch (err) {
+          this.$message({
+            showClose: true,
+            message: err.message,
+            type: "error",
+          });
         }
-        this.btnloading1 = false
-        this.dialogFormVisible1 = false
+      })
+      .catch( err => {
+        console.log(err, 'err');
+      })
+    },
+    SeeVirtual(el) {
+      console.log(el, 'el')
+      el.virtual_info = []
+      el.btnloading4 = true
+      this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
+        confirmButtonText: this.$t('confirm'),
+        cancelButtonText:  this.$t('cancel'),
+        inputValue: this.passward
+      })
+      .then( async ({ value }) => {
+        try {
+          let nonce = await randomWord()
+          let sign = await CreateSignature(nonce, value)
+          let VMS_Info = await VMS_details({ only_key: el.id, machine_id: el.machine_id, nonce, sign, wallet: this.wallet_address })
+          this.setPassWard(value)
+          if(VMS_Info.status == 0){
+            el.virtual_info.push(VMS_Info.message)
+          }else{
+            this.$message.success('该机器未创建虚拟机')
+            el.virtual_info = []
+          }
+          el.btnloading4 = false
+        } catch (err) {
+          el.btnloading4 = false
+          this.$message({
+            showClose: true,
+            message: err.message,
+            type: "error",
+          });
+        }
+      })
+      .catch( err => {
+        el.btnloading4 = false
+        console.log(err, 'err');
       })
     },
     // 重启虚拟机

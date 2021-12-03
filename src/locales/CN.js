@@ -100,6 +100,7 @@ export default {
     myMachine_cpu: "我的CPU容器", //2020 1.9
     myMachine_stopped: "我的已停止容器", //2020 1.9
     myMachine_gpuVirtual: "我的GPU虚拟机", //2021 9.14
+    myVerify_gpuVirtual: "我的验证GPU虚拟机", //2021 12.2
     machineList: "机器列表",
     walletAddress: "钱包地址",
     notice_1: "请保管好私钥信息，私钥丢失，任何人都将无法帮你找回DBC资产!",
@@ -690,7 +691,7 @@ export default {
   dbc_price_wallet_tips: "DBC价格是随时波动的，购买DBC的时候请注意波动风险",
   dbcChange_tips: "DBC 24小时价格变化",
   dlg_bindMail_dbc_tip: "温馨提示:钱包中需要至少1个DBC才能绑定成功",
-  dlg_bindMail_voc_failure: "验证失败，请重新获取验证吗，进行验证",
+  dlg_bindMail_voc_failure: "验证失败，请重新获取验证码，进行验证",
   restart_tip_mymachine: "如果容器无法连接，可以重启容器，进程会被杀死，数据不会丢失、环境不会被重置",
   send_email_error: "邮件发送失败，请再次点击发送",
   send_email_repeat: "重发邮件",
@@ -942,6 +943,7 @@ export default {
     seeDetails1:'等待问题描述',
     seeDetails2:'查看问题描述',
     seeDetails3:'提交验证结果Hash值',
+    seeDetails4:'查看虚拟机信息',
     status:'状态',
     status1:'等待抢单',
     status2:'已被抢完',
@@ -961,11 +963,14 @@ export default {
     verification:'开始验证',
     verification1:'提交验证结果Hash值',
     verification2:'提交验证结果原始值',
+    verification3:'查看虚拟机',
+    verification4:'创建虚拟机',
     mytime:'我的可验证时间段',
     verification1_time:'提交验证结果Hash值倒计时',
     verification2_time:'提交验证结果原始值倒计时',
     verification_tips:'在验证的时间内必须提交结果Hash值',
-    verification_tips1:'36小时后才能够提交，提交内容包含原始值',
+    verification_tips1:'后才能够提交，限时12小时内提交内容包含原始值',
+    verification_tips2:'只有在验证时间内方可查看、登录虚拟机进行机器验证操作',
     // 我的审核
     machineStatus:'机器状态',
     machineStatus1:'验证中',
@@ -1087,6 +1092,7 @@ export default {
     Renew:'续费',
     renew_success: '续费成功',
     Build:'创建GPU虚拟机',
+    SeeVirtual:'查看GPU虚拟机',
     Build_success:'创建GPU虚拟机成功',
     Build_fails:'创建GPU虚拟机失败',
     virId: '虚拟机ID',

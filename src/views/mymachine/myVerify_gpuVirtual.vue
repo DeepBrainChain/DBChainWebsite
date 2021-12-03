@@ -1,0 +1,807 @@
+<template>
+  <div class="machine">
+    <!-- <div class="title">
+      <div></div>
+      <div
+        v-if="!isBinding && bindMail && $t('website_name') !== 'congTuCloud'"
+        class="binding"
+      >
+        <span class="bindingInfo"
+          >{{ $t("my_machine_binding_email") }}:{{ bindMail }}</span
+        >
+        <el-button class="ml10" size="mini" plain @click="openDlgMail(false)">{{
+          $t("gpu.modifyMail")
+        }}</el-button>
+      </div>
+      <div
+        v-else-if="!isBinding && this.$t('website_name') != 'congTuCloud'"
+        class="bind"
+      >
+        <el-button size="small" plain @click="openDlgMail(true)">{{
+          $t("gpu.bindMail")
+        }}</el-button>
+        <span class="bindInfo ml10" v-html="$t('gpu.bindMailInfo')"></span>
+      </div>
+      <div v-else-if="isBinding">
+        <span v-if="isBinding" class="bindInfo">{{
+          $t("my_machine_vocing")
+        }}</span>
+      </div>
+    </div> -->
+    <ul>
+      <li
+        v-for="(item, index) in res_body.content"
+        class="info-wrap"
+        :key='index'
+      >
+        <div class="flex status-title">
+          <div class="verification_time f16 c333">{{ $t("audit.mytime") }}:
+            <span v-for="(el, idx) in item.verify_time" class="fs14" :key="idx">
+              {{el.timestart}}-{{el.timeend}}
+              <i v-if="idx != item.verify_time.length-1" class="f16"> | </i>
+            </span>
+          </div>
+          <div class="center">
+            <el-button 
+              v-if="item.status == 'booked'"
+              style="width: 120px"
+              type="primary"
+              size="mini"
+              :loading='item.btnloading2'
+              :disabled='item.submit'
+              @click="SeeVirtual(item)"
+              >{{ $t("audit.verification3") }}</el-button
+            >
+            <el-button 
+              v-if="item.status == 'booked'"
+              style="width: 120px"
+              type="primary"
+              size="mini"
+              :loading='item.btnloading1'
+              :disabled='item.submit'
+              @click="CreateVirtual(item)"
+              >{{ $t("audit.verification4") }}</el-button
+            >
+            <div v-if="item.status == 'booked'" class="verification_tips">{{ $t("audit.verification_tips2") }}</div>
+          </div>
+        </div>
+        <div class="flex">
+          <div class="machineIdBox">
+            {{ item.booked_committee }}
+          </div>
+        </div>
+        <div class="flex">
+          <div class="td">
+            <span class="fs16">
+              {{$t('list_ram_size')}}：
+              <a class="cPrimaryColor">{{ item.mem&&item.mem.free }}</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{ $t('list_cpu_numbers')}}：
+              <a class="cPrimaryColor">{{ item.cpu&&item.cpu.cores }}</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{ $t('audit.CPUfrequency')}}：
+              <a class="cPrimaryColor">{{ item.cpu&&item.cpu.hz }}</a>
+            </span>
+          </div>
+          <div class="td3">
+            <span class="fs16">
+              {{ $t("list_cpu_type") }}：
+              <a class="cPrimaryColor">{{ item.cpu && item.cpu.type }}</a>
+            </span>
+          </div>
+        </div>
+        <div class="flex">
+          <div class="td">
+            <span class="fs16">
+              {{$t("audit.Shd_space")}}：
+              <a class="cPrimaryColor">{{ item.disk_system&&item.disk_system.size }}</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{$t("audit.Dhd_space")}}：
+              <a class="cPrimaryColor">{{ item.disk_data && item.disk_data.free }}</a>
+            </span>
+          </div>
+        </div>
+        <div class="virtual" v-if="item.virtual_info&&item.virtual_info.length">
+          <div class="v-list"  v-for="el in item.virtual_info" :key="el.task_id">
+            <div class="li-top">
+              <div class="left fs14"><span class="bold">{{$t('myvirtual.virId')}}</span>: {{el.task_id}}</div>
+              <div>
+                <el-button
+                  plain
+                  class="tool-btn"
+                  size="mini"
+                  @click="reboot(el)"
+                  :loading='el.btnloading3'
+                  >{{ $t("myvirtual.reboot") }}</el-button
+                >
+              </div>
+            </div>
+            <div class="li-bottom">
+              <span>{{$t('myvirtual.mirror_name')}}: ubuntu.qcow2</span>
+              <span>{{$t('myvirtual.IP_address')}}: {{el.ssh_ip}}</span>
+              <span>{{$t('myvirtual.user_name')}}: {{el.user_name}}</span>
+              <span>{{$t('myvirtual.password')}}: {{el.login_password}}</span>
+              <span>{{$t('myvirtual.ssh_port')}}: {{el.ssh_port}}</span>
+              <span>{{$t('myvirtual.vir_mem')}}: {{el.mem_size}}</span>
+              <span >{{$t('myvirtual.vir_sys')}}: {{el.disk_system}}</span>
+              <span>{{$t('myvirtual.vir_data')}}: {{el.disk_data}}</span>
+              <span>{{$t('myvirtual.vir_gpu_num')}}: {{el.gpu_count}}</span>
+              <span >{{$t('myvirtual.vir_cpu_num')}}: {{el.cpu_cores}}</span>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <div class="paging">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[5, 10, 20, 50]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="machineCount"
+      >
+      </el-pagination>
+    </div>
+    <!-- bindMail-dlg-->
+    <dlg-mail
+      :open.sync="dlgMail_open"
+      :is-new-mail="isNewMail"
+      @binding="binding"
+      @fail="bindFail"
+    ></dlg-mail>
+  </div>
+</template>
+
+<script>
+import cookie from "js-cookie";
+import DlgMail from "@/components/machine/dlg_bindMail";
+import {
+  queryBindMail_rent,
+  binding_is_ok,
+  binding_is_ok_modify,
+  send_email_repeat,
+  VerifierMachine,
+  Verifier_CreateVM,
+  Tasks,
+  Restart
+} from "@/api";
+import {
+  getAccount,
+  getBalance,
+  getBlockchainTime,
+  randomWord
+} from "@/utlis";
+
+import { getCurrentPair, CreateSignature } from "@/utlis/dot"
+import { getBlockTime, getCommitteeList } from "@/utlis/dot/api"
+import { mapState, mapMutations } from "vuex"
+export default {
+  name: "distributionMachine_unlock",
+  components: {
+    DlgMail,
+  },
+  computed: {
+    ...mapState(["isNewWallet", "passward"]),
+  },
+  data() {
+    return {
+      wallet_address: (getAccount() && getAccount().address) || (getCurrentPair() && getCurrentPair().address),
+      styleHidden: {},
+      dlgMail_open: false,
+      isNewMail: false,
+      isBinding: false,
+      bindMail: "",
+      language: undefined,
+      send_email_repeatLoading: false,
+      send_email_repeat_index: -1,
+      machineCount: 0,
+      pageSize: 10,
+      currentPage: 1,
+      allListedMachine: [],
+      res_body: {
+        content: [],
+      },
+    };
+  },
+  watch: {
+    "$i18n.locale"() {
+      this.queryMc();
+    },
+  },
+  beforeMount() {
+    if (this.$t("website_name") === "congTuCloud") {
+      this.styleHidden.visibility = "hidden";
+    }
+    getCommitteeList(this.wallet_address).then(res => {
+      if (!res) {
+        this.$router.push('/home')
+      }
+    })
+  },
+  mounted() {
+    this.language = this.$i18n.locale;
+    this.queryMc();
+    this.queryMail();
+  },
+  beforeDestroy() {
+    
+  },
+  methods: {
+    ...mapMutations(['setPassWard']),
+    // 绑定邮箱
+    openDlgMail(isNewMail) {
+      getBalance().then((res) => {
+        this.balance = res.balance;
+        if (this.balance < 1) {
+          this.$message({
+            showClose: true,
+            message: this.$t("dlg_bindMail_no_dbc"),
+            type: "error",
+          });
+        } else {
+          this.isNewMail = isNewMail;
+          this.dlgMail_open = true;
+        }
+      });
+    },
+    //
+    queryMail() {
+      this.bindMail = cookie.get("mail");
+      let address = "tmp";
+      if (this.$t("website_name") != "congTuCloud") {
+        address = this.wallet_address
+      }
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
+      queryBindMail_rent({
+        wallet_address: address,
+        user_name_platform,
+        language,
+      }).then((res) => {
+        if (res.status === 1) {
+          this.bindMail = res.content;
+          cookie.set("mail", res.content);
+        } else {
+          binding_is_ok({
+            wallet_address: address,
+            user_name_platform,
+            language,
+          }).then((ren) => {
+            if (ren.status === 2) {
+              this.isBinding = true;
+            }
+          });
+          binding_is_ok_modify({
+            wallet_address: address,
+            user_name_platform,
+            language,
+          }).then((ren) => {
+            if (ren.status === 2) {
+              this.isBinding = true;
+            }
+          });
+        }
+      });
+    },
+    binding(isNewMail) {
+      this.isBinding = true;
+      let binding = true;
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
+      const si = setInterval(async () => {
+        if (binding) {
+          if (isNewMail) {
+            binding = false;
+            const res = await binding_is_ok({
+              wallet_address: this.wallet_address,
+              user_name_platform,
+              language,
+            });
+            if (res.status === 1) {
+              clearInterval(si);
+              this.bindSuccess();
+            }
+          } else {
+            binding = false;
+            const res = await binding_is_ok_modify({
+              wallet_address: this.wallet_address,
+              user_name_platform,
+              language,
+            });
+            if (res.status === 1) {
+              clearInterval(si);
+              this.bindSuccess();
+            }
+          }
+        }
+        binding = true;
+      }, 15000);
+    },
+    send_email_repeat(item, index) {
+      const user_name_platform = this.$t("website_name");
+      const language = this.$i18n.locale;
+      this.send_email_repeatLoading = true;
+      this.send_email_repeat_index = index;
+      send_email_repeat({
+        order_id: item.orderData.order_id,
+
+        user_name_platform,
+        language,
+      })
+        .then((res) => {
+          if (res.status === 1) {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "success",
+            });
+          } else if (res.status === -1) {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "error",
+            });
+          }
+        })
+        .catch((err) => {
+          this.$message({
+            showClose: true,
+            message: this.$t("send_email_error"),
+            type: "error",
+          });
+        })
+        .finally(() => {
+          this.send_email_repeatLoading = false;
+          this.send_email_repeat_index = -1;
+        });
+    },
+    // bind fail
+    bindFail() {
+      this.isBinding = false;
+    },
+    // bind success
+    bindSuccess() {
+      this.isBinding = false;
+      this.queryMail();
+    },
+
+    showMachines(machines, currentPage, pageSize) {
+      let needMachines = []; //需要展示的机器
+      // 循环页面要显示的机器数量次
+      for (
+        let machineIndex = (currentPage - 1) * pageSize; //当前分页机器起始索引
+        machineIndex < currentPage * pageSize && //当前分页机器索引范围
+        machineIndex < machines.length; //机器索引最大值
+        machineIndex++
+      ) {
+        needMachines.push(machines[machineIndex]);
+      }
+      this.res_body.content = needMachines; //需要展示的机器
+      this.machineCount = machines.length; //展示的机器总数
+    },
+    queryMc() {
+      let loadingInstance = this.$loading({target:'.machine'});
+      let params = {
+        wallet: this.wallet_address
+      };
+      VerifierMachine(params)
+      .then( async (res) => {
+        let BlockchainTime = await getBlockTime().then((res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
+        this.allListedMachine = []
+        if (res) {
+          for(let i=0; i< res.content.length; i++){
+            if ( res.content[i].booked_machine ) {
+              res.content[i].lcOpsEntity = { ...res.content[i].booked_machine, btnloading1: false, btnloading2: false, status: 'booked' }
+            } else {
+              res.content[i].lcOpsEntity = { ...res.content[i].hashed_machine, btnloading1: false, btnloading2: false, status: 'hashed' }
+            }
+            let newel = Object.assign({ submit: true }, JSON.parse(res.content[i].original).result_message, res.content[i].lcOpsEntity)
+            newel.verify_time = await getBlockchainTime(BlockchainTime, newel.verify_time_high?newel.verify_time_high:[])
+            let nowData = +new Date()
+            newel.verify_time.map(el => {
+              if(nowData > el.startTimestamp && nowData < el.endTimestamp){
+                newel.submit = false
+              }
+            })
+            newel.virtual_info = [
+              // {
+              //   ssh_ip: '1',
+              //   user_name: '22222',
+              //   login_password: '22222',
+              //   ssh_port: '22222',
+              //   mem_size: '22222',
+              //   disk_system: '22222',
+              //   disk_data: '22222',
+              //   gpu_count: '22222',
+              //   cpu_cores: '22222'
+              // }
+            ]
+            this.allListedMachine.push(newel)
+          }
+          loadingInstance.close();
+          console.log(this.allListedMachine, 'all');
+          this.showMachines(
+            this.allListedMachine,
+            this.currentPage,
+            this.pageSize
+          );
+        }
+      })
+      .catch( err => {
+        console.log(err, 'err')
+        this.$message({
+          showClose: true,
+          message: this.$t('audit.errormsg'),
+          type: "error",
+        });
+        loadingInstance.close();
+      });
+    },
+    handleSizeChange(pageSize) {
+      console.log(`每页 ${pageSize} 条`);
+      this.pageSize = pageSize;
+      this.showMachines(this.allListedMachine, this.currentPage, this.pageSize);
+    },
+    handleCurrentChange(currentPage) {
+      console.log(`当前页: ${currentPage}`);
+      this.currentPage = currentPage;
+      this.showMachines(this.allListedMachine, this.currentPage, this.pageSize);
+    },
+    // 查看虚拟机
+    SeeVirtual(el) {
+      el.btnloading2 = true
+      this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
+        confirmButtonText: this.$t('confirm'),
+        cancelButtonText:  this.$t('cancel'),
+        inputValue: this.passward
+      })
+      .then( async ({ value }) => {
+        try {
+          let nonce = await randomWord()
+          let sign = await CreateSignature(nonce, value)
+          let VMS_Info = await Tasks({ task_id: el.task_id, machine_id: el.booked_committee, nonce, sign, wallet: this.wallet_address })
+          if(VMS_Info.status == 0){
+            el.virtual_info.push(VMS_Info.message)
+          }else{
+            this.$message.error('查询虚拟机信息失败，请稍后再试')
+            el.virtual_info = []
+          }
+          el.btnloading2 = false
+        } catch (err) {
+          el.btnloading2 = false
+          this.$message({
+            showClose: true,
+            message: err.message,
+            type: "error",
+          });
+        }
+      })
+      .catch( err => {
+        el.btnloading2 = false
+        console.log(err, 'err');
+      })
+    } ,
+    // 创建虚拟机
+    CreateVirtual(el) {
+      console.log(el, 'el')
+      el.virtual_info = []
+      el.btnloading1 = true
+      this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
+        confirmButtonText: this.$t('confirm'),
+        cancelButtonText:  this.$t('cancel'),
+        inputValue: this.passward
+      })
+      .then( async ({ value }) => {
+        try {
+          let nonce = await randomWord()
+          let sign = await CreateSignature(nonce, value)
+          let VMS_Info = await Verifier_CreateVM({ only_key: el.id, machine_id: el.booked_committee, nonce, sign, wallet: this.wallet_address })
+          if(VMS_Info.status == 0){
+            el.virtual_info.push(VMS_Info.message)
+          }else{
+            this.$message.error('创建虚拟机失败，请稍后再试')
+            el.virtual_info = []
+          }
+          el.btnloading1 = false
+        } catch (err) {
+          el.btnloading1 = false
+          this.$message({
+            showClose: true,
+            message: err.message,
+            type: "error",
+          });
+        }
+      })
+      .catch( err => {
+        el.btnloading1 = false
+        console.log(err, 'err');
+      })
+    },
+    // 重启虚拟机
+    reboot(el) {
+      // el.btnloading3 = true
+      this.$confirm(this.$t('myvirtual.tip5'), this.$t('myvirtual.reboot'), {
+        confirmButtonText: this.$t('confirm'),
+        cancelButtonText: this.$t('cancel'),
+        type: 'warning'
+      }).then(() => {
+        Restart({ task_id: el.task_id, machine_id: el.booked_committee, nonce, sign, wallet: this.wallet_address }).then( res => {
+          if(res.result_code != 0){
+            this.$message({
+              type: 'error',
+              message: res.result_message
+            });
+          }else{
+            this.$message({
+              type: 'success',
+              message: this.$t('myvirtual.reboot_success')
+            });
+          }
+          el.btnloading3 = false
+        })
+        this.$message({
+          type: 'success',
+          message: '重启'
+        });
+      }).catch(() => {
+        // el.btnloading3 = false
+        this.$message({
+          type: 'info',
+          message: this.$t('cancel')
+        });          
+      });
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+@import "~@/assets/css/variables.scss";
+
+.title {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 20px;
+  line-height: 20px;
+
+  .bindInfo {
+    display: inline-block;
+    font-size: 12px;
+    min-height: 40px;
+    color: $textColor_def;
+    vertical-align: middle;
+  }
+
+  .bindingInfo {
+    font-size: 12px;
+    color: $textColor_def;
+    vertical-align: middle;
+  }
+
+  .iconwenhao {
+    color: $primaryColor;
+  }
+}
+.virtual{
+  padding: 10px 20px;
+  border-bottom: 1px solid #e1e6ec;
+  .v-list{
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #e1e6ec;
+    &:last-child{
+      margin: 0;
+    }
+    .li-top{
+      display: flex;
+      align-items: center;
+      padding-bottom: 5px;
+      justify-content: space-between;
+      border-bottom: 1px solid #e1e6ec;
+    }
+    .li-bottom{
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      padding-top: 10px;
+      span{
+        width: 16%;
+        margin-bottom: 6px;
+        word-break: break-all;
+        &.width50{
+          width: 50%;
+        }
+        &.width40{
+          width: 40%;
+        }
+        &.width30{
+          width: 30%;
+        }
+        &.bold{
+          font-size: 18px;
+          font-weight: bold;
+        }
+        .color{
+          color: #f56c6c;
+        }
+        i{
+          font-style: normal;
+          color: #195d91;
+        }
+      }
+    }
+  }
+}
+.info-wrap {
+  margin-bottom: 20px;
+  padding: 15px 20px 12px;
+  border: 1px solid #979797;
+  color: #666;
+  font-size: 14px;
+
+  .status-title {
+    padding-bottom: 17px;
+  }
+
+  .flex {
+    display: flex;
+    align-items: flex-start;
+    padding: 5px 0;
+
+    &.status-title {
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .verification_time{
+      font-weight: bold;
+    }
+    .center{
+      // width: 250px;
+      text-align: right;
+    }
+    .verification_tips{
+      font-size: 10px;
+      color: red;  
+    }
+
+    .td3 {
+      width: 40%;
+      line-height: 24px;
+
+      .cPrimaryColor {
+        font-size: 12px;
+
+        &.fs16 {
+          font-size: 28px;
+        }
+      }
+    }
+    .fs28 {
+      font-size: 18px;
+      .cRedbig {
+        color: #f56c6c;
+      }
+    }
+
+    .td2 {
+      width: 50%;
+
+      line-height: 24px;
+
+      .cPrimaryColor {
+        font-size: 32px;
+
+        &.fs28 {
+          font-size: 32px;
+        }
+      }
+
+      .cRedbig {
+        font-size: 32px;
+        color: #f56c6c;
+      }
+    }
+
+    .td {
+      width: 20%;
+      line-height: 24px;
+
+      .cPrimaryColor {
+        font-size: 12px;
+
+        &.fs16 {
+          font-size: 16px;
+        }
+      }
+
+      .upSpeed,
+      .downSpeed {
+        display: inline-block;
+        height: 16px;
+        line-height: 16px;
+        margin-right: 8px;
+        border: 1px dashed #666;
+        font-size: 14px;
+      }
+
+      .downSpeed {
+        transform: rotateZ(180deg);
+      }
+    }
+
+    .td4 {
+      width: 12%;
+      line-height: 24px;
+
+      .cPrimaryColor {
+        font-size: 12px;
+
+        &.fs16 {
+          font-size: 16px;
+        }
+      }
+    }
+    .td5 {
+      width: 20%;
+      line-height: 24px;
+
+      .cPrimaryColor {
+        font-size: 18px;
+
+        &.fs16 {
+          font-size: 18px;
+        }
+      }
+    }
+    .machineIdBox {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 530px;
+      height: 50px;
+      border: 1px solid #195d91;
+      border-radius: 2px;
+      color: #195d91;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: "Helvetica Neue", Helvetica, "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    }
+    // .machineIdBox:hover {
+    //   background: #195d91;
+    //   color: #ffffff;
+    //   opacity: 0.7;
+    // }
+  }
+}
+.paging {
+  .el-pagination {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.el-form-item{
+  margin-bottom: 0;
+}
+.el-form-item__content {
+  line-height: 35px;
+}
+.el-form-item__label {
+  line-height: 35px;
+}
+</style>

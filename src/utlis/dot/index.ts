@@ -24,7 +24,7 @@ import nacl from 'tweetnacl'
 const node = {
   polkadot: 'wss://rpc.polkadot.io',
   // dbc: 'wss://innertest2.dbcwallet.io' // 测试网
-  dbc: 'wss://preinfo.dbcwallet.io' // 银河竞赛预主网
+  dbc: 'wss://infotest.dbcwallet.io' // 银河竞赛预主网
   //dbc: 'wss://info.dbcwallet.io' // 主网
 }
 let api: ApiPromise | null = null
@@ -777,13 +777,13 @@ export const CreateSignature = async (message: string , password: string ): Prom
 //   console.log( res, 'wwwwwwwww');
 // })
 
-const Verify = async (msg: string, sign: string, wallet: string, ver: string) => {
-  await cryptoWaitReady();
-  console.log(signatureVerify( msg, sign, wallet ), ver );
-}
+// const Verify = async (msg: string, sign: string, wallet: string, ver: string) => {
+//   await cryptoWaitReady();
+//   console.log(signatureVerify( msg, sign, wallet ), ver );
+// }
 // Verify(
-//   '0x4f087b7e464904c59adb29f8bc296144fd6072a5c8937cf876350aaf9e5463a4',
-//   '0xca2221ab1574d210df9da0258f86d45d5b5932b247ac92d57a3fe15ef024e46de8d8fb017d5ea794c5d027bda36d236e029fd0592d77e37da168aeca7a85b785',
+//   'test message',
+//   '0x2000e5a4b71b388539437c1a9b3fe145f4a1ea7a96f5d82b7ed866f0e094ee725ffe6348e7d6371f92de84a93c6c15a577bff4ff807fdd230a7b4f453180ac89',
 //   '5HL92dTnQrZSJZy7ckDVYVt9mMX3NsjShWsYDquB3eB3yb5R',
 //   'Verify1'
 // )
