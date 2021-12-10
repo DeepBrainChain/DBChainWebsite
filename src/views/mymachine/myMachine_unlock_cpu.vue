@@ -2374,7 +2374,7 @@ export default {
             }
           });
       } else {
-        if (!getAccount()) {
+        if (!this.wallet_address) {
           // this.$router.push(`/openWallet/${type}`);
           return;
         }

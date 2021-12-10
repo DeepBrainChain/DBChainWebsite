@@ -210,7 +210,8 @@ export default {
           power: 65.67
         },
         {
-          type: "GeForceRTX2080Ti",
+          // type: "GeForceRTX2080Ti",
+          type: "GeForceGTX2080Ti",
           power: 68.25
         },
         {

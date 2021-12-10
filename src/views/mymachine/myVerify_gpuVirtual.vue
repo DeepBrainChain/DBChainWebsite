@@ -114,18 +114,20 @@
           <div class="v-list"  v-for="el in item.virtual_info" :key="el.task_id">
             <div class="li-top">
               <div class="left fs14"><span class="bold">{{$t('myvirtual.virId')}}</span>: {{el.task_id}}</div>
-              <div>
+              <div v-if="el.status == 'creating'">创建中,请在5~10分钟后点击查看虚拟机按钮，查看创建结果</div>
+              <!-- <div v-else-if="el.status == 'create error'">创建失败，请重试</div> -->
+              <div v-else>
                 <el-button
                   plain
                   class="tool-btn"
                   size="mini"
-                  @click="reboot(el)"
-                  :loading='el.btnloading3'
+                  @click="reboot(el, item)"
+                  :loading='item.btnloading3'
                   >{{ $t("myvirtual.reboot") }}</el-button
                 >
               </div>
             </div>
-            <div class="li-bottom">
+            <div v-if="el.status != 'creating'" class="li-bottom">
               <span>{{$t('myvirtual.mirror_name')}}: ubuntu.qcow2</span>
               <span>{{$t('myvirtual.IP_address')}}: {{el.ssh_ip}}</span>
               <span>{{$t('myvirtual.user_name')}}: {{el.user_name}}</span>
@@ -402,9 +404,9 @@ export default {
         if (res) {
           for(let i=0; i< res.content.length; i++){
             if ( res.content[i].booked_machine ) {
-              res.content[i].lcOpsEntity = { ...res.content[i].booked_machine, btnloading1: false, btnloading2: false, status: 'booked' }
+              res.content[i].lcOpsEntity = { ...res.content[i].booked_machine, btnloading1: false, btnloading2: false, btnloading3: false, status: 'booked' }
             } else {
-              res.content[i].lcOpsEntity = { ...res.content[i].hashed_machine, btnloading1: false, btnloading2: false, status: 'hashed' }
+              res.content[i].lcOpsEntity = { ...res.content[i].hashed_machine, btnloading1: false, btnloading2: false, btnloading3: false, status: 'hashed' }
             }
             let newel = Object.assign({ submit: true }, JSON.parse(res.content[i].original).result_message, res.content[i].lcOpsEntity)
             newel.verify_time = await getBlockchainTime(BlockchainTime, newel.verify_time_high?newel.verify_time_high:[])
@@ -467,14 +469,16 @@ export default {
         inputValue: this.passward
       })
       .then( async ({ value }) => {
+        this.setPassWard(value)
         try {
           let nonce = await randomWord()
           let sign = await CreateSignature(nonce, value)
           let VMS_Info = await Tasks({ task_id: el.task_id, machine_id: el.booked_committee, nonce, sign, wallet: this.wallet_address })
+          el.virtual_info = []
           if(VMS_Info.status == 0){
             el.virtual_info.push(VMS_Info.message)
           }else{
-            this.$message.error('查询虚拟机信息失败，请稍后再试')
+            this.$message.error('查询虚拟机信息失败，请确认是否创建')
             el.virtual_info = []
           }
           el.btnloading2 = false
@@ -494,8 +498,6 @@ export default {
     } ,
     // 创建虚拟机
     CreateVirtual(el) {
-      console.log(el, 'el')
-      el.virtual_info = []
       el.btnloading1 = true
       this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
         confirmButtonText: this.$t('confirm'),
@@ -503,14 +505,16 @@ export default {
         inputValue: this.passward
       })
       .then( async ({ value }) => {
+        this.setPassWard(value)
         try {
           let nonce = await randomWord()
           let sign = await CreateSignature(nonce, value)
-          let VMS_Info = await Verifier_CreateVM({ only_key: el.id, machine_id: el.booked_committee, nonce, sign, wallet: this.wallet_address })
+          let VMS_Info = await Verifier_CreateVM({ machine_id: el.booked_committee, nonce, sign, wallet: this.wallet_address })
+          el.virtual_info = []
           if(VMS_Info.status == 0){
             el.virtual_info.push(VMS_Info.message)
           }else{
-            this.$message.error('创建虚拟机失败，请稍后再试')
+            this.$message.error('创建虚拟机失败，请确认是否已创建，如已创建，请点击查询按钮查看')
             el.virtual_info = []
           }
           el.btnloading1 = false
@@ -529,18 +533,20 @@ export default {
       })
     },
     // 重启虚拟机
-    reboot(el) {
-      // el.btnloading3 = true
+    reboot(el, item) {
+      item.btnloading3 = true
       this.$confirm(this.$t('myvirtual.tip5'), this.$t('myvirtual.reboot'), {
         confirmButtonText: this.$t('confirm'),
         cancelButtonText: this.$t('cancel'),
         type: 'warning'
-      }).then(() => {
-        Restart({ task_id: el.task_id, machine_id: el.booked_committee, nonce, sign, wallet: this.wallet_address }).then( res => {
+      }).then( async () => {
+        let nonce = await randomWord()
+        let sign = await CreateSignature(nonce, this.passward)
+        Restart({ task_id: el.task_id, machine_id: item.booked_committee, nonce, sign, wallet: this.wallet_address }).then( res => {
           if(res.result_code != 0){
             this.$message({
               type: 'error',
-              message: res.result_message
+              message: res.message
             });
           }else{
             this.$message({
@@ -548,14 +554,15 @@ export default {
               message: this.$t('myvirtual.reboot_success')
             });
           }
-          el.btnloading3 = false
+          item.btnloading3 = false
         })
-        this.$message({
-          type: 'success',
-          message: '重启'
-        });
-      }).catch(() => {
-        // el.btnloading3 = false
+        // this.$message({
+        //   type: 'success',
+        //   message: '重启'
+        // });
+      }).catch((err) => {
+        console.log(err, 'err');
+        item.btnloading3 = false
         this.$message({
           type: 'info',
           message: this.$t('cancel')
@@ -597,7 +604,6 @@ export default {
 }
 .virtual{
   padding: 10px 20px;
-  border-bottom: 1px solid #e1e6ec;
   .v-list{
     padding: 10px;
     margin-bottom: 10px;

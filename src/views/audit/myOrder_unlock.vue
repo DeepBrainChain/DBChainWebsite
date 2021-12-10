@@ -156,7 +156,8 @@ import {
 import {
   getAccount,
   getBalance,
-  getCountDown
+  getCountDown,
+  randomWord
 } from "@/utlis";
 import { Error_Reason } from "@/utlis/error_desc"
 import { getCurrentPair ,getRand_str, naclSeal, naclOpen, getKeypair, CreateSignature } from "@/utlis/dot"
@@ -414,12 +415,14 @@ export default {
           inputValue: this.passward
         })
         .then( ({ value }) => {
-          CreateSignature(this.wallet_address, value)
+          const signaturemsg = randomWord()
+          CreateSignature(signaturemsg, value)
           .then((res)=> {
             this.setPassWard(value)
             let parmas = { 
               only_key: this.wallet_address + item.report_id,
               signature: res,
+              signaturemsg: signaturemsg,
               wallet: this.wallet_address
             }
             GetGrabbingHash(parmas)
@@ -465,7 +468,8 @@ export default {
           this.setPassWard(this.formInline.passward)
         }
         if(this.isHex){
-          CreateSignature(this.wallet_address, this.formInline.passward)
+          const signaturemsg = randomWord()
+          CreateSignature(signaturemsg, this.formInline.passward)
           .then((res) =>{
             let params = {
               only_key: this.wallet_address + this.formInline.report_id,
@@ -477,7 +481,8 @@ export default {
               support_report: this.formInline.support_report,
               extra_err_info: this.formInline.extra_err_info,
               wallet: this.wallet_address,
-              signature: res
+              signature: res,
+              signaturemsg: signaturemsg,
             }
             Save_GrabbingHash(params).then(res1=>{
               if(typeof res1 != 'string'){

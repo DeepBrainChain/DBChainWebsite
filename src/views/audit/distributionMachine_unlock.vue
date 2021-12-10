@@ -56,7 +56,6 @@
               style="width: 155px"
               type="primary"
               size="mini"
-              :disabled='item.submit'
               @click="verification(item, 1)"
               >{{ $t("audit.verification1") }}</el-button
             >
@@ -78,6 +77,9 @@
           <div class="machineIdBox">
             {{ item.booked_committee }}
           </div>
+          <div>
+            {{ $t("audit.confirmHash") }}：{{ item.HashSize }}
+          </div>
         </div>
         <!-- <div class="flex">
           <div class="td2">
@@ -97,13 +99,13 @@
           <div class="td">
             <span class="fs16">
               {{$t('list_ram_size')}}：
-              <a class="cPrimaryColor">{{ item.mem && item.mem.free }}</a>
+              <a class="cPrimaryColor">{{ item.mem && parseInt(item.mem.size) }}G</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
               {{ $t('list_cpu_numbers')}}：
-              <a class="cPrimaryColor">{{ item.cpu && item.cpu.cores }}</a>
+              <a class="cPrimaryColor">{{ item.cpu && parseInt(item.cpu.cores) }}</a>
             </span>
           </div>
           <div class="td">
@@ -143,13 +145,13 @@
           <div class="td">
             <span class="fs16">
               {{$t("audit.Shd_space")}}：
-              <a class="cPrimaryColor">{{ item.disk_system && item.disk_system.size }}</a>
+              <a class="cPrimaryColor">{{ item.disk_system && parseInt(item.disk_system.size) }}G</a>
             </span>
           </div>
           <div class="td">
             <span class="fs16">
               {{$t("audit.Dhd_space")}}：
-              <a class="cPrimaryColor">{{ item.disk_data && item.disk_data.free }}</a>
+              <a class="cPrimaryColor">{{ item.disk_data && parseInt(item.disk_data.size) }}G</a>
             </span>
           </div>
         </div>
@@ -227,8 +229,8 @@
           <el-input :disabled='radioDisabled' size="small" style="width:200px" v-model="formInline.calc_point"></el-input>
         </el-form-item>
         <el-form-item :label="$t('audit.Vresults')+':'" prop="radio">
-          <el-radio :disabled='radioDisabled' v-model="formInline.is_support" label="1">{{$t('audit.hasproblem')}}</el-radio>
-          <el-radio :disabled='radioDisabled' v-model="formInline.is_support" label="0">{{$t('audit.noproblem')}}</el-radio>
+          <el-radio :disabled='radioDisabled' v-model="formInline.is_support" label="1">{{$t('audit.isSupportY')}}</el-radio>
+          <el-radio :disabled='radioDisabled' v-model="formInline.is_support" label="0">{{$t('audit.isSupportN')}}</el-radio>
         </el-form-item>
         <el-form-item :label="$t('verifyPassward')+':'" prop="passward">
           <el-input size="small" style="width:200px" v-model="formInline.passward" show-password :placeholder="$t('verifyPassward')"></el-input>
@@ -311,12 +313,6 @@ export default {
         rand_str: randomWord(),
         is_support: '1',
         passward:'',
-      },
-      sclectItem: {
-        calc_point: "",
-        cuda_core: "",
-        gpu_mem: "",
-        gpu_type: ""
       },
       GPUmodelList:[],
       GPUnumberList:[
@@ -545,14 +541,14 @@ export default {
         if (res) {
           for(let i=0; i< res.content.length; i++){
             if ( res.content[i].booked_machine ) {
-              res.content[i].lcOpsEntity = { ...res.content[i].booked_machine, btnloading1: false, status: 'booked' }
+              res.content[i].lcOpsEntity = { ...res.content[i].booked_machine, HashSize: res.content[i].HashSize, btnloading1: false, status: 'booked' }
             } else {
-              res.content[i].lcOpsEntity = { ...res.content[i].hashed_machine, btnloading1: false, status: 'hashed' }
+              res.content[i].lcOpsEntity = { ...res.content[i].hashed_machine, HashSize: res.content[i].HashSize, btnloading1: false, status: 'hashed' }
             }
             let original = JSON.parse(res.content[i].original)
             let newel = Object.assign({ submit: true, canConfirm: true }, original.result_code == 0?original.result_message: {} , res.content[i].lcOpsEntity)
             newel.confirm_start_time = await getBlockConfirm(BlockchainTime, res.content[i].confirm_start_time)
-            if (res.content[i].confirm_start_time - BlockchainTime <= 0) { //验证是否到提交原始值的时间
+            if (res.content[i].confirm_start_time - BlockchainTime <= 0 || res.content[i].HashSize == 3) { //验证是否到提交原始值的时间 或有 已三人提交
               newel.canConfirm = false
             }
             newel.verify_time = await getBlockchainTime(BlockchainTime, newel.verify_time_high?newel.verify_time_high:[])
@@ -598,14 +594,18 @@ export default {
     // 开时验证
     verification(item,index){
       if (index == 1) { // 提交原始结果hash值
+        this.formInline.gpu_type = ''
+        this.formInline.gpu_num = ''
+        this.select = false
+        this.select1 = false
         this.formInline.machine_id = item.booked_committee
-        this.formInline.data_disk = item.disk_data && item.disk_data.free
+        this.formInline.data_disk = item.disk_data && parseInt(item.disk_data.size)
         this.formInline.cpu_type =  item.cpu && item.cpu.type
-        this.formInline.cpu_core_num =  item.cpu && item.cpu.cores
-        this.formInline.mem_num = item.mem && item.mem.free
-        this.formInline.cpu_rate = item.cpu && item.cpu.hz
+        this.formInline.cpu_core_num =  item.cpu && parseInt(item.cpu.cores)
+        this.formInline.mem_num = item.mem && parseInt(item.mem.size)
+        this.formInline.cpu_rate = item.cpu && parseInt(item.cpu.hz)
         this.formInline.passward = this.passward
-        this.formInline.sys_disk = item.disk_system && item.disk_system.size
+        this.formInline.sys_disk = item.disk_system && parseInt(item.disk_system.size)
         this.formInline.is_support = '1'
         this.dialogTableVisible1 = true
         this.radioDisabled = false
@@ -622,7 +622,7 @@ export default {
           .then(res=>{
             this.setPassWard(value)
             let parmas = { 
-              machine_id: item.booked_committee,
+              only_key: this.wallet_address + item.booked_committee,
               signature: res,
               signaturemsg: signaturemsg,
               wallet: this.wallet_address
@@ -635,11 +635,12 @@ export default {
               this.select = true
               this.select1 = true
               this.formInline.is_support = res1?String(res1.is_support):''
-              this.sclectItem.gpu_type = res1?res1.gpu_type: ''
               this.dialogTableVisible1 = true
               this.radioDisabled = true
+              console.log(this.formInline, 'formInline')
             })
             .catch( err1 => {
+              console.log(err1, 'err1');
               this.$message({
                 showClose: true,
                 message: err1.message,
@@ -671,21 +672,20 @@ export default {
     },
     selectCPU(val){
       this.select = true
-      this.sclectItem = val
       this.GPUmodelList.map(el => {
         if(el.gpu_type == val ){
           this.formInline = {...this.formInline, ...el}
         }
       })
+      if (this.formInline.gpu_num != '') {
+        let calc_point = getComputing_Power(this.formInline.gpu_num, parseInt(this.formInline.gpu_mem), parseInt(this.formInline.cuda_core), parseInt(this.formInline.sys_disk))
+        this.formInline.calc_point = parseInt(calc_point)
+      }
     },
     selectCPUNum(val){
       this.select1 = true
-      this.formInline.calc_point = getComputing_Power(
-        val, 
-        parseInt(this.formInline.gpu_mem), 
-        parseInt(this.formInline.cuda_core), 
-        parseInt(this.formInline.sys_disk)
-      )
+      let calc_point = getComputing_Power(val, parseInt(this.formInline.gpu_mem), parseInt(this.formInline.cuda_core), parseInt(this.formInline.sys_disk))
+      this.formInline.calc_point = parseInt(calc_point)
     },
     async commit(){
       if(this.formInline.passward == ''){
@@ -717,6 +717,11 @@ export default {
             }
           })
         }else{
+          if (this.formInline.gpu_type == '' || this.formInline.gpu_num == '' || this.formInline.calc_point == '') {
+            this.$message.error('提交内容不能为空')
+            this.btnloading = false;
+            return false
+          }
           const signaturemsg = randomWord()
           await CreateSignature(signaturemsg, this.formInline.passward)
           .then(res=>{
@@ -724,24 +729,23 @@ export default {
             let params = {
               only_key: this.wallet_address + this.formInline.machine_id,
               machine_id: this.formInline.machine_id,
-              gpu_type: this.formInline.gpu_type, 
-              gpu_num: this.formInline.gpu_num, 
-              cuda_core: this.formInline.cuda_core, 
-              gpu_mem: this.formInline.gpu_mem, 
-              calc_point: this.formInline.calc_point, 
-              sys_disk: this.formInline.sys_disk, 
-              data_disk: this.formInline.data_disk, 
-              cpu_type: this.formInline.cpu_type, 
-              cpu_core_num: this.formInline.cpu_core_num, 
-              cpu_rate: this.formInline.cpu_rate, 
-              mem_num: this.formInline.mem_num, 
-              rand_str: this.formInline.rand_str, 
+              gpu_type: this.formInline.gpu_type,
+              gpu_num: parseInt(this.formInline.gpu_num),
+              cuda_core: parseInt(this.formInline.cuda_core),
+              gpu_mem: parseInt(this.formInline.gpu_mem),
+              calc_point: this.formInline.calc_point,
+              sys_disk: this.formInline.sys_disk,
+              data_disk: this.formInline.data_disk,
+              cpu_type: this.formInline.cpu_type,
+              cpu_core_num: this.formInline.cpu_core_num,
+              cpu_rate: this.formInline.cpu_rate,
+              mem_num: this.formInline.mem_num,
+              rand_str: this.formInline.rand_str,
               is_support: this.formInline.is_support,
               wallet: this.wallet_address,
               signature: res,
               signaturemsg: signaturemsg
             }
-            
             Save_ResultHash(params).then(res1=>{
               if(res1){
                 ConfirmHash(this.formInline, this.formInline.passward, (res)=>{
@@ -766,7 +770,7 @@ export default {
               }else{
                 this.$message({
                   showClose: true,
-                  message: res,
+                  message: res1,
                   type: "error",
                 });
               }
@@ -836,7 +840,7 @@ export default {
 
   .flex {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     padding: 5px 0;
 
     &.status-title {
@@ -956,6 +960,7 @@ export default {
       color: #195d91;
       font-size: 14px;
       font-weight: 500;
+      margin-right: 20px;
       font-family: "Helvetica Neue", Helvetica, "PingFang SC",
         "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
     }
