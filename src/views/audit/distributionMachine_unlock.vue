@@ -546,7 +546,11 @@ export default {
               res.content[i].lcOpsEntity = { ...res.content[i].hashed_machine, HashSize: res.content[i].HashSize, btnloading1: false, status: 'hashed' }
             }
             let original = JSON.parse(res.content[i].original)
-            let newel = Object.assign({ submit: true, canConfirm: true }, original.result_code == 0?original.result_message: {} , res.content[i].lcOpsEntity)
+            let newel = Object.assign(
+              { submit: true, canConfirm: true }, 
+              original.errcode == 0 ? original.message: original.result_message, 
+              res.content[i].lcOpsEntity
+            )
             newel.confirm_start_time = await getBlockConfirm(BlockchainTime, res.content[i].confirm_start_time)
             if (res.content[i].confirm_start_time - BlockchainTime <= 0 || res.content[i].HashSize == 3) { //验证是否到提交原始值的时间 或有 已三人提交
               newel.canConfirm = false
@@ -603,7 +607,7 @@ export default {
         this.formInline.cpu_type =  item.cpu && item.cpu.type
         this.formInline.cpu_core_num =  item.cpu && parseInt(item.cpu.cores)
         this.formInline.mem_num = item.mem && parseInt(item.mem.size)
-        this.formInline.cpu_rate = item.cpu && parseInt(item.cpu.hz)
+        this.formInline.cpu_rate = item.cpu && parseInt(item.cpu.hz) ? parseInt(item.cpu.hz) : 0
         this.formInline.passward = this.passward
         this.formInline.sys_disk = item.disk_system && parseInt(item.disk_system.size)
         this.formInline.is_support = '1'
@@ -634,10 +638,10 @@ export default {
               this.formInline.machine_id = item.booked_committee
               this.select = true
               this.select1 = true
-              this.formInline.is_support = res1?String(res1.is_support):''
+              this.formInline.is_support = res1?String(res1.is_support):'0'
               this.dialogTableVisible1 = true
               this.radioDisabled = true
-              console.log(this.formInline, 'formInline')
+              // console.log(this.formInline, 'formInline')
             })
             .catch( err1 => {
               console.log(err1, 'err1');
@@ -678,14 +682,14 @@ export default {
         }
       })
       if (this.formInline.gpu_num != '') {
-        let calc_point = getComputing_Power(this.formInline.gpu_num, parseInt(this.formInline.gpu_mem), parseInt(this.formInline.cuda_core), parseInt(this.formInline.sys_disk))
-        this.formInline.calc_point = parseInt(calc_point)
+        let calc_point = getComputing_Power(this.formInline.gpu_num, this.formInline.gpu_mem, this.formInline.cuda_core, this.formInline.sys_disk)
+        this.formInline.calc_point = calc_point ? calc_point : 0
       }
     },
     selectCPUNum(val){
       this.select1 = true
-      let calc_point = getComputing_Power(val, parseInt(this.formInline.gpu_mem), parseInt(this.formInline.cuda_core), parseInt(this.formInline.sys_disk))
-      this.formInline.calc_point = parseInt(calc_point)
+      let calc_point = getComputing_Power(val, this.formInline.gpu_mem, this.formInline.cuda_core, this.formInline.sys_disk)
+      this.formInline.calc_point = calc_point ? calc_point : 0
     },
     async commit(){
       if(this.formInline.passward == ''){
@@ -697,6 +701,7 @@ export default {
       }else{
         this.btnloading = true;
         if(this.radioDisabled){
+          this.formInline.is_support = this.formInline.is_support == 0 ? Number(this.formInline.is_support): this.formInline.is_support
           ConfirmRaw(this.formInline, this.formInline.passward, (res)=>{
             console.log(res, 'res');
             this.btnloading = false;
@@ -733,7 +738,7 @@ export default {
               gpu_num: parseInt(this.formInline.gpu_num),
               cuda_core: parseInt(this.formInline.cuda_core),
               gpu_mem: parseInt(this.formInline.gpu_mem),
-              calc_point: this.formInline.calc_point,
+              calc_point: parseInt(this.formInline.calc_point*100),
               sys_disk: this.formInline.sys_disk,
               data_disk: this.formInline.data_disk,
               cpu_type: this.formInline.cpu_type,
@@ -746,6 +751,7 @@ export default {
               signature: res,
               signaturemsg: signaturemsg
             }
+            this.formInline.calc_point = parseInt(this.formInline.calc_point*100)
             Save_ResultHash(params).then(res1=>{
               if(res1){
                 ConfirmHash(this.formInline, this.formInline.passward, (res)=>{

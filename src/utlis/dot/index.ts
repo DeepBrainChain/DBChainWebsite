@@ -803,50 +803,13 @@ export const CreateSignature = async (message: string , password: string ): Prom
 // )
 // console.log(blake2AsHex(raw_input ,128), 'raw_input ,256');
 
-// let machine_id = "222222222222222222222222222222222",
-// reporter_rand_str= "1",
-// committee_rand_str = '1',
-// support_report= "1",
-// err_reason= "测试Bug,通过一下",
-// extra_err_info = "";
+let machine_id = "222222222222222222222222222222222",
+reporter_rand_str= "1",
+committee_rand_str = '1',
+support_report= "1",
+err_reason= "测试Bug,通过一下",
+extra_err_info = "";
 
 
 
-// console.log( blake2AsHex((machine_id+reporter_rand_str+committee_rand_str+support_report+err_reason+extra_err_info) ,128), 'raw_input ,256');
-
-
-let formInline = {
-  machine_id:'c2ad03b01cb72857978f7e18527afddb671c8354c72c46523405334be23c3701',
-  gpu_type:'GeForceGTX2080Ti',
-  gpu_num:'4',
-  cuda_core:'8704',
-  gpu_mem: '10',
-  calc_point:'59589',
-  sys_disk:'500',
-  data_disk:'3905',
-  cpu_type: 'Intel(R) Xeon(R) Silver 4214R',
-  cpu_core_num:'46',
-  cpu_rate:'2400',
-  mem_num:'440',
-  rand_str: '1',
-  is_support: '1',
-  passward:'',
-}
-
-let raw_input = blake2AsHex(
-  formInline.machine_id
-  + formInline.gpu_type
-  + formInline.gpu_num
-  + formInline.cuda_core
-  + formInline.gpu_mem
-  + formInline.calc_point
-  + formInline.sys_disk
-  + formInline.data_disk
-  + formInline.cpu_type
-  + formInline.cpu_core_num
-  + formInline.cpu_rate
-  + formInline.mem_num
-  + formInline.rand_str
-  + formInline.is_support
-  , 128)
-  console.log(raw_input , 'blake2AsHex ,128');
+console.log( blake2AsHex((machine_id+reporter_rand_str+committee_rand_str+support_report+err_reason+extra_err_info) ,128), 'raw_input ,256');

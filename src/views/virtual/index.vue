@@ -210,8 +210,7 @@ export default {
           power: 65.67
         },
         {
-          // type: "GeForceRTX2080Ti",
-          type: "GeForceGTX2080Ti",
+          type: "GeForceRTX2080Ti",
           power: 68.25
         },
         {
@@ -523,15 +522,15 @@ export default {
       this.useTime = 1;
       this.dialogFormVisible = true;
       this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*this.useTime)
-      this.totalDbc = Math.ceil(this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*this.useTime/this.dbc_price))
+      this.totalDbc = Math.ceil(this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*this.useTime/this.dbc_price)) + 10
     },
     inputNum(val){
       if(!this.openCheck){
         this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*val)
-        this.totalDbc = Math.ceil(this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*val/this.dbc_price))
+        this.totalDbc = Math.ceil(this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*val/this.dbc_price)) + 10
       }else{
         this.totalMoney = this.getnum2(Number(this.totalCalc)/100*0.028229*val)
-        this.totalDbc = Math.ceil(this.getnum2(Number(this.totalCalc)/100*0.028229*val/this.dbc_price))
+        this.totalDbc = Math.ceil(this.getnum2(Number(this.totalCalc)/100*0.028229*val/this.dbc_price)) + 10
       }
     },
     handleCheckAllChange(val) {
@@ -573,7 +572,7 @@ export default {
           this.totalCalc += Number(el.calc_point)
         })
         this.totalMoney = this.getnum2(Number(this.totalCalc)/100*0.028229*this.useTime)
-        this.totalDbc = Math.ceil(this.getnum2(Number(this.totalCalc)/100*0.028229*this.useTime/this.dbc_price))
+        this.totalDbc = Math.ceil(this.getnum2(Number(this.totalCalc)/100*0.028229*this.useTime/this.dbc_price)) + 10
         this.dialogFormVisible = true;
       }else{
         this.$message({
@@ -585,6 +584,11 @@ export default {
     },
     async confirm(){
       this.btnloading = true;
+      let { balance } = await getBalance()
+      if (balance < this.totalDbc+1) {
+        this.$message.error(this.$t('lessdbc'))
+        return false
+      }
       if(this.openCheck){
         console.log('批量租用')
         let walletInfo = [] // 需要转账的钱包信息
@@ -699,15 +703,23 @@ export default {
                       console.log(permas, 'permas');
                       My_Chain(permas).then(res => { 
                         console.log(res, 'res');
-                        this.$message({
-                          showClose: true,
-                          message: this.$t('virtual.tip4'),
-                          type: "success",
-                        });
+                        if (res == '租用失败') {
+                          this.$message({
+                            showClose: true,
+                            message: res,
+                            type: "error",
+                          });
+                        } else {
+                          this.$message({
+                            showClose: true,
+                            message: this.$t('virtual.tip4'),
+                            type: "success",
+                          });
+                          setTimeout(() => {
+                            this.$router.push('/mymachine/myMachine_gpuVirtual')
+                          }, 2000);
+                        }
                         this.btnloading = false;
-                        setTimeout(() => {
-                          this.$router.push('/mymachine/myMachine_gpuVirtual')
-                        }, 2000);
                       })
                     }else{
                       this.btnloading = false;

@@ -192,7 +192,7 @@ export default {
       refresh: undefined
     }
   },
-  created() {
+  mounted() {
     this.$store.commit('setNewWallet', 'true')
     this.initData()
     // this.si = setInterval(() => {
@@ -214,12 +214,12 @@ export default {
   methods: {
     ...mapActions(["getAccountState", "getExchangeRate", "getGate", "getTransferList1"]),
     async initData() {
-      const loading = this.$loading()
+      const loadingInstance = this.$loading({target:'.top-tools'})
       if (getPairs().length === 0) {
         initFromLocalstorage()
       }
       const {api, nodeName, nodeVersion, properties} = await initNetwork()
-      loading.close()
+      loadingInstance.close()
       // 获取地址
       if (getPairs().length > 0) {
         this.pair = getPairs()[0]

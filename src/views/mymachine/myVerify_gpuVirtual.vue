@@ -115,7 +115,7 @@
             <div class="li-top">
               <div class="left fs14"><span class="bold">{{$t('myvirtual.virId')}}</span>: {{el.task_id}}</div>
               <div v-if="el.status == 'creating'">创建中,请在5~10分钟后点击查看虚拟机按钮，查看创建结果</div>
-              <!-- <div v-else-if="el.status == 'create error'">创建失败，请重试</div> -->
+              <div v-else-if="el.status == 'create error'">创建失败，请重试或直接拒绝该机器上线</div>
               <div v-else>
                 <el-button
                   plain
@@ -127,7 +127,7 @@
                 >
               </div>
             </div>
-            <div v-if="el.status != 'creating'" class="li-bottom">
+            <div v-if="el.status == 'running'" class="li-bottom">
               <span>{{$t('myvirtual.mirror_name')}}: ubuntu.qcow2</span>
               <span>{{$t('myvirtual.IP_address')}}: {{el.ssh_ip}}</span>
               <span>{{$t('myvirtual.user_name')}}: {{el.user_name}}</span>
@@ -408,7 +408,12 @@ export default {
             } else {
               res.content[i].lcOpsEntity = { ...res.content[i].hashed_machine, btnloading1: false, btnloading2: false, btnloading3: false, status: 'hashed' }
             }
-            let newel = Object.assign({ submit: true }, JSON.parse(res.content[i].original).result_message, res.content[i].lcOpsEntity)
+            let original = JSON.parse(res.content[i].original)
+            let newel = Object.assign(
+              { submit: true }, 
+              original.errcode == 0 ? original.message: original.result_message,
+              res.content[i].lcOpsEntity
+            )
             newel.verify_time = await getBlockchainTime(BlockchainTime, newel.verify_time_high?newel.verify_time_high:[])
             let nowData = +new Date()
             newel.verify_time.map(el => {
@@ -416,19 +421,7 @@ export default {
                 newel.submit = false
               }
             })
-            newel.virtual_info = [
-              // {
-              //   ssh_ip: '1',
-              //   user_name: '22222',
-              //   login_password: '22222',
-              //   ssh_port: '22222',
-              //   mem_size: '22222',
-              //   disk_system: '22222',
-              //   disk_data: '22222',
-              //   gpu_count: '22222',
-              //   cpu_cores: '22222'
-              // }
-            ]
+            newel.virtual_info = []
             this.allListedMachine.push(newel)
           }
           loadingInstance.close();
@@ -475,7 +468,7 @@ export default {
           let sign = await CreateSignature(nonce, value)
           let VMS_Info = await Tasks({ task_id: el.task_id, machine_id: el.booked_committee, nonce, sign, wallet: this.wallet_address })
           el.virtual_info = []
-          if(VMS_Info.status == 0){
+          if(VMS_Info.errcode == 0){
             el.virtual_info.push(VMS_Info.message)
           }else{
             this.$message.error('查询虚拟机信息失败，请确认是否创建')
@@ -511,7 +504,7 @@ export default {
           let sign = await CreateSignature(nonce, value)
           let VMS_Info = await Verifier_CreateVM({ machine_id: el.booked_committee, nonce, sign, wallet: this.wallet_address })
           el.virtual_info = []
-          if(VMS_Info.status == 0){
+          if(VMS_Info.errcode == 0){
             el.virtual_info.push(VMS_Info.message)
           }else{
             this.$message.error('创建虚拟机失败，请确认是否已创建，如已创建，请点击查询按钮查看')

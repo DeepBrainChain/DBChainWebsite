@@ -88,7 +88,9 @@
           <div class="v-list"  v-for="item in el.virtual_info" :key="item.task_id">
             <div class="li-top">
               <div class="left fs14"><span class="bold">{{$t('myvirtual.virId')}}</span>: {{item.task_id}}</div>
-              <div>
+              <div v-if="item.status == 'creating'">创建中,请在5~10分钟后点击查看虚拟机按钮，查看创建结果</div>
+              <div v-else-if="item.status == 'create error'">创建失败</div>
+              <div v-else>
                 <el-button
                   plain
                   class="tool-btn"
@@ -116,7 +118,7 @@
                 > -->
               </div>
             </div>
-            <div class="li-bottom">
+            <div v-if="item.status == 'running'"  class="li-bottom">
               <span>{{$t('myvirtual.mirror_name')}}: ubuntu.qcow2</span>
               <span>{{$t('myvirtual.IP_address')}}: {{item.ssh_ip}}</span>
               <span>{{$t('myvirtual.user_name')}}: {{item.user_name}}</span>
@@ -243,7 +245,7 @@
       <div class="useTime">
         <div>
           <span class="width12 bold">{{$t('myvirtual.vir_mem')}}: </span>
-          <el-input-number :precision="2" size="mini" v-model="vir_mem" :min="0" :max="1" :step="0.1"></el-input-number> G
+          <el-input-number :precision="0" size="mini" v-model="vir_mem" :min="1" :max="max_vir_mem" :step="1"></el-input-number> G
         </div>
         <div>{{$t('myvirtual.max_set')}}: {{max_vir_mem}}G</div>
       </div>
@@ -263,9 +265,28 @@
       </div>
       <div class="useTime">
         <div>
+          <span class="width12 bold">{{$t('myvirtual.vir_data')}}: </span>
+          <el-input-number :precision="0" size="mini" v-model="vir_disk_size" :min="1" :max="Number(max_disk_num)"></el-input-number> G
+        </div>
+        <div>{{$t('myvirtual.max_set')}}: {{max_disk_num}}G</div>
+      </div>
+      <div class="useTime">
+        <div>
           <span class="width12 bold">{{$t('myvirtual.port_range')}}: </span>
           <el-input-number :precision="0" size="mini" v-model="port_range" :min="5000" :max="6000"></el-input-number>
         </div>
+      </div>
+      <div class="fs12">
+        {{$t('myvirtual.tip8')}}
+      </div>
+      <div class="useTime">
+        <div>
+          <span class="width12 bold">{{$t('myvirtual.vnc_port')}}: </span>
+          <el-input-number :precision="0" size="mini" v-model="vnc_port" :min="5900" :max="5999"></el-input-number>
+        </div>
+      </div>
+      <div class="fs12">
+        {{$t('myvirtual.tip9')}}
       </div>
       <!-- <div class="useTime">
         <div>
@@ -458,12 +479,15 @@ export default {
       vir_mem: 0.1,
       vir_cpu_num: 4,
       vir_gpu_num: 1,
+      vir_disk_size: 1,
       max_vir_mem: 0,
       max_cpu_num: 0,
       max_gpu_num: 0,
+      max_disk_num: 0,
       port_range: 5000,
       port_min: 6000,
       port_max: 60000,
+      vnc_port: 5900,
       Vir_info: [],
       // 充值密码
       dialogFormVisible2: false,
@@ -704,7 +728,12 @@ export default {
         for(let i = 0; i< res.content.length; i++){
           let nowTime = + new Date();
           let startTime = + new Date(res.content[i].time)
-          let endTime = startTime + res.content[i].day*24*60*60*1000
+          let endTime = ''
+          if (res.content[i].orderStatus == '订单取消') {
+            endTime = startTime + 30*60*1000
+          } else {
+            endTime = startTime + res.content[i].day*24*60*60*1000
+          }
           res.content[i].btnloading1 = false
           res.content[i].btnloading2 = false
           res.content[i].btnloading3 = false
@@ -874,14 +903,17 @@ export default {
       let chooseVirtualMem = 0;
       let chooseVirtualCpu = 0;
       let chooseVirtualGpu = 0;
+      let chooseVirtualDisk = 0;
       data.virtual_info.map(el => {
         chooseVirtualMem +=  parseFloat(el.mem_size)
         chooseVirtualCpu += el.cpu_cores
         chooseVirtualGpu += el.gpu_count
+        chooseVirtualDisk += parseFloat(el.disk_size)
       })
       this.max_vir_mem = data.mem_num - chooseVirtualMem
       this.max_cpu_num = data.cpu_core_num - chooseVirtualCpu
       this.max_gpu_num = data.gpu_num - chooseVirtualGpu
+      this.max_disk_num = data.sys_disk - chooseVirtualDisk
       if(str == 'create'){
         this.title = this.$t('myvirtual.Build')
       }else{
@@ -898,7 +930,6 @@ export default {
         try {
           let nonce = await randomWord()
           let sign = await CreateSignature(nonce, value)
-          console.log( nonce, sign, '333333' );
           this.btnloading1 = true
           let perams = {
             only_key: this.chooseMac.id,
@@ -908,13 +939,15 @@ export default {
             gpu_count: this.vir_gpu_num,
             cpu_cores: this.vir_cpu_num,
             mem_rate: this.vir_mem,
+            disk_size: this.vir_disk_size,
+            vnc_port: this.vnc_port,
             nonce: nonce,
             sign: sign,
             wallet: this.wallet_address
           }
           Create_VMS(perams).then( res=> {
             console.log(res ,'res');
-            if(res.status == 0){
+            if(res.errcode == 0){
               this.$message.success(this.$t('myvirtual.Build_success'))
             }else{
               this.$message.error(this.$t('myvirtual.Build_fails'))
@@ -949,10 +982,10 @@ export default {
           let sign = await CreateSignature(nonce, value)
           let VMS_Info = await VMS_details({ only_key: el.id, machine_id: el.machine_id, nonce, sign, wallet: this.wallet_address })
           this.setPassWard(value)
-          if(VMS_Info.status == 0){
+          if(VMS_Info.errcode == 0){
             el.virtual_info.push(VMS_Info.message)
           }else{
-            this.$message.success('该机器未创建虚拟机')
+            this.$message.error('该机器未创建虚拟机')
             el.virtual_info = []
           }
           el.btnloading4 = false
