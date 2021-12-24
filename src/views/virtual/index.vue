@@ -175,7 +175,7 @@ import { getCurrentPair } from "@/utlis/dot";
 import { getAccount, getBalance } from "@/utlis";
 import { mapState, mapMutations } from "vuex";
 import { transfer, getBlockTime, batchTransfer } from '@/utlis/dot/api';
-import { dbc_info, GetGpu_Info, GetMachine_Details, Count_Details, CreateWallet, Get_ByWif, My_Virtual, My_Chain } from "@/api"
+import { dbc_info, GetGpu_Info, GetMachine_Details, Count_Details, CreateWallet, createVirOrder, rentmachine } from "@/api"
 export default {
   name: "virtual",
   data() {
@@ -515,9 +515,6 @@ export default {
         });
         return;
       }
-      CreateWallet( { only_key : el.machine_id+this.wallet_address, machine_id: el.machine_id } ).then(res => {
-        console.log(res, 'res');
-      })
       this.chooseMac = el;
       this.useTime = 1;
       this.dialogFormVisible = true;
@@ -560,9 +557,9 @@ export default {
               this.checkedCities[index] = res
               // machineList.push(res)
               // 获取每个机器对应的临时钱包
-              CreateWallet( { only_key : res.machine_id+this.wallet_address, machine_id: res.machine_id } ).then(res1 => {
-                console.log(res1, 'CreateWallet');
-              })
+              // CreateWallet( { id : res.machine_id+this.wallet_address, machine_id: res.machine_id } ).then(res1 => {
+              //   console.log(res1, 'CreateWallet');
+              // })
             }
           })
         })
@@ -593,7 +590,7 @@ export default {
         console.log('批量租用')
         let walletInfo = [] // 需要转账的钱包信息
         for(let i =0; i< this.checkedCities.length; i++){
-          let wallet_info = await Get_ByWif({ only_key: this.checkedCities[i].machine_id+this.wallet_address })
+          let wallet_info = await CreateWallet({ id: this.checkedCities[i].machine_id+this.wallet_address })
           if(!wallet_info.wallet){
             this.btnloading = false;
             this.$message({
@@ -624,7 +621,7 @@ export default {
                 let request = []
                 for(let j =0; j< walletInfo.length; j++){
                   let permas = {
-                    only_key: walletInfo[j].machine_id+this.wallet_address,
+                    id: walletInfo[j].machine_id+this.wallet_address,
                     machine_id: walletInfo[j].machine_id,
                     dollar: this.getnum2(Number(walletInfo[j].calc_point)/100*0.028229),
                     day: this.useTime,
@@ -633,7 +630,7 @@ export default {
                     wallet: this.wallet_address
                   }
                   console.log(permas, 'permas'+j);
-                  request.push(await My_Virtual(permas))
+                  request.push(await createVirOrder(permas))
                 }
                 Promise.all(request).then(res => {
                   this.$message({
@@ -669,7 +666,7 @@ export default {
         }
       }else{
         let permas = {
-          only_key: this.chooseMac.machine_id+this.wallet_address,
+          id: this.chooseMac.machine_id+this.wallet_address,
           machine_id: this.chooseMac.machine_id,
           dollar: this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229),
           day: this.useTime,
@@ -677,13 +674,13 @@ export default {
           dbc: this.totalDbc,
           wallet: this.wallet_address
         }
-        My_Virtual(permas).then(res => { 
+        createVirOrder(permas).then(res => { 
           console.log(res, 'res');
-          if(res){
-            Get_ByWif({ only_key: this.chooseMac.machine_id+this.wallet_address } )
+          if(res.success){
+            CreateWallet({ id: this.chooseMac.machine_id+this.wallet_address } )
             .then(res=> {
-              if (res.wallet) {
-                console.log(`向${res.wallet}转账${this.totalDbc}.${res.random_number}DBC`);
+              if (res.success) {
+                console.log(`向${res.content.wallet}转账${this.totalDbc}.${res.content.nonce}DBC`);
                 this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
                   confirmButtonText: this.$t('confirm'),
                   cancelButtonText:  this.$t('cancel'),
@@ -691,22 +688,17 @@ export default {
                 })
                 .then( ({ value }) => {
                   this.setPassWard(value)
-                  transfer(res.wallet, `${this.totalDbc}.${res.random_number}`, value, (res1) => {
+                  transfer(res.content.wallet, `${this.totalDbc}.${res.content.nonce}`, value, (res1) => {
                     console.log(res1, 'res');
                     if(res1.success){
                       let permas = {
-                        only_key: this.chooseMac.machine_id+this.wallet_address,
-                        machine_id: this.chooseMac.machine_id,
-                        day: this.useTime,
-                        wallet: this.wallet_address
+                        id: this.chooseMac.machine_id+this.wallet_address
                       }
-                      console.log(permas, 'permas');
-                      My_Chain(permas).then(res => { 
-                        console.log(res, 'res');
-                        if (res == '租用失败') {
+                      rentmachine(permas).then(res2 => { 
+                        if (!res2.success) {
                           this.$message({
                             showClose: true,
-                            message: res,
+                            message: res2.msg,
                             type: "error",
                           });
                         } else {
@@ -746,16 +738,8 @@ export default {
             .catch(() => {
               this.btnloading = false;
             })
-            // this.$message({
-            //   showClose: true,
-            //   message: this.$t('virtual.tip4'),
-            //   type: "success",
-            // });
-            // this.btnloading = false;
-            // setTimeout(() => {
-            //   this.$router.push('/mymachine/myMachine_gpuVirtual')
-            // }, 2000);
           }else{
+            this.btnloading = false;
             this.$message({
               showClose: true,
               message: this.$t('virtual.tip5'),

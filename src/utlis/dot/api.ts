@@ -9,7 +9,7 @@ import { ExtrinsicStatus, EventRecord } from '@polkadot/types/interfaces';
 const node = {
   polkadot: 'wss://rpc.polkadot.io',
   // dbc: 'wss://innertest2.dbcwallet.io' // 测试网
-  dbc: 'wss://infotest.dbcwallet.io' // 银河竞赛预主网
+  dbc: 'wss://congtuinfo.dbcwallet.io:7777' // 银河竞赛预主网
   //dbc: 'wss://info.dbcwallet.io' // 主网
 }
 let api: ApiPromise | null = null
@@ -451,8 +451,9 @@ export const getBlockTime = async (): Promise<any> => {
 export const getCommitteeList = async (wallet: string): Promise<any> => {
   await GetApi();
   let de: any = await api!.query.committee.committee()
-  let list  = de.normal.toHuman().indexOf(wallet) > -1? true : false
-  return list
+  let commit = [...de.normal.toHuman(), ...de.fulfilling_list.toHuman()]
+  let isCommit = commit.indexOf(wallet) > -1? true : false
+  return isCommit
 }
 
 

@@ -1098,7 +1098,7 @@ export default {
     renew_success: '续费成功',
     Build:'创建GPU虚拟机',
     SeeVirtual:'查看GPU虚拟机',
-    Build_success:'创建GPU虚拟机成功,点击查看按钮查看详情',
+    Build_success:'GPU虚拟机创建中,点击查看按钮查看详情',
     Build_fails:'创建GPU虚拟机失败',
     virId: '虚拟机ID',
     reboot:'重启虚拟机',

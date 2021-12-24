@@ -671,6 +671,7 @@ export const getBlockchainTime = async (BlockchainTime, arr) => {
   // let BlockchainTime = await getBlockTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
   let nowDate = Date.parse(new Date()) // 获取当前时间的秒数
   let newarr = arr.map(el => {
+    el = parseFloat(el.replace(/,/g, ''))
     let timestart = (el - BlockchainTime)*30000 + nowDate
     let timeend = timestart+14400000
     return { 

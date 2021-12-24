@@ -33,14 +33,17 @@
         <div class="li_list1">
           <div>
             <span class="Machine_id">{{$t('virtual.Machine_ID')}}: {{el.machine_id}}</span>
-            <span class="time_left" v-if="el.orderStatus == '正在使用中'">{{$t('myvirtual.time_left')}}: {{el.time_left}} </span>
+            <span class="time_left" v-if="el.orderStatus == 3">{{$t('myvirtual.time_left')}}: {{el.time_left}} </span>
           </div>
-          <div class="countTime" v-if="el.orderStatus == '待确认支付'">
+          <div class="countTime" v-if="el.orderStatus == 2">
             <div class="fs14"><span class="bold">{{$t('myvirtual.confirm_time')}}</span>: {{el.confirmTime}}</div>
             <div>{{$t('myvirtual.tip1')}}</div>
           </div>
           <div class="order_status fs14 bold">
-            <!-- {{$t('myvirtual.order_status1')}} -->{{ el.orderStatus }}
+            <span v-if="el.orderStatus == 2">待确认租用</span>
+            <span v-if="el.orderStatus == 3">正在使用中</span>
+            <span v-if="el.orderStatus == 4">订单结束</span>
+            <span v-if="el.orderStatus == 5">订单取消</span>
           </div>
         </div>
         <div class="pay-wrap">
@@ -95,7 +98,7 @@
                   plain
                   class="tool-btn"
                   size="mini"
-                  v-if="el.orderStatus == '正在使用中' || el.orderStatus == '待确认支付' "
+                  v-if="el.orderStatus == 3 || el.orderStatus == 2 "
                   @click="reboot(el)"
                   :loading='el.btnloading3'
                   >{{ $t("myvirtual.reboot") }}</el-button
@@ -156,7 +159,7 @@
               class="tool-btn"
               size="mini"
               :loading='el.btnloading1'
-              v-if="el.orderStatus == '待确认支付'"
+              v-if="el.orderStatus == 2"
               @click="Confirm_rental(el)"
               >{{ $t("myvirtual.Confirm_rental") }}</el-button
             >
@@ -166,14 +169,14 @@
               size="mini"
               :loading='el.btnloading2'
               @click="Renew(el)"
-              v-if="el.orderStatus == '正在使用中'"
+              v-if="el.orderStatus == 3"
               >{{ $t("myvirtual.Renew") }}</el-button
             >
             <el-button
               plain
               class="tool-btn"
               size="mini"
-              v-if="el.orderStatus == '正在使用中' || el.orderStatus == '待确认支付'"
+              v-if="el.orderStatus == 3 || el.orderStatus == 2"
               @click="operateVirtual('create', el)"
               >{{ $t("myvirtual.Build") }}</el-button
             >
@@ -252,16 +255,16 @@
       <div class="useTime">
         <div>
           <span class="width12 bold">{{$t('myvirtual.vir_cpu_num')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="vir_cpu_num" :min="4" :max="Number(max_cpu_num - max_cpu_num%4)" :step="4" step-strictly></el-input-number> G
+          <el-input-number :precision="0" size="mini" v-model="vir_cpu_num" :min="4" :max="Number(max_cpu_num - max_cpu_num%4)" :step="4" step-strictly></el-input-number>
         </div>
-        <div>{{$t('myvirtual.max_set')}}: {{max_cpu_num}}G</div>
+        <div>{{$t('myvirtual.max_set')}}: {{max_cpu_num}}</div>
       </div>
       <div class="useTime">
         <div>
           <span class="width12 bold">{{$t('myvirtual.vir_gpu_num')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="vir_gpu_num" :min="1" :max="Number(max_gpu_num)"></el-input-number> G
+          <el-input-number :precision="0" size="mini" v-model="vir_gpu_num" :min="1" :max="Number(max_gpu_num)"></el-input-number>
         </div>
-        <div>{{$t('myvirtual.max_set')}}: {{max_gpu_num}}G</div>
+        <div>{{$t('myvirtual.max_set')}}: {{max_gpu_num}}</div>
       </div>
       <div class="useTime">
         <div>
@@ -396,7 +399,7 @@ import {
   get_Virtual,
   Create_VMS,
   VMS_details,
-  Get_ByWif,
+  CreateWallet,
   ConFirm_Rent,
   Renew_Rent,
   VMS_restart
@@ -727,9 +730,9 @@ export default {
       get_Virtual({ wallet: this.wallet_address }).then( async res => {
         for(let i = 0; i< res.content.length; i++){
           let nowTime = + new Date();
-          let startTime = + new Date(res.content[i].time)
+          let startTime = res.content[i].createTime
           let endTime = ''
-          if (res.content[i].orderStatus == '订单取消') {
+          if (res.content[i].orderStatus == 5) {
             endTime = startTime + 30*60*1000
           } else {
             endTime = startTime + res.content[i].day*24*60*60*1000
@@ -795,7 +798,7 @@ export default {
       }).then(() => {
         clearInterval(this.si);
         let perams = {
-          only_key: el.id,
+          id: el._id,
           machine_id: el.machine_id
         }
         ConFirm_Rent(perams).then(res => {
@@ -850,56 +853,75 @@ export default {
     },
     confirmRenew(){
       this.btnloading = true;
-      Get_ByWif({ only_key: this.chooseMac.machine_id+this.wallet_address } ).then(res=> {
-        console.log(`向${res.wallet}转账${this.totalDbc}.${res.random_number}DBC`);
-        this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
-          confirmButtonText: this.$t('confirm'),
-          cancelButtonText:  this.$t('cancel'),
-          inputValue: this.passward
-        })
-        .then( ({ value }) => {
-          this.setPassWard(value)
-          transfer(res.wallet, `${this.totalDbc}.${res.random_number}`, value, (res1) => {
-            console.log(res1, 'res');
-            if(res1.success){
-              let permas = {
-                only_key: this.chooseMac.machine_id+this.wallet_address,
-                machine_id: this.chooseMac.machine_id,
-                add_day: this.useTime,
-                dbc: this.totalDbc,
-              }
-              console.log(permas, 'permas');
-              Renew_Rent(permas).then(res => {
-                console.log(res, 'res');
-                this.getMyVirtual();
+      CreateWallet({ id: this.chooseMac.machine_id+this.wallet_address } ).then(res=> {
+        if (res.success) {
+          console.log(`向${res.content.wallet}转账${this.totalDbc}.${res.content.nonce}DBC`);
+          this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
+            confirmButtonText: this.$t('confirm'),
+            cancelButtonText:  this.$t('cancel'),
+            inputValue: this.passward
+          })
+          .then( ({ value }) => {
+            this.setPassWard(value)
+            transfer(res.content.wallet, `${this.totalDbc}.${res.content.nonce}`, value, (res1) => {
+              console.log(res1, 'res');
+              if(res1.success){
+                let permas = {
+                  id: this.chooseMac.machine_id+this.wallet_address,
+                  machine_id: this.chooseMac.machine_id,
+                  add_day: this.useTime,
+                  dbc: this.totalDbc,
+                  wallet: this.wallet_address
+                }
+                console.log(permas, 'permas');
+                Renew_Rent(permas).then(res2 => {
+                  console.log(res, 'res');
+                  if (res2.success) {
+                    this.getMyVirtual();
+                    this.$message({
+                      showClose: true,
+                      message: this.$t('myvirtual.renew_success'),
+                      type: "success",
+                    });
+                    this.btnloading = false;
+                    this.dialogFormVisible = false
+                  } else {
+                    this.$message({
+                      showClose: true,
+                      message: res2.msg,
+                      type: "error",
+                    });
+                    this.btnloading = false;
+                    this.dialogFormVisible = false
+                  }
+                })
+              }else{
+                this.btnloading = false;
                 this.$message({
                   showClose: true,
-                  message: this.$t('myvirtual.renew_success'),
-                  type: "success",
+                  message: res1.msg,
+                  type: "error",
                 });
-                this.btnloading = false;
-                this.dialogFormVisible = false
-              })
-            }else{
-              this.btnloading = false;
-              this.$message({
-                showClose: true,
-                message: res.msg,
-                type: "error",
-              });
-            }
-          })
-        }).catch(() => {
+              }
+            })
+          }).catch(() => {
+            this.btnloading = false;
+            console.log(this.$t('cancel'));
+          });
+        } else {
           this.btnloading = false;
-          console.log(this.$t('cancel'));
-        });
+          this.$message({
+            showClose: true,
+            message: this.$t('virtual.tip6'),
+            type: "error",
+          });
+        }
       })
     },
     // 创建、修改 虚拟机
     operateVirtual(str, data) {
       this.dialogFormVisible1 = true
       this.chooseMac = data
-      console.log(data, 'data');
       let chooseVirtualMem = 0;
       let chooseVirtualCpu = 0;
       let chooseVirtualGpu = 0;
@@ -932,7 +954,7 @@ export default {
           let sign = await CreateSignature(nonce, value)
           this.btnloading1 = true
           let perams = {
-            only_key: this.chooseMac.id,
+            id: this.chooseMac._id,
             machine_id: this.chooseMac.machine_id,
             ssh_port: this.port_range,
             // ssh_port: `${this.port_min}~${this.port_max}`,
@@ -947,7 +969,7 @@ export default {
           }
           Create_VMS(perams).then( res=> {
             console.log(res ,'res');
-            if(res.errcode == 0){
+            if(res.success){
               this.$message.success(this.$t('myvirtual.Build_success'))
             }else{
               this.$message.error(this.$t('myvirtual.Build_fails'))
@@ -980,13 +1002,16 @@ export default {
         try {
           let nonce = await randomWord()
           let sign = await CreateSignature(nonce, value)
-          let VMS_Info = await VMS_details({ only_key: el.id, machine_id: el.machine_id, nonce, sign, wallet: this.wallet_address })
+          let VMS_Info = await VMS_details({ id: el._id, machine_id: el.machine_id, nonce, sign, wallet: this.wallet_address })
           this.setPassWard(value)
-          if(VMS_Info.errcode == 0){
-            el.virtual_info.push(VMS_Info.message)
+          if(VMS_Info.success){
+            if (!VMS_Info.content.length) {
+              this.$message.error('该机器未创建虚拟机')
+            } else {
+              el.virtual_info = VMS_Info.content
+            }
           }else{
-            this.$message.error('该机器未创建虚拟机')
-            el.virtual_info = []
+            this.$message.error(VMS_Info.msg)
           }
           el.btnloading4 = false
         } catch (err) {

@@ -431,6 +431,8 @@ export default {
             this.currentPage,
             this.pageSize
           );
+        } else {
+          loadingInstance.close();
         }
       })
       .catch( err => {

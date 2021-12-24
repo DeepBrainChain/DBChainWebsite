@@ -75,7 +75,7 @@
         </div>
         <div class="flex">
           <div class="machineIdBox">
-            {{ item.booked_committee }}
+            {{ item.machine_id }}
           </div>
           <div>
             {{ $t("audit.confirmHash") }}：{{ item.HashSize }}
@@ -255,7 +255,8 @@ import {
   getGPUList,
   getMachineList,
   Save_ResultHash,
-  GetResultHash
+  GetResultHash,
+  changeStatus
 } from "@/api";
 import {
   getAccount,
@@ -348,11 +349,41 @@ export default {
           label: "10"
         }
       ],
+      HashSize: 0,
       dialogTableVisible1: false,
       btnloading: false,
       radioDisabled: false,
       select: false,
-      select1: false
+      select1: false,
+      originalDefult: {
+        "version": "0",
+        "ip": "Undefined",
+        "os": "Undefined",
+        "cpu": {
+          "type": "Undefined",
+          "hz": "0",
+          "cores": "0",
+          "used_usage": "0"
+        },
+        "mem": {
+          "size": "0G",
+          "free": "0G",
+          "used_usage": "0"
+        },
+        "disk_system": {
+          "type": "0",
+          "size": "0G"
+        },
+        "disk_data": {
+          "type": "0",
+          "size": "0G",
+          "free": "0G",
+          "used_usage": "0%"
+        },
+        "images": [
+          "null"
+        ]
+      }
     };
   },
   watch: {
@@ -538,19 +569,18 @@ export default {
       .then( async (res) => {
         let BlockchainTime = await getBlockTime().then((res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
         this.allListedMachine = []
-        if (res) {
+        if (res.success) {
           for(let i=0; i< res.content.length; i++){
-            if ( res.content[i].booked_machine ) {
-              res.content[i].lcOpsEntity = { ...res.content[i].booked_machine, HashSize: res.content[i].HashSize, btnloading1: false, status: 'booked' }
-            } else {
-              res.content[i].lcOpsEntity = { ...res.content[i].hashed_machine, HashSize: res.content[i].HashSize, btnloading1: false, status: 'hashed' }
-            }
-            let original = JSON.parse(res.content[i].original)
+            // res.content[i].lcOpsEntity = { ...res.content[i].booked_machine, HashSize: res.content[i].HashSize, btnloading1: false }
+            let original = res.content[i].original
             let newel = Object.assign(
-              { submit: true, canConfirm: true }, 
-              original.errcode == 0 ? original.message: original.result_message, 
-              res.content[i].lcOpsEntity
+              { submit: true, canConfirm: true, btnloading1: false}, 
+              res.content[i],
+              original.errcode == 0 ? original.message : this.originalDefult
+              // original.errcode == 0 ? original.message: original.result_message, 
+              // res.content[i].lcOpsEntity
             )
+            res.content[i].confirm_start_time = parseFloat(res.content[i].confirm_start_time.replace(/,/g, ''))
             newel.confirm_start_time = await getBlockConfirm(BlockchainTime, res.content[i].confirm_start_time)
             if (res.content[i].confirm_start_time - BlockchainTime <= 0 || res.content[i].HashSize == 3) { //验证是否到提交原始值的时间 或有 已三人提交
               newel.canConfirm = false
@@ -602,7 +632,7 @@ export default {
         this.formInline.gpu_num = ''
         this.select = false
         this.select1 = false
-        this.formInline.machine_id = item.booked_committee
+        this.formInline.machine_id = item.machine_id
         this.formInline.data_disk = item.disk_data && parseInt(item.disk_data.size)
         this.formInline.cpu_type =  item.cpu && item.cpu.type
         this.formInline.cpu_core_num =  item.cpu && parseInt(item.cpu.cores)
@@ -613,6 +643,7 @@ export default {
         this.formInline.is_support = '1'
         this.dialogTableVisible1 = true
         this.radioDisabled = false
+        this.HashSize = item.HashSize
       } else if (index == 2) {
         item.btnloading1 = true
         this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
@@ -626,7 +657,7 @@ export default {
           .then(res=>{
             this.setPassWard(value)
             let parmas = { 
-              only_key: this.wallet_address + item.booked_committee,
+              only_key: this.wallet_address + item.machine_id,
               signature: res,
               signaturemsg: signaturemsg,
               wallet: this.wallet_address
@@ -635,7 +666,7 @@ export default {
             .then(res1 => {
               this.formInline =  res1?res1:{}
               this.formInline.passward = this.passward
-              this.formInline.machine_id = item.booked_committee
+              this.formInline.machine_id = item.machine_id
               this.select = true
               this.select1 = true
               this.formInline.is_support = res1?String(res1.is_support):'0'
@@ -711,8 +742,19 @@ export default {
                 message: this.$t('audit.Op_Successful'),
                 type: "success",
               });
-              this.dialogTableVisible1 = false
-              this.queryMc()
+              let data = {
+                wallet: this.wallet_address,
+                machine_id: this.formInline.machine_id,
+                status: 'hashed',
+                size: this.HashSize
+              }
+              changeStatus(data).then(res => {
+                console.log(res.msg)
+                this.dialogTableVisible1 = false
+                this.queryMc()
+              })
+              // this.dialogTableVisible1 = false
+              // this.queryMc()
             }else{
               this.$message({
                 showClose: true,
@@ -763,8 +805,17 @@ export default {
                       message: this.$t('audit.Op_Successful'),
                       type: "success",
                     });
-                    this.dialogTableVisible1 = false
-                    this.queryMc()
+                    let data = {
+                      wallet: this.wallet_address,
+                      machine_id: this.formInline.machine_id,
+                      status: 'booked',
+                      size: this.HashSize
+                    }
+                    changeStatus(data).then(res => {
+                      console.log(res.msg)
+                      this.dialogTableVisible1 = false
+                      this.queryMc()
+                    })
                   }else{
                     this.$message({
                       showClose: true,
