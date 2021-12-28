@@ -1033,8 +1033,11 @@ export const get_cpu_order_id_list = params => {
 };
 
 
-
+// http://114.115.219.202:8090
+// http://localhost:8090
 // 审核机器新增
+
+const nodeHost = 'http://114.115.219.202:8090'
 
 /**
  * @description 获取待审核列表
@@ -1044,8 +1047,7 @@ export const getMachineList = params => {
   return axios({
     method: "get",
     // url: "https://identifiertest.congtu.cloud/bywallet",
-    // url: "/identifier/bywallet",
-    url: "http://localhost:8090/api/audit/getAuditList",
+    url: nodeHost + "/api/audit/getAuditList",
     params
   });
 };
@@ -1128,8 +1130,8 @@ export const GetResultHash = params => {
  export const VerifierMachine = params => {
   return axios({
     method: "post",
-    // url: "https://identifiertest.congtu.cloud/VerifierMachine",
-    url: "/identifier/VerifierMachine",
+    url: "https://identifiertest.congtu.cloud/VerifierMachine",
+    // url: "/identifier/VerifierMachine",
     params
   });
 };
@@ -1142,8 +1144,8 @@ export const GetResultHash = params => {
  export const Verifier_CreateVM = params => {
   return axios({
     method: "post",
-    // url: "https://identifiertest.congtu.cloud/Verifier_CreateVM",
-    url: "/identifier/Verifier_CreateVM",
+    url: "https://identifiertest.congtu.cloud/Verifier_CreateVM",
+    // url: "/identifier/Verifier_CreateVM",
     params
   });
 };
@@ -1155,8 +1157,8 @@ export const GetResultHash = params => {
  export const Restart = params => {
   return axios({
     method: "post",
-    // url: "https://identifiertest.congtu.cloud/Restart",
-    url: "/identifier/Restart",
+    url: "https://identifiertest.congtu.cloud/Restart",
+    // url: "/identifier/Restart",
     params
   });
 };
@@ -1168,8 +1170,8 @@ export const GetResultHash = params => {
  export const Tasks = params => {
   return axios({
     method: "post",
-    // url: "https://identifiertest.congtu.cloud/Tasks",
-    url: "/identifier/Tasks",
+    url: "https://identifiertest.congtu.cloud/Tasks",
+    // url: "/identifier/Tasks",
     params
   });
 };
@@ -1181,8 +1183,8 @@ export const GetResultHash = params => {
  export const GetGpu_Info = () => {
   return axios({
     method: "get",
-    // url: "https://identifiertest.congtu.cloud/GetGpu_Info",
-    url: "/identifier/GetGpu_Info",
+    url: "https://identifiertest.congtu.cloud/GetGpu_Info",
+    // url: "/identifier/GetGpu_Info",
   });
 };
 
@@ -1194,8 +1196,8 @@ export const GetResultHash = params => {
  export const GetMachine_Details = (params) => {
   return axios({
     method: "get",
-    // url: "https://identifiertest.congtu.cloud/GetMachine_Details",
-    url: "/identifier/GetMachine_Details",
+    url: "https://identifiertest.congtu.cloud/GetMachine_Details",
+    // url: "/identifier/GetMachine_Details",
     params
   });
 };
@@ -1207,49 +1209,34 @@ export const GetResultHash = params => {
  export const Count_Details = (params) => {
   return axios({
     method: "get",
-    // url: "https://identifiertest.congtu.cloud/Count_Details",
-    url: "/identifier/Count_Details",
+    url: "https://identifiertest.congtu.cloud/Count_Details",
+    // url: "/identifier/Count_Details",
     params
   });
 };
 
 /**
  * @description 获取支付钱包地址和四位随机数
- * @param {object} params {machine_id, gpu, ....}
+ * @param {object} data {machine_id, gpu, ....}
  */
  export const CreateWallet = data => {
   return axios({
     method: "post",
     // url: "https://identifiertest.congtu.cloud/CreateWalletAddressByWif",
-    // url: "/identifier/CreateWalletAddressByWif",
-    url: 'http://localhost:8090/api/rentMachine/getWallet',
+    url: nodeHost + '/api/rentMachine/getWallet',
     data: data
   });
 };
 
-// /**
-//  * @description 获取支付钱包地址和四位随机数
-//  * @param {object} params {machine_id, gpu, ....}
-//  */
-//  export const Get_ByWif = (params) => {
-//   return axios({
-//     method: "post",
-//     url: "https://identifiertest.congtu.cloud/Get_ByWif",
-//     // url: "/identifier/Get_ByWif",
-//     params
-//   });
-// };
-
 /**
  * @description 添加订单信息
- * @param {object} params {machine_id, gpu, ....}
+ * @param {object} data {machine_id, gpu, ....}
  */
  export const createVirOrder = (data) => {
   return axios({
     method: "post",
     // url: "https://identifiertest.congtu.cloud/My_Virtual",
-    // url: "/identifier/My_Virtual",
-    url: 'http://localhost:8090/api/rentMachine/createVirOrder',
+    url: nodeHost + '/api/rentMachine/createVirOrder',
     data: data
   });
 };
@@ -1257,97 +1244,91 @@ export const GetResultHash = params => {
 
 /**
  * @description 确认支付成功
- * @param {object} params {machine_id, gpu, ....}
+ * @param {object} data {machine_id, gpu, ....}
  */
  export const rentmachine = (data) => {
   return axios({
     method: "post",
     // url: "https://identifiertest.congtu.cloud/Chain",
-    // url: "/identifier/Chain",
-    url: 'http://localhost:8090/api/rentMachine/rentmachine',
+    url: nodeHost + '/api/rentMachine/rentmachine',
     data: data
   });
 };
 /**
  * @description 获取订单信息
- * @param {object} params {machine_id, gpu, ....}
+ * @param {object} data {machine_id, gpu, ....}
  */
  export const get_Virtual = (data) => {
   return axios({
     method: "post",
     // url: "https://identifiertest.congtu.cloud/get_Virtual",
-    // url: "/identifier/get_Virtual",
-    url: 'http://localhost:8090/api/rentMachine/getVirtual',
+    url: nodeHost + '/api/rentMachine/getVirtual',
     data: data
   });
 };
 
 /**
  * @description 创建虚拟机
- * @param {object} params {machine_id, gpu, ....}
+ * @param {object} data {machine_id, gpu, ....}
  */
  export const Create_VMS = (data) => {
   return axios({
     method: "post",
     // url: "https://identifiertest.congtu.cloud/Create_VMS",
-    // url: "/identifier/Create_VMS",
-    url: 'http://localhost:8090/api/rentMachine/createVirTask',
+    url: nodeHost + '/api/rentMachine/createVirTask',
     data: data
   });
 };
 
 /**
  * @description 查询虚拟机
- * @param {object} params {machine_id, gpu, ....}
+ * @param {object} data {machine_id, gpu, ....}
  */
  export const VMS_details = (data) => {
   return axios({
     method: "post",
     // url: "https://identifiertest.congtu.cloud/VMS_details",
-    // url: "/identifier/VMS_details",
-    url: 'http://localhost:8090/api/rentMachine/getVirTask',
+    url: nodeHost + '/api/rentMachine/getVirTask',
     data: data
   });
 };
 
 /**
  * @description 确认租用虚拟机
- * @param {object} params {machine_id, gpu, ....}
+ * @param {object} data {machine_id, gpu, ....}
  */
  export const ConFirm_Rent = (data) => {
   return axios({
     method: "post",
     // url: "https://identifiertest.congtu.cloud/ConFirm_Rent", 
-    // url: "/identifier/ConFirm_Rent",
-    url: 'http://localhost:8090/api/rentMachine/confirmRent',
+    url: nodeHost + '/api/rentMachine/confirmRent',
     data: data
   });
 };
 
 /**
  * @description 续费
- * @param {object} params {machine_id, gpu, ....}
+ * @param {object} data {machine_id, gpu, ....}
  */
  export const Renew_Rent = (data) => {
   return axios({
     method: "post",
     // url: "https://identifiertest.congtu.cloud/Renew_Rent",
-    // url: "/identifier/Renew_Rent",
-    url: 'http://localhost:8090/api/rentMachine/renewRent',
+    url: nodeHost + '/api/rentMachine/renewRent',
     data: data
   });
 };
 
 /**
  * @description 重启虚拟机
- * @param {object} params {machine_id, gpu, ....}
+ * @param {object} data {machine_id, gpu, ....}
  */
- export const VMS_restart = (params) => {
+ export const VMS_restart = (data) => {
   return axios({
     method: "post",
-    url: "https://identifiertest.congtu.cloud/VMS_restart",
-    // url: "/identifier/VMS_restart",
-    params
+    // url: "https://identifiertest.congtu.cloud/VMS_restart",
+    url: nodeHost + '/api/rentMachine/restartVir',
+    data: data
   });
 };
 
@@ -1361,22 +1342,20 @@ export const GetResultHash = params => {
 export const searchMachine = params => {
   return axios({
     method: "get",
-    // url: "http://114.115.219.202:8090/api/select/searchMachine",
-    url: 'http://localhost:8090/api/select/searchMachine',
+    url: nodeHost + '/api/select/searchMachine',
     params
   });
 };
 
 /**
  * @description 提交审核结果后修改派单状态
- * @param {object} params {machine_id, gpu, ....}
+ * @param {object} data {machine_id, gpu, ....}
  */
 
 export const changeStatus = data => {
   return axios({
     method: "post",
-    // url: "http://114.115.219.202:8090/api/select/searchMachine",
-    url: 'http://localhost:8090/api/audit/changeStatus',
+    url: nodeHost + '/api/audit/changeStatus',
     data: data
   });
 };

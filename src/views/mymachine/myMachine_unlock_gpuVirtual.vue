@@ -40,10 +40,10 @@
             <div>{{$t('myvirtual.tip1')}}</div>
           </div>
           <div class="order_status fs14 bold">
-            <span v-if="el.orderStatus == 2">待确认租用</span>
-            <span v-if="el.orderStatus == 3">正在使用中</span>
-            <span v-if="el.orderStatus == 4">订单结束</span>
-            <span v-if="el.orderStatus == 5">订单取消</span>
+            <span v-if="el.orderStatus == 2">{{$t('myvirtual.status1')}}</span>
+            <span v-if="el.orderStatus == 3">{{$t('myvirtual.status2')}}</span>
+            <span v-if="el.orderStatus == 4">{{$t('myvirtual.status3')}}</span>
+            <span v-if="el.orderStatus == 5">{{$t('myvirtual.status4')}}</span>
           </div>
         </div>
         <div class="pay-wrap">
@@ -91,15 +91,15 @@
           <div class="v-list"  v-for="item in el.virtual_info" :key="item.task_id">
             <div class="li-top">
               <div class="left fs14"><span class="bold">{{$t('myvirtual.virId')}}</span>: {{item.task_id}}</div>
-              <div v-if="item.status == 'creating'">创建中,请在5~10分钟后点击查看虚拟机按钮，查看创建结果</div>
-              <div v-else-if="item.status == 'create error'">创建失败</div>
+              <div v-if="item.status == 'creating'">{{$t('myvirtual.create_status1')}}</div>
+              <div v-else-if="item.status == 'create error'">{{$t('myvirtual.create_status2')}}</div>
               <div v-else>
                 <el-button
                   plain
                   class="tool-btn"
                   size="mini"
                   v-if="el.orderStatus == 3 || el.orderStatus == 2 "
-                  @click="reboot(el)"
+                  @click="reboot(item, el)"
                   :loading='el.btnloading3'
                   >{{ $t("myvirtual.reboot") }}</el-button
                 >
@@ -728,56 +728,67 @@ export default {
         loadingInstance = this.$loading({target:'.gpuVirtual'});
       }
       get_Virtual({ wallet: this.wallet_address }).then( async res => {
-        for(let i = 0; i< res.content.length; i++){
-          let nowTime = + new Date();
-          let startTime = res.content[i].createTime
-          let endTime = ''
-          if (res.content[i].orderStatus == 5) {
-            endTime = startTime + 30*60*1000
-          } else {
-            endTime = startTime + res.content[i].day*24*60*60*1000
-          }
-          res.content[i].btnloading1 = false
-          res.content[i].btnloading2 = false
-          res.content[i].btnloading3 = false
-          res.content[i].btnloading4 = false
-          res.content[i].time = startTime
-          if(endTime - nowTime > 0 ){
-            res.content[i].time_left = this.minsToHourMins(Math.ceil((endTime - nowTime)/60000))
-            res.content[i].userTime = this.minsToHourMins(Math.ceil((nowTime - res.content[i].time)/60000))
-            res.content[i].Actual_cost = Math.ceil((Number(res.content[i].dbc)/Number(res.content[i].day)/24/60)*((nowTime - res.content[i].time)/60000))
-          }else{
-            res.content[i].time_left = '0h0m'
-            res.content[i].userTime = this.minsToHourMins(Math.ceil((endTime - res.content[i].time)/60000))
-            res.content[i].Actual_cost = res.content[i].dbc
-          }
-          res.content[i].confirmTime = (res.content[i].time+1800000 -nowTime)/1000
-          if(this.firstLoading){
-            res.content[i].virtual_info = []
-          }else{
-            if(this.Machine_info[i].virtual_info.length){
-              res.content[i].virtual_info = this.Machine_info[i].virtual_info
+        if (res.success) {
+          for(let i = 0; i< res.content.length; i++){
+            let nowTime = + new Date();
+            let startTime = res.content[i].createTime
+            let endTime = ''
+            if (res.content[i].orderStatus == 5) {
+              endTime = startTime + 30*60*1000
+            } else {
+              endTime = startTime + res.content[i].day*24*60*60*1000
+            }
+            res.content[i].btnloading1 = false
+            res.content[i].btnloading2 = false
+            res.content[i].btnloading3 = false
+            res.content[i].btnloading4 = false
+            res.content[i].time = startTime
+            if(endTime - nowTime > 0 ){
+              res.content[i].time_left = this.minsToHourMins(Math.ceil((endTime - nowTime)/60000))
+              res.content[i].userTime = this.minsToHourMins(Math.ceil((nowTime - res.content[i].time)/60000))
+              res.content[i].Actual_cost = Math.ceil((Number(res.content[i].dbc)/Number(res.content[i].day)/24/60)*((nowTime - res.content[i].time)/60000))
             }else{
+              res.content[i].time_left = '0h0m'
+              res.content[i].userTime = this.minsToHourMins(Math.ceil((endTime - res.content[i].time)/60000))
+              res.content[i].Actual_cost = res.content[i].dbc
+            }
+            res.content[i].confirmTime = (res.content[i].time+1800000 -nowTime)/1000
+            if(this.firstLoading){
               res.content[i].virtual_info = []
+            }else{
+              if(this.Machine_info[i].virtual_info.length){
+                res.content[i].virtual_info = this.Machine_info[i].virtual_info
+              }else{
+                res.content[i].virtual_info = []
+              }
             }
           }
-        }
-        if(this.firstLoading){
-          loadingInstance.close();
-        }
-        this.firstLoading = false
-        this.Machine_info = res.content
-        this.orderNumber = res.content.length
-        this.total = res.content.length
-        this.Machine_info.map((el, index) => {
-          if(el.confirmTime  > 0){
-            this.count( el.confirmTime, index, (msg)=>{
-              this.$set(this.Machine_info[index], 'confirmTime', msg)
-            })
-          }else{
-            el.confirmTime = '00:00'
+          if(this.firstLoading){
+            loadingInstance.close();
           }
-        })
+          this.firstLoading = false
+          this.Machine_info = res.content
+          this.orderNumber = res.content.length
+          this.total = res.content.length
+          this.Machine_info.map((el, index) => {
+            if(el.confirmTime  > 0){
+              this.count( el.confirmTime, index, (msg)=>{
+                this.$set(this.Machine_info[index], 'confirmTime', msg)
+              })
+            }else{
+              el.confirmTime = '00:00'
+            }
+          })
+        } else {
+          if(this.firstLoading){
+            loadingInstance.close();
+            this.$message.error(this.$t('myvirtual.err_msg1'))
+          }
+          this.firstLoading = false
+          if (this.si) {
+            clearInterval(this.si);
+          }
+        }
       })
     },
     handleChangepageSize(num) {
@@ -930,12 +941,12 @@ export default {
         chooseVirtualMem +=  parseFloat(el.mem_size)
         chooseVirtualCpu += el.cpu_cores
         chooseVirtualGpu += el.gpu_count
-        chooseVirtualDisk += parseFloat(el.disk_size)
+        chooseVirtualDisk += parseFloat(el.disk_data)
       })
       this.max_vir_mem = data.mem_num - chooseVirtualMem
       this.max_cpu_num = data.cpu_core_num - chooseVirtualCpu
       this.max_gpu_num = data.gpu_num - chooseVirtualGpu
-      this.max_disk_num = data.sys_disk - chooseVirtualDisk
+      this.max_disk_num = data.data_disk - chooseVirtualDisk
       if(str == 'create'){
         this.title = this.$t('myvirtual.Build')
       }else{
@@ -972,7 +983,8 @@ export default {
             if(res.success){
               this.$message.success(this.$t('myvirtual.Build_success'))
             }else{
-              this.$message.error(this.$t('myvirtual.Build_fails'))
+              // this.$message.error(this.$t('myvirtual.Build_fails'))
+              this.$message.error(res.message)
             }
             this.btnloading1 = false
             this.dialogFormVisible1 = false
@@ -1006,7 +1018,7 @@ export default {
           this.setPassWard(value)
           if(VMS_Info.success){
             if (!VMS_Info.content.length) {
-              this.$message.error('该机器未创建虚拟机')
+              this.$message.error(this.$t('myvirtual.err_msg'))
             } else {
               el.virtual_info = VMS_Info.content
             }
@@ -1029,18 +1041,18 @@ export default {
       })
     },
     // 重启虚拟机
-    reboot(el) {
+    reboot(item, el) {
       el.btnloading3 = true
       this.$confirm(this.$t('myvirtual.tip5'), this.$t('myvirtual.reboot'), {
         confirmButtonText: this.$t('confirm'),
         cancelButtonText: this.$t('cancel'),
         type: 'warning'
       }).then(() => {
-        VMS_restart({machine_id: el.machine_id, only_key: el.id}).then( res => {
-          if(res.result_code != 0){
+        VMS_restart({ task_id: item.task_id, id: item.belong, machine_id: el.machine_id}).then( res => {
+          if(!res.success){
             this.$message({
               type: 'error',
-              message: res.result_message
+              message: res.msg
             });
           }else{
             this.$message({

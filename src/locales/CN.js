@@ -1059,8 +1059,10 @@ export default {
     tip2:'使用过程中机器出现问题，可以提交报告申诉，申诉成功可以获得dbc补偿',
     tip3:'租用过程会产生 10 DBC的租用费用，无论最后租用是否成功该费用不会退回',
     tip4:'下单成功，即将跳转我的机器页面',
-    tip5:'下单失败，请稍后再试',
+    tip5:'下单失败，稍后DBC退回原账户',
     tip6:'获取钱包地址失败',
+    tip7:'下单成功',
+    tip8:'即将跳转我的机器页面',
     Machine_num:'机器数量',
     Max_disk_Num:"虚拟机最大可用硬盘空间",
     Max_Mem:"虚拟机最大可用内存",
@@ -1083,7 +1085,12 @@ export default {
     title: '我租用的机器',
     tower: '台',
     confirm_time: '确认租用倒计时',
-
+    status1: '待确认租用',
+    status2: '正在使用中',
+    status3: '订单结束',
+    status4: '订单取消',
+    create_status1: '创建中,请在5~10分钟后点击查看虚拟机按钮，查看创建结果',
+    create_status2: '创建失败',
     time_left: '剩余时间',
     order_status1:'未支付',
     order_status2:'正在使用中',
@@ -1130,7 +1137,9 @@ export default {
     order_details: '查看订单详情',
     details:'订单详情',
     refund:'退币',
-    renewal_time: '续租时长'
+    renewal_time: '续租时长',
+    err_msg: '该机器未创建虚拟机',
+    err_msg1: '获取数据失败，请稍后再试！'
   },
   // 操作报错原因
   err_reason:{

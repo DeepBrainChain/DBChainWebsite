@@ -73,7 +73,7 @@
                 <div class="tableli" v-for="el in Machine_info" :key="el.machine_id">
                   <div class="li_list1">
                     <div>
-                      <el-checkbox v-if="openCheck" :disabled="el.machine_status != 'online'" :label="el.machine_id" :key="el.machine_id">{{''}}</el-checkbox>
+                      <el-checkbox v-if="openCheck" :disabled="el.machine_status == 'online'" :label="el.machine_id" :key="el.machine_id">{{''}}</el-checkbox>
                       <span class="Machine_id">{{$t('virtual.Machine_ID')}}: {{el.machine_id}}</span>
                     </div>
                     <span v-if="el.server_room">{{$t('virtual.Room_number')}}: {{String(el.server_room).substring(0,10)+'...'}}</span>
@@ -526,15 +526,25 @@ export default {
         this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*val)
         this.totalDbc = Math.ceil(this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*val/this.dbc_price)) + 10
       }else{
-        this.totalMoney = this.getnum2(Number(this.totalCalc)/100*0.028229*val)
-        this.totalDbc = Math.ceil(this.getnum2(Number(this.totalCalc)/100*0.028229*val/this.dbc_price)) + 10
+        this.totalCalc = 0
+        this.totalMoney = 0
+        this.totalDbc = 0
+        this.checkedCities.map( el=>{
+          this.totalCalc += Number(el.calc_point)
+          this.totalMoney += Number(this.getnum2(Number(el.calc_point)/100*0.028229*this.useTime))
+          this.totalDbc += (Math.ceil(this.getnum2(Number(el.calc_point)/100*0.028229*this.useTime/this.dbc_price)) + 10)
+        })
+        this.totalMoney = this.getnum2(this.totalMoney)
+        // this.totalMoney = this.getnum2(Number(this.totalCalc)/100*0.028229*val)
+        // this.totalDbc = Math.ceil(this.getnum2(Number(this.totalCalc)/100*0.028229*val/this.dbc_price)) + 10
       }
     },
     handleCheckAllChange(val) {
+      console.log(val, 'val');
       this.checkedCities = []
       this.Machine_info.map( el => {
         if(val){
-          if(el.machine_status == 'online'){
+          if(el.machine_status != 'online'){
             this.checkedCities.push(el.machine_id)
           }
         }
@@ -563,13 +573,17 @@ export default {
             }
           })
         })
-        console.log(this.checkedCities, 'this.checkedCities');
         this.totalCalc = 0
+        this.totalMoney = 0
+        this.totalDbc = 0
         this.checkedCities.map( el=>{
           this.totalCalc += Number(el.calc_point)
+          this.totalMoney += Number(this.getnum2(Number(el.calc_point)/100*0.028229*this.useTime))
+          this.totalDbc += (Math.ceil(this.getnum2(Number(el.calc_point)/100*0.028229*this.useTime/this.dbc_price)) + 10)
         })
-        this.totalMoney = this.getnum2(Number(this.totalCalc)/100*0.028229*this.useTime)
-        this.totalDbc = Math.ceil(this.getnum2(Number(this.totalCalc)/100*0.028229*this.useTime/this.dbc_price)) + 10
+        this.totalMoney = this.getnum2(this.totalMoney)
+        // this.totalMoney = this.getnum2(Number(this.totalCalc)/100*0.028229*this.useTime)
+        // this.totalDbc = Math.ceil(this.getnum2(Number(this.totalCalc)/100*0.028229*this.useTime/this.dbc_price)) + 10
         this.dialogFormVisible = true;
       }else{
         this.$message({
@@ -588,26 +602,30 @@ export default {
       }
       if(this.openCheck){
         console.log('批量租用')
-        let walletInfo = [] // 需要转账的钱包信息
+        let orderInfo = []
+        let errInfo = [] // 需要转账的钱包信息
         for(let i =0; i< this.checkedCities.length; i++){
-          let wallet_info = await CreateWallet({ id: this.checkedCities[i].machine_id+this.wallet_address })
-          if(!wallet_info.wallet){
-            this.btnloading = false;
-            this.$message({
-              showClose: true,
-              message: this.$t('virtual.tip6'),
-              type: "error",
-            });
-            return false
+          let orderdata = {
+            id: this.checkedCities[i].machine_id+this.wallet_address,
+            machine_id: this.checkedCities[i].machine_id,
+            dollar: this.getnum2(Number(this.checkedCities[i].calc_point)/100*0.028229),
+            day: this.useTime,
+            count: this.getnum2(Number(this.checkedCities[i].calc_point)/100*0.028229*this.useTime),
+            dbc: Math.ceil(this.getnum2(Number(this.checkedCities[i].calc_point)/100*0.028229*this.useTime/this.dbc_price)) + 10,
+            wallet: this.wallet_address
           }
-          wallet_info.machine_id = this.checkedCities[i].machine_id
-          wallet_info.calc_point = this.checkedCities[i].calc_point
-          wallet_info.totalMoney = this.getnum2(Number(this.checkedCities[i].calc_point)/100*0.028229*this.useTime)
-          wallet_info.totalDbc = Math.ceil(this.getnum2(Number(this.checkedCities[i].calc_point)/100*0.028229*this.useTime/this.dbc_price))
-          walletInfo.push(wallet_info)
+          let order = await createVirOrder(orderdata)
+          let wallet_info = await CreateWallet({ id: this.checkedCities[i].machine_id+this.wallet_address })
+          if (order.success && wallet_info.success) {
+            order.info = wallet_info.content,
+            order.totalDbc = orderdata.dbc
+            orderInfo.push(order)
+          } else {
+            errInfo.push(order.content)
+          }
         }
-        console.log(walletInfo, 'walletInfo');
-        if(walletInfo.length){
+        console.log(orderInfo, 'orderInfo', errInfo, 'errInfo','创建结果')
+        if (orderInfo.length) {
           this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
             confirmButtonText: this.$t('confirm'),
             cancelButtonText:  this.$t('cancel'),
@@ -615,32 +633,40 @@ export default {
           })
           .then( ({ value }) => {
             this.setPassWard(value)
-            batchTransfer( walletInfo, value, async (res1) => {
+            batchTransfer( orderInfo, value, async (res1) => {
               console.log(res1, 'res');
               if(res1.success){
                 let request = []
-                for(let j =0; j< walletInfo.length; j++){
+                for(let j =0; j< orderInfo.length; j++){
                   let permas = {
-                    id: walletInfo[j].machine_id+this.wallet_address,
-                    machine_id: walletInfo[j].machine_id,
-                    dollar: this.getnum2(Number(walletInfo[j].calc_point)/100*0.028229),
-                    day: this.useTime,
-                    count: walletInfo[j].totalMoney,
-                    dbc: walletInfo[j].totalDbc,
-                    wallet: this.wallet_address
+                    id: orderInfo[j].content
                   }
                   console.log(permas, 'permas'+j);
-                  request.push(await createVirOrder(permas))
+                  request.push(rentmachine(permas))
                 }
                 Promise.all(request).then(res => {
-                  this.$message({
-                    showClose: true,
-                    message: this.$t('virtual.tip4'),
-                    type: "success",
-                  });
-                  setTimeout(() => {
-                    this.$router.push('/mymachine/myMachine_gpuVirtual')
-                  }, 2000);
+                  console.log(res, 'rentmachine');
+                  let i = 0, e = 0;
+                  for (let j = 0; j< res.length; j++) {
+                    res[j].success ? i ++ : e ++
+                  }
+                  if (i) {
+                    this.$message({
+                      showClose: true,
+                      message: this.$t('virtual.tip7') + i + this.$t('virtual.tip8'),
+                      type: "success",
+                    });
+                    setTimeout(() => {
+                      this.$router.push('/mymachine/myMachine_gpuVirtual')
+                    }, 2000);
+                  } else {
+                    this.$message({
+                      showClose: true,
+                      message: this.$t('virtual.tip5'),
+                      type: "error",
+                    });
+                  }
+                  this.btnloading = false;
                 })
                 .catch(err => {
                   this.btnloading = false;
@@ -675,12 +701,12 @@ export default {
           wallet: this.wallet_address
         }
         createVirOrder(permas).then(res => { 
-          console.log(res, 'res');
+          console.log(res, 'createVirOrder');
           if(res.success){
             CreateWallet({ id: this.chooseMac.machine_id+this.wallet_address } )
-            .then(res=> {
-              if (res.success) {
-                console.log(`向${res.content.wallet}转账${this.totalDbc}.${res.content.nonce}DBC`);
+            .then(res1=> {
+              if (res1.success) {
+                console.log(`向${res1.content.wallet}转账${this.totalDbc}.${res1.content.nonce}DBC`);
                 this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
                   confirmButtonText: this.$t('confirm'),
                   cancelButtonText:  this.$t('cancel'),
@@ -688,17 +714,17 @@ export default {
                 })
                 .then( ({ value }) => {
                   this.setPassWard(value)
-                  transfer(res.content.wallet, `${this.totalDbc}.${res.content.nonce}`, value, (res1) => {
-                    console.log(res1, 'res');
-                    if(res1.success){
+                  transfer(res1.content.wallet, `${this.totalDbc}.${res1.content.nonce}`, value, (res2) => {
+                    console.log(res2, 'transfer');
+                    if(res2.success){
                       let permas = {
                         id: this.chooseMac.machine_id+this.wallet_address
                       }
-                      rentmachine(permas).then(res2 => { 
-                        if (!res2.success) {
+                      rentmachine(permas).then(res3 => { 
+                        if (!res3.success) {
                           this.$message({
                             showClose: true,
-                            message: res2.msg,
+                            message: res3.msg,
                             type: "error",
                           });
                         } else {
@@ -717,7 +743,7 @@ export default {
                       this.btnloading = false;
                       this.$message({
                         showClose: true,
-                        message: res1.msg,
+                        message: res2.msg,
                         type: "error",
                       });
                     }

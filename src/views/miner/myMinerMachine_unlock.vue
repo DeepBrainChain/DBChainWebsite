@@ -750,8 +750,8 @@ import {
   vocing_deposite_dbc_repeat,
   sold_out_machine,
 } from "@/api"
-import {getAccount, transfer} from "@/utlis"
-
+import {getAccount, transfer } from "@/utlis"
+import { getCurrentPair } from "@/utlis/dot"
 export default {
   name: "myMinerMachine_unlock",
   components: {

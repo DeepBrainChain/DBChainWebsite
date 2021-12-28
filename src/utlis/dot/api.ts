@@ -866,13 +866,12 @@ export const transfer = async (dest: any, value: string,  passward: string, call
 export const batchTransfer = async (walletList: Array<any>, passward: string, callback: (data: Object) => void) => {
   await initNetwork();
   const basePower: number = formatBalance.getDefaults().decimals // 小数位数
-  console.log(basePower, 'basePower');
   const siPower: BN = new BN(basePower)
   let tsArray: Array<any> = []
   for(let i =0; i< walletList.length; i++){
-    let money = `${walletList[i].totalDbc}.${walletList[i].random_number}`
+    let money = `${walletList[i].totalDbc}.${walletList[i].info.nonce}`
     let bob = inputToBn(money, siPower, basePower)
-    tsArray.push(api?.tx.balances.transfer( walletList[i].wallet, bob ))
+    tsArray.push(api?.tx.balances.transfer( walletList[i].info.wallet, bob ))
   }
   let kering = await getCurrentPair()
   try {
@@ -891,7 +890,7 @@ export const batchTransfer = async (walletList: Array<any>, passward: string, ca
   .signAndSend( kering! , ( { events = [], status , dispatchError  } ) => {
     if (status.isInBlock) {
       events.forEach(({ event: { method, data: [error] } }) => {
-        console.log(error, method, 'method');
+        // console.log(error, method, 'method');
         let returnError: any = error
         if (method == 'ExtrinsicFailed') {
           const decoded = api?.registry.findMetaError(returnError.asModule);
