@@ -23,9 +23,9 @@ import nacl from 'tweetnacl'
 
 const node = {
   polkadot: 'wss://rpc.polkadot.io',
-  // dbc: 'wss://innertest2.dbcwallet.io' // 测试网
-  dbc: 'wss://congtuinfo.dbcwallet.io:7777' // 银河竞赛预主网
-  //dbc: 'wss://info.dbcwallet.io' // 主网
+  // dbc: 'wss://congtuinfo.dbcwallet.io:7777', // 聪图云私链测试链
+  dbc: 'wss://infotest.dbcwallet.io:7777', // 公链测试链
+  // dbc: 'wss://info.dbcwallet.io' // 公链正式链
 }
 let api: ApiPromise | null = null
 

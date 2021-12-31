@@ -44,6 +44,7 @@
             <span v-if="el.orderStatus == 3">{{$t('myvirtual.status2')}}</span>
             <span v-if="el.orderStatus == 4">{{$t('myvirtual.status3')}}</span>
             <span v-if="el.orderStatus == 5">{{$t('myvirtual.status4')}}</span>
+            <span v-if="el.orderStatus == 6">{{$t('myvirtual.status5')}}</span>
           </div>
         </div>
         <div class="pay-wrap">
@@ -733,7 +734,7 @@ export default {
             let nowTime = + new Date();
             let startTime = res.content[i].createTime
             let endTime = ''
-            if (res.content[i].orderStatus == 5) {
+            if (res.content[i].orderStatus == 5 || res.content[i].orderStatus == 6) {
               endTime = startTime + 30*60*1000
             } else {
               endTime = startTime + res.content[i].day*24*60*60*1000
@@ -984,7 +985,7 @@ export default {
               this.$message.success(this.$t('myvirtual.Build_success'))
             }else{
               // this.$message.error(this.$t('myvirtual.Build_fails'))
-              this.$message.error(res.message)
+              this.$message.error(res.msg)
             }
             this.btnloading1 = false
             this.dialogFormVisible1 = false
@@ -1002,8 +1003,8 @@ export default {
       })
     },
     SeeVirtual(el) {
-      console.log(el, 'el')
       el.virtual_info = []
+      console.log(el, 'el')
       el.btnloading4 = true
       this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
         confirmButtonText: this.$t('confirm'),

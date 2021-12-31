@@ -98,10 +98,30 @@
         <div class="flex">
           <div class="td">
             <span class="fs16">
+              {{$t('audit.GPUnumber')}}：
+              <a class="cPrimaryColor">{{ item.gpu && parseInt(item.gpu.gpu_count) }}</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
               {{$t('list_ram_size')}}：
               <a class="cPrimaryColor">{{ item.mem && parseInt(item.mem.size) }}G</a>
             </span>
           </div>
+          <div class="td">
+            <span class="fs16">
+              {{$t("audit.Shd_space")}}：
+              <a class="cPrimaryColor">{{ item.disk_system && parseInt(item.disk_system.size) }}G</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{$t("audit.Dhd_space")}}：
+              <a class="cPrimaryColor">{{ item.disk_data && parseInt(item.disk_data.size) }}G</a>
+            </span>
+          </div>
+        </div>
+        <div class="flex">
           <div class="td">
             <span class="fs16">
               {{ $t('list_cpu_numbers')}}：
@@ -120,8 +140,6 @@
               <a class="cPrimaryColor">{{ item.cpu && item.cpu.type }}</a>
             </span>
           </div>
-        </div>
-        <div class="flex">
           <!-- <div class="td">
             <span class="fs16">
               Cuda_core：
@@ -142,18 +160,6 @@
               <a class="cPrimaryColor">{{ item.calc_point }}</a>
             </span>
           </div> -->
-          <div class="td">
-            <span class="fs16">
-              {{$t("audit.Shd_space")}}：
-              <a class="cPrimaryColor">{{ item.disk_system && parseInt(item.disk_system.size) }}G</a>
-            </span>
-          </div>
-          <div class="td">
-            <span class="fs16">
-              {{$t("audit.Dhd_space")}}：
-              <a class="cPrimaryColor">{{ item.disk_data && parseInt(item.disk_data.size) }}G</a>
-            </span>
-          </div>
         </div>
       </li>
     </ul>
@@ -197,15 +203,16 @@
         <el-form-item v-show="select" :label="$t('audit.Memoryvalue')+':'">
           <span>{{ formInline.gpu_mem }}</span>
         </el-form-item>
-        <el-form-item v-show="select" :label="$t('audit.GPUnumber')+':'">
-          <el-select :disabled='radioDisabled' size="small" @change="selectCPUNum" v-model="formInline.gpu_num" placeholder="请选择">
+        <el-form-item :label="$t('audit.GPUnumber')+':'">
+          <span>{{ formInline.gpu_num }}</span>
+          <!-- <el-select :disabled='radioDisabled' size="small" @change="selectCPUNum" v-model="formInline.gpu_num" placeholder="请选择">
             <el-option
               v-for="item in GPUnumberList"
               :key="item.value"
               :label="item.label"
               :value="item.value">
             </el-option>
-          </el-select>
+          </el-select> -->
         </el-form-item>
         <el-form-item :label="$t('audit.CPUcores')+':'">
           <span>{{formInline.cpu_core_num}}</span>
@@ -225,7 +232,7 @@
         <el-form-item :label="$t('audit.Dhd_space')+':'">
           <span>{{ formInline.data_disk }}</span>
         </el-form-item>
-        <el-form-item v-show="select1" :label="$t('audit.SGC_power')+':'">
+        <el-form-item v-show="select" :label="$t('audit.SGC_power')+':'">
           <el-input :disabled='radioDisabled' size="small" style="width:200px" v-model="formInline.calc_point"></el-input>
         </el-form-item>
         <el-form-item :label="$t('audit.Vresults')+':'" prop="radio">
@@ -629,12 +636,12 @@ export default {
     verification(item,index){
       if (index == 1) { // 提交原始结果hash值
         this.formInline.gpu_type = ''
-        this.formInline.gpu_num = ''
         this.select = false
         this.select1 = false
         this.formInline.machine_id = item.machine_id
         this.formInline.data_disk = item.disk_data && parseInt(item.disk_data.size)
         this.formInline.cpu_type =  item.cpu && item.cpu.type
+        this.formInline.gpu_num = item.gpu && item.gpu.gpu_count
         this.formInline.cpu_core_num =  item.cpu && parseInt(item.cpu.cores)
         this.formInline.mem_num = item.mem && parseInt(item.mem.size)
         this.formInline.cpu_rate = item.cpu && parseInt(item.cpu.hz) ? parseInt(item.cpu.hz) : 0

@@ -1016,7 +1016,12 @@ export default {
     bindEmail:'请先绑定邮箱信息',
     Op_Successful:'操作成功',
     Op_Failed:'操作失败',
-    errormsg:'获取数据失败，请稍后再试！'
+    errormsg:'获取数据失败，请稍后再试！',
+    // 验证GPU列表
+    verify_msg: '创建中,请在5~10分钟后点击查看虚拟机按钮，查看创建结果',
+    verify_msg1: '创建失败，请重试或直接拒绝该机器上线',
+    verify_msg2: '查询虚拟机信息失败，请确认是否创建',
+    verify_msg3: '创建虚拟机失败，请确认是否已创建，如已创建，请点击查询按钮查看'
   },
   // 租用虚拟机
   virtual: {
@@ -1089,6 +1094,7 @@ export default {
     status2: '正在使用中',
     status3: '订单结束',
     status4: '订单取消',
+    status5: '正在退币中，请稍后',
     create_status1: '创建中,请在5~10分钟后点击查看虚拟机按钮，查看创建结果',
     create_status2: '创建失败',
     time_left: '剩余时间',

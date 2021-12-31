@@ -114,8 +114,8 @@
           <div class="v-list"  v-for="el in item.virtual_info" :key="el.task_id">
             <div class="li-top">
               <div class="left fs14"><span class="bold">{{$t('myvirtual.virId')}}</span>: {{el.task_id}}</div>
-              <div v-if="el.status == 'creating'">创建中,请在5~10分钟后点击查看虚拟机按钮，查看创建结果</div>
-              <div v-else-if="el.status == 'create error'">创建失败，请重试或直接拒绝该机器上线</div>
+              <div v-if="el.status == 'creating'">{{$t('audit.verify_msg')}}</div>
+              <div v-else-if="el.status == 'create error'">{{$t('audit.verify_msg1')}}</div>
               <div v-else>
                 <el-button
                   plain
@@ -473,7 +473,7 @@ export default {
           if(VMS_Info.errcode == 0){
             el.virtual_info.push(VMS_Info.message)
           }else{
-            this.$message.error('查询虚拟机信息失败，请确认是否创建')
+            this.$message.error(this.$t('audit.verify_msg2'))
             el.virtual_info = []
           }
           el.btnloading2 = false
@@ -509,7 +509,7 @@ export default {
           if(VMS_Info.errcode == 0){
             el.virtual_info.push(VMS_Info.message)
           }else{
-            this.$message.error('创建虚拟机失败，请确认是否已创建，如已创建，请点击查询按钮查看')
+            this.$message.error(this.$t('audit.verify_msg3'))
             el.virtual_info = []
           }
           el.btnloading1 = false

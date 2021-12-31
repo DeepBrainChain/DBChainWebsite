@@ -32,9 +32,9 @@ const netType = "https://neocli.dbchain.ai";
 //const netType = 'http://seed2.aphelion-neo.com:10332'
 const DBCHash = "b951ecbbc5fe37a9c280a76cb0ce0014827294cf"; // DBC assetId
 const DBC_NAME = "DEEPBRAIN COIN";
-const testAddress = "AKMqDy51FuMnc4poiGBczQvPh6819hQuLH";
-// const testNewAddress = "5GGu2iQBLXuys61zbSnzfBsVMYzwaM3FfMbpMAmsAiExSWcN";
-const testNewAddress = '5GEji5DojzpeNjKZnsjh3paKR2t1qgLEBnRRpZKLc5ntGNoz';
+const testAddress = "AKMqDy51FuMnc4poiGBczQvPh6819hQuLH"; // 邮箱转账钱包 老钱包
+const testNewAddress = "5GGu2iQBLXuys61zbSnzfBsVMYzwaM3FfMbpMAmsAiExSWcN";// 邮箱转账钱包 新钱包
+// const testNewAddress = '5GEji5DojzpeNjKZnsjh3paKR2t1qgLEBnRRpZKLc5ntGNoz'; 
 
 export let account = undefined;
 
@@ -671,6 +671,7 @@ export const getBlockchainTime = async (BlockchainTime, arr) => {
   // let BlockchainTime = await getBlockTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
   let nowDate = Date.parse(new Date()) // 获取当前时间的秒数
   let newarr = arr.map(el => {
+    el = String(el)
     el = parseFloat(el.replace(/,/g, ''))
     let timestart = (el - BlockchainTime)*30000 + nowDate
     let timeend = timestart+14400000
