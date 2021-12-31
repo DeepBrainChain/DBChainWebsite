@@ -372,6 +372,9 @@ export default {
           "cores": "0",
           "used_usage": "0"
         },
+        "gpu": {
+          "gpu_count": 1,
+        },
         "mem": {
           "size": "0G",
           "free": "0G",
@@ -721,6 +724,7 @@ export default {
       })
       if (this.formInline.gpu_num != '') {
         let calc_point = getComputing_Power(this.formInline.gpu_num, this.formInline.gpu_mem, this.formInline.cuda_core, this.formInline.sys_disk)
+        console.log(calc_point, 'calc_point');
         this.formInline.calc_point = calc_point ? calc_point : 0
       }
     },
