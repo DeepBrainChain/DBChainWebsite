@@ -242,6 +242,9 @@
         <el-form-item :label="$t('verifyPassward')+':'" prop="passward">
           <el-input size="small" style="width:200px" v-model="formInline.passward" show-password :placeholder="$t('verifyPassward')"></el-input>
         </el-form-item>
+        <el-form-item v-show="select">
+          <span style="display: block;font-size: 12px;line-height: 20px;">({{ $t('audit.savemsgtip') }})</span>
+        </el-form-item>
         <el-form-item class="dlg-bottom">
           <el-button class="dlg-bttn" :loading="btnloading" plain size="small" @click="commit">{{$t('confirm')}}</el-button>
           <el-button class="dlg-bn" plain size="small" @click="cancel1">{{$t('cancel')}}</el-button>
@@ -273,7 +276,7 @@ import {
   getComputing_Power,
   randomWord
 } from "@/utlis";
-
+import FileSaver from 'file-saver'
 import { Error_Reason } from "@/utlis/error_desc"
 import { getCurrentPair, CreateSignature } from "@/utlis/dot"
 import { ConfirmHash, ConfirmRaw, getBlockTime } from "@/utlis/dot/api"
@@ -667,21 +670,29 @@ export default {
           .then(res=>{
             this.setPassWard(value)
             let parmas = { 
-              only_key: this.wallet_address + item.machine_id,
+              machine_id: item.machine_id,
               signature: res,
               signaturemsg: signaturemsg,
               wallet: this.wallet_address
             }
             GetResultHash(parmas)
             .then(res1 => {
-              this.formInline =  res1?res1:{}
-              this.formInline.passward = this.passward
-              this.formInline.machine_id = item.machine_id
-              this.select = true
-              this.select1 = true
-              this.formInline.is_support = res1?String(res1.is_support):'0'
-              this.dialogTableVisible1 = true
-              this.radioDisabled = true
+              if (res1.success) {
+                this.formInline =  res1.content?res1.content:{}
+                this.formInline.passward = this.passward
+                this.formInline.machine_id = item.machine_id
+                this.select = true
+                this.select1 = true
+                this.formInline.is_support = res1.content?String(res1.content.is_support):'0'
+                this.dialogTableVisible1 = true
+                this.radioDisabled = true
+              } else {
+                this.$message({
+                showClose: true,
+                message: res1.msg,
+                type: "error",
+              }); 
+              }
               // console.log(this.formInline, 'formInline')
             })
             .catch( err1 => {
@@ -723,15 +734,16 @@ export default {
         }
       })
       if (this.formInline.gpu_num != '') {
-        let calc_point = getComputing_Power(this.formInline.gpu_num, this.formInline.gpu_mem, this.formInline.cuda_core, this.formInline.sys_disk)
-        console.log(calc_point, 'calc_point');
-        this.formInline.calc_point = calc_point ? calc_point : 0
+        let calc_point = getComputing_Power(this.formInline.gpu_num, this.formInline.mem_num, this.formInline.cuda_core, this.formInline.gpu_mem)
+        this.formInline.calc_point = calc_point ? parseInt(calc_point*100) : 0
       }
     },
     selectCPUNum(val){
       this.select1 = true
-      let calc_point = getComputing_Power(val, this.formInline.gpu_mem, this.formInline.cuda_core, this.formInline.sys_disk)
-      this.formInline.calc_point = calc_point ? calc_point : 0
+      let calc_point = getComputing_Power(this.formInline.gpu_num, this.formInline.mem_num, this.formInline.cuda_core, this.formInline.gpu_mem)
+      console.log(this.formInline, 'this.formInline');
+      console.log(calc_point, 'calc_point');
+      this.formInline.calc_point = calc_point ? parseInt(calc_point*100) : 0
     },
     async commit(){
       if(this.formInline.passward == ''){
@@ -784,14 +796,14 @@ export default {
           await CreateSignature(signaturemsg, this.formInline.passward)
           .then(res=>{
             this.setPassWard(this.formInline.passward)
+            
             let params = {
-              only_key: this.wallet_address + this.formInline.machine_id,
               machine_id: this.formInline.machine_id,
               gpu_type: this.formInline.gpu_type,
               gpu_num: parseInt(this.formInline.gpu_num),
               cuda_core: parseInt(this.formInline.cuda_core),
               gpu_mem: parseInt(this.formInline.gpu_mem),
-              calc_point: parseInt(this.formInline.calc_point*100),
+              calc_point: this.formInline.calc_point,
               sys_disk: this.formInline.sys_disk,
               data_disk: this.formInline.data_disk,
               cpu_type: this.formInline.cpu_type,
@@ -804,13 +816,33 @@ export default {
               signature: res,
               signaturemsg: signaturemsg
             }
-            this.formInline.calc_point = parseInt(this.formInline.calc_point*100)
             Save_ResultHash(params).then(res1=>{
-              if(res1){
+              if(res1.success){
+                this.formInline.gpu_num = parseInt(this.formInline.gpu_num)
+                this.formInline.cuda_core = parseInt(this.formInline.cuda_core)
+                this.formInline.gpu_mem = parseInt(this.formInline.gpu_mem)
                 ConfirmHash(this.formInline, this.formInline.passward, (res)=>{
                   console.log(res, 'res');
                   this.btnloading = false;
                   if(res.success){
+                    let rawdata = {
+                      machine_id: this.formInline.machine_id,
+                      gpu_type: this.formInline.gpu_type,
+                      gpu_num: this.formInline.gpu_num,
+                      cuda_core: this.formInline.cuda_core,
+                      gpu_mem: this.formInline.gpu_mem,
+                      calc_point: this.formInline.calc_point,
+                      sys_disk: this.formInline.sys_disk,
+                      data_disk: this.formInline.data_disk,
+                      cpu_type: this.formInline.cpu_type,
+                      cpu_core_num: this.formInline.cpu_core_num,
+                      cpu_rate: this.formInline.cpu_rate,
+                      mem_num: this.formInline.mem_num,
+                      rand_str: this.formInline.rand_str,
+                      is_support: this.formInline.is_support,
+                    }
+                    const blob = new Blob([JSON.stringify(rawdata)], {type: 'application/json; charset=utf-8'});
+                    FileSaver.saveAs(blob, `${rawdata.machine_id}.json`);
                     this.$message({
                       showClose: true,
                       message: this.$t('audit.Op_Successful'),
@@ -836,9 +868,10 @@ export default {
                   }
                 })
               }else{
+                this.btnloading = false;
                 this.$message({
                   showClose: true,
-                  message: res1,
+                  message: res1.msg,
                   type: "error",
                 });
               }

@@ -1,33 +1,5 @@
 <template>
   <div class="machine">
-    <!-- <div class="title">
-      <div></div>
-      <div
-        v-if="!isBinding && bindMail && $t('website_name') !== 'congTuCloud'"
-        class="binding"
-      >
-        <span class="bindingInfo"
-          >{{ $t("my_machine_binding_email") }}:{{ bindMail }}</span
-        >
-        <el-button class="ml10" size="mini" plain @click="openDlgMail(false)">{{
-          $t("gpu.modifyMail")
-        }}</el-button>
-      </div>
-      <div
-        v-else-if="!isBinding && this.$t('website_name') != 'congTuCloud'"
-        class="bind"
-      >
-        <el-button size="small" plain @click="openDlgMail(true)">{{
-          $t("gpu.bindMail")
-        }}</el-button>
-        <span class="bindInfo ml10" v-html="$t('gpu.bindMailInfo')"></span>
-      </div>
-      <div v-else-if="isBinding">
-        <span v-if="isBinding" class="bindInfo">{{
-          $t("my_machine_vocing")
-        }}</span>
-      </div>
-    </div> -->
     <ul>
       <li
         v-for="(item, index) in res_body.content"
@@ -67,16 +39,36 @@
         </div>
         <div class="flex">
           <div class="machineIdBox">
-            {{ item.booked_committee }}
+            {{ item.machine_id }}
           </div>
         </div>
         <div class="flex">
           <div class="td">
             <span class="fs16">
-              {{$t('list_ram_size')}}：
-              <a class="cPrimaryColor">{{ item.mem&&item.mem.free }}</a>
+              {{$t('audit.GPUnumber')}}：
+              <a class="cPrimaryColor">{{ item.gpu && parseInt(item.gpu.gpu_count) }}</a>
             </span>
           </div>
+          <div class="td">
+            <span class="fs16">
+              {{$t('list_ram_size')}}：
+              <a class="cPrimaryColor">{{ item.mem&&item.mem.size }}</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{$t("audit.Shd_space")}}：
+              <a class="cPrimaryColor">{{ item.disk_system&&item.disk_system.size }}</a>
+            </span>
+          </div>
+          <div class="td">
+            <span class="fs16">
+              {{$t("audit.Dhd_space")}}：
+              <a class="cPrimaryColor">{{ item.disk_data && item.disk_data.size }}</a>
+            </span>
+          </div>
+        </div>
+        <div class="flex">
           <div class="td">
             <span class="fs16">
               {{ $t('list_cpu_numbers')}}：
@@ -96,27 +88,12 @@
             </span>
           </div>
         </div>
-        <div class="flex">
-          <div class="td">
-            <span class="fs16">
-              {{$t("audit.Shd_space")}}：
-              <a class="cPrimaryColor">{{ item.disk_system&&item.disk_system.size }}</a>
-            </span>
-          </div>
-          <div class="td">
-            <span class="fs16">
-              {{$t("audit.Dhd_space")}}：
-              <a class="cPrimaryColor">{{ item.disk_data && item.disk_data.free }}</a>
-            </span>
-          </div>
-        </div>
         <div class="virtual" v-if="item.virtual_info&&item.virtual_info.length">
           <div class="v-list"  v-for="el in item.virtual_info" :key="el.task_id">
             <div class="li-top">
               <div class="left fs14"><span class="bold">{{$t('myvirtual.virId')}}</span>: {{el.task_id}}</div>
               <div v-if="el.status == 'creating'">{{$t('audit.verify_msg')}}</div>
-              <div v-else-if="el.status == 'create error'">{{$t('audit.verify_msg1')}}</div>
-              <div v-else>
+              <div v-else-if="el.status == 'running'">
                 <el-button
                   plain
                   class="tool-btn"
@@ -126,6 +103,7 @@
                   >{{ $t("myvirtual.reboot") }}</el-button
                 >
               </div>
+              <div v-else>{{$t('audit.verify_msg1')}}</div>
             </div>
             <div v-if="el.status == 'running'" class="li-bottom">
               <span>{{$t('myvirtual.mirror_name')}}: ubuntu.qcow2</span>
@@ -397,22 +375,17 @@ export default {
       let params = {
         wallet: this.wallet_address
       };
-      VerifierMachine(params)
+      VerifierMachine(params) 
       .then( async (res) => {
         let BlockchainTime = await getBlockTime().then((res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
         this.allListedMachine = []
-        if (res) {
+        if (res.success) {
           for(let i=0; i< res.content.length; i++){
-            if ( res.content[i].booked_machine ) {
-              res.content[i].lcOpsEntity = { ...res.content[i].booked_machine, btnloading1: false, btnloading2: false, btnloading3: false, status: 'booked' }
-            } else {
-              res.content[i].lcOpsEntity = { ...res.content[i].hashed_machine, btnloading1: false, btnloading2: false, btnloading3: false, status: 'hashed' }
-            }
-            let original = JSON.parse(res.content[i].original)
+            let original = res.content[i].original
             let newel = Object.assign(
-              { submit: true }, 
-              original.errcode == 0 ? original.message: original.result_message,
-              res.content[i].lcOpsEntity
+              { submit: true, canConfirm: true, btnloading1: false}, 
+              res.content[i],
+              original.errcode == 0 ? original.message : this.originalDefult
             )
             newel.verify_time = await getBlockchainTime(BlockchainTime, newel.verify_time_high?newel.verify_time_high:[])
             let nowData = +new Date()
@@ -468,14 +441,16 @@ export default {
         try {
           let nonce = await randomWord()
           let sign = await CreateSignature(nonce, value)
-          let VMS_Info = await Tasks({ task_id: el.task_id, machine_id: el.booked_committee, nonce, sign, wallet: this.wallet_address })
+          let VMS_Info = await Tasks({ machine_id: el.machine_id, nonce, sign, wallet: this.wallet_address })
           el.virtual_info = []
-          if(VMS_Info.errcode == 0){
-            el.virtual_info.push(VMS_Info.message)
+          console.log(VMS_Info, 'VMS_Info');
+          if(VMS_Info.success){
+            el.virtual_info.push(VMS_Info.content)
           }else{
             this.$message.error(this.$t('audit.verify_msg2'))
             el.virtual_info = []
           }
+          console.log(el, 'el')
           el.btnloading2 = false
         } catch (err) {
           el.btnloading2 = false
@@ -504,12 +479,29 @@ export default {
         try {
           let nonce = await randomWord()
           let sign = await CreateSignature(nonce, value)
-          let VMS_Info = await Verifier_CreateVM({ machine_id: el.booked_committee, nonce, sign, wallet: this.wallet_address })
+          let perams = {
+            machine_id: el.machine_id,
+            image_name: el.images.length?el.images[0]:'ubuntu.qcow2',
+            gpu_count: el.gpu.gpu_count,
+            cpu_cores: el.cpu.cores,
+            mem_size: parseFloat(el.mem.free) > 10 ? 10 : parseFloat(el.mem.free),
+            disk_size: parseFloat(el.disk_data.free) > 10 ? 10 : parseFloat(el.disk_data.free),
+            wallet: this.wallet_address,
+            sign,
+            nonce
+          }
+          let VMS_Info = await Verifier_CreateVM(perams)
           el.virtual_info = []
-          if(VMS_Info.errcode == 0){
-            el.virtual_info.push(VMS_Info.message)
+          if(VMS_Info.success){
+            el.virtual_info.push(VMS_Info.content)
           }else{
-            this.$message.error(this.$t('audit.verify_msg3'))
+            if (VMS_Info.code == -4) {
+              this.$message.error(VMS_Info.msg)
+            } else if (VMS_Info.code == -10001) {
+              this.$message.error(VMS_Info.msg)
+            } else {
+              this.$message.error(this.$t('audit.verify_msg3'))
+            }
             el.virtual_info = []
           }
           el.btnloading1 = false
@@ -537,8 +529,8 @@ export default {
       }).then( async () => {
         let nonce = await randomWord()
         let sign = await CreateSignature(nonce, this.passward)
-        Restart({ task_id: el.task_id, machine_id: item.booked_committee, nonce, sign, wallet: this.wallet_address }).then( res => {
-          if(res.result_code != 0){
+        Restart({ task_id: el.task_id, machine_id: item.machine_id, nonce, sign, wallet: this.wallet_address }).then( res => {
+          if(!res.success){
             this.$message({
               type: 'error',
               message: res.message

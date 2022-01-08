@@ -1099,12 +1099,12 @@ export const getMachineList = params => {
  * @description 保存派单列表hash
  * @param {object} params {machine_id, gpu, ....}
  */
- export const Save_ResultHash = params => {
+ export const Save_ResultHash = data => {
   return axios({
     method: "post",
-    url: "https://identifiertest.congtu.cloud/Save_ResultHash",
-    // url: "/identifier/Save_ResultHash",
-    params
+    // url: "https://identifiertest.congtu.cloud/Save_ResultHash",
+    url: nodeHost + "/api/audit/saveAuditHash",
+    data: data
   });
 };
 
@@ -1113,12 +1113,12 @@ export const getMachineList = params => {
  * @description 获取派单机器hash
  * @param {object} params {machine_id, gpu, ....}
  */
-export const GetResultHash = params => {
+export const GetResultHash = data => {
   return axios({
     method: "post",
-    url: "https://identifiertest.congtu.cloud/GetResultHash",
-    // url: "/identifier/GetResultHash",
-    params
+    // url: "https://identifiertest.congtu.cloud/GetResultHash",
+    url: nodeHost + "/api/audit/getAuditHash",
+    data: data
   });
 };
 
@@ -1129,9 +1129,9 @@ export const GetResultHash = params => {
  */
  export const VerifierMachine = params => {
   return axios({
-    method: "post",
-    url: "https://identifiertest.congtu.cloud/VerifierMachine",
-    // url: "/identifier/VerifierMachine",
+    method: "get",
+    // url: "https://identifiertest.congtu.cloud/VerifierMachine",
+    url: nodeHost + "/api/audit/getVerifyGPUList",
     params
   });
 };
@@ -1141,12 +1141,12 @@ export const GetResultHash = params => {
  * @description 我的验证Gpu虚拟机-创建虚拟机
  * @param {object} params {machine_id, gpu, ....}
  */
- export const Verifier_CreateVM = params => {
+ export const Verifier_CreateVM = data => {
   return axios({
     method: "post",
-    url: "https://identifiertest.congtu.cloud/Verifier_CreateVM",
-    // url: "/identifier/Verifier_CreateVM",
-    params
+    // url: "https://identifiertest.congtu.cloud/Verifier_CreateVM",
+    url: nodeHost + "/api/audit/createVerifyVir",
+    data: data
   });
 };
 
@@ -1154,12 +1154,12 @@ export const GetResultHash = params => {
  * @description 我的验证Gpu虚拟机-重启虚拟机
  * @param {object} params {machine_id, gpu, ....}
  */
- export const Restart = params => {
+ export const Restart = data => {
   return axios({
     method: "post",
-    url: "https://identifiertest.congtu.cloud/Restart",
-    // url: "/identifier/Restart",
-    params
+    // url: "https://identifiertest.congtu.cloud/Restart",
+    url: nodeHost + "/api/audit/restartVerifyVir",
+    data: data
   });
 };
 
@@ -1167,12 +1167,12 @@ export const GetResultHash = params => {
  * @description 我的验证Gpu虚拟机-查看虚拟机
  * @param {object} params {machine_id, gpu, ....}
  */
- export const Tasks = params => {
+ export const Tasks = data => {
   return axios({
     method: "post",
-    url: "https://identifiertest.congtu.cloud/Tasks",
-    // url: "/identifier/Tasks",
-    params
+    // url: "https://identifiertest.congtu.cloud/Tasks",
+    url: nodeHost + "/api/audit/getVerifyVir",
+    data: data
   });
 };
 

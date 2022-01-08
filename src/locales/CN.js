@@ -968,6 +968,8 @@ export default {
     mytime:'我的可验证时间段',
     verification1_time:'提交验证结果Hash值倒计时',
     verification2_time:'提交验证结果原始值倒计时',
+    savemsg: '保存信息',
+    savemsgtip: '提示：保存原始信息到本地，当页面提交原始值出错时，可去链上操作',
     verification_tips:'在验证的时间内必须提交结果Hash值',
     verification_tips1:'后12小时内提交内容包含原始值 或 三个验证人都已提交hash也可提交内容包含原始值',
     verification_tips2:'只有在验证时间内方可查看、登录虚拟机进行机器验证操作',
@@ -1011,7 +1013,7 @@ export default {
     Memory:'内存',
     Shd_space:'系统硬盘空间',
     Dhd_space:'数据硬盘空间',
-    SGC_power:'单个GPU算力值',
+    SGC_power:'单个GPU算力值(X100)',
     Vresults:'验证结果',
     bindEmail:'请先绑定邮箱信息',
     Op_Successful:'操作成功',
@@ -1021,7 +1023,7 @@ export default {
     verify_msg: '创建中,请在5~10分钟后点击查看虚拟机按钮，查看创建结果',
     verify_msg1: '创建失败，请重试或直接拒绝该机器上线',
     verify_msg2: '查询虚拟机信息失败，请确认是否创建',
-    verify_msg3: '创建虚拟机失败，请确认是否已创建，如已创建，请点击查询按钮查看'
+    verify_msg3: '创建虚拟机失败，请确认是否已创建或直接拒绝该机器上线'
   },
   // 租用虚拟机
   virtual: {

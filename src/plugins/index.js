@@ -5,7 +5,8 @@ import cookie from 'js-cookie'
 import {
   Loading,
   MessageBox,
-  Message
+  Message,
+  Notification 
 } from 'element-ui'
 
 const globalCountries = [{
@@ -1291,7 +1292,7 @@ export default function install(Vue, options) {
   Vue.prototype.$alert = MessageBox.alert
   Vue.prototype.$confirm = MessageBox.confirm
   Vue.prototype.$prompt = MessageBox.prompt
-  // Vue.prototype.$notify = Notification
+  Vue.prototype.$notify = Notification
   Vue.prototype.$message = Message
   Vue.prototype.$secToDate = (msd, format = 'DHMS') => {
     var time = msd
