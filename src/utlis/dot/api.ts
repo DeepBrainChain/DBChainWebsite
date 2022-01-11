@@ -433,6 +433,17 @@ export const getBlockTime = async (): Promise<any> => {
 }
 
 /**
+ * getBlockTime 获取链上GPUPointPrice
+ * 
+ * @return data:返回链上单个算力值的价格
+ */
+ export const standardGPUPointPrice = async (): Promise<any> => {
+  await GetApi();
+  let de = await api?.query.onlineProfile.standardGPUPointPrice();
+  let data = de?.toJSON()
+  return data
+}
+/**
  * getAccountBalance 查询账户余额
  * 
  * @return balance:余额

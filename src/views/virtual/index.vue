@@ -89,7 +89,7 @@
                     <span class="bold">{{$t('virtual.GPU_memory')}}: {{el.gpu_mem}}G</span>
                     <span class="width30 bold">{{$t('virtual.GPU_type')}}: {{el.gpu_type}}</span>
                     <span class="width30 bold">{{$t('virtual.Daily_Rent')}}: 
-                      <i class="color"> {{getnum2(Number(el.calc_point)/100*0.028229)}}$≈{{getnum2(Number(el.calc_point)/100*0.028229/dbc_price)}}DBC </i>
+                      <i class="color"> {{getnum2(Number(el.calc_point)/100*GPUPointPrice)}}$≈{{getnum2(Number(el.calc_point)/100*GPUPointPrice/dbc_price)}}DBC </i>
                     </span>
                     <span>{{$t('virtual.Country')}}: {{el.country}}</span>
                     <span>{{$t('virtual.City')}}: {{el.city}}</span>
@@ -174,7 +174,7 @@ import Footer from "@/congTuCloud/components/footer/Footer.vue";
 import { getCurrentPair } from "@/utlis/dot";
 import { getAccount, getBalance } from "@/utlis";
 import { mapState, mapMutations } from "vuex";
-import { transfer, getBlockTime, batchTransfer } from '@/utlis/dot/api';
+import { transfer, getBlockTime, batchTransfer, standardGPUPointPrice } from '@/utlis/dot/api';
 import { dbc_info, GetGpu_Info, GetMachine_Details, Count_Details, CreateWallet, createVirOrder, rentmachine } from "@/api"
 export default {
   name: "virtual",
@@ -347,6 +347,7 @@ export default {
         width: "65px",
         left: "92px",
       },
+      GPUPointPrice: 0.028299
     };
   },
   beforeMount() {
@@ -414,6 +415,8 @@ export default {
           })
         }
         let online_block = await getBlockTime();
+        const GPUPrice = await standardGPUPointPrice()
+        this.GPUPointPrice = GPUPrice.gpu_price/1000000
         online_block = online_block.replace(/,/gi, '');
         this.Machine_info.map( (el) => {
           el.online = this.minsToHourMins(Math.floor((online_block-el.bonding_height)/2))

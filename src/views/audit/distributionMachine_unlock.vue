@@ -741,8 +741,6 @@ export default {
     selectCPUNum(val){
       this.select1 = true
       let calc_point = getComputing_Power(this.formInline.gpu_num, this.formInline.mem_num, this.formInline.cuda_core, this.formInline.gpu_mem)
-      console.log(this.formInline, 'this.formInline');
-      console.log(calc_point, 'calc_point');
       this.formInline.calc_point = calc_point ? parseInt(calc_point*100) : 0
     },
     async commit(){
