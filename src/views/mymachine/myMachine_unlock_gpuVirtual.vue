@@ -62,7 +62,7 @@
           <span class="bold">{{$t('virtual.GPU_memory')}}: {{el.gpu_mem}}G</span>
           <span class="width30 bold">{{$t('virtual.GPU_type')}}: {{el.gpu_type}}</span>
           <span class="width30 bold">{{$t('virtual.Daily_Rent')}}: 
-            <i class="color"> {{getnum2(Number(el.calc_point)/100*0.028229)}}$≈{{getnum2(Number(el.calc_point)/100*0.028229/dbc_price)}}DBC </i>
+            <i class="color"> {{getnum2(Number(el.calc_point)/100*GPUPointPrice)}}$≈{{getnum2(Number(el.calc_point)/100*GPUPointPrice/dbc_price)}}DBC </i>
           </span>
           <span>{{$t('virtual.Country')}}: {{el.country}}</span>
           <span>{{$t('virtual.City')}}: {{el.city}}</span>
@@ -230,7 +230,7 @@
           <el-input-number :precision="0" size="mini" v-model="useTime" @change="inputNum" :min="1" :max="90"></el-input-number>
            {{$t('day')}}
         </div>
-        <div>{{$t('virtual.Daily_Rent')}}: <span class="color">{{getnum2(Number(chooseMac.calc_point)/100*0.028229)}}$≈{{getnum2(Number(chooseMac.calc_point)/100*0.028229/dbc_price)}}DBC</span></div>
+        <div>{{$t('virtual.Daily_Rent')}}: <span class="color">{{getnum2(Number(chooseMac.calc_point)/100*GPUPointPrice)}}$≈{{getnum2(Number(chooseMac.calc_point)/100*GPUPointPrice/dbc_price)}}DBC</span></div>
       </div>
       <div class="fs12">{{$t('myvirtual.tip6')}}</div>
       <div>
@@ -412,7 +412,7 @@ import {
   getUsdToRmb,
   randomWord
 } from "@/utlis";
-import { transfer, getAccountBalance } from '@/utlis/dot/api';
+import { transfer, getAccountBalance, standardGPUPointPrice } from '@/utlis/dot/api';
 import { getCurrentPair, CreateSignature } from "@/utlis/dot"
 import { mapState, mapMutations } from "vuex"
 export default {
@@ -509,6 +509,7 @@ export default {
       },
       // 订单详情
       dialogFormVisible3: false,
+      GPUPointPrice: 0.028229
     };
   },
 
@@ -766,6 +767,8 @@ export default {
           }
           if(this.firstLoading){
             loadingInstance.close();
+            const GPUPrice = await standardGPUPointPrice()
+            this.GPUPointPrice = GPUPrice.gpu_price/1000000
           }
           this.firstLoading = false
           this.Machine_info = res.content
@@ -854,14 +857,14 @@ export default {
       this.chooseMac = el
       this.useTime = 7
       this.time_left = this.chooseMac.time_left
-      this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*this.useTime)
-      this.totalDbc = Math.ceil(this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*this.useTime/this.dbc_price))
+      this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*this.GPUPointPrice*this.useTime)
+      this.totalDbc = Math.ceil(this.getnum2(Number(this.chooseMac.calc_point)/100*this.GPUPointPrice*this.useTime/this.dbc_price))
       el.btnloading2 = false
       this.dialogFormVisible = true
     },
     inputNum(val){
-      this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*val)
-      this.totalDbc = Math.ceil(this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*val/this.dbc_price))
+      this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*this.GPUPointPrice*val)
+      this.totalDbc = Math.ceil(this.getnum2(Number(this.chooseMac.calc_point)/100*this.GPUPointPrice*val/this.dbc_price))
     },
     confirmRenew(){
       this.btnloading = true;

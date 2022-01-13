@@ -144,7 +144,7 @@
           <el-input-number :precision="0" size="mini" v-model="useTime" @change="inputNum" :min="1" :max="90"></el-input-number>
            {{$t('day')}}
         </div>
-        <div v-if="!openCheck">{{$t('virtual.Daily_Rent')}}: <span class="color">{{getnum2(Number(chooseMac.calc_point)/100*0.028229)}}$≈{{getnum2(Number(chooseMac.calc_point)/100*0.028229/dbc_price)}}DBC</span></div>
+        <div v-if="!openCheck">{{$t('virtual.Daily_Rent')}}: <span class="color">{{getnum2(Number(chooseMac.calc_point)/100*GPUPointPrice)}}$≈{{getnum2(Number(chooseMac.calc_point)/100*GPUPointPrice/dbc_price)}}DBC</span></div>
       </div>
       <div class="fs12">{{$t('virtual.tip1')}}</div>
       <div>
@@ -347,7 +347,7 @@ export default {
         width: "65px",
         left: "92px",
       },
-      GPUPointPrice: 0.028299
+      GPUPointPrice: 0.028229
     };
   },
   beforeMount() {
@@ -521,25 +521,25 @@ export default {
       this.chooseMac = el;
       this.useTime = 1;
       this.dialogFormVisible = true;
-      this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*this.useTime)
-      this.totalDbc = Math.ceil(this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*this.useTime/this.dbc_price)) + 10
+      this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*this.GPUPointPrice*this.useTime)
+      this.totalDbc = Math.ceil(this.getnum2(Number(this.chooseMac.calc_point)/100*this.GPUPointPrice*this.useTime/this.dbc_price)) + 10
     },
     inputNum(val){
       if(!this.openCheck){
-        this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*val)
-        this.totalDbc = Math.ceil(this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229*val/this.dbc_price)) + 10
+        this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*this.GPUPointPrice*val)
+        this.totalDbc = Math.ceil(this.getnum2(Number(this.chooseMac.calc_point)/100*this.GPUPointPrice*val/this.dbc_price)) + 10
       }else{
         this.totalCalc = 0
         this.totalMoney = 0
         this.totalDbc = 0
         this.checkedCities.map( el=>{
           this.totalCalc += Number(el.calc_point)
-          this.totalMoney += Number(this.getnum2(Number(el.calc_point)/100*0.028229*this.useTime))
-          this.totalDbc += (Math.ceil(this.getnum2(Number(el.calc_point)/100*0.028229*this.useTime/this.dbc_price)) + 10)
+          this.totalMoney += Number(this.getnum2(Number(el.calc_point)/100*this.GPUPointPrice*this.useTime))
+          this.totalDbc += (Math.ceil(this.getnum2(Number(el.calc_point)/100*this.GPUPointPrice*this.useTime/this.dbc_price)) + 10)
         })
         this.totalMoney = this.getnum2(this.totalMoney)
-        // this.totalMoney = this.getnum2(Number(this.totalCalc)/100*0.028229*val)
-        // this.totalDbc = Math.ceil(this.getnum2(Number(this.totalCalc)/100*0.028229*val/this.dbc_price)) + 10
+        // this.totalMoney = this.getnum2(Number(this.totalCalc)/100*this.GPUPointPrice*val)
+        // this.totalDbc = Math.ceil(this.getnum2(Number(this.totalCalc)/100*this.GPUPointPrice*val/this.dbc_price)) + 10
       }
     },
     handleCheckAllChange(val) {
@@ -581,12 +581,12 @@ export default {
         this.totalDbc = 0
         this.checkedCities.map( el=>{
           this.totalCalc += Number(el.calc_point)
-          this.totalMoney += Number(this.getnum2(Number(el.calc_point)/100*0.028229*this.useTime))
-          this.totalDbc += (Math.ceil(this.getnum2(Number(el.calc_point)/100*0.028229*this.useTime/this.dbc_price)) + 10)
+          this.totalMoney += Number(this.getnum2(Number(el.calc_point)/100*this.GPUPointPrice*this.useTime))
+          this.totalDbc += (Math.ceil(this.getnum2(Number(el.calc_point)/100*this.GPUPointPrice*this.useTime/this.dbc_price)) + 10)
         })
         this.totalMoney = this.getnum2(this.totalMoney)
-        // this.totalMoney = this.getnum2(Number(this.totalCalc)/100*0.028229*this.useTime)
-        // this.totalDbc = Math.ceil(this.getnum2(Number(this.totalCalc)/100*0.028229*this.useTime/this.dbc_price)) + 10
+        // this.totalMoney = this.getnum2(Number(this.totalCalc)/100*this.GPUPointPrice*this.useTime)
+        // this.totalDbc = Math.ceil(this.getnum2(Number(this.totalCalc)/100*this.GPUPointPrice*this.useTime/this.dbc_price)) + 10
         this.dialogFormVisible = true;
       }else{
         this.$message({
@@ -611,10 +611,10 @@ export default {
           let orderdata = {
             id: this.checkedCities[i].machine_id+this.wallet_address,
             machine_id: this.checkedCities[i].machine_id,
-            dollar: this.getnum2(Number(this.checkedCities[i].calc_point)/100*0.028229),
+            dollar: this.getnum2(Number(this.checkedCities[i].calc_point)/100*this.GPUPointPrice),
             day: this.useTime,
-            count: this.getnum2(Number(this.checkedCities[i].calc_point)/100*0.028229*this.useTime),
-            dbc: Math.ceil(this.getnum2(Number(this.checkedCities[i].calc_point)/100*0.028229*this.useTime/this.dbc_price)) + 10,
+            count: this.getnum2(Number(this.checkedCities[i].calc_point)/100*this.GPUPointPrice*this.useTime),
+            dbc: Math.ceil(this.getnum2(Number(this.checkedCities[i].calc_point)/100*this.GPUPointPrice*this.useTime/this.dbc_price)) + 10,
             wallet: this.wallet_address
           }
           let order = await createVirOrder(orderdata)
@@ -697,7 +697,7 @@ export default {
         let permas = {
           id: this.chooseMac.machine_id+this.wallet_address,
           machine_id: this.chooseMac.machine_id,
-          dollar: this.getnum2(Number(this.chooseMac.calc_point)/100*0.028229),
+          dollar: this.getnum2(Number(this.chooseMac.calc_point)/100*this.GPUPointPrice),
           day: this.useTime,
           count: this.totalMoney,
           dbc: this.totalDbc,
