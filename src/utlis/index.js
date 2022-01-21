@@ -643,6 +643,8 @@ export function getHref(url){
     return 'help'
   } else if (urlstr.indexOf('audit') != -1) { // audit
     return 'audit'
+  }  else if (urlstr.indexOf('home') != -1) { // home
+    return 'home'
   } 
 }
 
@@ -745,15 +747,15 @@ export const GetRTime = (t) => {
 
 /**
  * getComputing_Power 时间戳倒计时 天 时分秒
- * 整机算力值=25*（卡数）+内存/3.5+(√(cuda数量)*√（显存/10））*卡数
+ * 整机算力值=(25*（卡数）+内存/3.5+(√(cuda数量)*√（显存/10））*卡数)*地域系数
  * @param Gpu_Num 卡数
  * @param Mem 内存
  * @param Cuda cuda数量
  * @param M_value 显存
  */
  
-export const getComputing_Power = (Gpu_Num, Mem, Cuda, M_value) => {
-  var num = (Gpu_Num*25+ Mem/3.5 + Math.sqrt(Cuda) * Math.sqrt(M_value/10)*Gpu_Num).toFixed(2)
+export const getComputing_Power = (Gpu_Num, Mem, Cuda, M_value, coe) => {
+  var num = ((Gpu_Num*25+ Mem/3.5 + Math.sqrt(Cuda) * Math.sqrt(M_value/10)*Gpu_Num)*coe).toFixed(2)
   return num
 }
 

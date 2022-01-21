@@ -400,6 +400,7 @@ let CallBack_data1 = {
 // 定义回调函数
 const returnFun = (status: ExtrinsicStatus, events: EventRecord[], callback: Function) => {
   if (status.isInBlock) {
+    console.log(status, 'status');
     events.forEach(({ event: { method, data: [error] } }) => {
       if (method == 'ExtrinsicFailed') {
         let returnError:any = error
@@ -443,6 +444,18 @@ export const getBlockTime = async (): Promise<any> => {
   let data = de?.toJSON()
   return data
 }
+
+/**
+ * getBlockTime 获取链上DBC的实时价格
+ * 
+ * @return data:返回链上单个算力值的价格
+ */
+ export const dbcPriceOcw = async (): Promise<any> => {
+  await GetApi();
+  let de = await api?.query.dbcPriceOcw.avgPrice();
+  return de?.toJSON()
+}
+
 /**
  * getAccountBalance 查询账户余额
  * 

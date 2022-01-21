@@ -4,7 +4,7 @@
       <div class="fw600 all_profit">{{ $t("audit.all_profit") }}: {{totalReward}} DBC</div>
       <div class="fw600 today_profit">{{ $t("audit.today_profit") }}: {{todayReward}} DBC</div>
       <div class="fw600 all_machine">{{ $t("audit.all_machine") }}: {{machineCount}} <span class="fs12 cRed">{{ $t("audit.machineTips") }}</span></div>
-      <div
+      <!-- <div
         v-if="!isBinding && bindMail && $t('website_name') !== 'congTuCloud'"
         class="binding"
       >
@@ -28,7 +28,7 @@
         <span v-if="isBinding" class="bindInfo">{{
           $t("my_machine_vocing")
         }}</span>
-      </div>
+      </div> -->
     </div>
     <ul>
       <li
@@ -174,6 +174,7 @@
       <el-table
         :data="tableData"
         header-align='center'
+        height="300"
         style="width: 100%">
         <el-table-column
           prop="index"
@@ -282,7 +283,7 @@ export default {
   },
   activated() {
     this.language = this.$i18n.locale;
-    this.queryMail();
+    // this.queryMail();
     this.getList();
   },
   deactivated() {

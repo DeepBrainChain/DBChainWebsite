@@ -3,7 +3,7 @@
     <div class="border-box">
       <h2>{{$t('helpsell.title')}}</h2>
 
-      <h3>
+      <!-- <h3>
         {{$t('helpsell.2')}}，
         <a
           v-if="this.$i18n.locale==='cn' || this.$i18n.locale==='CN'"
@@ -21,7 +21,7 @@
       <h3>
         {{$t('helpsell.3')}}，
         <a href="https://www.kucoin.io" target="_blank">https://www.kucoin.io</a>
-      </h3>
+      </h3> -->
 
       <h3>
         {{$t('helpsell.4')}}，

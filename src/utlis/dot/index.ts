@@ -630,6 +630,17 @@ export function getRand_str(){
   return rand_str
 }
 
+
+/**
+ * dbcPriceOcw 获取链上DBC的实时价格
+ * 
+ * @return data:返回链上DBC的实时价格
+ */
+ export const dbcPriceOcw = async (): Promise<any> => {
+  let de = await api?.query.dbcPriceOcw.avgPrice();
+  return de?.toJSON()
+}
+
 // 工具
 export {mnemonicValidate, isAddress} from '@polkadot/util-crypto'
 

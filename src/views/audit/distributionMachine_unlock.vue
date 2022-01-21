@@ -1,6 +1,6 @@
 <template>
   <div class="machine">
-    <div class="title">
+    <!-- <div class="title">
       <div></div>
       <div
         v-if="!isBinding && bindMail && $t('website_name') !== 'congTuCloud'"
@@ -27,7 +27,7 @@
           $t("my_machine_vocing")
         }}</span>
       </div>
-    </div>
+    </div> -->
     <ul>
       <li
         v-for="(item, index) in res_body.content"
@@ -44,7 +44,6 @@
           <div class="center">
             <el-button 
               v-if="item.status == 'booked'"
-              style="width: 120px"
               type="primary"
               size="mini"
               :disabled='item.submit'
@@ -53,7 +52,6 @@
             >
             <el-button
               v-if="item.status == 'booked'"
-              style="width: 155px"
               type="primary"
               size="mini"
               @click="verification(item, 1)"
@@ -61,7 +59,6 @@
             >
             <el-button
               v-if="item.status == 'hashed'"
-              style="width: 155px"
               type="primary"
               size="mini"
               :disabled="item.canConfirm"
@@ -70,7 +67,9 @@
               >{{ $t("audit.verification2") }}</el-button
             >
             <div v-if="item.status == 'booked'" class="verification_tips">{{ $t("audit.verification_tips") }}</div>
-            <div v-else class="verification_tips">{{ item.confirm_start_time }}{{ $t("audit.verification_tips1") }}</div>
+            <div v-else class="verification_tips">
+              {{ $t("audit.verification_tips1_1") }} {{ item.confirm_start_time }} {{ $t("audit.verification_tips1_2") }} {{ $t("audit.verification_tips1") }}
+            </div>
           </div>
         </div>
         <div class="flex">
@@ -187,6 +186,19 @@
     <el-dialog :visible.sync="dialogTableVisible1" width="580px">
       <div slot="title">{{$t('audit.seeDetails3')}}</div>
       <el-form :model="formInline" class="form-inline">
+        <el-form-item :label="$t('audit.coefficient')+':'">
+          <el-select :disabled='radioDisabled' size="small" @change="selectcoe" v-model="formInline.coefficient" placeholder="请选择">
+            <el-option
+              v-for="item in Coefficient"
+              :key="item._id"
+              :label="language == 'CN' ? item.name: item.name_En"
+              :value="item._id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item v-show="choosecoe" :label="$t('audit.coefficient1')+':'">
+          <span>{{formInline.coe}}</span>
+        </el-form-item>
         <el-form-item :label="$t('audit.GPUmodel')+':'">
           <el-select :disabled='radioDisabled' size="small" @change="selectCPU" v-model="formInline.gpu_type" placeholder="请选择">
             <el-option
@@ -233,7 +245,8 @@
           <span>{{ formInline.data_disk }}</span>
         </el-form-item>
         <el-form-item v-show="select" :label="$t('audit.SGC_power')+':'">
-          <el-input :disabled='radioDisabled' size="small" style="width:200px" v-model="formInline.calc_point"></el-input>
+          <span>{{ formInline.calc_point }}</span>
+          <!-- <el-input :disabled='radioDisabled' size="small" style="width:200px" v-model="formInline.calc_point"></el-input> -->
         </el-form-item>
         <el-form-item :label="$t('audit.Vresults')+':'" prop="radio">
           <el-radio :disabled='radioDisabled' v-model="formInline.is_support" label="1">{{$t('audit.isSupportY')}}</el-radio>
@@ -244,6 +257,9 @@
         </el-form-item>
         <el-form-item v-show="select">
           <span style="display: block;font-size: 12px;line-height: 20px;">({{ $t('audit.savemsgtip') }})</span>
+        </el-form-item>
+        <el-form-item v-show="startConfirm">
+          <span style="display: block;font-size: 12px;line-height: 20px;color: red">{{ $t('responseTip') }}</span>
         </el-form-item>
         <el-form-item class="dlg-bottom">
           <el-button class="dlg-bttn" :loading="btnloading" plain size="small" @click="commit">{{$t('confirm')}}</el-button>
@@ -266,7 +282,8 @@ import {
   getMachineList,
   Save_ResultHash,
   GetResultHash,
-  changeStatus
+  changeStatus,
+  getCoefficient
 } from "@/api";
 import {
   getAccount,
@@ -310,6 +327,7 @@ export default {
       },
       formInline: {
         machine_id:'',
+        coefficient: '',
         gpu_type:'',
         gpu_num:'',
         cuda_core:'',
@@ -396,7 +414,10 @@ export default {
         "images": [
           "null"
         ]
-      }
+      },
+      Coefficient: [],
+      choosecoe: false,
+      startConfirm: false
     };
   },
   watch: {
@@ -412,9 +433,12 @@ export default {
   activated() {
     this.language = this.$i18n.locale;
     this.queryMc();
-    this.queryMail();
+    // this.queryMail();
     getGPUList().then(res=>{
       this.GPUmodelList = res
+    })
+    getCoefficient().then(res => {
+      this.Coefficient = res.content
     })
   },
   deactivated() {
@@ -662,6 +686,7 @@ export default {
         this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
           confirmButtonText: this.$t('confirm'),
           cancelButtonText:  this.$t('cancel'),
+          inputType:'password',
           inputValue: this.passward
         })
         .then( ({ value }) => {
@@ -733,14 +758,26 @@ export default {
           this.formInline = {...this.formInline, ...el}
         }
       })
-      if (this.formInline.gpu_num != '') {
-        let calc_point = getComputing_Power(this.formInline.gpu_num, this.formInline.mem_num, this.formInline.cuda_core, this.formInline.gpu_mem)
+      if (this.formInline.gpu_num != '' && this.formInline.coefficient != '') {
+        let calc_point = getComputing_Power(this.formInline.gpu_num, this.formInline.mem_num, this.formInline.cuda_core, this.formInline.gpu_mem, this.formInline.coe)
+        this.formInline.calc_point = calc_point ? parseInt(calc_point*100) : 0
+      }
+    },
+    selectcoe(val) {
+      this.Coefficient.map(el => {
+        if(el._id == val) {
+          this.choosecoe = true
+          this.formInline.coe = el.coe
+        }
+      })
+      if (this.formInline.gpu_num != '' && this.formInline.gpu_type != '') {
+        let calc_point = getComputing_Power(this.formInline.gpu_num, this.formInline.mem_num, this.formInline.cuda_core, this.formInline.gpu_mem, this.formInline.coe)
         this.formInline.calc_point = calc_point ? parseInt(calc_point*100) : 0
       }
     },
     selectCPUNum(val){
       this.select1 = true
-      let calc_point = getComputing_Power(this.formInline.gpu_num, this.formInline.mem_num, this.formInline.cuda_core, this.formInline.gpu_mem)
+      let calc_point = getComputing_Power(this.formInline.gpu_num, this.formInline.mem_num, this.formInline.cuda_core, this.formInline.gpu_mem, this.formInline.coe)
       this.formInline.calc_point = calc_point ? parseInt(calc_point*100) : 0
     },
     async commit(){
@@ -752,11 +789,13 @@ export default {
         });
       }else{
         this.btnloading = true;
+        this.startConfirm = true;
         if(this.radioDisabled){
           this.formInline.is_support = this.formInline.is_support == 0 ? Number(this.formInline.is_support): this.formInline.is_support
           ConfirmRaw(this.formInline, this.formInline.passward, (res)=>{
             console.log(res, 'res');
             this.btnloading = false;
+            this.startConfirm = false;
             if(res.success){
               this.$message({
                 showClose: true,
@@ -788,6 +827,7 @@ export default {
           if (this.formInline.gpu_type == '' || this.formInline.gpu_num == '' || this.formInline.calc_point == '') {
             this.$message.error('提交内容不能为空')
             this.btnloading = false;
+            this.startConfirm = false;
             return false
           }
           const signaturemsg = randomWord()
@@ -822,6 +862,7 @@ export default {
                 ConfirmHash(this.formInline, this.formInline.passward, (res)=>{
                   console.log(res, 'res');
                   this.btnloading = false;
+                  this.startConfirm = false;
                   if(res.success){
                     let rawdata = {
                       machine_id: this.formInline.machine_id,
@@ -867,6 +908,7 @@ export default {
                 })
               }else{
                 this.btnloading = false;
+                this.startConfirm = false;
                 this.$message({
                   showClose: true,
                   message: res1.msg,
@@ -882,6 +924,7 @@ export default {
               type: "error",
             });
             this.btnloading = false;
+            this.startConfirm = false;
           })
         }
       }
@@ -890,6 +933,7 @@ export default {
     cancel1(){
       this.radioDisabled = false;
       this.btnloading = false;
+      this.startConfirm = false;
       this.dialogTableVisible1 = false
     },
   },

@@ -192,6 +192,38 @@ export default {
       res_body: {
         content: [],
       },
+      originalDefult: {
+        "version": "0",
+        "ip": "Undefined",
+        "os": "Undefined",
+        "cpu": {
+          "type": "Undefined",
+          "hz": "0",
+          "cores": "0",
+          "used_usage": "0"
+        },
+        "gpu": {
+          "gpu_count": 1,
+        },
+        "mem": {
+          "size": "0G",
+          "free": "0G",
+          "used_usage": "0"
+        },
+        "disk_system": {
+          "type": "0",
+          "size": "0G"
+        },
+        "disk_data": {
+          "type": "0",
+          "size": "0G",
+          "free": "0G",
+          "used_usage": "0%"
+        },
+        "images": [
+          "null"
+        ]
+      }
     };
   },
   watch: {
@@ -212,7 +244,7 @@ export default {
   mounted() {
     this.language = this.$i18n.locale;
     this.queryMc();
-    this.queryMail();
+    // this.queryMail();
   },
   beforeDestroy() {
     
@@ -434,6 +466,7 @@ export default {
       this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
         confirmButtonText: this.$t('confirm'),
         cancelButtonText:  this.$t('cancel'),
+        inputType:'password',
         inputValue: this.passward
       })
       .then( async ({ value }) => {
@@ -472,6 +505,7 @@ export default {
       this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
         confirmButtonText: this.$t('confirm'),
         cancelButtonText:  this.$t('cancel'),
+        inputType:'password',
         inputValue: this.passward
       })
       .then( async ({ value }) => {

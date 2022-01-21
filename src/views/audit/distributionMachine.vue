@@ -16,12 +16,12 @@
       >
         {{ $t('mywallet_create') }}
       </el-button>
-      <el-button
+      <!-- <el-button
         type="primary"
         @click="openWallet"
       >
         {{ $t('mywallet_open_old') }}
-      </el-button>
+      </el-button> -->
       <el-button
         v-if="contain_new_wallet"
         type="primary"

@@ -2,7 +2,7 @@
   <div class="head">
     <div class="content wrap1440">
       <img class="logo" :src="logo" />
-      <el-dropdown
+      <!-- <el-dropdown
         class="item"
         :class="{active: this.$store.state.menuName === 'home' || this.$store.state.menuName=== 'minerHome'}"
         trigger="click"
@@ -16,24 +16,29 @@
           <el-dropdown-item command="home">{{$t('heads.gpu')}}</el-dropdown-item>
           <el-dropdown-item command="minerHome">{{$t('heads.miner')}}</el-dropdown-item>
         </el-dropdown-menu>
-      </el-dropdown>
+      </el-dropdown> -->
       <!--      <a class="item" :class="{active: menuName === 'home'}" @click="pushMenu('home')">{{$t('heads.home')}}</a>-->
-      <a
+      <!-- <a
         class="item"
         :class="{active: menuName === 'gpu'}"
         @click="pushMenu('gpu')"
-      >{{$t('heads.gpu')}}</a>
+      >{{$t('heads.gpu')}}</a> -->
       <!--      <router-link class="item" to="/network">{{$t('heads.network')}}</router-link>-->
+      <a
+        class="item"
+        :class="{active: menuName === 'home'}"
+        @click="pushMenu('home')"
+      >{{$t('heads.home')}}</a>
       <a
         class="item"
         :class="{active: menuName === 'virtual'}"
         @click="pushMenu('virtual')"
       >{{$t('heads.virtual')}}</a>
-      <a
+      <!-- <a
         class="item"
         :class="{active: menuName === 'miner'}"
         @click="pushMenu('miner')"
-      >{{$t('heads.miner')}}</a>
+      >{{$t('heads.miner')}}</a> -->
       <a
         class="item"
         :class="{active: menuName === 'audit'}"
@@ -50,9 +55,9 @@
         @click="pushMenu('mywallet')"
       >{{$t('heads.mywallet')}}</a>
       <a
+        target="_blank"
+        href="https://deepbrainchain.github.io/DBC-Wiki/dbc-introduction/rentVirtual.html"
         class="item"
-        :class="{active: menuName === 'help'}"
-        @click="pushMenu('help')"
       >{{$t('heads.help')}}</a>
       <a
         class="item"
@@ -72,7 +77,7 @@
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="CN">简体中文</el-dropdown-item>
           <el-dropdown-item command="EN">ENGLISH</el-dropdown-item>
-          <el-dropdown-item command="RU">Ру́сский язы́к</el-dropdown-item>
+          <!-- <el-dropdown-item command="RU">Ру́сский язы́к</el-dropdown-item> -->
           <!--    <el-dropdown-item command="VI">Việt nam</el-dropdown-item>
           <el-dropdown-item command="KO">한국어</el-dropdown-item>
           <el-dropdown-item command="TH">ภาษาไทย</el-dropdown-item>
@@ -526,7 +531,6 @@ export default {
     },
     pushMenu(name) {
       //  this.menuName = name;
-      console.log(name, 'name');
       this.$store.commit("setMenuName", name);
       this.$router.push("/" + name);
     },
@@ -567,14 +571,16 @@ export default {
 
 <style lang="scss" scoped>
 .head {
-  padding-top: 112px;
-  padding-bottom: 110px;
+  // padding-top: 112px;
+  // padding-bottom: 110px;
+  padding-top: 30px;
+  padding-bottom: 25px;
 }
 
 .content {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
 
   .logo {
     // margin-top: -30px; //dbchain:10px ,aionego:-30px,yousanai:-30px,deepshare-30px,yalecloud-30px,panchuanga:-30px,,sharegpu:-30px
@@ -587,7 +593,7 @@ export default {
     font-weight: 700;
     cursor: pointer;
     color: rgba(255, 255, 255, 0.5);
-    padding-bottom: 10px;
+    padding-bottom: 5px;
     border-bottom: 2px solid transparent;
 
     &:hover {

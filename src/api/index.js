@@ -1124,6 +1124,19 @@ export const GetResultHash = data => {
 
 
 /**
+ * @description 获取地域系数
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const getCoefficient = params => {
+  return axios({
+    method: "get",
+    url: nodeHost + "/api/audit/getCoefficient",
+    params
+  });
+};
+
+
+/**
  * @description 我的验证Gpu虚拟机列表
  * @param {object} params {machine_id, gpu, ....}
  */
@@ -1215,6 +1228,20 @@ export const GetResultHash = data => {
   });
 };
 
+
+/**
+ * @description 获取租用虚拟机加价百分比
+ * @param {object} data {machine_id, gpu, ....}
+ */
+ export const getPercentage = data => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/rentMachine/getPercentage',
+    data: data
+  });
+};
+
+
 /**
  * @description 获取支付钱包地址和四位随机数
  * @param {object} data {machine_id, gpu, ....}
@@ -1241,6 +1268,18 @@ export const GetResultHash = data => {
   });
 };
 
+
+/**
+ * @description 获取机器信息
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const getMachineInfo = data => {
+  return axios({
+    method: "post",
+    url: nodeHost + "/api/rentMachine/getMachineInfo",
+    data: data
+  });
+};
 
 /**
  * @description 确认支付成功

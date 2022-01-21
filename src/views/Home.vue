@@ -9,7 +9,7 @@
           </div>
           <div class="btn-wrap mt60">
             <el-button class="lg fs18 long" type="primary" @click="pushToWallet">
-              {{$t('home.start')}}
+              {{$t('startVir')}}
               <i class="el-icon-back r"></i>
             </el-button>
           </div>
@@ -88,7 +88,7 @@
           <div class="gpu-info">
             <img src="~@/assets/imgs/gpu_img_2.jpg" alt />
             <div class="text">
-              <p>{{$t('home.intr_6')}}</p>
+              <p>{{$t('home_intr')}}</p>
             </div>
           </div>
         </el-col>
@@ -124,8 +124,8 @@ export default {
         .catch(err => {});
     },
     pushToWallet() {
-      this.$router.push("/gpu");
-      this.$store.commit("setMenuName", "gpu");
+      this.$router.push("/virtual");
+      this.$store.commit("setMenuName", "virtual");
     },
     set_image1() {
       this.image1 = require("../assets/imgs/building@1x.png");

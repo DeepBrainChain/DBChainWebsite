@@ -48,26 +48,26 @@ export default {
         "myMachine_unlock_stopped",
         "myMachine_unlock_gpuVirtual"
       ],
-      curNavIndex: 0,
+      curNavIndex: 3,
       menus: [
-        {
-          title: undefined, //this.$t("gpu.myMachine"),
-          to: "myMachine",
-          index: 0,
-          iconClass: "iconmachine",
-        },
-        {
-          title: undefined, //this.$t("gpu.machineList"),
-          to: "myMachine_cpu",
-          index: 1,
-          iconClass: "iconmachine",
-        },
-        {
-          title: undefined, //this.$t("gpu.machineList"),
-          to: "myMachine_stopped",
-          index: 2,
-          iconClass: "iconmachine",
-        },
+        // {
+        //   title: undefined, //this.$t("gpu.myMachine"),
+        //   to: "myMachine",
+        //   index: 0,
+        //   iconClass: "iconmachine",
+        // },
+        // {
+        //   title: undefined, //this.$t("gpu.machineList"),
+        //   to: "myMachine_cpu",
+        //   index: 1,
+        //   iconClass: "iconmachine",
+        // },
+        // {
+        //   title: undefined, //this.$t("gpu.machineList"),
+        //   to: "myMachine_stopped",
+        //   index: 2,
+        //   iconClass: "iconmachine",
+        // },
         {
           title: undefined, //this.$t("gpu.machineList"),
           to: "myMachine_gpuVirtual",
@@ -83,6 +83,7 @@ export default {
   },
   beforeRouteUpdate(to, from, next) {
     // const curRoute = to.matched.find(item => item.path === to.path)
+    console.log(to.meta, 'to.meta');
     this.curNavIndex = to.meta.menuIndex;
     next();
   },
@@ -113,12 +114,12 @@ export default {
   },
   methods: {
     init_menus() {
-      this.menus[0].title = this.$t("gpu.myMachine_gpu");
-      this.menus[1].title = this.$t("gpu.myMachine_cpu");
-      this.menus[2].title = this.$t("gpu.myMachine_stopped");
-      this.menus[3].title = this.$t("gpu.myMachine_gpuVirtual");
-      if (this.menus[4]) {
-        this.menus[4].title = this.$t("gpu.myVerify_gpuVirtual");
+      // this.menus[0].title = this.$t("gpu.myMachine_gpu");
+      // this.menus[1].title = this.$t("gpu.myMachine_cpu");
+      // this.menus[2].title = this.$t("gpu.myMachine_stopped");
+      this.menus[0].title = this.$t("gpu.myMachine_gpuVirtual");
+      if (this.menus[1]) {
+        this.menus[1].title = this.$t("gpu.myVerify_gpuVirtual");
       }
       // if (this.$t("website_name") === "congTuCloud") {
       //   this.menus.splice(2, 1);

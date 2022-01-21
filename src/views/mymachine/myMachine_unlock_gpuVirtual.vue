@@ -2,7 +2,7 @@
   <div class="gpuVirtual">
     <div class="title">
       <span>{{$t("myvirtual.title")}}：{{ orderNumber }} {{$t("myvirtual.tower")}}</span>
-      <div
+      <!-- <div
         v-if="!isBinding && bindMail && $t('website_name') !== 'congTuCloud'"
         class="binding"
       >
@@ -26,7 +26,7 @@
         <span v-if="isBinding" class="bindInfo">{{
           $t("my_machine_vocing")
         }}</span>
-      </div>
+      </div> -->
     </div>
     <div class="table">
       <div class="tableli" v-for="el in Machine_info" :key="el.machine_id">
@@ -62,10 +62,11 @@
           <span class="bold">{{$t('virtual.GPU_memory')}}: {{el.gpu_mem}}G</span>
           <span class="width30 bold">{{$t('virtual.GPU_type')}}: {{el.gpu_type}}</span>
           <span class="width30 bold">{{$t('virtual.Daily_Rent')}}: 
-            <i class="color"> {{getnum2(Number(el.calc_point)/100*GPUPointPrice)}}$≈{{getnum2(Number(el.calc_point)/100*GPUPointPrice/dbc_price)}}DBC </i>
+            <i class="color"> {{getnum2(Number(el.calc_point)/100*GPUPointPrice * (1 + DBCPercentage))}}$≈{{getnum2(Number(el.calc_point)/100*GPUPointPrice * (1 + DBCPercentage)/dbc_price)}}DBC </i>
           </span>
           <span>{{$t('virtual.Country')}}: {{el.country}}</span>
           <span>{{$t('virtual.City')}}: {{el.city}}</span>
+          <span v-if="el.server_room" :title="el.server_room">{{$t('virtual.Room_number')}}: {{String(el.server_room).substring(0,10)+'...'}}</span>
           <!-- <span>
             {{$t('virtual.lable_two2')}}: 
             <i :title="el.machine_owner" v-if='!el.machine_name'>{{String(el.machine_owner).substring(0,10)+'...'}}</i>
@@ -123,7 +124,7 @@
               </div>
             </div>
             <div v-if="item.status == 'running'"  class="li-bottom">
-              <span>{{$t('myvirtual.mirror_name')}}: ubuntu.qcow2</span>
+              <span>{{$t('myvirtual.mirror_name')}}: {{item.images}}</span>
               <span>{{$t('myvirtual.IP_address')}}: {{item.ssh_ip}}</span>
               <span>{{$t('myvirtual.user_name')}}: {{item.user_name}}</span>
               <span>{{$t('myvirtual.password')}}: {{item.login_password}}</span>
@@ -134,6 +135,8 @@
               <span>{{$t('myvirtual.vir_data')}}: {{item.disk_data}}</span>
               <span>{{$t('myvirtual.vir_gpu_num')}}: {{item.gpu_count}}</span>
               <span >{{$t('myvirtual.vir_cpu_num')}}: {{item.cpu_cores}}</span>
+              <span>{{$t('myvirtual.vnc_port')}}: {{item.vnc_port}}</span>
+              <span >{{$t('myvirtual.open_port_range')}}: {{item.port_min}} - {{item.port_max}}</span>
             </div>
           </div>
         </div>
@@ -230,13 +233,16 @@
           <el-input-number :precision="0" size="mini" v-model="useTime" @change="inputNum" :min="1" :max="90"></el-input-number>
            {{$t('day')}}
         </div>
-        <div>{{$t('virtual.Daily_Rent')}}: <span class="color">{{getnum2(Number(chooseMac.calc_point)/100*GPUPointPrice)}}$≈{{getnum2(Number(chooseMac.calc_point)/100*GPUPointPrice/dbc_price)}}DBC</span></div>
+        <div>{{$t('virtual.Daily_Rent')}}: <span class="color">{{getnum2(Number(chooseMac.calc_point)/100*GPUPointPrice * (1 + DBCPercentage))}}$≈{{getnum2(Number(chooseMac.calc_point)/100*GPUPointPrice * (1 + DBCPercentage)/dbc_price)}}DBC</span></div>
       </div>
       <div class="fs12">{{$t('myvirtual.tip6')}}</div>
       <div>
         <p><span class="bold">{{$t('myvirtual.balance')}}:</span> {{balance}} DBC</p>
         <p><span class="bold">{{$t('virtual.total')}}:</span> {{totalMoney}} $</p>
         <p><span class="bold">{{$t('virtual.equivalent')}}:</span> {{totalDbc}}</p>
+      </div>
+      <div v-show="startConfirm">
+        <p style="color: #f56c6c;">{{$t('responseTip')}}</p>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button class="batch" size="mini" plain :loading='btnloading'  @click="confirmRenew">{{$t('virtual.confirm')}}</el-button>
@@ -246,6 +252,19 @@
 
     <!-- 创建、修改 虚拟机 -->
     <el-dialog width='30%' :title="title" :visible.sync="dialogFormVisible1">
+      <div class="useTime">
+        <div>
+          <span class="width12 bold">{{$t('myvirtual.mirror_name')}}: </span>
+          <el-select class='select' v-model="image_name" size='mini' @change='Selectimage' placeholder="choose">
+            <el-option
+              v-for="(item, index) in option"
+              :key="index"
+              :label="item"
+              :value="item">
+            </el-option>
+          </el-select>
+        </div>
+      </div>
       <div class="useTime">
         <div>
           <span class="width12 bold">{{$t('myvirtual.vir_mem')}}: </span>
@@ -276,12 +295,21 @@
       </div>
       <div class="useTime">
         <div>
-          <span class="width12 bold">{{$t('myvirtual.port_range')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="port_range" :min="5000" :max="6000"></el-input-number>
+          <span class="width12 bold">{{$t('myvirtual.ssh_port')}}: </span>
+          <el-input-number :precision="0" size="mini" v-model="port_range" :min="5600" :max="5899"></el-input-number>
         </div>
       </div>
       <div class="fs12">
         {{$t('myvirtual.tip8')}}
+      </div>
+      <div class="useTime">
+        <div>
+          <span class="width12 bold">{{$t('myvirtual.rdp_port')}}: </span>
+          <el-input-number :precision="0" size="mini" v-model="rdp_port" :min="5600" :max="5899"></el-input-number>
+        </div>
+      </div>
+      <div class="fs12">
+        {{$t('myvirtual.tip8')}}{{$t('myvirtual.tip10')}}
       </div>
       <div class="useTime">
         <div>
@@ -292,7 +320,7 @@
       <div class="fs12">
         {{$t('myvirtual.tip9')}}
       </div>
-      <!-- <div class="useTime">
+      <div class="useTime">
         <div>
           <span class="width12 bold">{{$t('myvirtual.open_port_range')}}: </span>
           <el-input-number :precision="0" size="mini" v-model="port_min" :min="6000" :max="port_max-1"></el-input-number>
@@ -302,7 +330,7 @@
       </div>
       <div class="fs12">
         {{$t('myvirtual.tip7')}}
-      </div> -->
+      </div>
       <div slot="footer" class="dialog-footer">
         <el-button class="batch" size="mini" plain :loading='btnloading1' @click="Createvirtual">{{$t('myvirtual.Confirm_create')}}</el-button>
         <el-button class="batch" size="mini" plain @click="dialogFormVisible1 = false">{{$t('virtual.cancal')}}</el-button>
@@ -403,7 +431,9 @@ import {
   CreateWallet,
   ConFirm_Rent,
   Renew_Rent,
-  VMS_restart
+  VMS_restart,
+  getPercentage,
+  getMachineInfo
 } from "@/api";
 
 import {
@@ -412,7 +442,7 @@ import {
   getUsdToRmb,
   randomWord
 } from "@/utlis";
-import { transfer, getAccountBalance, standardGPUPointPrice } from '@/utlis/dot/api';
+import { transfer, getAccountBalance, standardGPUPointPrice, dbcPriceOcw } from '@/utlis/dot/api';
 import { getCurrentPair, CreateSignature } from "@/utlis/dot"
 import { mapState, mapMutations } from "vuex"
 export default {
@@ -480,6 +510,8 @@ export default {
       // 创建、修改 虚拟机
       title:'',
       dialogFormVisible1: false,
+      option: [],
+      image_name: '',
       vir_mem: 0.1,
       vir_cpu_num: 4,
       vir_gpu_num: 1,
@@ -488,7 +520,8 @@ export default {
       max_cpu_num: 0,
       max_gpu_num: 0,
       max_disk_num: 0,
-      port_range: 5000,
+      port_range: 5600,
+      rdp_port: 5601,
       port_min: 6000,
       port_max: 60000,
       vnc_port: 5900,
@@ -509,7 +542,9 @@ export default {
       },
       // 订单详情
       dialogFormVisible3: false,
-      GPUPointPrice: 0.028229
+      GPUPointPrice: 0.028229,
+      DBCPercentage: 0,
+      startConfirm: false
     };
   },
 
@@ -525,11 +560,16 @@ export default {
     dbc_info().then( res => {
       this.dbc_price = res.content.dbc_price
     })
+    getPercentage().then(res => {
+      if (res.success) {
+        this.DBCPercentage = res.content.percentage / 100
+      }
+    })
   },
   activated() {
     // this.binding(isNewMail);
     clearInterval(this.si);
-    this.queryMail();
+    // this.queryMail();
     this.stopInter()
     this.getMyVirtual();
     this.si = setInterval( ()=> {
@@ -545,7 +585,6 @@ export default {
     }
     this.stopInter()
   },
-
   computed: {
     ...mapState(["isNewWallet", "passward"]),
   },
@@ -765,6 +804,8 @@ export default {
               }
             }
           }
+          let DBCprice1 = await dbcPriceOcw()
+          this.dbc_price = DBCprice1/1000000
           if(this.firstLoading){
             loadingInstance.close();
             const GPUPrice = await standardGPUPointPrice()
@@ -857,23 +898,27 @@ export default {
       this.chooseMac = el
       this.useTime = 7
       this.time_left = this.chooseMac.time_left
-      this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*this.GPUPointPrice*this.useTime)
-      this.totalDbc = Math.ceil(this.getnum2(Number(this.chooseMac.calc_point)/100*this.GPUPointPrice*this.useTime/this.dbc_price))
+      const getprice = Number(this.chooseMac.calc_point)/100 * this.GPUPointPrice * (1 + this.DBCPercentage)
+      this.totalMoney = this.getnum2(getprice*this.useTime)
+      this.totalDbc = Math.ceil(this.getnum2(getprice*this.useTime/this.dbc_price))
       el.btnloading2 = false
       this.dialogFormVisible = true
     },
     inputNum(val){
-      this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*this.GPUPointPrice*val)
-      this.totalDbc = Math.ceil(this.getnum2(Number(this.chooseMac.calc_point)/100*this.GPUPointPrice*val/this.dbc_price))
+      const getprice = Number(this.chooseMac.calc_point)/100 * this.GPUPointPrice * (1 + this.DBCPercentage)
+      this.totalMoney = this.getnum2(getprice*val)
+      this.totalDbc = Math.ceil(this.getnum2(getprice*val/this.dbc_price))
     },
     confirmRenew(){
       this.btnloading = true;
+      this.startConfirm = true;
       CreateWallet({ id: this.chooseMac.machine_id+this.wallet_address } ).then(res=> {
         if (res.success) {
           console.log(`向${res.content.wallet}转账${this.totalDbc}.${res.content.nonce}DBC`);
           this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
             confirmButtonText: this.$t('confirm'),
             cancelButtonText:  this.$t('cancel'),
+            inputType:'password',
             inputValue: this.passward
           })
           .then( ({ value }) => {
@@ -899,6 +944,7 @@ export default {
                       type: "success",
                     });
                     this.btnloading = false;
+                    this.startConfirm = false;
                     this.dialogFormVisible = false
                   } else {
                     this.$message({
@@ -907,11 +953,13 @@ export default {
                       type: "error",
                     });
                     this.btnloading = false;
+                    this.startConfirm = false;
                     this.dialogFormVisible = false
                   }
                 })
               }else{
                 this.btnloading = false;
+                this.startConfirm = false;
                 this.$message({
                   showClose: true,
                   message: res1.msg,
@@ -921,10 +969,12 @@ export default {
             })
           }).catch(() => {
             this.btnloading = false;
+            this.startConfirm = false;
             console.log(this.$t('cancel'));
           });
         } else {
           this.btnloading = false;
+          this.startConfirm = false;
           this.$message({
             showClose: true,
             message: this.$t('virtual.tip6'),
@@ -935,32 +985,34 @@ export default {
     },
     // 创建、修改 虚拟机
     operateVirtual(str, data) {
-      this.dialogFormVisible1 = true
-      this.chooseMac = data
-      let chooseVirtualMem = 0;
-      let chooseVirtualCpu = 0;
-      let chooseVirtualGpu = 0;
-      let chooseVirtualDisk = 0;
-      data.virtual_info.map(el => {
-        chooseVirtualMem +=  parseFloat(el.mem_size)
-        chooseVirtualCpu += el.cpu_cores
-        chooseVirtualGpu += el.gpu_count
-        chooseVirtualDisk += parseFloat(el.disk_data)
+      getMachineInfo({machine_id: data.machine_id}).then(res => {
+        console.log(res, 'res');
+        if (res.success) {
+          this.max_vir_mem = parseInt(res.content.mem.free)
+          this.max_cpu_num = Math.floor(res.content.cpu.cores)
+          this.max_gpu_num = Math.floor(res.content.gpu.gpu_count - res.content.gpu.gpu_used)
+          this.max_disk_num = parseInt(res.content.disk_data.free)
+          this.option = res.content.images
+          this.dialogFormVisible1 = true
+          this.chooseMac = data
+        } else {
+          this.$message.error(res.msg)
+        }
       })
-      this.max_vir_mem = data.mem_num - chooseVirtualMem
-      this.max_cpu_num = data.cpu_core_num - chooseVirtualCpu
-      this.max_gpu_num = data.gpu_num - chooseVirtualGpu
-      this.max_disk_num = data.data_disk - chooseVirtualDisk
       if(str == 'create'){
         this.title = this.$t('myvirtual.Build')
       }else{
         this.title = this.$t('myvirtual.change')
       }
     },
+    Selectimage(val) {
+      console.log(val, 'val')
+    },
     Createvirtual(){
       this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
         confirmButtonText: this.$t('confirm'),
         cancelButtonText:  this.$t('cancel'),
+        inputType:'password',
         inputValue: this.passward
       })
       .then( async ({ value }) => {
@@ -972,7 +1024,9 @@ export default {
             id: this.chooseMac._id,
             machine_id: this.chooseMac.machine_id,
             ssh_port: this.port_range,
-            // ssh_port: `${this.port_min}~${this.port_max}`,
+            image_name: this.image_name,
+            port_min: this.port_min,
+            port_max: this.port_max,
             gpu_count: this.vir_gpu_num,
             cpu_cores: this.vir_cpu_num,
             mem_rate: this.vir_mem,
@@ -985,6 +1039,7 @@ export default {
           Create_VMS(perams).then( res=> {
             console.log(res ,'res');
             if(res.success){
+              // el.virtual_info = VMS_Info.content
               this.$message.success(this.$t('myvirtual.Build_success'))
             }else{
               // this.$message.error(this.$t('myvirtual.Build_fails'))
@@ -1012,6 +1067,7 @@ export default {
       this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
         confirmButtonText: this.$t('confirm'),
         cancelButtonText:  this.$t('cancel'),
+        inputType:'password',
         inputValue: this.passward
       })
       .then( async ({ value }) => {
@@ -1205,7 +1261,7 @@ export default {
   .tableli{
     width: 100%;
     padding: 10px 0;
-    font-size: 12px;
+    font-size: 14px;
     box-sizing: border-box;
     border: 1px solid #999;
     margin-bottom: 15px;

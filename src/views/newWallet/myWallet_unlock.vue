@@ -44,7 +44,7 @@
       </router-link>
       <span class="f16">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $t('gpu.showDeitailDBC') }}</span>
       <a
-        href="javascript:"
+        href="https://www.deepbrainchain.org"
         class="f16 cPrimaryColor"
         @click="toCoinWeb"
       >{{ $t('gpu.clickCoinmarktcap') }}</a>
@@ -157,7 +157,8 @@ import {
   onGetBalance,
   removePair,
   isAddress,
-  onTransferBalance
+  onTransferBalance,
+  dbcPriceOcw
 } from '@/utlis/dot'
 
 export default {
@@ -169,7 +170,6 @@ export default {
   computed: {
     ...mapState([
       "dbcToUS",
-      "dbcPrice",
       "dbcChange",
     ])
   },
@@ -189,7 +189,8 @@ export default {
         num: ''
       },
       unsubBalance: null, // 余额
-      refresh: undefined
+      refresh: undefined,
+      dbcPrice: 0,
     }
   },
   mounted() {
@@ -226,7 +227,8 @@ export default {
         this.address = this.pair.address
         this.$store.commit('setData',{address: this.pair.address})
       }
-      
+      let DBCprice = await dbcPriceOcw()
+      this.dbcPrice = DBCprice/1000000
       // 获取余额
       this.unsubBalance = await onGetBalance(this.pair.address, (num, token, decimals,free) => {
         this.balance = num
@@ -234,7 +236,9 @@ export default {
         this.decimals = decimals
         this.balanceFree = free
       })
-      this.refresh = setInterval(() => {
+      this.refresh = setInterval( async () => {
+        let DBCprice1 = await dbcPriceOcw()
+        this.dbcPrice = DBCprice1/1000000
         onGetBalance(this.pair.address, (num, token, decimals,free) => {
           this.balance = num
           this.token = token

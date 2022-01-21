@@ -28,7 +28,7 @@
         }}</span>
       </div>
     </div> -->
-    <div class="title">
+    <!-- <div class="title">
       <div></div>
       <div
         v-if="!isBinding && bindMail && $t('website_name') !== 'congTuCloud'"
@@ -55,7 +55,7 @@
           $t("my_machine_vocing")
         }}</span>
       </div>
-    </div>
+    </div> -->
     <div class="order_tips ">{{$t('audit.ogMachine_tips')}}</div>
     <template v-if="res_body.content.length > 0">
       <div
@@ -222,7 +222,7 @@ export default {
   activated() {
     // this.binding(this.isNewMail);
     this.stopInter()
-    this.queryMail();
+    // this.queryMail();
     this.getList()
   },
   deactivated() {
@@ -412,6 +412,7 @@ export default {
         this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
           confirmButtonText: this.$t('confirm'),
           cancelButtonText:  this.$t('cancel'),
+          inputType:'password',
           inputValue: this.passward
         })
         .then( ({ value }) => {
@@ -552,6 +553,7 @@ export default {
         this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
           confirmButtonText: this.$t('confirm'),
           cancelButtonText:  this.$t('cancel'),
+          inputType:'password',
           inputValue: this.passward
         }).then( ({ value }) => {
           this.setPassWard(value)

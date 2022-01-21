@@ -25,17 +25,15 @@
                 <div class="topitem">
                   {{$t('virtual.Machine_status')}}: 
                   <el-select class='select' v-model="Machine_status" size='mini' @change='SelectStatus' placeholder="">
-                    <el-option
-                      v-for="item in options"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
+                    <el-option :label="$t('virtual.All')" value=""></el-option>
+                    <el-option :label="$t('virtual.Rented')" value="rented"></el-option>
+                    <el-option :label="$t('virtual.Idle')" value="online"></el-option>
                   </el-select>
                 </div>
                 <div class="topitem">
                   {{$t('virtual.GPU_Num')}}: 
                   <el-select class='select' v-model="GPU_Num" size='mini' @change='SelectNum' placeholder="">
+                    <el-option :label="$t('virtual.All')" value=""></el-option>
                     <el-option
                       v-for="item in options1"
                       :key="item.value"
@@ -73,10 +71,10 @@
                 <div class="tableli" v-for="el in Machine_info" :key="el.machine_id">
                   <div class="li_list1">
                     <div>
-                      <el-checkbox v-if="openCheck" :disabled="el.machine_status == 'online'" :label="el.machine_id" :key="el.machine_id">{{''}}</el-checkbox>
+                      <el-checkbox v-if="openCheck" :disabled="el.machine_status != 'online'" :label="el.machine_id" :key="el.machine_id">{{''}}</el-checkbox>
                       <span class="Machine_id">{{$t('virtual.Machine_ID')}}: {{el.machine_id}}</span>
                     </div>
-                    <span v-if="el.server_room">{{$t('virtual.Room_number')}}: {{String(el.server_room).substring(0,10)+'...'}}</span>
+                    <span v-if="el.server_room" :title="el.server_room">{{$t('virtual.Room_number')}}: {{String(el.server_room).substring(0,10)+'...'}}</span>
                     <span>{{$t('virtual.Machine_sta')}}: {{el.machine_status != 'online'?$t('virtual.Rented'):$t('virtual.Idle')}}</span>
                     <span v-if="!openCheck">
                       <el-button class="batch" :disabled='el.machine_status != "online"' size="mini" plain @click="batch_Mac(el)">
@@ -89,7 +87,7 @@
                     <span class="bold">{{$t('virtual.GPU_memory')}}: {{el.gpu_mem}}G</span>
                     <span class="width30 bold">{{$t('virtual.GPU_type')}}: {{el.gpu_type}}</span>
                     <span class="width30 bold">{{$t('virtual.Daily_Rent')}}: 
-                      <i class="color"> {{getnum2(Number(el.calc_point)/100*GPUPointPrice)}}$≈{{getnum2(Number(el.calc_point)/100*GPUPointPrice/dbc_price)}}DBC </i>
+                      <i class="color"> {{getnum2(Number(el.calc_point)/100*GPUPointPrice * (1 + DBCPercentage))}}$≈{{getnum2(Number(el.calc_point)/100*GPUPointPrice * (1 + DBCPercentage)/dbc_price)}}DBC </i>
                     </span>
                     <span>{{$t('virtual.Country')}}: {{el.country}}</span>
                     <span>{{$t('virtual.City')}}: {{el.city}}</span>
@@ -144,18 +142,19 @@
           <el-input-number :precision="0" size="mini" v-model="useTime" @change="inputNum" :min="1" :max="90"></el-input-number>
            {{$t('day')}}
         </div>
-        <div v-if="!openCheck">{{$t('virtual.Daily_Rent')}}: <span class="color">{{getnum2(Number(chooseMac.calc_point)/100*GPUPointPrice)}}$≈{{getnum2(Number(chooseMac.calc_point)/100*GPUPointPrice/dbc_price)}}DBC</span></div>
+        <div v-if="!openCheck">{{$t('virtual.Daily_Rent')}}: <span class="color">{{getnum2(Number(chooseMac.calc_point)/100*GPUPointPrice * (1 + DBCPercentage))}}$≈{{getnum2(Number(chooseMac.calc_point)/100*GPUPointPrice * (1 + DBCPercentage)/dbc_price)}}DBC</span></div>
       </div>
       <div class="fs12">{{$t('virtual.tip1')}}</div>
       <div>
         <p v-if="!openCheck"><span class="bold">{{$t('virtual.Max_disk_Num')}}:</span> {{Number(chooseMac.data_disk)}}T</p>
-        <p v-if="!openCheck"><span class="bold">{{$t('virtual.Max_Mem')}}:</span> {{Math.ceil(Number(chooseMac.mem_num))}}G</p>
+        <p v-if="!openCheck"><span class="bold">{{$t('virtual.Max_Mem')}}:</span> <span style="color: #f56c6c;">{{max_vir_mem ? max_vir_mem : Math.ceil(Number(chooseMac.mem_num))}} </span>G</p>
         <p><span class="bold">{{$t('virtual.total')}}:</span> {{totalMoney}} $</p>
         <p><span class="bold">{{$t('virtual.equivalent')}}:</span> {{totalDbc}}</p>
       </div>
       <div>
         <p>{{$t('virtual.tip2')}}</p>
         <p>{{$t('virtual.tip3')}}</p>
+        <p v-show="startConfirm" style="color: #f56c6c;">{{$t('responseTip')}}</p>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button class="batch" size="mini" plain :loading='btnloading'  @click="confirm">{{$t('virtual.confirm')}}</el-button>
@@ -174,8 +173,8 @@ import Footer from "@/congTuCloud/components/footer/Footer.vue";
 import { getCurrentPair } from "@/utlis/dot";
 import { getAccount, getBalance } from "@/utlis";
 import { mapState, mapMutations } from "vuex";
-import { transfer, getBlockTime, batchTransfer, standardGPUPointPrice } from '@/utlis/dot/api';
-import { dbc_info, GetGpu_Info, GetMachine_Details, Count_Details, CreateWallet, createVirOrder, rentmachine } from "@/api"
+import { transfer, getBlockTime, batchTransfer, standardGPUPointPrice, dbcPriceOcw } from '@/utlis/dot/api';
+import { GetGpu_Info, GetMachine_Details, Count_Details, CreateWallet, createVirOrder, rentmachine, getPercentage, getMachineInfo } from "@/api"
 export default {
   name: "virtual",
   data() {
@@ -279,23 +278,8 @@ export default {
           power: 0
         }
       ],
-      options:[
-        {
-          value: '',
-          label: this.$t('virtual.All')
-        }, {
-          value: 'rented',
-          label: this.$t('virtual.Rented')
-        }, {
-          value: 'online',
-          label: this.$t('virtual.Idle')
-        }
-      ],
       options1:[
         {
-          value: '',
-          label: this.$t('virtual.All')
-        }, {
           value: '1',
           label: '1'
         }, {
@@ -328,6 +312,52 @@ export default {
         }
       ],
       tableData: [],
+      tableDataDefulat: [
+        {
+          type: "GeForceGTX1660S",
+          power: 42.08
+        },
+        {
+          type: "GeForceRTX3060",
+          power: 65.67
+        },
+        {
+          type: "GeForceRTX2080Ti",
+          power: 68.25
+        },
+        {
+          type: "GeForceRTX3060Ti",
+          power: 68.79
+        },
+        {
+          type: "GeForceRTX3070",
+          power: 74.39
+        },
+        {
+          type: "GeForceRTX3070Ti",
+          power: 75.71
+        },
+        {
+          type: "GeForceRTX3080",
+          power: 89.96
+        },
+        {
+          type: "GeForceRTX3080Ti",
+          power: 99.01
+        },
+        {
+          type: "NVIDIA A4000",
+          power: 103.51
+        },
+        {
+          type: "NVIDIA A5000",
+          power: 103.51
+        },
+        {
+          type: "GeForceRTX3090",
+          power: 115.45
+        }
+      ],
       Machine_info: [],
       All_Machine: 0,
       Idle_Machine: 0,
@@ -347,12 +377,18 @@ export default {
         width: "65px",
         left: "92px",
       },
-      GPUPointPrice: 0.028229
+      GPUPointPrice: 0.028229,
+      DBCPercentage: 0,
+      refresh: null,
+      startConfirm: false,
+      max_vir_mem: 0
     };
   },
   beforeMount() {
-    dbc_info().then( res => {
-      this.dbc_price = res.content.dbc_price
+    getPercentage().then(res => {
+      if (res.success) {
+        this.DBCPercentage = res.content.percentage / 100
+      }
     })
   },
   mounted() {
@@ -360,6 +396,11 @@ export default {
       this.$refs.virtualBox.style.marginBottom = "0px";
     }
     this.getGpuList()
+  },
+  beforeDestroy() {
+    if(this.refresh){
+      clearInterval(this.refresh)
+    }
   },
   watch: {
     
@@ -371,13 +412,16 @@ export default {
     ...mapMutations(['setPassWard']),
     getGpuList(){
       GetGpu_Info().then(res => {
-        this.Gpu_Type.map( el1 =>{
-          res.map(el => {
-            if( el == el1.type){
-              this.tableData.push(el1)
+        for (let i=0; i< this.Gpu_Type.length; i++) {
+          for (let k=0; k< res.length; k++) {
+            if(res[k] == this.Gpu_Type[i].type) {
+              this.tableData.push(this.Gpu_Type[i])
             }
-          })
-        })
+          }
+        }
+        if ( !this.tableData.length ) {
+          this.tableData = this.tableDataDefulat
+        }
         this.active = this.tableData[0] ? this.tableData[0].type : ''
         this.Computing_Power = this.tableData[0] ? this.tableData[0].power : 0
         this.getList(this.active , this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
@@ -399,7 +443,6 @@ export default {
         delete data['machine_status']
       }
       GetMachine_Details(data).then( async (res) => {
-        console.log(res);
         res.list.map( (el, i) => {
           if(el.operator){
             el.machine_name = this.byteToStr(JSON.parse(el.operator))
@@ -413,7 +456,17 @@ export default {
             this.All_Machine = res1.count[str]?res1.count[str]:0
             this.Idle_Machine = res1.sum[str]?res1.sum[str]:0
           })
+          if(this.refresh){
+            clearInterval(this.refresh)
+          }
+          this.refresh = setInterval( async () => {
+            let DBCprice1 = await dbcPriceOcw()
+            this.dbc_price = DBCprice1/1000000
+            this.getList(this.active , this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+          }, 60000)
         }
+        let DBCprice1 = await dbcPriceOcw()
+        this.dbc_price = DBCprice1/1000000
         let online_block = await getBlockTime();
         const GPUPrice = await standardGPUPointPrice()
         this.GPUPointPrice = GPUPrice.gpu_price/1000000
@@ -519,23 +572,31 @@ export default {
         return;
       }
       this.chooseMac = el;
+      getMachineInfo({machine_id: el.machine_id}).then(res => {
+        if (res.success) {
+          this.max_vir_mem = parseInt(res.content.mem.free)
+        }
+      })
       this.useTime = 1;
       this.dialogFormVisible = true;
-      this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*this.GPUPointPrice*this.useTime)
-      this.totalDbc = Math.ceil(this.getnum2(Number(this.chooseMac.calc_point)/100*this.GPUPointPrice*this.useTime/this.dbc_price)) + 10
+      const getprice = Number(this.chooseMac.calc_point)/100 * this.GPUPointPrice * (1 + this.DBCPercentage)
+      this.totalMoney = this.getnum2(getprice * this.useTime)
+      this.totalDbc = Math.ceil(this.getnum2(getprice * this.useTime/this.dbc_price)) + 10
     },
     inputNum(val){
       if(!this.openCheck){
-        this.totalMoney = this.getnum2(Number(this.chooseMac.calc_point)/100*this.GPUPointPrice*val)
-        this.totalDbc = Math.ceil(this.getnum2(Number(this.chooseMac.calc_point)/100*this.GPUPointPrice*val/this.dbc_price)) + 10
+        const getprice = Number(this.chooseMac.calc_point)/100 * this.GPUPointPrice * (1 + this.DBCPercentage)
+        this.totalMoney = this.getnum2(getprice * val)
+        this.totalDbc = Math.ceil(this.getnum2(getprice * val/this.dbc_price)) + 10
       }else{
         this.totalCalc = 0
         this.totalMoney = 0
         this.totalDbc = 0
         this.checkedCities.map( el=>{
           this.totalCalc += Number(el.calc_point)
-          this.totalMoney += Number(this.getnum2(Number(el.calc_point)/100*this.GPUPointPrice*this.useTime))
-          this.totalDbc += (Math.ceil(this.getnum2(Number(el.calc_point)/100*this.GPUPointPrice*this.useTime/this.dbc_price)) + 10)
+          const getprice = Number(el.calc_point)/100*this.GPUPointPrice * (1 + this.DBCPercentage)
+          this.totalMoney += Number(this.getnum2(getprice*this.useTime))
+          this.totalDbc += (Math.ceil(this.getnum2(getprice*this.useTime/this.dbc_price)) + 10)
         })
         this.totalMoney = this.getnum2(this.totalMoney)
         // this.totalMoney = this.getnum2(Number(this.totalCalc)/100*this.GPUPointPrice*val)
@@ -547,7 +608,7 @@ export default {
       this.checkedCities = []
       this.Machine_info.map( el => {
         if(val){
-          if(el.machine_status != 'online'){
+          if(el.machine_status == 'online'){
             this.checkedCities.push(el.machine_id)
           }
         }
@@ -581,12 +642,11 @@ export default {
         this.totalDbc = 0
         this.checkedCities.map( el=>{
           this.totalCalc += Number(el.calc_point)
-          this.totalMoney += Number(this.getnum2(Number(el.calc_point)/100*this.GPUPointPrice*this.useTime))
-          this.totalDbc += (Math.ceil(this.getnum2(Number(el.calc_point)/100*this.GPUPointPrice*this.useTime/this.dbc_price)) + 10)
+          const getprice = Number(el.calc_point)/100*this.GPUPointPrice * (1 + this.DBCPercentage)
+          this.totalMoney += Number(this.getnum2(getprice*this.useTime))
+          this.totalDbc += (Math.ceil(this.getnum2(getprice*this.useTime/this.dbc_price)) + 10)
         })
         this.totalMoney = this.getnum2(this.totalMoney)
-        // this.totalMoney = this.getnum2(Number(this.totalCalc)/100*this.GPUPointPrice*this.useTime)
-        // this.totalDbc = Math.ceil(this.getnum2(Number(this.totalCalc)/100*this.GPUPointPrice*this.useTime/this.dbc_price)) + 10
         this.dialogFormVisible = true;
       }else{
         this.$message({
@@ -598,6 +658,7 @@ export default {
     },
     async confirm(){
       this.btnloading = true;
+      this.startConfirm = true;
       let { balance } = await getBalance()
       if (balance < this.totalDbc+1) {
         this.$message.error(this.$t('lessdbc'))
@@ -611,10 +672,10 @@ export default {
           let orderdata = {
             id: this.checkedCities[i].machine_id+this.wallet_address,
             machine_id: this.checkedCities[i].machine_id,
-            dollar: this.getnum2(Number(this.checkedCities[i].calc_point)/100*this.GPUPointPrice),
+            dollar: this.getnum2(Number(this.checkedCities[i].calc_point)/100*this.GPUPointPrice * (1 + this.DBCPercentage)),
             day: this.useTime,
-            count: this.getnum2(Number(this.checkedCities[i].calc_point)/100*this.GPUPointPrice*this.useTime),
-            dbc: Math.ceil(this.getnum2(Number(this.checkedCities[i].calc_point)/100*this.GPUPointPrice*this.useTime/this.dbc_price)) + 10,
+            count: this.getnum2(Number(this.checkedCities[i].calc_point)/100*this.GPUPointPrice * (1 + this.DBCPercentage)*this.useTime),
+            dbc: Math.ceil(this.getnum2(Number(this.checkedCities[i].calc_point)/100*this.GPUPointPrice * (1 + this.DBCPercentage) *this.useTime/this.dbc_price)) + 10,
             wallet: this.wallet_address
           }
           let order = await createVirOrder(orderdata)
@@ -632,6 +693,7 @@ export default {
           this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
             confirmButtonText: this.$t('confirm'),
             cancelButtonText:  this.$t('cancel'),
+            inputType:'password',
             inputValue: this.passward
           })
           .then( ({ value }) => {
@@ -670,9 +732,11 @@ export default {
                     });
                   }
                   this.btnloading = false;
+                  this.startConfirm = false;
                 })
                 .catch(err => {
                   this.btnloading = false;
+                  this.startConfirm = false;
                   this.$message({
                     showClose: true,
                     message: this.$t('virtual.tip5'),
@@ -681,6 +745,7 @@ export default {
                 })
               }else{
                 this.btnloading = false;
+                this.startConfirm = false;
                 this.$message({
                   showClose: true,
                   message: res1.msg,
@@ -690,6 +755,7 @@ export default {
             })
           }).catch(() => {
             this.btnloading = false;
+            this.startConfirm = false;
             console.log('取消下单');
           });
         }
@@ -697,7 +763,7 @@ export default {
         let permas = {
           id: this.chooseMac.machine_id+this.wallet_address,
           machine_id: this.chooseMac.machine_id,
-          dollar: this.getnum2(Number(this.chooseMac.calc_point)/100*this.GPUPointPrice),
+          dollar: this.getnum2(Number(this.chooseMac.calc_point)/100*this.GPUPointPrice * (1 + this.DBCPercentage)),
           day: this.useTime,
           count: this.totalMoney,
           dbc: this.totalDbc,
@@ -713,10 +779,12 @@ export default {
                 this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
                   confirmButtonText: this.$t('confirm'),
                   cancelButtonText:  this.$t('cancel'),
+                  inputType:'password',
                   inputValue: this.passward
                 })
                 .then( ({ value }) => {
                   this.setPassWard(value)
+                  console.log('transfer-Start');
                   transfer(res1.content.wallet, `${this.totalDbc}.${res1.content.nonce}`, value, (res2) => {
                     console.log(res2, 'transfer');
                     if(res2.success){
@@ -741,9 +809,11 @@ export default {
                           }, 2000);
                         }
                         this.btnloading = false;
+                        this.startConfirm = false;
                       })
                     }else{
                       this.btnloading = false;
+                      this.startConfirm = false;
                       this.$message({
                         showClose: true,
                         message: res2.msg,
@@ -753,10 +823,12 @@ export default {
                   })
                 }).catch(() => {
                   this.btnloading = false;
+                  this.startConfirm = false;
                   console.log('取消下单');
                 });
               } else {
                 this.btnloading = false;
+                this.startConfirm = false;
                 this.$message({
                   showClose: true,
                   message: this.$t('virtual.tip6'),
@@ -766,9 +838,11 @@ export default {
             })
             .catch(() => {
               this.btnloading = false;
+              this.startConfirm = false;
             })
           }else{
             this.btnloading = false;
+            this.startConfirm = false;
             this.$message({
               showClose: true,
               message: this.$t('virtual.tip5'),
@@ -803,6 +877,7 @@ export default {
     text-align: center;
     .naviBtn {
       width: 280px;
+      font-size: 16px;
       color: $textColor_gray;
       border-color: $textColor_gray;
       &.active,
@@ -850,7 +925,7 @@ export default {
       flex-wrap: wrap;
       align-items: center;
       .topitem{
-        font-size: 14px;
+        font-size: 16px;
         margin-right: 40px;
         margin-bottom: 20px;
         .select{
@@ -882,7 +957,7 @@ export default {
     .tableli{
       width: 100%;
       padding: 10px;
-      font-size: 12px;
+      font-size: 14px;
       box-sizing: border-box;
       border: 1px solid #999;
       margin-bottom: 15px;
@@ -914,7 +989,7 @@ export default {
         align-items: center;
         span{
           width: 20%;
-          margin-bottom: 12px;
+          margin-bottom: 14px;
           word-break: break-all;
           &.width50{
             width: 50%;

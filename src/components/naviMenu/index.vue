@@ -43,6 +43,7 @@ export default {
     text-align: center;
     .naviBtn {
       width: 280px;
+      font-size: 16px;
       color: $textColor_gray;
       border-color: $textColor_gray;
       &.active,
