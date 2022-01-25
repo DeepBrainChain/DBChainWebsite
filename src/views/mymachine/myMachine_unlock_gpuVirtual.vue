@@ -137,6 +137,8 @@
               <span >{{$t('myvirtual.vir_cpu_num')}}: {{item.cpu_cores}}</span>
               <span>{{$t('myvirtual.vnc_port')}}: {{item.vnc_port}}</span>
               <span >{{$t('myvirtual.open_port_range')}}: {{item.port_min}} - {{item.port_max}}</span>
+              <span >{{$t('myvirtual.rdp_port')}}: {{item.rdp_port? item.rdp_port: ''}}</span>
+              <span >{{$t('myvirtual.multicast')}}: {{item.multicast? item.multicast.toString(): ''}}</span>
             </div>
           </div>
         </div>
@@ -295,6 +297,18 @@
       </div>
       <div class="useTime">
         <div>
+          <span class="width12 bold">{{$t('myvirtual.operation')}}: </span>
+          <el-select class='select' v-model="operation_system" size='mini' @change='changeOp' placeholder="choose">
+            <el-option label='windows' value='windows'></el-option>
+            <el-option label='ubuntu' value='ubuntu'></el-option>
+          </el-select>
+        </div>
+      </div>
+      <div class="fs12">
+        {{$t('myvirtual.tip11')}}
+      </div>
+      <div class="useTime">
+        <div>
           <span class="width12 bold">{{$t('myvirtual.ssh_port')}}: </span>
           <el-input-number :precision="0" size="mini" v-model="port_range" :min="5600" :max="5899"></el-input-number>
         </div>
@@ -331,9 +345,25 @@
       <div class="fs12">
         {{$t('myvirtual.tip7')}}
       </div>
+      <div class="useTime">
+        <div style="align-items: center; display: flex">
+          <span class="width12 bold">{{$t('myvirtual.multicast')}}: </span>
+          <el-input
+            type="textarea"
+            autosize
+            style="width: 250px"
+            size="mini"
+            placeholder="224.0.0.0,239.255.255.255"
+            v-model="multicast">
+          </el-input>
+        </div>
+      </div>
+      <div class="fs12">
+        {{$t('myvirtual.tip12')}}
+      </div>
       <div slot="footer" class="dialog-footer">
         <el-button class="batch" size="mini" plain :loading='btnloading1' @click="Createvirtual">{{$t('myvirtual.Confirm_create')}}</el-button>
-        <el-button class="batch" size="mini" plain @click="dialogFormVisible1 = false">{{$t('virtual.cancal')}}</el-button>
+        <el-button class="batch" size="mini" plain @click="dialogFormVisible1 = false;btnloading1 = false">{{$t('virtual.cancal')}}</el-button>
       </div>
     </el-dialog>
 
@@ -512,6 +542,9 @@ export default {
       dialogFormVisible1: false,
       option: [],
       image_name: '',
+      multicast:'',
+      operation_system: '',
+      bios_mode: '',
       vir_mem: 0.1,
       vir_cpu_num: 4,
       vir_gpu_num: 1,
@@ -983,6 +1016,9 @@ export default {
         }
       })
     },
+    changeOp(val){
+      console.log(val, 'val')
+    },
     // 创建、修改 虚拟机
     operateVirtual(str, data) {
       getMachineInfo({machine_id: data.machine_id}).then(res => {
@@ -1006,7 +1042,11 @@ export default {
       }
     },
     Selectimage(val) {
-      console.log(val, 'val')
+      if (val == 'ubuntu') {
+        this.bios_mode = 'legacy'
+      } else {
+        this.bios_mode = 'uefi'
+      }
     },
     Createvirtual(){
       this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
@@ -1020,6 +1060,15 @@ export default {
           let nonce = await randomWord()
           let sign = await CreateSignature(nonce, value)
           this.btnloading1 = true
+          let multicastArr;
+          if (this.multicast == ''){
+            multicastArr = []
+          } else {
+            multicastArr = this.multicast.split(',').map(el => {
+              el = el+':5558'
+              return el
+            })
+          }
           let perams = {
             id: this.chooseMac._id,
             machine_id: this.chooseMac.machine_id,
@@ -1032,6 +1081,10 @@ export default {
             mem_rate: this.vir_mem,
             disk_size: this.vir_disk_size,
             vnc_port: this.vnc_port,
+            rdp_port: this.rdp_port,
+            operation_system: this.operation_system,
+            bios_mode: this.bios_mode,
+            multicast: JSON.stringify(multicastArr),
             nonce: nonce,
             sign: sign,
             wallet: this.wallet_address
@@ -1041,6 +1094,13 @@ export default {
             if(res.success){
               // el.virtual_info = VMS_Info.content
               this.$message.success(this.$t('myvirtual.Build_success'))
+              let chooseIndex;
+              this.Machine_info.map((el, index) => {
+                if (el._id == this.chooseMac._id) {
+                  chooseIndex = index
+                }
+              })
+              this.$set(this.Machine_info[chooseIndex], 'virtual_info', res.content)
             }else{
               // this.$message.error(this.$t('myvirtual.Build_fails'))
               this.$message.error(res.msg)
@@ -1377,7 +1437,7 @@ export default {
           align-items: center;
           padding-top: 10px;
           span{
-            width: 16%;
+            width: 25%;
             margin-bottom: 6px;
             word-break: break-all;
             &.width50{

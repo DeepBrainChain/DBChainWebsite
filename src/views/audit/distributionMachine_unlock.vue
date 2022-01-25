@@ -668,6 +668,7 @@ export default {
         this.formInline.gpu_type = ''
         this.select = false
         this.select1 = false
+        this.choosecoe = false
         this.formInline.machine_id = item.machine_id
         this.formInline.data_disk = item.disk_data && parseInt(item.disk_data.size)
         this.formInline.cpu_type =  item.cpu && item.cpu.type
@@ -708,6 +709,7 @@ export default {
                 this.formInline.machine_id = item.machine_id
                 this.select = true
                 this.select1 = true
+                this.choosecoe = true
                 this.formInline.is_support = res1.content?String(res1.content.is_support):'0'
                 this.dialogTableVisible1 = true
                 this.radioDisabled = true
@@ -836,6 +838,8 @@ export default {
             this.setPassWard(this.formInline.passward)
             
             let params = {
+              coefficient: this.formInline.coefficient,
+              coe: this.formInline.coe,
               machine_id: this.formInline.machine_id,
               gpu_type: this.formInline.gpu_type,
               gpu_num: parseInt(this.formInline.gpu_num),
