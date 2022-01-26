@@ -128,17 +128,18 @@
               <span>{{$t('myvirtual.IP_address')}}: {{item.ssh_ip}}</span>
               <span>{{$t('myvirtual.user_name')}}: {{item.user_name}}</span>
               <span>{{$t('myvirtual.password')}}: {{item.login_password}}</span>
-              <span>{{$t('myvirtual.ssh_port')}}: {{item.ssh_port}}</span>
+              <span v-if="item.os == 'ubuntu'">{{$t('myvirtual.ssh_port')}}: {{item.ssh_port}}</span>
               <!-- <span>{{$t('myvirtual.port_range')}}: 600~6000</span> -->
               <span>{{$t('myvirtual.vir_mem')}}: {{item.mem_size}}</span>
               <span >{{$t('myvirtual.vir_sys')}}: {{item.disk_system}}</span>
               <span>{{$t('myvirtual.vir_data')}}: {{item.disk_data}}</span>
               <span>{{$t('myvirtual.vir_gpu_num')}}: {{item.gpu_count}}</span>
               <span >{{$t('myvirtual.vir_cpu_num')}}: {{item.cpu_cores}}</span>
-              <span>{{$t('myvirtual.vnc_port')}}: {{item.vnc_port}}</span>
+              <span >{{$t('myvirtual.vnc_port')}}: {{item.vnc_port}}</span>
               <span >{{$t('myvirtual.open_port_range')}}: {{item.port_min}} - {{item.port_max}}</span>
-              <span >{{$t('myvirtual.rdp_port')}}: {{item.rdp_port? item.rdp_port: ''}}</span>
+              <span v-if="item.os != 'ubuntu'">{{$t('myvirtual.rdp_port')}}: {{item.rdp_port? item.rdp_port: ''}}</span>
               <span >{{$t('myvirtual.multicast')}}: {{item.multicast? item.multicast.toString(): ''}}</span>
+              <span style="width: 50%">{{$t('myvirtual.local_address')}}: {{item.local_address? item.local_address.toString(): ''}}</span>
             </div>
           </div>
         </div>
@@ -256,6 +257,18 @@
     <el-dialog width='30%' :title="title" :visible.sync="dialogFormVisible1">
       <div class="useTime">
         <div>
+          <span class="width12 bold">{{$t('myvirtual.operation')}}: </span>
+          <el-select class='select' v-model="operation_system" size='mini' @change='changeOp' placeholder="choose">
+            <el-option label='windows' value='windows'></el-option>
+            <el-option label='ubuntu' value='ubuntu'></el-option>
+          </el-select>
+        </div>
+      </div>
+      <!-- <div class="fs12">
+        {{$t('myvirtual.tip11')}}
+      </div> -->
+      <div class="useTime">
+        <div>
           <span class="width12 bold">{{$t('myvirtual.mirror_name')}}: </span>
           <el-select class='select' v-model="image_name" size='mini' @change='Selectimage' placeholder="choose">
             <el-option
@@ -295,36 +308,24 @@
         </div>
         <div>{{$t('myvirtual.max_set')}}: {{max_disk_num}}G</div>
       </div>
-      <div class="useTime">
-        <div>
-          <span class="width12 bold">{{$t('myvirtual.operation')}}: </span>
-          <el-select class='select' v-model="operation_system" size='mini' @change='changeOp' placeholder="choose">
-            <el-option label='windows' value='windows'></el-option>
-            <el-option label='ubuntu' value='ubuntu'></el-option>
-          </el-select>
-        </div>
-      </div>
-      <div class="fs12">
-        {{$t('myvirtual.tip11')}}
-      </div>
-      <div class="useTime">
+      <div class="useTime" v-show='!is_ubunto'>
         <div>
           <span class="width12 bold">{{$t('myvirtual.ssh_port')}}: </span>
           <el-input-number :precision="0" size="mini" v-model="port_range" :min="5600" :max="5899"></el-input-number>
         </div>
       </div>
-      <div class="fs12">
-        {{$t('myvirtual.tip8')}}
-      </div>
-      <div class="useTime">
+      <div class="useTime" v-show='is_ubunto'>
         <div>
           <span class="width12 bold">{{$t('myvirtual.rdp_port')}}: </span>
           <el-input-number :precision="0" size="mini" v-model="rdp_port" :min="5600" :max="5899"></el-input-number>
         </div>
       </div>
       <div class="fs12">
-        {{$t('myvirtual.tip8')}}{{$t('myvirtual.tip10')}}
+        {{$t('myvirtual.tip8')}}
       </div>
+      <!-- <div class="fs12">
+        {{$t('myvirtual.tip8')}}
+      </div> -->
       <div class="useTime">
         <div>
           <span class="width12 bold">{{$t('myvirtual.vnc_port')}}: </span>
@@ -577,7 +578,8 @@ export default {
       dialogFormVisible3: false,
       GPUPointPrice: 0.028229,
       DBCPercentage: 0,
-      startConfirm: false
+      startConfirm: false,
+      is_ubunto: false
     };
   },
 
@@ -1018,6 +1020,15 @@ export default {
     },
     changeOp(val){
       console.log(val, 'val')
+      if (val == 'ubuntu') {
+        this.bios_mode = 'legacy'
+        this.is_ubunto = false
+        this.port_range = ''
+      } else {
+        this.bios_mode = 'uefi'
+        this.is_ubunto = true
+        this.rdp_port = ''
+      }
     },
     // 创建、修改 虚拟机
     operateVirtual(str, data) {
@@ -1042,11 +1053,7 @@ export default {
       }
     },
     Selectimage(val) {
-      if (val == 'ubuntu') {
-        this.bios_mode = 'legacy'
-      } else {
-        this.bios_mode = 'uefi'
-      }
+      
     },
     Createvirtual(){
       this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {

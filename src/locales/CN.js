@@ -1146,6 +1146,7 @@ export default {
     rdp_port: 'RDP端口',
     operation: '操作系统',
     multicast: '组播地址',
+    local_address:'内网IP地址',
     open_port_range: '开放端口范围',
     port_range: '端口范围',
     vnc_port: 'VNC端口',
