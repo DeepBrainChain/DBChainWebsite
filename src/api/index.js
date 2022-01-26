@@ -1037,7 +1037,7 @@ export const get_cpu_order_id_list = params => {
 // http://localhost:8090
 // 审核机器新增
 
-const nodeHost = 'http://localhost:8090'
+const nodeHost = 'http://114.115.219.202:8090'
 
 /**
  * @description 获取待审核列表
