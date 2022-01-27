@@ -526,7 +526,7 @@ export default {
       } else if (this.$t("website_name") == "changhe") {
         this.logo = require("../../assets/imgs/changhe@1x.png");
       } else if (this.$t("website_name") == "tycloud") {
-        this.logo = require("../../assets/imgs/tycloud@1x.png");
+        this.logo = require("../../assets/imgs/tianyucloud.png");
       }
     },
     pushMenu(name) {

@@ -6,7 +6,7 @@ export default {
    ** 如果是法币聪图云模式，要把根目录下public/index.html 中脚本的 websiteNameIsCongtuCloud变量 修改为true
    */
   webtype: "1", //0:表示法币支付网站,1:表示dbc支付网站
-  website_name: "dbchain", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab,congTuCloud
+  website_name: "dbchain", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab,congTuCloud,tycloud
   display_select_rent_platform: "0", //0：不显示机器出租的云平台选项，1:显示出租的云平台选项
   //alpha-dbchain/aichriscloud/deepbit/vnxmart/aiaicloud/snbt/heekmind/redstonewill/rocketai/aicv/\shareaiot\freegpu\boincplanet\topgpu\thinkotech
   //coolgpu\scclouds\nvidiaai\deligpu\longway\sharedgpu\aipower\cvstudy\gpuhub\district51\deepmind\transportation\planetc\sdnu\freegputop\tensorgpu
@@ -563,7 +563,7 @@ export default {
   footer_service_codefate: "wangming1785@foxmail.com", //9.17 19:33
   footer_service_changhe: "changhecloud@outlook.com", //9.17 19:33
   footer_service_dpool: "hello@decentral.cc", //9.17 19:33
-  footer_service_tycloud: "tyhctech@hotmail.com", //9.17 19:33
+  footer_service_tycloud: "tyhctech@gmail.com", //9.17 19:33
 
   list_start_rentout: "分钟后可租用", //9.17 19:33
   list_can_rentout: "用户现在可租用", //9.17 19:33

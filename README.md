@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 # dbchain
 
 ## Project setup
@@ -27,13 +25,3 @@ npm run test
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-=======
-# DBChainWebsite
-DBChain Website
->>>>>>> 96795db (Initial commit)
-=======
-# DBChainWebsite
-DBChain Website
->>>>>>> 96795dbe6eb3ceaf01a1b76103080ced68ef14ed
