@@ -844,7 +844,7 @@ export default {
           if(this.firstLoading){
             loadingInstance.close();
             const GPUPrice = await standardGPUPointPrice()
-            this.GPUPointPrice = GPUPrice.gpu_price/1000000
+            this.GPUPointPrice = GPUPrice? GPUPrice.gpu_price/1000000 : this.GPUPointPrice
           }
           this.firstLoading = false
           this.Machine_info = res.content

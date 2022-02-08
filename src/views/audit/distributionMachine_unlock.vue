@@ -666,6 +666,7 @@ export default {
     verification(item,index){
       if (index == 1) { // 提交原始结果hash值
         this.formInline.gpu_type = ''
+        this.formInline.coefficient = ''
         this.select = false
         this.select1 = false
         this.choosecoe = false
