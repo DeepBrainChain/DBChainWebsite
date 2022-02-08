@@ -469,7 +469,7 @@ export default {
         this.dbc_price = DBCprice1/1000000
         let online_block = await getBlockTime();
         const GPUPrice = await standardGPUPointPrice()
-        this.GPUPointPrice = GPUPrice.gpu_price/1000000
+        this.GPUPointPrice = GPUPrice ? GPUPrice.gpu_price/1000000 : this.GPUPointPrice
         online_block = online_block.replace(/,/gi, '');
         this.Machine_info.map( (el) => {
           el.online = this.minsToHourMins(Math.floor((online_block-el.bonding_height)/2))
