@@ -676,7 +676,8 @@ export default {
             day: this.useTime,
             count: this.getnum2(Number(this.checkedCities[i].calc_point)/100*this.GPUPointPrice * (1 + this.DBCPercentage)*this.useTime),
             dbc: Math.ceil(this.getnum2(Number(this.checkedCities[i].calc_point)/100*this.GPUPointPrice * (1 + this.DBCPercentage) *this.useTime/this.dbc_price)) + 10,
-            wallet: this.wallet_address
+            wallet: this.wallet_address,
+            language: this.$i18n.locale
           }
           let order = await createVirOrder(orderdata)
           let wallet_info = await CreateWallet({ id: this.checkedCities[i].machine_id+this.wallet_address })
@@ -767,7 +768,8 @@ export default {
           day: this.useTime,
           count: this.totalMoney,
           dbc: this.totalDbc,
-          wallet: this.wallet_address
+          wallet: this.wallet_address,
+          language: this.$i18n.locale
         }
         createVirOrder(permas).then(res => { 
           console.log(res, 'createVirOrder');
