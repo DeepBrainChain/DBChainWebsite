@@ -363,7 +363,7 @@ export default {
     status3: 'End of order',
     status4: 'Cancel the order',
     status5: 'Refunding, please wait',
-    create_status1: 'Creating, please click the View Virtual Machine button after 5~10 minutes to view the creation result',
+    create_status1: 'Creating, please wait patiently, do not refresh the page',
     create_status2: 'Failed to create',
     time_left: 'Time left',
     order_status1:'not paid',

@@ -449,8 +449,6 @@ export default {
           }
           el.online = '···'
         })
-        this.Machine_info = res.list
-        this.total = res.total
         if(type == 'first'){
           Count_Details({ gpu_type: str }).then( res1 => {
             this.All_Machine = res1.count[str]?res1.count[str]:0
@@ -471,6 +469,8 @@ export default {
         const GPUPrice = await standardGPUPointPrice()
         this.GPUPointPrice = GPUPrice ? GPUPrice.gpu_price/1000000 : this.GPUPointPrice
         online_block = online_block.replace(/,/gi, '');
+        this.Machine_info = res.list
+        this.total = res.total
         this.Machine_info.map( (el) => {
           el.online = this.minsToHourMins(Math.floor((online_block-el.bonding_height)/2))
         })
@@ -847,7 +847,7 @@ export default {
             this.startConfirm = false;
             this.$message({
               showClose: true,
-              message: this.$t('virtual.tip5'),
+              message: res.msg,
               type: "error",
             });
           }

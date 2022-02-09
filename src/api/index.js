@@ -301,6 +301,18 @@ export const GetResultHash = data => {
   });
 };
 
+
+/**
+ * @description 定时查询虚拟机
+ * @param {object} data {machine_id, gpu, ....}
+ */
+ export const timedQueryTask = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/rentMachine/timedQueryTask',
+    data: data
+  });
+};
 /**
  * @description 查询虚拟机
  * @param {object} data {machine_id, gpu, ....}
@@ -309,6 +321,19 @@ export const GetResultHash = data => {
   return axios({
     method: "post",
     url: nodeHost + '/api/rentMachine/getVirTask',
+    data: data
+  });
+};
+
+
+/**
+ * @description 删除虚拟机
+ * @param {object} data {machine_id, gpu, ....}
+ */
+ export const deleteVir = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/rentMachine/deleteVir',
     data: data
   });
 };

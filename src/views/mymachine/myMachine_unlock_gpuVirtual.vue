@@ -94,7 +94,18 @@
             <div class="li-top">
               <div class="left fs14"><span class="bold">{{$t('myvirtual.virId')}}</span>: {{item.task_id}}</div>
               <div v-if="item.status == 'creating'">{{$t('myvirtual.create_status1')}}</div>
-              <div v-else-if="item.status == 'create error'">{{$t('myvirtual.create_status2')}}</div>
+              <div v-else-if="item.status == 'create error'">
+                <span>{{$t('myvirtual.create_status2')}}</span>
+                <el-button
+                  plain
+                  class="tool-btn"
+                  style="margin-left: 10px"
+                  size="mini"
+                  v-if="el.orderStatus == 3"
+                  @click="delect(item, el)"
+                  >{{ $t("myvirtual.delect") }}</el-button
+                >
+              </div>
               <div v-else>
                 <el-button
                   plain
@@ -104,6 +115,14 @@
                   @click="reboot(item, el)"
                   :loading='el.btnloading3'
                   >{{ $t("myvirtual.reboot") }}</el-button
+                >
+                <el-button
+                  plain
+                  class="tool-btn"
+                  size="mini"
+                  v-if="el.orderStatus == 3"
+                  @click="delect(item, el)"
+                  >{{ $t("myvirtual.delect") }}</el-button
                 >
                 <!-- <el-button
                   plain
@@ -129,6 +148,7 @@
               <span>{{$t('myvirtual.user_name')}}: {{item.user_name}}</span>
               <span>{{$t('myvirtual.password')}}: {{item.login_password}}</span>
               <span v-if="item.os == 'ubuntu'">{{$t('myvirtual.ssh_port')}}: {{item.ssh_port}}</span>
+              <span v-if="item.os != 'ubuntu'">{{$t('myvirtual.rdp_port')}}: {{item.rdp_port? item.rdp_port: ''}}</span>
               <!-- <span>{{$t('myvirtual.port_range')}}: 600~6000</span> -->
               <span>{{$t('myvirtual.vir_mem')}}: {{item.mem_size}}</span>
               <span >{{$t('myvirtual.vir_sys')}}: {{item.disk_system}}</span>
@@ -137,7 +157,6 @@
               <span >{{$t('myvirtual.vir_cpu_num')}}: {{item.cpu_cores}}</span>
               <span >{{$t('myvirtual.vnc_port')}}: {{item.vnc_port}}</span>
               <span >{{$t('myvirtual.open_port_range')}}: {{item.port_min}} - {{item.port_max}}</span>
-              <span v-if="item.os != 'ubuntu'">{{$t('myvirtual.rdp_port')}}: {{item.rdp_port? item.rdp_port: ''}}</span>
               <span >{{$t('myvirtual.multicast')}}: {{item.multicast? item.multicast.toString(): ''}}</span>
               <span style="width: 50%">{{$t('myvirtual.local_address')}}: {{item.local_address? item.local_address.toString(): ''}}</span>
             </div>
@@ -464,7 +483,9 @@ import {
   Renew_Rent,
   VMS_restart,
   getPercentage,
-  getMachineInfo
+  getMachineInfo,
+  timedQueryTask,
+  deleteVir
 } from "@/api";
 
 import {
@@ -1097,9 +1118,7 @@ export default {
             wallet: this.wallet_address
           }
           Create_VMS(perams).then( res=> {
-            console.log(res ,'res');
             if(res.success){
-              // el.virtual_info = VMS_Info.content
               this.$message.success(this.$t('myvirtual.Build_success'))
               let chooseIndex;
               this.Machine_info.map((el, index) => {
@@ -1107,7 +1126,26 @@ export default {
                   chooseIndex = index
                 }
               })
-              this.$set(this.Machine_info[chooseIndex], 'virtual_info', res.content)
+              this.Machine_info[chooseIndex].virtual_info.push(res.content)
+              let timeData = {
+                id: this.Machine_info[chooseIndex]._id,
+                machine_id: this.Machine_info[chooseIndex].machine_id,
+                task_id: res.content.task_id
+              }
+              let timetask = null
+              timetask = setInterval( async () => {
+                let timedQuery = await timedQueryTask(timeData)
+                if (timedQuery.success) {
+                  let virarr = this.Machine_info[chooseIndex].virtual_info.map(item => 
+                    item.task_id === timeData.task_id ? timedQuery.content : item
+                  )
+                  this.Machine_info[chooseIndex].virtual_info = virarr
+                }
+                if (timedQuery.content.status != 'creating') {
+                  clearInterval(timetask)
+                  timetask = null
+                }
+              }, 60000)
             }else{
               // this.$message.error(this.$t('myvirtual.Build_fails'))
               this.$message.error(res.msg)
@@ -1128,8 +1166,6 @@ export default {
       })
     },
     SeeVirtual(el) {
-      el.virtual_info = []
-      console.log(el, 'el')
       el.btnloading4 = true
       this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
         confirmButtonText: this.$t('confirm'),
@@ -1147,6 +1183,7 @@ export default {
             if (!VMS_Info.content.length) {
               this.$message.error(this.$t('myvirtual.err_msg'))
             } else {
+              el.virtual_info = []
               el.virtual_info = VMS_Info.content
             }
           }else{
@@ -1185,6 +1222,38 @@ export default {
             this.$message({
               type: 'success',
               message: this.$t('myvirtual.reboot_success')
+            });
+          }
+          el.btnloading3 = false
+        })
+      }).catch(() => {
+        el.btnloading3 = false
+        this.$message({
+          type: 'info',
+          message: this.$t('cancel')
+        });          
+      });
+    },
+    // 删除虚拟机
+    delect(item, el) {
+      this.$confirm(this.$t('myvirtual.tip13'), this.$t('myvirtual.delect'), {
+        confirmButtonText: this.$t('confirm'),
+        cancelButtonText: this.$t('cancel'),
+        type: 'warning'
+      }).then(() => {
+        deleteVir({ task_id: item.task_id, id: item.belong, machine_id: el.machine_id}).then( res => {
+          if(!res.success){
+            this.$message({
+              type: 'error',
+              message: res.msg
+            });
+          }else{
+            el.virtual_info.splice(el.virtual_info.indexOf(el.virtual_info.find(ele => {
+              return ele._id == item.task_id
+            })), 1)
+            this.$message({
+              type: 'success',
+              message: this.$t('myvirtual.delect_success')
             });
           }
           el.btnloading3 = false
