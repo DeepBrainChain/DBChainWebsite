@@ -365,7 +365,7 @@
       <div class="fs12">
         {{$t('myvirtual.tip7')}}
       </div>
-      <div class="useTime">
+      <!-- <div class="useTime">
         <div style="align-items: center; display: flex">
           <span class="width12 bold">{{$t('myvirtual.multicast')}}: </span>
           <el-input
@@ -380,7 +380,7 @@
       </div>
       <div class="fs12">
         {{$t('myvirtual.tip12')}}
-      </div>
+      </div> -->
       <div slot="footer" class="dialog-footer">
         <el-button class="batch" size="mini" plain :loading='btnloading1' @click="Createvirtual">{{$t('myvirtual.Confirm_create')}}</el-button>
         <el-button class="batch" size="mini" plain @click="dialogFormVisible1 = false;btnloading1 = false">{{$t('virtual.cancal')}}</el-button>
@@ -564,7 +564,7 @@ export default {
       dialogFormVisible1: false,
       option: [],
       image_name: '',
-      multicast:'',
+      multicast:'224.0.0.0',
       operation_system: '',
       bios_mode: '',
       vir_mem: 0.1,
@@ -1063,6 +1063,9 @@ export default {
           this.option = res.content.images
           this.dialogFormVisible1 = true
           this.chooseMac = data
+          this.vir_mem = this.max_vir_mem/2
+          this.vir_cpu_num = this.max_cpu_num/2
+          this.vir_disk_size = this.max_disk_num/2
         } else {
           this.$message.error(res.msg)
         }
@@ -1100,7 +1103,7 @@ export default {
           let perams = {
             id: this.chooseMac._id,
             machine_id: this.chooseMac.machine_id,
-            ssh_port: this.port_range,
+            ssh_port: !this.is_ubunto ? this.port_range : '',
             image_name: this.image_name,
             port_min: this.port_min,
             port_max: this.port_max,
@@ -1109,7 +1112,7 @@ export default {
             mem_rate: this.vir_mem,
             disk_size: this.vir_disk_size,
             vnc_port: this.vnc_port,
-            rdp_port: this.rdp_port,
+            rdp_port: this.is_ubunto ? this.rdp_port : '',
             operation_system: this.operation_system,
             bios_mode: this.bios_mode,
             multicast: JSON.stringify(multicastArr),
@@ -1154,6 +1157,7 @@ export default {
             this.dialogFormVisible1 = false
           })
         } catch (err) {
+          this.btnloading1 = false
           this.$message({
             showClose: true,
             message: err.message,
@@ -1182,10 +1186,9 @@ export default {
           if(VMS_Info.success){
             if (!VMS_Info.content.length) {
               this.$message.error(this.$t('myvirtual.err_msg'))
-            } else {
-              el.virtual_info = []
-              el.virtual_info = VMS_Info.content
             }
+            el.virtual_info = []
+            el.virtual_info = VMS_Info.content
           }else{
             this.$message.error(VMS_Info.msg)
           }
