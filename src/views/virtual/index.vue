@@ -661,6 +661,8 @@ export default {
       this.startConfirm = true;
       let { balance } = await getBalance()
       if (balance < this.totalDbc+1) {
+        this.btnloading = false;
+        this.startConfirm = false;
         this.$message.error(this.$t('lessdbc'))
         return false
       }

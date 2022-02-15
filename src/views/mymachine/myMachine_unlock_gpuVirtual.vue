@@ -93,6 +93,18 @@
           <div class="v-list"  v-for="item in el.virtual_info" :key="item.task_id">
             <div class="li-top">
               <div class="left fs14"><span class="bold">{{$t('myvirtual.virId')}}</span>: {{item.task_id}}</div>
+              <div>
+                <span v-show="item.status == 'closed'">{{$t('myvirtual.vir_status')}}</span>
+                <span v-show="item.status == 'creating'">{{$t('myvirtual.vir_status1')}}</span>
+                <span v-show="item.status == 'running'">{{$t('myvirtual.vir_status2')}}</span>
+                <span v-show="item.status == 'starting'">{{$t('myvirtual.vir_status3')}}</span>
+                <span v-show="item.status == 'stopping'">{{$t('myvirtual.vir_status4')}}</span>
+                <span v-show="item.status == 'restarting'">{{$t('myvirtual.vir_status5')}}</span>
+                <span v-show="item.status == 'resetting'">{{$t('myvirtual.vir_status6')}}</span>
+                <span v-show="item.status == 'start error'">{{$t('myvirtual.vir_status7')}}</span>
+                <span v-show="item.status == 'restart error'">{{$t('myvirtual.vir_status8')}}</span>
+                <span v-show="item.status == 'pm_suspended'">{{$t('myvirtual.vir_status9')}}</span>
+              </div>
               <div v-if="item.status == 'creating'">{{$t('myvirtual.create_status1')}}</div>
               <div v-else-if="item.status == 'create error'">
                 <span>{{$t('myvirtual.create_status2')}}</span>
@@ -111,16 +123,31 @@
                   plain
                   class="tool-btn"
                   size="mini"
-                  v-if="el.orderStatus == 3 || el.orderStatus == 2 "
+                  v-if="el.orderStatus == 3 && item.status == 'running'"
+                  @click="stopVir(item, el)"
+                  >{{ $t("myvirtual.stop") }}</el-button
+                >
+                <el-button
+                  plain
+                  class="tool-btn"
+                  size="mini"
+                  v-if="el.orderStatus == 3 && item.status == 'closed'"
+                  @click="startVir(item, el)"
+                  >{{ $t("myvirtual.start") }}</el-button
+                >
+                <el-button
+                  plain
+                  class="tool-btn"
+                  size="mini"
+                  v-if="el.orderStatus == 3 && item.status == 'running'"
                   @click="reboot(item, el)"
-                  :loading='el.btnloading3'
                   >{{ $t("myvirtual.reboot") }}</el-button
                 >
                 <el-button
                   plain
                   class="tool-btn"
                   size="mini"
-                  v-if="el.orderStatus == 3"
+                  v-if="el.orderStatus == 3 || el.orderStatus == 2"
                   @click="delect(item, el)"
                   >{{ $t("myvirtual.delect") }}</el-button
                 >
@@ -485,7 +512,9 @@ import {
   getPercentage,
   getMachineInfo,
   timedQueryTask,
-  deleteVir
+  deleteVir,
+  stopVir,
+  startVir
 } from "@/api";
 
 import {
@@ -1215,13 +1244,51 @@ export default {
         cancelButtonText: this.$t('cancel'),
         type: 'warning'
       }).then(() => {
-        VMS_restart({ task_id: item.task_id, id: item.belong, machine_id: el.machine_id}).then( res => {
+        VMS_restart({ task_id: item.task_id, id: item.belong, machine_id: el.machine_id}).then( async (res) => {
           if(!res.success){
             this.$message({
               type: 'error',
               message: res.msg
             });
           }else{
+            let timeData = {
+              id: item.belong,
+              machine_id: el.machine_id,
+              task_id: item.task_id
+            }
+            let timedQuery1 = await timedQueryTask(timeData)
+            let chooseIndex1;
+            this.Machine_info.map((ele, index) => {
+              if (ele._id == item.belong) {
+                chooseIndex1 = index
+              }
+            })
+            if (timedQuery1.success) {
+              let virarr1 = this.Machine_info[chooseIndex1].virtual_info.map(ele => 
+                ele.task_id === timeData.task_id ? timedQuery1.content : ele
+              )
+              this.Machine_info[chooseIndex1].virtual_info = virarr1
+            }
+            let timetask = null
+            timetask = setInterval( async () => {
+              let timedQuery = await timedQueryTask(timeData)
+              let chooseIndex;
+              this.Machine_info.map((ele, index) => {
+                if (ele._id == item.belong) {
+                  chooseIndex = index
+                }
+              })
+              if (timedQuery.success) {
+                let virarr = this.Machine_info[chooseIndex].virtual_info.map(ele => 
+                  ele.task_id === timeData.task_id ? timedQuery.content : ele
+                )
+                this.Machine_info[chooseIndex].virtual_info = virarr
+              }
+              if (timedQuery.content.status == 'running' || timedQuery.content.status == 'error') {
+                clearInterval(timetask)
+                timetask = null
+              }
+            }, 20000)
             this.$message({
               type: 'success',
               message: this.$t('myvirtual.reboot_success')
@@ -1257,6 +1324,138 @@ export default {
             this.$message({
               type: 'success',
               message: this.$t('myvirtual.delect_success')
+            });
+          }
+          el.btnloading3 = false
+        })
+      }).catch(() => {
+        el.btnloading3 = false
+        this.$message({
+          type: 'info',
+          message: this.$t('cancel')
+        });          
+      });
+    },
+    stopVir(item, el) {
+      this.$confirm(this.$t('myvirtual.tip14'), this.$t('myvirtual.stop'), {
+        confirmButtonText: this.$t('confirm'),
+        cancelButtonText: this.$t('cancel'),
+        type: 'warning'
+      }).then(() => {
+        stopVir({ task_id: item.task_id, id: item.belong, machine_id: el.machine_id}).then( async (res) => {
+          if(!res.success){
+            this.$message({
+              type: 'error',
+              message: res.msg
+            });
+          }else{
+            let timeData = {
+              id: item.belong,
+              machine_id: el.machine_id,
+              task_id: item.task_id
+            }
+            let timedQuery1 = await timedQueryTask(timeData)
+            let chooseIndex1;
+            this.Machine_info.map((ele, index) => {
+              if (ele._id == item.belong) {
+                chooseIndex1 = index
+              }
+            })
+            if (timedQuery1.success) {
+              let virarr1 = this.Machine_info[chooseIndex1].virtual_info.map(ele => 
+                ele.task_id === timeData.task_id ? timedQuery1.content : ele
+              )
+              this.Machine_info[chooseIndex1].virtual_info = virarr1
+            }
+            let timetask = null
+            timetask = setInterval( async () => {
+              let timedQuery = await timedQueryTask(timeData)
+              let chooseIndex;
+              this.Machine_info.map((ele, index) => {
+                if (ele._id == item.belong) {
+                  chooseIndex = index
+                }
+              })
+              if (timedQuery.success) {
+                let virarr = this.Machine_info[chooseIndex].virtual_info.map(ele => 
+                  ele.task_id === timeData.task_id ? timedQuery.content : ele
+                )
+                this.Machine_info[chooseIndex].virtual_info = virarr
+              }
+              if (timedQuery.content.status == 'closed' || timedQuery.content.status == 'error') {
+                clearInterval(timetask)
+                timetask = null
+              }
+            }, 20000)
+            this.$message({
+              type: 'success',
+              message: this.$t('myvirtual.stop_success')
+            });
+          }
+          el.btnloading3 = false
+        })
+      }).catch(() => {
+        el.btnloading3 = false
+        this.$message({
+          type: 'info',
+          message: this.$t('cancel')
+        });          
+      });
+    },
+    startVir(item, el) {
+      this.$confirm(this.$t('myvirtual.tip15'), this.$t('myvirtual.stop'), {
+        confirmButtonText: this.$t('confirm'),
+        cancelButtonText: this.$t('cancel'),
+        type: 'warning'
+      }).then(() => {
+        startVir({ task_id: item.task_id, id: item.belong, machine_id: el.machine_id}).then( async (res) => {
+          if(!res.success){
+            this.$message({
+              type: 'error',
+              message: res.msg
+            });
+          }else{
+            let timeData = {
+              id: item.belong,
+              machine_id: el.machine_id,
+              task_id: item.task_id
+            }
+            let timedQuery1 = await timedQueryTask(timeData)
+            let chooseIndex1;
+            this.Machine_info.map((ele, index) => {
+              if (ele._id == item.belong) {
+                chooseIndex1 = index
+              }
+            })
+            if (timedQuery1.success) {
+              let virarr1 = this.Machine_info[chooseIndex1].virtual_info.map(ele => 
+                ele.task_id === timeData.task_id ? timedQuery1.content : ele
+              )
+              this.Machine_info[chooseIndex1].virtual_info = virarr1
+            }
+            let timetask = null
+            timetask = setInterval( async () => {
+              let timedQuery = await timedQueryTask(timeData)
+              let chooseIndex;
+              this.Machine_info.map((ele, index) => {
+                if (ele._id == item.belong) {
+                  chooseIndex = index
+                }
+              })
+              if (timedQuery.success) {
+                let virarr = this.Machine_info[chooseIndex].virtual_info.map(ele => 
+                  ele.task_id === timeData.task_id ? timedQuery.content : ele
+                )
+                this.Machine_info[chooseIndex].virtual_info = virarr
+              }
+              if (timedQuery.content.status == 'running' || timedQuery.content.status == 'error' || timedQuery.content.status == 'start error') {
+                clearInterval(timetask)
+                timetask = null
+              }
+            }, 20000)
+            this.$message({
+              type: 'success',
+              message: this.$t('myvirtual.start_success')
             });
           }
           el.btnloading3 = false
@@ -1509,6 +1708,9 @@ export default {
           padding-bottom: 5px;
           justify-content: space-between;
           border-bottom: 1px solid #e1e6ec;
+          .left{
+            width: 300px;
+          }
         }
         .li-bottom{
           display: flex;

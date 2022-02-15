@@ -77,6 +77,7 @@
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="CN">简体中文</el-dropdown-item>
           <el-dropdown-item command="EN">ENGLISH</el-dropdown-item>
+          <!-- <el-dropdown-item command="FR">Français</el-dropdown-item> -->
           <!-- <el-dropdown-item command="RU">Ру́сский язы́к</el-dropdown-item> -->
           <!--    <el-dropdown-item command="VI">Việt nam</el-dropdown-item>
           <el-dropdown-item command="KO">한국어</el-dropdown-item>
@@ -176,6 +177,9 @@ export default {
         } else if (lang === "EN") {
           this.curLang = "EN";
           this.language_name = "ENGLISH";
+        } else if (lang === "FR") {
+          this.curLang = "FR";
+          this.language_name = "Français";
         }
         //else if (lang === "VI") {
         //   this.language_name = "Việt nam";
@@ -562,6 +566,8 @@ export default {
           this.language_name = "Türk Dili";
         } else if (lang === "JA") {
           this.language_name = "日本語";
+        } else if (lang === "FR") {
+          this.language_name = "Français";
         }
       });
     }

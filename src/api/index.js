@@ -339,6 +339,30 @@ export const GetResultHash = data => {
 };
 
 /**
+ * @description 停止虚拟机
+ * @param {object} data {machine_id, gpu, ....}
+ */
+ export const stopVir = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/rentMachine/stopVir',
+    data: data
+  });
+};
+
+/**
+ * @description 启动虚拟机
+ * @param {object} data {machine_id, gpu, ....}
+ */
+ export const startVir = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/rentMachine/startVir',
+    data: data
+  });
+};
+
+/**
  * @description 确认租用虚拟机
  * @param {object} data {machine_id, gpu, ....}
  */

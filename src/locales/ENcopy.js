@@ -789,7 +789,7 @@ export default {
   // 审核机器
   audit:{
     // 抢单页面
-    ordergrabbingMachine:'List of order grabbing machines',
+    ordergrabbingMachine:'List of grab orders',
     distributionMachine:'Assign machine list',
     myAudit:'My review list',
     myOrder:'My order list',
