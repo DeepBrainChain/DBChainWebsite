@@ -131,7 +131,7 @@
                   plain
                   class="tool-btn"
                   size="mini"
-                  v-if="el.orderStatus == 3 && item.status == 'closed'"
+                  v-if="el.orderStatus == 3 && item.status == 'closed' || item.status == 'start error'"
                   @click="startVir(item, el)"
                   >{{ $t("myvirtual.start") }}</el-button
                 >
@@ -1387,10 +1387,10 @@ export default {
                 timetask = null
               }
             }, 20000)
-            this.$message({
-              type: 'success',
-              message: this.$t('myvirtual.stop_success')
-            });
+            // this.$message({
+            //   type: 'success',
+            //   message: this.$t('myvirtual.stop_success')
+            // });
           }
           el.btnloading3 = false
         })
@@ -1453,10 +1453,10 @@ export default {
                 timetask = null
               }
             }, 20000)
-            this.$message({
-              type: 'success',
-              message: this.$t('myvirtual.start_success')
-            });
+            // this.$message({
+            //   type: 'success',
+            //   message: this.$t('myvirtual.start_success')
+            // });
           }
           el.btnloading3 = false
         })

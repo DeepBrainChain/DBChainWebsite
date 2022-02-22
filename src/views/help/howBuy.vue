@@ -21,13 +21,12 @@
           target="_blank"
         >https://www.huobi.me/en-us/</a>
         .{{$t('help.reloadWallet')}}
-      </h3>
+      </h3> -->
 
       <h3>
         {{$t('help.3')}}，
-        <a href="https://www.kucoin.io" target="_blank">https://www.kucoin.io</a>
-        .{{$t('help.reloadWallet')}}
-      </h3> -->
+        <a href="javascript:" @click="tradedbcHref">dbctrade</a>
+      </h3>
 
       <h3>
         {{$t('help.4')}}，
@@ -46,13 +45,20 @@
 <script>
 export default {
   name: "howBuy",
-
+  data(){
+    return{
+      address: this.$route.query.address_user
+    }
+  },
+  mounted() {
+    console.log(this.address, 'sss');
+  },
   methods: {
     tradedbcHref() {
-      window.open(
-        "https://www.dbctrade.io/trade/buy_1?address_user=" +
-          this.$route.query.address_user
-      );
+      this.$router.push({
+        path:'/trade',
+        query: { address_user:this.address }
+      })
     }
   }
 };

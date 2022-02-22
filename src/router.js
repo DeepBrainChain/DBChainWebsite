@@ -339,6 +339,36 @@ const router = new Router({
       ]
     },*/
     {
+      name: 'trade',
+      path: '/trade',
+      component: resolve => require(['./views/trade_io'] , resolve),
+      redirect: '/trade/buy_1',
+      children: [
+        // {
+        //   path: 'home',
+        //   component: resolve => require(['./views/trade_io/trade'] , resolve)
+        // },
+        {
+          path: 'buy_1',
+          component: resolve => require(['./views/trade_io/buy_1'] , resolve)
+        },
+        {
+          path: 'buy_2',
+          component: resolve => require(['./views/trade_io/buy_2'] , resolve)
+        },
+        {
+          path: 'buy_3',
+          component: resolve => require(['./views/trade_io/buy_3'] , resolve)
+        },
+        {
+          path: 'buy_4',
+          component: resolve => require(['./views/trade_io/buy_4'] , resolve)
+        }
+      ]
+    },
+
+
+    {
       path: '/continuePayDetail',
       name: 'continuePayDetail',
 

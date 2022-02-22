@@ -425,3 +425,16 @@ export const changeStatus = data => {
     data: data
   });
 };
+
+/**
+ * @description 法币购买dbc
+ * @param {object} data {machine_id, gpu, ....}
+ */
+
+ export const confirmPayment = params => {
+  return axios({
+    method: "get",
+    url: nodeHost + '/api/paypal/confirmPayment',
+    params
+  });
+};

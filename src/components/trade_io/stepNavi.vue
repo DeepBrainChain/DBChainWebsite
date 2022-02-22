@@ -3,7 +3,7 @@
     <div class="item" :class="{active: stepIndex >= 1}">
       <span class="cycle">1</span>
       <div class="step-name">
-        购买金额
+        {{$t('buyDBC.address')}}
       </div>
       <div class="icon-wrap">
         <i class="el-icon-caret-top"></i>
@@ -13,7 +13,7 @@
     <div class="item" :class="{active: stepIndex >= 2}">
       <span class="cycle">2</span>
       <div class="step-name">
-        钱包地址
+        {{$t('buyDBC.amount')}}
       </div>
       <div class="icon-wrap">
         <i class="el-icon-caret-top"></i>
@@ -23,7 +23,7 @@
     <div class="item" :class="{active: stepIndex >= 3}">
       <span class="cycle">3</span>
       <div class="step-name">
-        支付方式
+        {{$t('buyDBC.pay')}}
       </div>
       <div class="icon-wrap">
         <i class="el-icon-caret-top"></i>
@@ -33,7 +33,7 @@
     <div class="item" :class="{active: stepIndex >= 4}">
       <span class="cycle">4</span>
       <div class="step-name">
-        完成购买
+        {{$t('buyDBC.finish')}}
       </div>
       <div class="icon-wrap">
         <i class="el-icon-caret-top"></i>

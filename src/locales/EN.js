@@ -498,7 +498,35 @@ export default {
     vir_status6: 'resetting',
     vir_status7: 'start error',
     vir_status8: 'restart error',
-    vir_status9: 'pm_suspended'
+    vir_status9: 'pm_suspended',
+  },
+  // 购买DBC
+  buyDBC: {
+    address: 'wallet address',
+    amount: "Amount of purchase",
+    pay: "Pay by",
+    finish: 'complete the purchase',
+    enterwallet: "Please enter the wallet address to receive DBC",
+    continue: 'continue',
+    support: "Customer support",
+    reply: "Customer service will reply within 24 hours",
+    quantity: 'corresponding quantity',
+    seePrice: "Click to view the price:",
+    enterAmount: "Please enter the amount",
+    payBy: 'Please select mode of payment:',
+    status1: "Inquiring...",
+    status2: "The DBC transfer is successful. It will take about a few minutes to arrive at the account. Please check the wallet address.",
+    status3: "The payment is successful, but the DBC transfer fails, please email support@dbctrade.io. We will help you within 24 hours",
+    status4: "Payment failed, please email support@dbctrade.io. We will help you within 24 hours",
+    title1: "important hint",
+    tip1: "The DBCTrade platform transfers DBC through smart contracts. After the payment is completed, the smart contract will automatically transfer the DBC you purchased to the DBC address you specified.",
+    tip2: "Reminder: The DBCTrade platform charges 14% of the fee, and the maximum single purchase amount is 2,000 US dollars. If you need to invoice, please add WeChat ID: DCloud2019",
+    tip3: "DBC prices fluctuate all the time, please be aware of the risks!",
+    tip4: "DBC price refers to the price of gate DBC/USDT trading pair,",
+    tip5: "The DBC amount is 0, please refresh the page and re-enter the USD amount",
+    tip6: "Amount cannot exceed 2000",
+    tip7: "Amount cannot be less than or equal to 0",
+    tip8: "Incorrect amount entered"
   },
   // 操作报错原因
   err_reason:{

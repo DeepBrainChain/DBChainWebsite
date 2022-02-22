@@ -312,12 +312,12 @@ export default {
     startMiner: "开始出租GPU"
   },
   help: {
-    title: "如何购买DBC",
+    title: "如何购买DBC", 
     "1": "1.直接用支付宝购买DBC(此平台可以开发票)，进入",
     "2": "2.从火币购买DBC",
-    "3": "3.从库币购买DBC",
-    "4": "1.从Gate.io购买DBC",
-    "5": "2.从其他支持DBC的钱包转账到钱包账号，比如",
+    "3": "1.直接用PayPal购买DBC(此平台可以开发票)，进入",
+    "4": "2.从Gate.io购买DBC",
+    "5": "3.从其他支持DBC的钱包转账到钱包账号，比如",
     reloadWallet: "充值进入钱包账号"
   },
   miner: {
@@ -1186,6 +1186,34 @@ export default {
     vir_status7: '启动失败',
     vir_status8: '重启失败',
     vir_status9: '休眠中'
+  },
+  // 购买DBC
+  buyDBC: {
+    address: '钱包地址',
+    amount: "购买金额",
+    pay: "支付方式",
+    finish: '完成购买',
+    enterwallet: "请输入收取DBC的钱包地址",
+    continue: '继续',
+    support: "客服支持",
+    reply: "客服会在24小时内回复",
+    quantity: '对应的等值数量',
+    seePrice: "点击查看价格：",
+    enterAmount: "请输入金额",
+    payBy: '请选择支付方式：',
+    status1: "正在查询中...",
+    status2: "DBC转账成功，到账大概需要几分钟，请到钱包地址中查看",
+    status3: "支付成功，但DBC转账失败，请邮件联系support@dbctrade.io.我们会在24小时内帮您处理",
+    status4: "支付失败，请邮件联系support@dbctrade.io.我们会在24小时内帮您处理",
+    title1: "重要提示",
+    tip1: "DBCTrade平台是通过智能合约进行DBC转账，支付完成后，智能合约会自动将您购买的DBC打入到您指定的DBC地址.",
+    tip2: "温馨提示：DBCTrade平台收取14%的费用,单次购买金额最多2000美元.如果需要开发票，请加微信号:DCloud2019",
+    tip3: "DBC价格随时随刻都在波动，请注意风险！",
+    tip4: "DBC价格参考gate DBC/USDT交易对价格，",
+    tip5: "DBC数量为0，请刷新页面后重新输入USD金额",
+    tip6: "金额不能超过2000",
+    tip7: "金额不能小于等于0",
+    tip8: "输入金额不正确"
   },
   // 操作报错原因
   err_reason:{
