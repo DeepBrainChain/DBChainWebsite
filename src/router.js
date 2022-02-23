@@ -4,7 +4,6 @@ import Home from './views/Home.vue'
 //import Home from "./congTuCloud/pages/home.vue";
 import Login from "./congTuCloud/pages/login"
 import Register from "./congTuCloud/pages/register"
-import Preview from './views/preview'
 
 Vue.use(Router)
 
@@ -15,11 +14,6 @@ const router = new Router({
 
   mode: 'history',
   routes: [
-    {
-      path: '/preview',
-      name: ' preview',
-      component: Preview
-    },
     {
       path: '/',
       redirect: '/home'
@@ -45,79 +39,9 @@ const router = new Router({
       component: resolve => require(['./views/network'] , resolve)
     },
     {
-      path: '/gpu',
-      name: 'gpu',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: resolve => require(['./views/gpu'] , resolve),
-      redirect: '/gpu/highStabilityAITrain',
-      children: [
-        {
-          meta: {
-            menuIndex: 0
-          },
-          path: 'list',
-          component: resolve => require(['./views/gpu/list'] , resolve)
-        },
-        {
-          meta: {
-            menuIndex: 1
-          },
-          path: 'highStabilityAITrain',
-          component: resolve => require(['./views/gpu/highStabilityAITrain'] , resolve)
-        },
-        {
-          meta: {
-            menuIndex: 2
-          },
-          path: 'aiInference',
-          component: resolve => require(['./views/gpu/aiInference'] , resolve)
-        },
-        {
-          meta: {
-            menuIndex: 3
-          },
-          path: 'hashCompute',
-          component: resolve => require(['./views/gpu/hashCompute'] , resolve)
-        },
-        {
-          meta: {
-            menuIndex: 4
-          },
-          path: 'superNodeCompute',
-          component: resolve => require(['./views/gpu/superNodeCompute'] , resolve)
-        }
-      ]
-    },
-    {
       path: '/virtual',
       name: 'virtual',
       component: resolve => require(['./views/virtual'] , resolve),
-    },
-    {
-      path: '/miner',
-      name: 'miner',
-      component: resolve => require(['./views/miner'] , resolve),
-      redirect: '/miner/myMinerMachine',
-      children: [
-        {
-          name: 'myMinerMachine',
-          meta: {
-            menuIndex: 0
-          },
-          path: 'myMinerMachine',
-          component: resolve => require(['./views/miner/myMinerMachine'] , resolve)
-        },
-        {
-          name: 'myMinerMachine_unlock',
-          meta: {
-            menuIndex: 0
-          },
-          path: 'myMinerMachine_unlock',
-          component: resolve => require(['./views/miner/myMinerMachine_unlock'] , resolve)
-        }
-      ]
     },
     // 审核机器
     {
@@ -184,38 +108,13 @@ const router = new Router({
         }
       ]
     },
-
-
+    // 我的机器
     {
       path: '/mymachine',
       name: 'mymachine',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: resolve => require(['./views/mymachine'] , resolve),
       redirect: '/mymachine/myMachine_gpuVirtual',
       children: [
-        {
-          meta: {
-            menuIndex: 0
-          },
-          path: 'myMachine',
-          component: resolve => require(['./views/mymachine/myMachine'] , resolve)
-        },
-        {
-          meta: {
-            menuIndex: 1
-          },
-          path: 'myMachine_cpu',
-          component: resolve => require(['./views/mymachine/myMachine_cpu'] , resolve)
-        },
-        {
-          meta: {
-            menuIndex: 2
-          },
-          path: 'myMachine_stopped',
-          component: resolve => require(['./views/mymachine/myMachine_stopped'] , resolve)
-        },
         {
           meta: {
             menuIndex: 3
@@ -232,27 +131,6 @@ const router = new Router({
         },
         {
           meta: {
-            menuIndex: 0
-          },
-          path: 'myMachineUnlock',
-          component: resolve => require(['./views/mymachine/myMachine_unlock'] , resolve)
-        },
-        {
-          meta: {
-            menuIndex: 1
-          },
-          path: 'myMachineUnlockCPU',
-          component: resolve => require(['./views/mymachine/myMachine_unlock_cpu'] , resolve)
-        },
-        {
-          meta: {
-            menuIndex: 2
-          },
-          path: 'myMachineUnlockStopped',
-          component: resolve => require(['./views/mymachine/myMachine_unlock_stopped'] , resolve)
-        },
-        {
-          meta: {
             menuIndex: 3
           },
           path: 'myMachineUnlockGpuVirtual',
@@ -263,9 +141,6 @@ const router = new Router({
     {
       path: '/mywallet',
       name: 'mywallet',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: resolve => require(['./views/mywallet'] , resolve),
       redirect: '/mywallet/myWallet',
       children: [
@@ -275,79 +150,42 @@ const router = new Router({
           },
           path: 'myWallet',
           component: resolve => require(['./views/mywallet/myWallet'] , resolve)
-        },
-        {
-          meta: {
-            menuIndex: 0
-          },
-          path: 'myWalletUnlock',
-          component: resolve => require(['./views/mywallet/myWallet_unlock'] , resolve)
         }
       ]
     },
     {
-      path: '/help',
-      name: 'help',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: resolve => require(['./views/help'] , resolve),
-      redirect: '/help/aiHelp',
-      children: [{
+      path: '/newWallet/createWallet',
+      name: 'CreateWallet',
+      component: resolve => require(['./views/newWallet/createWallet'] , resolve)
+    },
+    {
+      path: '/newWallet/openWallet',
+      name: 'OpenWallet',
+      component: resolve => require(['./views/newWallet/openWallet'] , resolve)
+    },
+    {
+      path: '/newWallet',
+      name: 'newMyWallet',
+      component: resolve => require(['./views/mywallet'] , resolve),
+      children: [
+        {
+          
           meta: {
             menuIndex: 0
           },
-          path: 'aiHelp',
-          component: resolve => require(['./views/help/aiHelp'] , resolve)
-        },
-
-        {
-          meta: {
-            menuIndex: 1
-          },
-          path: 'filecoinHelp',
-          component: resolve => require(['./views/help/filecoinHelp'] , resolve)
-        },
-        {
-          meta: {
-            menuIndex: 2
-          },
-          path: 'supernodeHelp',
-          component: resolve => require(['./views/help/supernodeHelp'] , resolve)
+          path: '/newWallet/myWalletUnlock',
+          name: 'myWalletUnlockNew',
+          component: resolve => require(['./views/newWallet/myWallet_unlock'] , resolve)
         }
       ]
     },
-    /*{
-      path: '/miner',
-      name: 'miner',
-      component: resolve => require(['./views/miner'] , resolve),
-      redirect: '/miner/myMinerMachine',
-      children: [{
-          meta: {
-            menuIndex: 0
-          },
-          path: 'myMinerMachine',
-          component: resolve => require(['./views/miner/myMinerMachine'] , resolve)
-        },
-        {
-          meta: {
-            menuIndex: 0
-          },
-          path: 'myMinerMachine_unlock',
-          component: resolve => require(['./views/miner/myMinerMachine_unlock'] , resolve)
-        }
-      ]
-    },*/
+    // 购买DBC
     {
       name: 'trade',
       path: '/trade',
       component: resolve => require(['./views/trade_io'] , resolve),
       redirect: '/trade/buy_1',
       children: [
-        // {
-        //   path: 'home',
-        //   component: resolve => require(['./views/trade_io/trade'] , resolve)
-        // },
         {
           path: 'buy_1',
           component: resolve => require(['./views/trade_io/buy_1'] , resolve)
@@ -366,29 +204,6 @@ const router = new Router({
         }
       ]
     },
-
-
-    {
-      path: '/continuePayDetail',
-      name: 'continuePayDetail',
-
-      component: resolve => require(['./views/continuePayDetail'] , resolve)
-    },
-    {
-      path: '/machineDetail',
-      name: 'machineDetail',
-      component: resolve => require(['./views/machineDetail'] , resolve)
-    },
-    {
-      path: '/createWallet/:type',
-      name: 'createWallet',
-      component: resolve => require(['./views/createWallet/index.vue'] , resolve)
-    },
-    {
-      path: '/openWallet/:type',
-      name: 'openWallet',
-      component: resolve => require(['./views/openWallet/index.vue'] , resolve)
-    },
     {
       path: '/howBuy',
       name: 'howBuy',
@@ -398,55 +213,6 @@ const router = new Router({
       path: '/howSell',
       name: 'howSell',
       component: resolve => require(['./views/help/howSell'] , resolve),
-    },
-    {
-      path: '/minerHome',
-      name: 'minerHome',
-      component: resolve => require(['./views/minerHome'] , resolve)
-    },
-    {
-      path: '/addMc',
-      name: 'miner_addMc',
-      component: resolve => require(['./views/miner/addMachine'] , resolve)
-    },
-    {
-      path: '/editMc',
-      name: 'miner_editMc',
-      component: resolve => require(['./views/miner/addMachine'] , resolve)
-    },
-    {
-      path: '/machineOrder',
-      name: 'machineOrder',
-      component: resolve => require(['./views/machineOrder'] , resolve)
-    },
-    {
-      path: '/newWallet/createWallet',
-      name: 'CreateWallet',
-      component: resolve => require(['./views/newWallet/createWallet'] , resolve)
-    },
-    {
-      path: '/newWallet/openWallet',
-      name: 'OpenWallet',
-      component: resolve => require(['./views/newWallet/openWallet'] , resolve)
-    },
-    {
-      path: '/newWallet',
-      name: 'newMyWallet',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: resolve => require(['./views/mywallet'] , resolve),
-      children: [
-        {
-          
-          meta: {
-            menuIndex: 0
-          },
-          path: '/newWallet/myWalletUnlock',
-          name: 'myWalletUnlockNew',
-          component: resolve => require(['./views/newWallet/myWallet_unlock'] , resolve)
-        }
-      ]
     }
   ]
 })

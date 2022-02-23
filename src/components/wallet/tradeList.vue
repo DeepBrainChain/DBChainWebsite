@@ -7,7 +7,6 @@
           <th>{{$t('from')}}</th>
           <th>{{$t('to')}}</th>
           <th width="100">{{$t('value')}}</th>
-          <!--        <th width="100">{{$t('asset')}}</th>-->
         </tr>
       </thead>
       <tbody>
@@ -61,9 +60,6 @@ export default {
   computed: {
     ...mapState(["transferList"])
   },
-  // methods: {
-  //   ...mapActions(["getTransferList"])
-  // }
 }
 </script>
 

@@ -159,9 +159,7 @@ export default {
     },
     ...mapActions([
       "getAccountState",
-      // "getTransferList",
-      "getExchangeRate",
-      "getGate",
+      "getExchangeRate"
     ]),
     initData() {
       this.getExchangeRate();

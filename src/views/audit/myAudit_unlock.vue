@@ -4,31 +4,6 @@
       <div class="fw600 all_profit">{{ $t("audit.all_profit") }}: {{totalReward}} DBC</div>
       <div class="fw600 today_profit">{{ $t("audit.today_profit") }}: {{todayReward}} DBC</div>
       <div class="fw600 all_machine">{{ $t("audit.all_machine") }}: {{machineCount}} <span class="fs12 cRed">{{ $t("audit.machineTips") }}</span></div>
-      <!-- <div
-        v-if="!isBinding && bindMail && $t('website_name') !== 'congTuCloud'"
-        class="binding"
-      >
-        <span class="bindingInfo"
-          >{{ $t("my_machine_binding_email") }}:{{ bindMail }}</span
-        >
-        <el-button class="ml10" size="mini" plain @click="openDlgMail(false)">{{
-          $t("gpu.modifyMail")
-        }}</el-button>
-      </div>
-      <div
-        v-else-if="!isBinding && this.$t('website_name') != 'congTuCloud'"
-        class="bind"
-      >
-        <el-button size="small" plain @click="openDlgMail(true)">{{
-          $t("gpu.bindMail")
-        }}</el-button>
-        <span class="bindInfo ml10" v-html="$t('gpu.bindMailInfo')"></span>
-      </div>
-      <div v-else-if="isBinding">
-        <span v-if="isBinding" class="bindInfo">{{
-          $t("my_machine_vocing")
-        }}</span>
-      </div> -->
     </div>
     <ul>
       <li
@@ -124,7 +99,7 @@
           </div>
           <div class="td3">
             <span class="fs16">
-              {{ $t("list_cpu_type") }}：
+              {{ $t("audit.CPUmodel") }}：
               <a class="cPrimaryColor">{{ item.info.machine_info_detail.committee_upload_info.cpu_type }}</a>
             </span>
           </div>
@@ -161,14 +136,6 @@
       >
       </el-pagination>
     </div>
-    <!--    bindMail-dlg-->
-    <dlg-mail
-      :open.sync="dlgMail_open"
-      :is-new-mail="isNewMail"
-      @binding="binding"
-      @fail="bindFail"
-    ></dlg-mail>
-
     <el-dialog :visible.sync="dialogTableVisible" width="580px">
       <div slot="title">{{$t('audit.record')}}</div>
       <el-table
@@ -179,12 +146,12 @@
         <el-table-column
           prop="index"
           align='center'
-          label="日期">
+          :label="label1">
         </el-table-column>
         <el-table-column
           prop="reward"
           align='center'
-          label="收益(DBC)">
+          :label="label2">
         </el-table-column>
       </el-table>
     </el-dialog>
@@ -192,29 +159,14 @@
 </template>
 
 <script>
-import cookie from "js-cookie";
-import DlgMail from "@/components/machine/dlg_bindMail";
-import {
-  queryBindMail_rent,
-  binding_is_ok,
-  binding_is_ok_modify,
-  send_email_repeat,
-  query_machines_by_machine_type,
-  searchMachine
-} from "@/api";
-import {
-  getAccount,
-  getBalance,
-} from "@/utlis";
+import { searchMachine } from "@/api";
+import { getAccount } from "@/utlis";
 import BigNumber from "bignumber.js";
 import { getCurrentPair } from "@/utlis/dot"
 import { mapState } from "vuex"
-import { leaseCommitteeOps, machinesInfo, currentEra, erasMachineReleasedReward } from "@/utlis/dot/api"
+import { currentEra, erasMachineReleasedReward } from "@/utlis/dot/api"
 export default {
   name: "myAudit_unlock",
-  components: {
-    DlgMail,
-  },
   data() {
     return {
       wallet_address: (getAccount() && getAccount().address) || (getCurrentPair() && getCurrentPair().address),
@@ -259,7 +211,8 @@ export default {
       machineCount: 0,
       todayReward: 0,
       totalReward: 0,
-      
+      label1: this.$t('audit.date'),
+      label2: this.$t('audit.income'),
       pageSize1: 1,
       pageNum: 10,
       pageSize: 10,
@@ -273,7 +226,8 @@ export default {
   },
   watch: {
     "$i18n.locale"() {
-      this.queryMc();
+      this.label1 = this.$t('audit.date')
+      this.label2 = this.$t('audit.income')
     },
   },
   beforeMount() {
@@ -294,143 +248,6 @@ export default {
     ...mapState(["isNewWallet"]),
   },
   methods: {
-    // 绑定邮箱
-    openDlgMail(isNewMail) {
-      getBalance().then((res) => {
-        this.balance = res.balance;
-        if (this.balance < 1) {
-          this.$message({
-            showClose: true,
-            message: this.$t("dlg_bindMail_no_dbc"),
-            type: "error",
-          });
-        } else {
-          this.isNewMail = isNewMail;
-          this.dlgMail_open = true;
-        }
-      });
-    },
-    //
-    queryMail() {
-      this.bindMail = cookie.get("mail");
-      let address = "tmp";
-      if (this.$t("website_name") != "congTuCloud") {
-        address = this.wallet_address
-      }
-      const user_name_platform = this.$t("website_name");
-      const language = this.$i18n.locale;
-      queryBindMail_rent({
-        wallet_address: address,
-        user_name_platform,
-        language,
-      }).then((res) => {
-        if (res.status === 1) {
-          this.bindMail = res.content;
-          cookie.set("mail", res.content);
-        } else {
-          binding_is_ok({
-            wallet_address: address,
-            user_name_platform,
-            language,
-          }).then((ren) => {
-            if (ren.status === 2) {
-              this.isBinding = true;
-            }
-          });
-          binding_is_ok_modify({
-            wallet_address: address,
-            user_name_platform,
-            language,
-          }).then((ren) => {
-            if (ren.status === 2) {
-              this.isBinding = true;
-            }
-          });
-        }
-      });
-    },
-    binding(isNewMail) {
-      this.isBinding = true;
-      let binding = true;
-      const user_name_platform = this.$t("website_name");
-      const language = this.$i18n.locale;
-      const si = setInterval(async () => {
-        if (binding) {
-          if (isNewMail) {
-            binding = false;
-            const res = await binding_is_ok({
-              wallet_address: this.wallet_address,
-              user_name_platform,
-              language,
-            });
-            if (res.status === 1) {
-              clearInterval(si);
-              this.bindSuccess();
-            }
-          } else {
-            binding = false;
-            const res = await binding_is_ok_modify({
-              wallet_address: this.wallet_address,
-              user_name_platform,
-              language,
-            });
-            if (res.status === 1) {
-              clearInterval(si);
-              this.bindSuccess();
-            }
-          }
-        }
-        binding = true;
-      }, 15000);
-    },
-    send_email_repeat(item, index) {
-      const user_name_platform = this.$t("website_name");
-      const language = this.$i18n.locale;
-      this.send_email_repeatLoading = true;
-      this.send_email_repeat_index = index;
-      send_email_repeat({
-        order_id: item.orderData.order_id,
-
-        user_name_platform,
-        language,
-      })
-        .then((res) => {
-          if (res.status === 1) {
-            this.$message({
-              showClose: true,
-              message: res.msg,
-              type: "success",
-            });
-          } else if (res.status === -1) {
-            this.$message({
-              showClose: true,
-              message: res.msg,
-              type: "error",
-            });
-          }
-        })
-        .catch((err) => {
-          this.$message({
-            showClose: true,
-            message: this.$t("send_email_error"),
-            type: "error",
-          });
-        })
-        .finally(() => {
-          this.send_email_repeatLoading = false;
-          this.send_email_repeat_index = -1;
-        });
-    },
-    // bind fail
-    bindFail() {
-      this.isBinding = false;
-    },
-    // bind success
-    bindSuccess() {
-      this.isBinding = false;
-      this.queryMail();
-    },
-
     // 查询机器
     getnum1(num) {
       const num1 = new BigNumber(Number(num)/ Math.pow(10,15)).toFormat()
@@ -440,7 +257,6 @@ export default {
     },
     async getList(){
       let loadingInstance = this.$loading({target:'.myAudit'});
-      // this.res_body.content = []
       searchMachine({pageSize: this.pageSize1, pageNum: this.pageNum, wallet: this.wallet_address}).then(res => {
         if(res.success){
           this.todayReward = this.getnum1(res.todayReward)
@@ -459,37 +275,7 @@ export default {
           this.res_body.content = []
         }
       })
-      // 只获取分页收益信息
-      // let machinesList =  await leaseCommitteeOps('5D1vwMoK1DjBF7pfApKjT9Gi5C4DKHvZMztFRhTsMqo71B8r');
-      // let list = machinesList.online_machine // 获取当前委员会验证上线的机器
-      // let nowDay = await currentEra() // 获取当前链上第几天，用于计算当天的收益以及累计收益（当天收益为当前天数减一）
-      // for(let i = 0; i< list.length; i++){
-      //   this.allListedMachine[i] = await machinesInfo( nowDay - 1, list[i] ) // 通过机器id获取机器详细信息
-      //   this.allListedMachine[i].totalReward = '···'
-      //   this.allListedMachine[i].reward = []
-      //   this.allListedMachine[i].online_day = 0
-      //   this.todayReward += (this.allListedMachine[i].todayReward/99/this.allListedMachine[i].info.reward_committee.length)
-      // }
-      // this.showMachines(this.allListedMachine, this.currentPage, this.pageSize)
       loadingInstance.close();
-
-      // 获取全部总收益
-      // for(let i = 0; i< this.allListedMachine.length; i++){
-      //   this.allListedMachine[i].totalReward = '···'
-      //   this.allListedMachine[i].reward = []
-      //   this.allListedMachine[i].online_day = parseInt((this.allListedMachine[i].info.online_height.replace(',',''))/2880) // 获取机器第几天上线
-      //   let day = this.allListedMachine[i].online_day
-      //   while( day < nowDay ){
-      //     this.allListedMachine[i].reward.push( await erasMachineReleasedReward(day, list[i]) ) // 计算从上线以后每一天的收益
-      //     day ++ 
-      //   }
-      // }
-      // for(let i = 0; i< this.allListedMachine.length; i++){
-      //   let reward = this.allListedMachine[i].reward.reduce(function(a, b) { 
-      //     return a + b;
-      //   })
-      //   this.$set(this.allListedMachine[i], 'totalReward', this.getnum1(reward/99/this.allListedMachine[i].info.reward_committee.length)) // 计算累计收益
-      // }
     },
 
     async showMachines(machines, currentPage, pageSize) {

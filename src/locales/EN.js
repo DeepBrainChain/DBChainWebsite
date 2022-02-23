@@ -1,8 +1,13 @@
 import enLocale from 'element-ui/lib/locale/lang/en'
 
 export default {
-  message: 'hello i18n !!',
+  /* 关于webtype:
+   ** 修改数值时，要把router.js文件开头引入的Home组件切换与此类型一致
+   ** 如果是法币聪图云模式，要把根目录下public/index.html 中脚本的 websiteNameIsCongtuCloud变量 修改为true
+   */
+  webtype: "1",
   website_name: 'dbchain', //yousanai,  dbchain,aionego
+  contain_new_wallet: "1",
   $: '$',
   send: 'Send',
   closeWallet: 'Close Wallet',
@@ -11,13 +16,10 @@ export default {
   from: 'FROM ',
   to: 'TO',
   value: 'VALUE',
-  asset: 'ASSET',
   transfer: 'TRANSFER',
   day: 'D',
   hour: 'H',
   password: 'Password',
-  unsubscribe: 'Unsubscribe',
-  subscribe: 'Subscribe',
   tips: 'Reminder',
   total: 'Total',
   confirm: 'Confirm',
@@ -32,19 +34,15 @@ export default {
   amountNoMore: 'Transaction amount cannot be more than your wallet balance', // new
   noZero: 'The amount cannot be smaller than or equal to 0', // new
   errAddr: 'Wallet address incorrect',
+  transfer_ing: "Transferring, please wait...",
   transferSuccess: 'Transaction successful, please wait and check for update on blocks',
   transferFail: 'Transaction Failed',
   confirmTrTitle: 'Confirm Transfer',
   confirmTrMsg: 'You are sending <b>{amount}</b> DBC to this address:<br> <b>{address}</b>',
   confirmTrWaring: 'Are you sure?',
-  lease: 'Rent',
   bind: 'Bind',
-  modify: 'Modify',
-  scores: 'Score(s)',
   back: 'Go Back',
-  reEdit: 'Edit Again',
   open_wallet: 'Open Wallet',
-  access_wallet: 'Select method to open wallet',
   keystore_file: 'Keystore File',
   private_key: 'Private Key',
   select_wallet_file: 'Select Wallet File',
@@ -56,7 +54,6 @@ export default {
   dbc_price_wallet_tips: "DBC prices fluctuate all the time, please pay attention to the risks when buying DBC",
   dbcChange_tips: "DBC 24hours price change",
   heads: {
-    logo: 'DBChain',
     home: 'Home',
     virtual: "Rent GPU Virtual Machine",
     mymachine: "MyMachine",
@@ -67,13 +64,6 @@ export default {
   },
   footer: {
     DBChain: 'DeepBrain Chain',
-    DBCMiner: 'DBCMiner',
-    DBCTalk: 'DBCTalk',
-    KuCoin: 'KuCoin',
-    DBCTrade: 'DBCTrade',
-    DBCloud: 'DBCloud',
-    HuobiPro: 'Huobi Pro',
-    GateIo: 'Gate.io'
   },
   gpu: {
     myWallet: 'My Wallet',
@@ -90,6 +80,12 @@ export default {
     rentMachine: 'Open or create wallet',
     payDBCs:'Total DBC paid',
     userTime: 'Elapsed time',
+    payPrice: "DBC price when paid",
+    actualPrice: "incurring actual costs",
+    currentRemaining: "remaining",
+    gpuBilling: "GPU price when paid",
+    createWallet: "Create a wallet account",
+    openWallet: "Open wallet account"
   },
   msg: {
     wallet_0: 'Save your private key file in a safe place, such as writing it down and putting it in a safe.',
@@ -109,11 +105,7 @@ export default {
       'If you use this document on a malicious phishing website your asset will be stolen!<br>' +
       '<b>You must have a back-up!</b>' +
       'Treat it as if one day if could be worth millions of USD',
-    wallet_4: 'Private key incorrect',
-    wallet_5: 'You must remember your password, do not lose it, ' +
-      'you need this password and your private key to unlock your wallet',
-    wallet_6: 'You must remember your password, do not lose it, ' +
-    'You need this password and your private key file to unlock the wallet'
+    wallet_6: 'You must remember your password, do not lose it, ' + 'You need this password and your private key file to unlock the wallet'
   },
   home: {
     intr_dbchain_1: "DBChain",
@@ -167,6 +159,8 @@ export default {
     intr_opengpu_1: "OpenGPU",
     intr_aiyanxishe_1: "AI YanXiShe",
     intr_codefate_1: "CodeFate",
+    intr_changhe_1: "long river cloud",
+    intr_dpool_1: "DPool",
     intr_tycloud_1: "TYCloud",
     intr_1: ' provides GPU rental service.join us! can help your machine very convenient access to the DBC network, gain revenue. \n' +
       '\n' +
@@ -175,16 +169,11 @@ export default {
       ' If your GPU is ever idle for more than one hour, you can connect it to the DBC network to earn DBC tokens.',
     intr_2: 'Our GPUs come from all over the world, connected through the DBC distributed network, there is no centralized server in here, your data will not be stolen. \n',
     intr_3: ' In the DBC network You need the DBC token to rent and use GPU(s).GPU(s) are priced in USD, the higher the price of DBC the less DBC you need in order to pay.',
-
     intr_4: ' committed to providing users with cost-effective GPU computing services, using DBC TOKEN for settlement. DeepBrain Chain is an infinitely scalable high-performance computing network. Through us, you can easily use the GPU server in DeepBrain Chain. We provide rich services to meet your needs.',
     intr_5: 'In our cloud platform you can find a wide variety of GPUs at an affordable price.',
-    intr_6: 'GPU rental is charged by the minute, if a GPU machine stops abruptly during usage you can be compensated up to 144 hour\'s rental fee.',
     intr_7: 'DBC will start mining from 2020 and each year 500 million DBCs are mined, starting from the 4th year, 250 millions are mined each year and the amount is halved every 5 years from then on. A total of 4 billion DBCs will be mined.',
     intr_8: 'Join DBC income combo: supernodes reward + mining reward + rental reward',
     intr_snbt_4: ' is committed to providing users with cost-effective artificial intelligence computing services, Hong Kong strategic international investment co., ltd. and the ordos government reached a strategic cooperation in 2017, the establishment of ordos sanolbert technology co., ltd. is committed to the block chain + artificial intelligence field. Build "three research, two production and one platform" industrial closed loop ecological system, take big data industry as an opportunity, based on ordos high-tech industry planning cloud computing industrial park, build super computing industry platform, with wisdom and data to boost the value. Outline the possibilities of the future.',
-    start: 'Start renting GPU',
-    github: 'GitHub',
-    video: 'Video',
     startMiner: 'Start renting GPU'
   },
   help: {
@@ -195,51 +184,96 @@ export default {
     reloadWallet: 'Deposit and enter wallet account',
     enter:'Enter'
   },
-  
+  list_total_rent_count: "Total number of rentals",
+  list_gpu_ram_size: "GPU memory",
+  list_cpu_numbers: "Number of CPU cores",
+  list_ram_size: "machine memory",
+  list_inet_up: "Upstream bandwidth",
+  list_inet_down: "Downlink bandwidth",
   footer_friend: 'Useful links',
-  //footer_service: 'Customer service: :support@dbchain.ai, the customer service will get back to you in 24 hours',
   wallet_box_adddress: 'Wallet address: your wallet address is also your account, when you give this address to another person, the other person can send DBC token to your address.',
   wallet_box_keystore: 'Private key saved document: private key saved document exist in an encrypted password form to save your private key, we suggest you always use your private key to unlock your wallet.',
   wallet_box_key: 'Your private key is the unencrypted version of your private key, this means no password is needed. If someone finds your unencrypted private key they can access your wallet without a password. So please always use your encrypted private key.',
-
   creat_wallet_index_download: 'Please download the encrypted private key',
-
   mywallet_create: 'Create wallet account',
   mywallet_open: 'Open wallet account',
   mywallet_open_create: 'Open or create wallet account to rent machine(s)',
   mywallet_transfer_record: 'Transaction record',
   mywallet_display: 'Open or create wallet to view transaction record',
-
   open_wallet_cannot_read: 'Your browser does not support reading of local document',
- 
   footer_service: "Customer support",
   footr_reply: "customer service will reply within 24 hours",
-  
-  footer_service_tycloud: "tyhctech@hotmail.com", 
+  footer_service_dbchain: "support@dbchain.ai", //9.17 19:33
+  footer_service_yousanai: "longpeng@yousanai.cn", //9.17 19:33
+  footer_service_aionego: "aionego66@hotmail.com", //9.17 19:33
+  footer_service_deepshare: "service@deepshare.net", //9.17 19:33
+  footer_service_panchuangai: "zhouas@panchuangai.cn", //9.17 19:33
+  footer_service_sharegpu: "758655995@qq.com", //9.17 19:33
+  footer_service_yalecloud: "yalesoft@163.com", //9.17 19:33
+  footer_service_52lm: "2483098379@qq.com", //9.17 19:33
+  footer_service_dimi: "18019983388@163.com", //9.17 19:33
+  footer_service_mayi: "mayipool@163.com", //9.17 19:33
+  footer_service_windywinter: "591498086@qq.com", //9.17 19:33
+  footer_service_1024lab: "2413810931@qq.com", //9.17 19:33
+  footer_service_litaai: "ranran@litaai.xyz", //9.17 19:33
+  footer_service_ainlp: "textminer@foxmail.com", //9.17 19:33
+  footer_service_52cv: "微信号 xiao-ma-baoli，请注明“GPU”", //9.17 19:33
+  footer_service_alpha_dbchain: "1123622944@qq.com", //9.17 19:33
+  footer_service_redstonewill: "redstonewill@hotmail.com", //9.17 19:33
+  footer_service_xyzlab: "gpu@xyzlab.ai", //9.17 19:33
+  footer_service_gpgpu: "sharegpu@protonmail.com", //9.17 19:33
+  footer_service_rocketai: "xing_hua_zhang@126.com", //9.17 19:33
+  footer_service_deepbit: "a18159851988@163.com", //9.17 19:33
+  footer_service_aichriscloud: "zhangmw_play@163.com", //9.17 19:33
+  footer_service_vnxmart: "customerservice@visionx.org", //9.17 19:33
+  footer_service_aiaicloud: "kf@aiaicloud.cn", //9.17 19:33
+  footer_service_snbt: "368496964@qq.com、3426409648@qq.com", //9.17 19:33
+  footer_service_heekmind: "amdin@heekmind.com", //9.17 19:33
+  footer_service_aicv: "944830401@qq.com", //9.17 19:33
+  footer_service_freegpu: "1760398969@qq.com", //9.17 19:33
+  footer_service_boincplanet: "info@boinc.io", //9.17 19:33
+  footer_service_shareaiot: "3123029727@qq.com", //9.17 19:33
+  footer_service_topgpu: "treenewbeetogether@163.com", //9.17 19:33
+  footer_service_thinkotech: "284522212@qq.com", //9.17 19:33
+  footer_service_coolgpu: "coolgpu@163.com", //9.17 19:33
+  footer_service_scclouds: "ser@scclouds.cn", //9.17 19:33
+  footer_service_nvidiaai: "167442878@qq.com", //9.17 19:33
+  footer_service_deligpu: "arrky@mail.ru", //9.17 19:33
+  footer_service_longway: "2546954766@qq.com", //9.17 19:33
+  footer_service_aipower: "1272068154@qq.com", //9.17 19:33
+  footer_service_cvstudy: "cvstudy@163.com", //9.17 19:33
+  footer_service_gpuhub: "gpuhub@foxmail.com", //9.17 19:33
+  footer_service_district51: "district51_604@126.com", //9.17 19:33
+  footer_service_deepmind: "528121344@qq.com", //9.17 19:33
+  footer_service_transportation: "jinleizhangbjtu@gmail.com", //9.17 19:33
+  footer_service_planetc: "planetc_ai@sina.com", //9.17 19:33
+  footer_service_sdnu: "sdnuai@163.com", //9.17 19:33
+  footer_service_freegputop: "hill_gpu@163.com", //9.17 19:33
+  footer_service_tensorgpu: "support@tensorgpu.com", //9.17 19:33
+  footer_service_opengpu: "1184823135@qq.com", //9.17 19:33
+  footer_service_aiyanxishe: "kefu@yanxishe.com", //9.17 19:33
+  footer_service_codefate: "wangming1785@foxmail.com", //9.17 19:33
+  footer_service_changhe: "changhecloud@outlook.com", //9.17 19:33
+  footer_service_dpool: "hello@decentral.cc", //9.17 19:33
+  footer_service_tycloud: "tyhctech@gmail.com", //9.17 19:33
   pleae_create_wallet: "Please create wallet account in My Wallet first",
+  diskspace_remaining: "Maximum free hard disk space",
+  memory_space: "memory space",
   howsellDBC: "How to sell DBC",
   helpsell: {
     title: "How to sell DBC",
-
-
     "2": "1.Sell DBC from Huobi（Sell DBC into Bitcoin first, then sell BTC for RMB to transfer into bank account or or Alipay）",
     "3": "2.Sell DBC from Kucoin",
     "4": "Sell DBC from Gate.io",
-
-
   },
   dbc_price_wallet: "DBC Price",
   dbc_price_usd: "USD",
- 
-  ...enLocale,
-
+  lessdbc: "Insufficient DBC balance",
+  list_gpu_count_tip: "GPU model and total number of GPUs for the current machine",
   mywallet_open_new: "Open wallet account",
-
-  // 新加
   mnemonic: "mnemonic",
   errorPassword: "wrong password",
-  mywallet_create_new: "Create a new wallet account",
-
+  ...enLocale,
   /**
    * hz 新增单词
    */
@@ -314,6 +348,8 @@ export default {
     failed:'Did not pass',
     proportion:'Validation ratio',
     record:'Historical Earnings Information',
+    date:"Date",
+    income:"Earnings (DBC)",
     machine_id: 'machine ID',
     reporter_nonce: 'Reporter random number',
     validator_nonce: "Validator's own random number",
@@ -500,7 +536,7 @@ export default {
     vir_status6: 'resetting',
     vir_status7: 'start error',
     vir_status8: 'restart error',
-    vir_status9: 'pm_suspended',
+    vir_status9: 'pm_suspended'
   },
   // 购买DBC
   buyDBC: {
@@ -520,6 +556,7 @@ export default {
     status2: "The DBC transfer is successful. It will take about a few minutes to arrive at the account. Please check the wallet address.",
     status3: "The payment is successful, but the DBC transfer fails, please email support@dbctrade.io. We will help you within 24 hours",
     status4: "Payment failed, please email support@dbctrade.io. We will help you within 24 hours",
+    status5: "If the order amount is inconsistent with the transfer amount, please contact customer service",
     title1: "important hint",
     tip1: "The platform transfers DBC through smart contracts. After the payment is completed, the smart contract will automatically transfer the DBC you purchased to the DBC address you specify.",
     tip2: "Reminder: The platform charges a fee of 14% + 0.3USD, and the maximum single purchase amount is 2,000 USD. If you need to invoice, please send an email to the customer service support mailbox at the bottom right",
@@ -528,7 +565,8 @@ export default {
     tip5: "The DBC amount is 0, please refresh the page and re-enter the USD amount",
     tip6: "Amount cannot exceed 2000",
     tip7: "Amount cannot be less than 1",
-    tip8: "Incorrect amount entered"
+    tip8: "Incorrect amount entered",
+    tip9: "The smart contract wallet balance is insufficient, please re-enter the purchase amount"
   },
   // 操作报错原因
   err_reason:{

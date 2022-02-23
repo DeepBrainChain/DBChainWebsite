@@ -9,7 +9,6 @@
           target="_blank"
         >PanChuang Docs</a>
         <a href="https://www.deepbrainchain.org" target="_blank">{{$t('footer.DBChain')}}</a>
-        <!-- <a href="https://www.neotracker.io" target="_blank">{{$t('footer.neotracker')}}</a> -->
         <a href="https://www.dbcwallet.io" target="_blank">{{$t('DBCWallet')}}</a>
         <a href="https://dbc.subscan.io" target="_blank">{{$t('DBCBrowser')}}</a>
       </div>

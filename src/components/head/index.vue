@@ -2,28 +2,6 @@
   <div class="head">
     <div class="content wrap1440">
       <img class="logo" :src="logo" />
-      <!-- <el-dropdown
-        class="item"
-        :class="{active: this.$store.state.menuName === 'home' || this.$store.state.menuName=== 'minerHome'}"
-        trigger="click"
-        v-on:command="drop_home"
-      >
-        <span class="el-dropdown-link">
-          <span>{{$t('heads.home')}}</span>
-          <i class="el-icon-caret-bottom ml5"></i>
-        </span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="home">{{$t('heads.gpu')}}</el-dropdown-item>
-          <el-dropdown-item command="minerHome">{{$t('heads.miner')}}</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown> -->
-      <!--      <a class="item" :class="{active: menuName === 'home'}" @click="pushMenu('home')">{{$t('heads.home')}}</a>-->
-      <!-- <a
-        class="item"
-        :class="{active: menuName === 'gpu'}"
-        @click="pushMenu('gpu')"
-      >{{$t('heads.gpu')}}</a> -->
-      <!--      <router-link class="item" to="/network">{{$t('heads.network')}}</router-link>-->
       <a
         class="item"
         :class="{active: menuName === 'home'}"
@@ -34,11 +12,6 @@
         :class="{active: menuName === 'virtual'}"
         @click="pushMenu('virtual')"
       >{{$t('heads.virtual')}}</a>
-      <!-- <a
-        class="item"
-        :class="{active: menuName === 'miner'}"
-        @click="pushMenu('miner')"
-      >{{$t('heads.miner')}}</a> -->
       <a
         class="item"
         :class="{active: menuName === 'audit'}"
@@ -66,8 +39,6 @@
         target="_blank"
       >{{set_dbctalk}}</a>
       <a class="item" v-else href="https://t.me/deepbrainchainglobal" target="_blank">Join Telegram</a>
-      <!--      <router-link class="item" to="/home">{{$t('heads.api')}}</router-link>-->
-      <!--  <router-link class="item" to="/home">{{$t('heads.help')}}</router-link>-->
       <el-dropdown class="drop-lang" trigger="click" v-on:command="drop_command">
         <span class="el-dropdown-link">
           <i class="icon-language"></i>
@@ -129,9 +100,7 @@ export default {
   methods: {
     ...mapActions([
       "getAccountState",
-      // "getTransferList",
-      "getExchangeRate",
-      "getGate"
+      "getExchangeRate"
     ]),
     initData() {
       this.getExchangeRate();

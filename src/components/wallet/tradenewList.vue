@@ -8,7 +8,6 @@
           <th>{{$t('to')}}</th>
           <th width="80">{{$t('result')}}</th>
           <th width="100">{{$t('value')}}</th>
-          <!--        <th width="100">{{$t('asset')}}</th>-->
         </tr>
       </thead>
       <tbody>

@@ -108,7 +108,7 @@
           </th>
         </tr>
         </thead>
-        <tbody>
+        <tbody id="transfer">
         <tr>
           <td
             class="tl pl30 pr20"
@@ -213,7 +213,7 @@ export default {
     // }
   },
   methods: {
-    ...mapActions(["getAccountState", "getExchangeRate", "getGate", "getTransferList1"]),
+    ...mapActions(["getAccountState", "getExchangeRate", "getTransferList1"]),
     async initData() {
       const loadingInstance = this.$loading({target:'.top-tools'})
       if (getPairs().length === 0) {
@@ -283,6 +283,7 @@ export default {
             confirmButtonText: this.$t("confirm"),
             cancelButtonText: this.$t("cancel"),
             inputPlaceholder: '请输入解锁密码',
+            inputType:'password',
             // type: 'info',
             // iconClass: '',
             dangerouslyUseHTMLString: true
@@ -294,7 +295,13 @@ export default {
           if (this.pair.isLocked) {
             this.pair.unlock(password)
           }
-          const loading = this.$loading()
+          const loading = this.$loading({
+            target:'#transfer',
+            lock: true,
+            spinner: 'el-icon-loading',
+            text: this.$t("transfer_ing"),
+            background: 'rgba(0, 0, 0, 0.7)'
+          })
           return new Promise((resolve)=>{
             onTransferBalance(this.pair, this.transferFormData.toAddress, this.transferFormData.num, (hex) => {
               console.log('success transfer');

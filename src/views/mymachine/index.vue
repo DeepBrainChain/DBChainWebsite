@@ -50,24 +50,6 @@ export default {
       ],
       curNavIndex: 3,
       menus: [
-        // {
-        //   title: undefined, //this.$t("gpu.myMachine"),
-        //   to: "myMachine",
-        //   index: 0,
-        //   iconClass: "iconmachine",
-        // },
-        // {
-        //   title: undefined, //this.$t("gpu.machineList"),
-        //   to: "myMachine_cpu",
-        //   index: 1,
-        //   iconClass: "iconmachine",
-        // },
-        // {
-        //   title: undefined, //this.$t("gpu.machineList"),
-        //   to: "myMachine_stopped",
-        //   index: 2,
-        //   iconClass: "iconmachine",
-        // },
         {
           title: undefined, //this.$t("gpu.machineList"),
           to: "myMachine_gpuVirtual",
@@ -114,9 +96,6 @@ export default {
   },
   methods: {
     init_menus() {
-      // this.menus[0].title = this.$t("gpu.myMachine_gpu");
-      // this.menus[1].title = this.$t("gpu.myMachine_cpu");
-      // this.menus[2].title = this.$t("gpu.myMachine_stopped");
       this.menus[0].title = this.$t("gpu.myMachine_gpuVirtual");
       if (this.menus[1]) {
         this.menus[1].title = this.$t("gpu.myVerify_gpuVirtual");

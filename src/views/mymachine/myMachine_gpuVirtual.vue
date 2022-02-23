@@ -9,16 +9,6 @@
 <template>
   <div class="my-wallet">
     <h3></h3>
-    <!-- <div class="wallet-btns">
-      <el-button
-        type="primary"
-        v-on:click="openCreateWallet('/createWallet')"
-        >{{ $t("gpu.createWallet") }}</el-button
-      >
-      <el-button type="primary" v-on:click="openWallet">{{
-        $t("gpu.openWallet")
-      }}</el-button>
-    </div> -->
     <div class="wallet-btns">
       <el-button
         type="primary"
@@ -26,12 +16,6 @@
       >
         {{ $t('mywallet_create') }}
       </el-button>
-      <!-- <el-button
-        type="primary"
-        @click="openWallet"
-      >
-        {{ $t('mywallet_open_old') }}
-      </el-button> -->
       <el-button
         v-if="contain_new_wallet"
         type="primary"
@@ -69,7 +53,7 @@ export default {
   },
   methods: {
     ...mapMutations(['setPassWard']),
-    ...mapActions(["getAccountState", "getTransferList"]),
+    ...mapActions(["getAccountState"]),
     initData() {
       if (this.$t("website_name") == "congTuCloud") {
         this.$router.replace("myMachineUnlockGpuVirtual");

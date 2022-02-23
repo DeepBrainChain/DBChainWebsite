@@ -16,7 +16,6 @@ import { getCurrentPair } from './dot'
 import { getAccountBalance } from './dot/api'
 import {
   dbc_balance,
-  getsearch,
   dbc_gas_balance
 } from "@/api";
 import store  from '@/store'
@@ -71,82 +70,6 @@ export function initAccount(privateKey) {
   } else {
     return undefined;
   }
-}
-
-export function initAccountFromEncryptedKey(encryptedKey, password) {
-  return new Promise((resolve, reject) => {
-    if (wallet.isNEP2(encryptedKey)) {
-      account = new wallet.Account(encryptedKey);
-      account
-        .decrypt(password)
-        .then(account => {
-          resolve(account);
-        })
-        .catch(e => {
-          reject(e);
-        });
-    } else {
-      reject("the key is wrong~!");
-    }
-  });
-}
-
-export function getBalance_old() {
-  return new Promise((resolve, reject) => {
-    if (account) {
-      const scriptHash = DBCHash;
-      //const apiProvider = new api.neoscan.instance('MainNet')
-      //  const apiProvider = new api.neoscan.instance(
-      //    "https://api.neoscan.io/api/main_net"
-      //   ); //
-      const apiProvider = new api.neoCli.instance("https://neocli.dbchain.ai"); //or "http://seed5.ngd.network:20332" for TestNet );
-
-      apiProvider
-        .getBalance(account.address)
-        .then(res => {
-          // console.log(res)
-          const nep5AssetsArray = [];
-          res.tokenSymbols.forEach(symbol => {
-            const fixed8 = res.tokens[symbol];
-            const balance = fixed8.toNumber();
-            nep5AssetsArray.push({
-              symbol,
-              balance
-            });
-          });
-          const dbc_info = nep5AssetsArray.find(
-            item => item.symbol === DBC_NAME
-          );
-          if (dbc_info) {
-            console.log(dbc_info);
-            resolve(dbc_info);
-          } else {
-            resolve({
-              balance: 0
-            });
-          }
-        })
-        .catch(err => {
-          console.log(err);
-          reject("please open wallet");
-        });
-
-      /*nep5.getToken(netType, scriptHash, account.address).then(res => {
-        console.log(res)
-        resolve({
-          name: res.name,
-          symbol: res.symbol,
-          balance: res.balance.c[0],
-          decimals: res.decimals
-        })
-      }).catch(err => {
-        console.log(err)
-        reject('please open wallet')
-      })*/
-    } else {
-      reject("please open wallet");
-    }
-  });
 }
 
 export function getBalance() {
@@ -520,7 +443,7 @@ export function transfer_other({
       } else {
         this.$message({
           showClose: true,
-          message: this.$t("dbc_lack_of_balance"),
+          message: this.$t("lessdbc"),
           type: "error"
         });
         return Promise.reject({

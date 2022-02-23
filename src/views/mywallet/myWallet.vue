@@ -1,12 +1,6 @@
 <template>
   <div class="my-wallet">
     <div class="wallet-btns">
-      <!-- <el-button
-        type="primary"
-        @click="openCreateWallet('/createWallet')"
-      >
-        {{ $t('mywallet_create') }}
-      </el-button> -->
       <el-button
         v-if="contain_new_wallet"
         type="primary"
@@ -14,19 +8,6 @@
       >
         {{ $t('mywallet_create') }}
       </el-button>
-      <!-- <el-button
-        v-if="!contain_new_wallet"
-        type="primary"
-        @click="openWallet"
-      >
-        {{ $t('mywallet_open') }}
-      </el-button> -->
-      <!-- <el-button
-        type="primary"
-        @click="openWallet"
-      >
-        {{ $t('mywallet_open_old') }}
-      </el-button> -->
       <el-button
         v-if="contain_new_wallet"
         type="primary"
@@ -79,7 +60,7 @@ export default {
     ...mapState(['isNewWallet'])
   },
   methods: {
-    ...mapActions(["getAccountState", "getTransferList"]),
+    ...mapActions(["getAccountState"]),
     initData() {
       console.log(String(this.isNewWallet), 'this.isNewWallet');
       if(String(this.isNewWallet) == 'false'){
