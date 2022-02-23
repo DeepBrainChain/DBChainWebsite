@@ -205,6 +205,9 @@ export default {
     },
     computeTotalDBC() {
       if (this.usd !== "" && this.usd !== 0) {
+        if (this.usd < 1) {
+          this.usd = 1
+        }
         this.usd = parseFloat(this.usd).toFixed(2)
         clearTimeout(this.time)
         this.time = setTimeout(() => {
