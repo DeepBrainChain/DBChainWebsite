@@ -438,3 +438,16 @@ export const changeStatus = data => {
     params
   });
 };
+
+/**
+ * @description 创建订单
+ * @param {object} data {machine_id, gpu, ....}
+ */
+
+ export const createBuyOd = data => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/paypal/createOrder',
+    data: data
+  });
+};

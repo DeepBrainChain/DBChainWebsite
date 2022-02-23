@@ -315,10 +315,11 @@ export default {
     title: "如何购买DBC", 
     "1": "1.直接用支付宝购买DBC(此平台可以开发票)，进入",
     "2": "2.从火币购买DBC",
-    "3": "1.直接用PayPal购买DBC(此平台可以开发票)，进入",
+    "3": "1.直接用PayPal购买DBC(可以开发票)",
     "4": "2.从Gate.io购买DBC",
     "5": "3.从其他支持DBC的钱包转账到钱包账号，比如",
-    reloadWallet: "充值进入钱包账号"
+    reloadWallet: "充值进入钱包账号",
+    enter:'进入'
   },
   miner: {
     addMc_Title: "请按照如下步骤添加机器：",
@@ -916,7 +917,7 @@ export default {
   },
 
   mywallet_open_old: "打开旧钱包账号",
-  mywallet_open_new: "打开新钱包账号",
+  mywallet_open_new: "打开钱包账号",
 
   // 新加
   mnemonic: "助记词",
@@ -1205,15 +1206,17 @@ export default {
     status2: "DBC转账成功，到账大概需要几分钟，请到钱包地址中查看",
     status3: "支付成功，但DBC转账失败，请邮件联系support@dbctrade.io.我们会在24小时内帮您处理",
     status4: "支付失败，请邮件联系support@dbctrade.io.我们会在24小时内帮您处理",
+    status5: "查询订单金额与转账金额不一致，请联系客服处理",
     title1: "重要提示",
-    tip1: "DBCTrade平台是通过智能合约进行DBC转账，支付完成后，智能合约会自动将您购买的DBC打入到您指定的DBC地址.",
-    tip2: "温馨提示：DBCTrade平台收取14%的费用,单次购买金额最多2000美元.如果需要开发票，请加微信号:DCloud2019",
+    tip1: "平台是通过智能合约进行DBC转账，支付完成后，智能合约会自动将您购买的DBC打入到您指定的DBC地址.",
+    tip2: "温馨提示：平台收取14%+0.3USD的费用,单次购买金额最多2000美元.如果需要开发票，请发邮件至右下方客服支持邮箱",
     tip3: "DBC价格随时随刻都在波动，请注意风险！",
     tip4: "DBC价格参考gate DBC/USDT交易对价格，",
     tip5: "DBC数量为0，请刷新页面后重新输入USD金额",
     tip6: "金额不能超过2000",
-    tip7: "金额不能小于等于0",
-    tip8: "输入金额不正确"
+    tip7: "金额不能小于1",
+    tip8: "输入金额不正确",
+    tip9: "智能合约钱包余额不足，请重新输入购买金额"
   },
   // 操作报错原因
   err_reason:{

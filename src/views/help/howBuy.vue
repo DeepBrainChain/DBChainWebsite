@@ -25,7 +25,7 @@
 
       <h3>
         {{$t('help.3')}}，
-        <a href="javascript:" @click="tradedbcHref">dbctrade</a>
+        <a href="javascript:" @click="tradedbcHref">{{$t('help.enter')}}</a>
       </h3>
 
       <h3>
