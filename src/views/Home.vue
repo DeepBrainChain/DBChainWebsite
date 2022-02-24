@@ -230,6 +230,8 @@ export default {
         return this.$t("home.intr_dpool_1");
       }else if (this.$t("website_name") == "tycloud") {
         return this.$t("home.intr_tycloud_1");
+      }else if (this.$t("website_name") == "Nexuicloud") {
+        return this.$t("home.intr_Nexuicloud_1");
       }
 
       return this.$t("home.intr_dbchain_1");

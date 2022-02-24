@@ -174,6 +174,8 @@ export default {
         return this.$t("footer_service_dpool");
       } else if (this.$t("website_name") == "tycloud") {
         return this.$t("footer_service_tycloud");
+      } else if (this.$t("website_name") == "Nexuicloud") {
+        return this.$t("footer_service_Nexuicloud");
       }
 
       return this.$t("footer_service_dbchain");

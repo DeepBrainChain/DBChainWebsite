@@ -162,6 +162,7 @@ export default {
     intr_changhe_1: "long river cloud",
     intr_dpool_1: "DPool",
     intr_tycloud_1: "TYCloud",
+    intr_Nexuicloud_1: "Nexui",
     intr_1: ' fournit un service de location de GPU. rejoignez-nous ! peut aider votre machine à accéder très facilement au réseau DBC, à générer des revenus. \n' +
       '\n' +
       ' Si votre GPU est inactif, vous pouvez le connecter au réseau DBC pour gagner des jetons DBC et en profiter. \n ' +
@@ -256,6 +257,7 @@ export default {
   footer_service_changhe: "changhecloud@outlook.com", //9.17 19:33
   footer_service_dpool: "hello@decentral.cc", //9.17 19:33
   footer_service_tycloud: "tyhctech@gmail.com", //9.17 19:33
+  footer_service_Nexuicloud: "Info@nexuicom.com",
   pleae_create_wallet: "Veuillez d'abord créer un compte portefeuille dans Mon portefeuille",
   diskspace_remaining: "Espace disque libre maximum",
   memory_space: "espace mémoire",

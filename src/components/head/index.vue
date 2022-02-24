@@ -85,6 +85,13 @@ export default {
     this.setLanguageCode();
     this.initData();
   },
+  watch: {
+    "$i18n.locale"() {
+      this.set_ico()
+      this.set_title()
+      this.set_logo()
+    },
+  },
   computed: {
     ...mapState([
       "address",
@@ -393,9 +400,12 @@ export default {
         document.title = "dpool";
       } else if (this.$t("website_name") == "tycloud") {
         document.title = "tycloud";
+      } else if (this.$t("website_name") == "Nexuicloud") {
+        document.title = "Nexuicloud";
       }
     },
     set_logo() {
+      console.log(this.$t("website_name"), 'this.$t("website_name")');
       if (this.$t("website_name") == "dbchain") {
         this.logo = require("../../assets/imgs/dbchain@1x.png");
       } else if (this.$t("website_name") == "yousanai") {
@@ -502,6 +512,8 @@ export default {
         this.logo = require("../../assets/imgs/changhe@1x.png");
       } else if (this.$t("website_name") == "tycloud") {
         this.logo = require("../../assets/imgs/tianyucloud.png");
+      } else if (this.$t("website_name") == "Nexuicloud") {
+        this.logo = require("../../assets/imgs/Nexuicloud.png");
       }
     },
     pushMenu(name) {
@@ -560,6 +572,7 @@ export default {
   align-items: center;
 
   .logo {
+    max-width: 120px;
     // margin-top: -30px; //dbchain:10px ,aionego:-30px,yousanai:-30px,deepshare-30px,yalecloud-30px,panchuanga:-30px,,sharegpu:-30px
     //alpha-dbchain:-50px,xyzlab:-20px
     margin-right: 119px; //dbchain: 119px  ,aionego:119px,yousanai:119px,deepshare:119px
@@ -572,7 +585,7 @@ export default {
     .item {
       font-size: 16px;
       font-weight: 700;
-      margin-right: 50px;
+      margin-right: 40px;
       cursor: pointer;
       color: rgba(255, 255, 255, 0.5);
       // padding-bottom: 5px;
@@ -624,6 +637,7 @@ export default {
     .content{
       width: 1200px;
       .logo{
+        max-width: 120px;
         margin-right: 50px;
       }
       .navlist{
@@ -632,7 +646,7 @@ export default {
         justify-content: flex-start;
         align-items: center;
         .item {
-          margin-right: 30px;
+          margin-right: 25px;
         }
       }
     }

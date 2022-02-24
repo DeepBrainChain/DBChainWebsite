@@ -6,7 +6,7 @@ export default {
    ** 如果是法币聪图云模式，要把根目录下public/index.html 中脚本的 websiteNameIsCongtuCloud变量 修改为true
    */
   webtype: "1", //0:表示法币支付网站,1:表示dbc支付网站
-  website_name: "dbchain", //yousanai , dbchain ,aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp,1024lab,congTuCloud,tycloud
+  website_name: "dbchain", //dbchain, 1024lab, tycloud, Nexuicloud <--||| yousanai, congTuCloud, aionego,deepshare,panchuangai,sharegpu,yalecloud,52lm,dimi,mayi,windywinter,litaai,52cv,ainlp, 
   contain_new_wallet: "1", //0:不包含新钱包，1:包含新钱包
   $: "$",
   send: "发送",
@@ -162,6 +162,7 @@ export default {
     intr_changhe_1: "长河云",
     intr_dpool_1: "DPool",
     intr_tycloud_1: "天予云",
+    intr_Nexuicloud_1: "Nexui",
     intr_1: "提供GPU出租服务，加入我们，可以帮助您的机器非常方便的接入到深脑链网络中，获取收益。\n" +
       "\n" +
       "       只要你的GPU有空闲，就可以加入我们赚取DBC Token，同时可以享受Token升值带来的更多收益。\n" +
@@ -256,6 +257,7 @@ export default {
   footer_service_changhe: "changhecloud@outlook.com", //9.17 19:33
   footer_service_dpool: "hello@decentral.cc", //9.17 19:33
   footer_service_tycloud: "tyhctech@gmail.com", //9.17 19:33
+  footer_service_Nexuicloud: "Info@nexuicom.com",
   pleae_create_wallet: "请先在我的钱包中创建钱包账号",
   diskspace_remaining: "最大可用硬盘空间",
   memory_space: "内存空间",
