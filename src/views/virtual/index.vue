@@ -1059,4 +1059,28 @@ export default {
     color: #f56c6c;
   }
 }
+
+@media screen and (max-width: 1600px) {
+  .right_con{
+    .topcon{
+      .topcon_left{
+        .topitem{
+          font-size: 14px;
+        }
+      }
+    }
+    .table{
+      .tableli{
+        font-size: 12px;
+        .li_list2{
+          span{
+            &.bold{
+              font-size: 14px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
 </style>

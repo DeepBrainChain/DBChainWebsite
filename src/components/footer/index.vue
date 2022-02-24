@@ -11,6 +11,7 @@
         <a href="https://www.deepbrainchain.org" target="_blank">{{$t('footer.DBChain')}}</a>
         <a href="https://www.dbcwallet.io" target="_blank">{{$t('DBCWallet')}}</a>
         <a href="https://dbc.subscan.io" target="_blank">{{$t('DBCBrowser')}}</a>
+        <a href="https://deepbrainchain.github.io/DBC-Wiki/" target="_blank">{{$t('DBCWiki')}}</a>
       </div>
       <div class="line" tyle=" text-align:center"></div>
       <p class="contact">{{$t('footer_service')}}:{{footer_service}},{{$t('footr_reply')}}</p>

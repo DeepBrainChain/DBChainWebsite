@@ -1625,4 +1625,21 @@ export default {
     }
   }
 }
+
+
+@media screen and (max-width: 1600px) {
+  .table{
+    .tableli{
+      font-size: 12px;
+      .li_list2{
+        span{
+          &.bold{
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+}
+
 </style>

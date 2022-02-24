@@ -283,6 +283,7 @@ export default {
   verifyPassward: "Please enter account password",
   DBCWallet: "DBC wallet",
   DBCBrowser: "DBC Browser",
+  DBCWiki: "DBC Wiki",
   responseTip: 'The submission process takes about 20~40 seconds, please wait a moment',
   // 审核机器
   audit:{

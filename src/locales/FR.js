@@ -1,4 +1,4 @@
-import enLocale from 'element-ui/lib/locale/lang/en'
+import enLocale from 'element-ui/lib/locale/lang/fr'
 
 export default {
   /* 关于webtype:
@@ -283,6 +283,7 @@ export default {
   verifyPassward: "Veuillez entrer le mot de passe du compte",
   DBCWallet: "Portefeuille DBC",
   DBCBrowser: "Navigateur DBC",
+  DBCWiki: "Wiki DBC",
   responseTip: 'Le processus de soumission prend environ 20 à 40 secondes, veuillez patienter un instant',
   // 审核机器
   audit:{

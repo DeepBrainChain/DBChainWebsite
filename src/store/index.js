@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 
 import {
   getAccount,
-  getTransactions,
   getTransactions1
 } from '../utlis'
 
@@ -11,9 +10,7 @@ import newDbc from './modules/dbcWallet'
 
 import {
   dbc_info,
-  dbc_balance,
-  getsearch,
-  dbc_gas_balance
+  getsearch
 } from '@/api'
 
 Vue.use(Vuex)
@@ -196,47 +193,7 @@ export default new Vuex.Store({
               commit('setTransferList', array)
               commit('setListTotal', res.data.count)
             })
-          }else{
-            dbc_balance({
-              user_wallet_address: ac.address,
-              language
-            }).then(res => {
-  
-              commit('setBalances', res.content)
-  
-  
-            }).catch(err => {
-  
-            })
-  
-            dbc_gas_balance({
-              user_wallet_address: ac.address,
-              language
-            }).then(res => {
-  
-              commit('setGasBalances', res.content)
-  
-  
-            }).catch(err => {
-  
-            })
           }
-          
-
-          getTransactions(state.address, 1).then(res => {
-            const array = res.entries.map(item => {
-              return {
-                txHash: item.txid,
-                fromAddress: item.address_from,
-                toAddress: item.address_to,
-                time: item.time,
-                amount: item.amount
-              }
-            })
-            commit('setTransferList', array)
-          })
-
-
         } else {
           reject('please open wallet')
         }

@@ -513,4 +513,13 @@ export default {
   }
 }
 
+@media screen and (max-width: 1600px) {
+  .title{
+    font-size: 16px;
+  }
+  .info-wrap {
+    font-size: 12px;
+  }
+}
+
 </style>

@@ -2,43 +2,45 @@
   <div class="head">
     <div class="content wrap1440">
       <img class="logo" :src="logo" />
-      <a
-        class="item"
-        :class="{active: menuName === 'home'}"
-        @click="pushMenu('home')"
-      >{{$t('heads.home')}}</a>
-      <a
-        class="item"
-        :class="{active: menuName === 'virtual'}"
-        @click="pushMenu('virtual')"
-      >{{$t('heads.virtual')}}</a>
-      <a
-        class="item"
-        :class="{active: menuName === 'audit'}"
-        @click="pushMenu('audit')"
-      >{{$t('heads.audit')}}</a>
-      <a
-        class="item"
-        :class="{active: menuName === 'mymachine'}"
-        @click="pushMenu('mymachine')"
-      >{{$t('heads.mymachine')}}</a>
-      <a
-        class="item"
-        :class="{active: menuName === 'mywallet'}"
-        @click="pushMenu('mywallet')"
-      >{{$t('heads.mywallet')}}</a>
-      <a
-        target="_blank"
-        href="https://deepbrainchain.github.io/DBC-Wiki/dbc-introduction/rentVirtual.html"
-        class="item"
-      >{{$t('heads.help')}}</a>
-      <a
-        class="item"
-        v-if="this.curLang==='cn' ||this.curLang==='CN' "
-        href="http://www.dbctalk.ai"
-        target="_blank"
-      >{{set_dbctalk}}</a>
-      <a class="item" v-else href="https://t.me/deepbrainchainglobal" target="_blank">Join Telegram</a>
+      <div class="navlist">
+        <a
+          class="item"
+          :class="{active: menuName === 'home'}"
+          @click="pushMenu('home')"
+        >{{$t('heads.home')}}</a>
+        <a
+          class="item"
+          :class="{active: menuName === 'virtual'}"
+          @click="pushMenu('virtual')"
+        >{{$t('heads.virtual')}}</a>
+        <a
+          class="item"
+          :class="{active: menuName === 'audit'}"
+          @click="pushMenu('audit')"
+        >{{$t('heads.audit')}}</a>
+        <a
+          class="item"
+          :class="{active: menuName === 'mymachine'}"
+          @click="pushMenu('mymachine')"
+        >{{$t('heads.mymachine')}}</a>
+        <a
+          class="item"
+          :class="{active: menuName === 'mywallet'}"
+          @click="pushMenu('mywallet')"
+        >{{$t('heads.mywallet')}}</a>
+        <a
+          target="_blank"
+          href="https://deepbrainchain.github.io/DBC-Wiki/dbc-introduction/rentVirtual.html"
+          class="item"
+        >{{$t('heads.help')}}</a>
+        <a
+          class="item"
+          v-if="this.curLang==='cn' ||this.curLang==='CN' "
+          href="http://www.dbctalk.ai"
+          target="_blank"
+        >{{set_dbctalk}}</a>
+        <a class="item" v-else href="https://t.me/deepbrainchainglobal" target="_blank">Join Telegram</a>
+      </div>
       <el-dropdown class="drop-lang" trigger="click" v-on:command="drop_command">
         <span class="el-dropdown-link">
           <i class="icon-language"></i>
@@ -48,7 +50,7 @@
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="CN">简体中文</el-dropdown-item>
           <el-dropdown-item command="EN">ENGLISH</el-dropdown-item>
-          <!-- <el-dropdown-item command="FR">Français</el-dropdown-item> -->
+          <el-dropdown-item command="FR">Français</el-dropdown-item>
           <!-- <el-dropdown-item command="RU">Ру́сский язы́к</el-dropdown-item> -->
           <!--    <el-dropdown-item command="VI">Việt nam</el-dropdown-item>
           <el-dropdown-item command="KO">한국어</el-dropdown-item>
@@ -562,22 +564,28 @@ export default {
     //alpha-dbchain:-50px,xyzlab:-20px
     margin-right: 119px; //dbchain: 119px  ,aionego:119px,yousanai:119px,deepshare:119px
   }
+  .navlist{
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    .item {
+      font-size: 16px;
+      font-weight: 700;
+      margin-right: 50px;
+      cursor: pointer;
+      color: rgba(255, 255, 255, 0.5);
+      // padding-bottom: 5px;
+      border-bottom: 2px solid transparent;
 
-  .item {
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    color: rgba(255, 255, 255, 0.5);
-    padding-bottom: 5px;
-    border-bottom: 2px solid transparent;
+      &:hover {
+        color: rgba(255, 255, 255, 0.9);
+      }
 
-    &:hover {
-      color: rgba(255, 255, 255, 0.9);
-    }
-
-    &.active {
-      border-bottom-color: #fff;
-      color: rgba(255, 255, 255, 0.9);
+      &.active {
+        border-bottom-color: #fff;
+        color: rgba(255, 255, 255, 0.9);
+      }
     }
   }
 
@@ -610,4 +618,25 @@ export default {
     color: rgba(255, 255, 255, 0.9);
   }
 }
+
+@media screen and (max-width: 1600px) {
+  .head{
+    .content{
+      width: 1200px;
+      .logo{
+        margin-right: 50px;
+      }
+      .navlist{
+        flex: 1;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        .item {
+          margin-right: 30px;
+        }
+      }
+    }
+  }
+}
+
 </style>

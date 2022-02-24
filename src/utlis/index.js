@@ -2,22 +2,15 @@ import Neon, {
   rpc,
   wallet,
   nep5,
-  api,
-  sc,
-  u,
-  tx
+  api
 } from "@cityofzion/neon-js";
 import cookie from "js-cookie";
 import {
-  get_address_abstracts,
   get_address_abstracts1
 } from "@/api/index";
 import { getCurrentPair } from './dot'
 import { getAccountBalance } from './dot/api'
-import {
-  dbc_balance,
-  dbc_gas_balance
-} from "@/api";
+
 import store  from '@/store'
 
 import {
@@ -97,43 +90,7 @@ export function getBalance() {
         // }).catch(err => {
         //   console.log(err, 'getsearch_Err');
         // })
-      }else{
-        dbc_balance({
-          user_wallet_address: account.address,
-          language: "CN"
-        }).then(res => {
-  
-          resolve({
-            symbol: DBC_NAME,
-            balance: res.content
-          });
-  
-        }).catch(err => {
-  
-        })
-      }      
-    } else {
-      reject("please open wallet");
-    }
-  });
-}
-
-export function getGasBalance() {
-  return new Promise((resolve, reject) => {
-    if (account) {
-      dbc_gas_balance({
-        user_wallet_address: account.address,
-        language: "CN"
-      }).then(res => {
-
-        resolve({
-          symbol: DBC_NAME,
-          gas_balance: res.content
-        });
-
-      }).catch(err => {
-
-      })
+      } 
     } else {
       reject("please open wallet");
     }
@@ -201,14 +158,6 @@ export function getTransfer(address) {
   });
 }
 
-export function getTransactions(address, page, assetsHash = DBCHash) {
-  return get_address_abstracts({
-    address,
-    page
-  }).then(res => {
-    return Promise.resolve(res);
-  });
-}
 export function getTransactions1(address, page, row,assetsHash = DBCHash) {
   return get_address_abstracts1({
     address,
@@ -270,142 +219,7 @@ export function transfer({
         status: -2
       });
     });
-  }else{
-    return dbc_balance({
-      user_wallet_address: account.address,
-      language: "CN"
-    })
-    .then(res => {
-      if (res.content > amount) {
-
-        const apiCli = new api.neoCli.instance("https://neocli.dbchain.ai");
-        //https://neocli.dbchain.ai
-        //https://seed11.ngd.network:10331
-        //const apiProvider = new api.neoscan.instance('https://api.neoscan.io/api/main_net')
-        //  const apiProvider = new api.neoscan.instance('https://neocli.dbchain.ai')
-        // console.log(apiProvider)
-        const generator = nep5.abi.transfer(
-          DBCHash,
-          account.address,
-          toAddress ? toAddress : testAddress,
-          amount
-        );
-        // console.log(generator)
-        const script = generator().str;
-        // console.log(script)
-        const config = {
-          api: apiCli, // The API Provider that we rely on for balance and rpc information
-
-          url: "https://neocli.dbchain.ai",
-
-          account: account, // The sending Account
-          // intents: undefined, // Additional intents to move assets
-          script: script, // The Smart Contract invocation script
-          gas: 0, //,
-          fees: 0.001
-
-        };
-        // console.log(res.balance)
-        return Neon.doInvoke(config).then(res => {
-          if (res.response && res.response.result) {
-            return Promise.resolve({
-              status: 1,
-              ...res
-            });
-          } else {
-            return Promise.resolve({
-              status: -2
-            });
-          }
-        });
-      } else {
-        return Promise.resolve({
-          status: -1
-        });
-      }
-    })
-    .catch(err => {
-      return Promise.resolve({
-        status: -2
-      });
-    });
   }
-  
-}
-
-export function transfer12({
-  toAddress = testAddress,
-  amount
-
-}) {
-  return dbc_balance({
-      user_wallet_address: account.address,
-      language: "CN"
-    })
-    .then(res => {
-      if (res.content > amount) {
-        const param_sending_address = sc.ContractParam.byteArray(
-          account.address,
-          "address"
-        );
-        const param_receiving_address = sc.ContractParam.byteArray(
-          toAddress,
-          "address"
-        );
-        const param_amount = Neon.create.contractParam("Integer", amount * 1e8);
-        // Build contract script
-        const props = {
-          scriptHash: DBCHash,
-          operation: "transfer",
-          args: [param_sending_address, param_receiving_address, param_amount]
-        };
-        const script = Neon.create.script(props);
-        // Create transaction object
-        let rawTransaction = new tx.InvocationTransaction({
-          script: script,
-          gas: 0
-        });
-        // Build input objects and output objects.
-        rawTransaction.addAttribute(
-          tx.TxAttrUsage.Script,
-          u.reverseHex(wallet.getScriptHashFromAddress(account.address))
-        );
-        // Sign transaction with sender's private key
-        const signature = wallet.sign(
-          rawTransaction.serialize(false),
-          account.privateKey
-        );
-        // Add witness
-        rawTransaction.addWitness(
-          tx.Witness.fromSignature(signature, account.publicKey)
-        );
-        // Send raw transactionconst
-        // client = new rpc.RPCClient("https://neocli.dbchain.ai");
-        //client = new rpc.RPCClient("http://117.51.149.193:10332");
-        //  client = new rpc.RPCClient("http://117.51.149.193:10332");
-
-        client.sendRawTransaction(rawTransaction).then(res => {
-          if (res.response && res.response.result) {
-            return Promise.resolve({
-              status: 1
-            });
-          } else {
-            return Promise.resolve({
-              status: -2
-            });
-          }
-        });
-      } else {
-        return Promise.resolve({
-          status: -1
-        });
-      }
-    })
-    .catch(err => {
-      return Promise.resolve({
-        status: -2
-      });
-    });
 }
 
 export function transfer_other({
