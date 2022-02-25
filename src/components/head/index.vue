@@ -2,17 +2,32 @@
   <div class="head">
     <div class="content wrap1440">
       <img class="logo" :src="logo" />
-      <div class="navlist">
+      <div v-show="headhidden" class="navlist">
         <a
           class="item"
           :class="{active: menuName === 'home'}"
           @click="pushMenu('home')"
         >{{$t('heads.home')}}</a>
-        <a
+        <el-dropdown
+          class="item"
+          trigger="click"
+          v-on:command="drop_home"
+        >
+          <span class="el-dropdown-link">
+            <span class="item" :class="{active: this.$store.state.menuName === 'virtual'}">{{$t('heads.virtual')}}</span>
+            <i class="el-icon-caret-bottom ml5"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="gpu">{{$t('heads.gputype')}}</el-dropdown-item>
+            <el-dropdown-item command="city">{{$t('heads.area')}}</el-dropdown-item>
+            <el-dropdown-item command="room">{{$t('heads.room')}}</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <!-- <a
           class="item"
           :class="{active: menuName === 'virtual'}"
           @click="pushMenu('virtual')"
-        >{{$t('heads.virtual')}}</a>
+        >{{$t('heads.virtual')}}</a> -->
         <a
           class="item"
           :class="{active: menuName === 'audit'}"
@@ -75,7 +90,8 @@ export default {
       link: undefined,
       title: undefined,
       logo: undefined,
-      language_name: "简体中文"
+      language_name: "简体中文",
+      headhidden: true
     };
   },
   created() {
@@ -91,6 +107,11 @@ export default {
       this.set_title()
       this.set_logo()
     },
+    "$route"(oldvalue) {
+      if (oldvalue.path.indexOf('/trade') != -1) {
+        this.headhidden = false
+      }
+    }
   },
   computed: {
     ...mapState([
@@ -405,7 +426,6 @@ export default {
       }
     },
     set_logo() {
-      console.log(this.$t("website_name"), 'this.$t("website_name")');
       if (this.$t("website_name") == "dbchain") {
         this.logo = require("../../assets/imgs/dbchain@1x.png");
       } else if (this.$t("website_name") == "yousanai") {
@@ -526,9 +546,13 @@ export default {
       this.$router.push("/preview");
     },
     drop_home(name) {
-      // this.menuName = name;
-      this.$store.commit("setMenuName", name);
-      this.$router.push("/" + name);
+      this.$store.commit("setMenuName", 'virtual');
+      this.$router.push({
+        path:"/virtual",
+        query: {
+          type: name
+        }
+      });
     },
     drop_command(lang) {
       this.$loadLanguageAsync(lang).then(() => {
@@ -590,7 +614,10 @@ export default {
       color: rgba(255, 255, 255, 0.5);
       // padding-bottom: 5px;
       border-bottom: 2px solid transparent;
-
+      .item {
+        margin-right: 0;
+        padding-bottom: 5px;
+      }
       &:hover {
         color: rgba(255, 255, 255, 0.9);
       }
@@ -647,6 +674,9 @@ export default {
         align-items: center;
         .item {
           margin-right: 25px;
+          .item {
+            margin-right: 0;
+          }
         }
       }
     }

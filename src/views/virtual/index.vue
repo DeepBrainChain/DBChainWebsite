@@ -5,7 +5,7 @@
       <el-container>
         <el-aside class="left-wrap">
           <div class="navi">
-            <ul class="btn-list">
+            <ul v-show="enterType == 'gpu'" class="btn-list">
               <li v-for="(item,idx) in tableData" :key="idx">
                 <el-button
                   class="lg naviBtn"
@@ -13,6 +13,28 @@
                   v-on:click="choose(item)"
                 >
                   <span>{{String(item.type).slice(7)}}</span>
+                </el-button>
+              </li>
+            </ul>
+            <ul v-show="enterType == 'city'" class="btn-list">
+              <li v-for="(item,idx) in cityData" :key="idx">
+                <el-button
+                  class="lg naviBtn"
+                  :class="{active: active === item.desc}"
+                  v-on:click="choosecity(item)"
+                >
+                  <span>{{item.desc}}</span>
+                </el-button>
+              </li>
+            </ul>
+            <ul v-show="enterType == 'room'" class="btn-list">
+              <li v-for="(item,idx) in roomData" :key="idx">
+                <el-button
+                  class="lg naviBtn"
+                  :class="{active: active === item}"
+                  v-on:click="chooseRoom(item)"
+                >
+                  <span :title="item">{{String(item).substring(0,15)+'...'}}</span>
                 </el-button>
               </li>
             </ul>
@@ -174,7 +196,20 @@ import { getCurrentPair } from "@/utlis/dot";
 import { getAccount, getBalance } from "@/utlis";
 import { mapState, mapMutations } from "vuex";
 import { transfer, getBlockTime, batchTransfer, standardGPUPointPrice, dbcPriceOcw } from '@/utlis/dot/api';
-import { GetGpu_Info, GetMachine_Details, Count_Details, CreateWallet, createVirOrder, rentmachine, getPercentage, getMachineInfo } from "@/api"
+import { 
+  GetGpu_Info,
+  GetMachine_Details,
+  Count_Details,
+  CreateWallet,
+  createVirOrder,
+  rentmachine,
+  getPercentage,
+  getMachineInfo,
+  getCity,
+  getlistByCity,
+  getRoomnum,
+  getlistByRoom,
+} from "@/api"
 export default {
   name: "virtual",
   data() {
@@ -312,6 +347,8 @@ export default {
         }
       ],
       tableData: [],
+      cityData: [],
+      roomData: [],
       tableDataDefulat: [
         {
           type: "GeForceGTX1660S",
@@ -381,7 +418,11 @@ export default {
       DBCPercentage: 0,
       refresh: null,
       startConfirm: false,
-      max_vir_mem: 0
+      max_vir_mem: 0,
+      enterType: this.$route.query.type ? this.$route.query.type : 'gpu',
+      chooseCity: '',
+      chooseCountry: '',
+      chooseRoomnum: ''
     };
   },
   beforeMount() {
@@ -395,7 +436,14 @@ export default {
     if (this.$t("website_name") === "congTuCloud") {
       this.$refs.virtualBox.style.marginBottom = "0px";
     }
-    this.getGpuList()
+    if (this.enterType == "gpu") {
+      this.getGpuList()
+    } else if (this.enterType == "city") {
+      this.getcity()
+    } else {
+      this.getroom()
+    }
+    
   },
   beforeDestroy() {
     if(this.refresh){
@@ -403,14 +451,30 @@ export default {
     }
   },
   watch: {
-    
+    '$route.query.type'(value){
+      this.enterType = value
+      this.Machine_status = ''
+      this.GPU_Num = ''
+      this.Idle_Machine = 0
+      this.All_Machine = 0
+      this.Machine_info = []
+      if (this.enterType == "gpu") {
+        this.getGpuList()
+      } else if (this.enterType == "city") {
+        this.getcity()
+      } else {
+        this.getroom()
+      }
+    }
   },
   computed: {
     ...mapState(["isNewWallet", "passward"]),
   },
   methods: {
     ...mapMutations(['setPassWard']),
+    // gpu显示
     getGpuList(){
+      this.tableData = []
       GetGpu_Info().then(res => {
         for (let i=0; i< this.Gpu_Type.length; i++) {
           for (let k=0; k< res.length; k++) {
@@ -423,7 +487,6 @@ export default {
           this.tableData = this.tableDataDefulat
         }
         this.active = this.tableData[0] ? this.tableData[0].type : ''
-        this.Computing_Power = this.tableData[0] ? this.tableData[0].power : 0
         this.getList(this.active , this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
       })
     },
@@ -476,15 +539,154 @@ export default {
         })
       })
     },
+    // 地区分类
+    getcity(){
+      getCity().then(res => {
+        if (res.success) {
+          this.cityData = res.content
+          this.active = this.cityData[0] ? this.cityData[0].desc : ''
+          this.chooseCountry = this.cityData[0].country
+          this.chooseCity = this.cityData[0].city
+        } else {
+          this.cityData = []
+        }
+        this.getCityList(this.chooseCountry, this.chooseCity, this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
+      })
+    },
+    getCityList(country, city, status = '', num = '', type , pageNum = 1, pageSize = 20 ) {
+      this.isIndeterminate = false;
+      this.checkedCities = [];
+      this.checkAll = false;
+      this.openCheck = false;
+      let data = {
+        country,
+        city,
+        status,
+        gpu_num: num,
+        pageNum: pageNum,
+        pageSize: pageSize
+      }
+      getlistByCity(data).then( async (res) => {
+        res.content.list.map( (el, i) => {
+          el.machine_id = el._id
+          if(el.operator){
+            el.machine_name = this.byteToStr(JSON.parse(el.operator))
+          }
+          el.online = '···'
+        })
+        this.All_Machine = res.content.total
+        this.Idle_Machine = res.content.online
+        if(type == 'first'){
+          if(this.refresh){
+            clearInterval(this.refresh)
+          }
+          this.refresh = setInterval( async () => {
+            let DBCprice1 = await dbcPriceOcw()
+            this.dbc_price = DBCprice1/1000000
+            this.getCityList(this.chooseCountry, this.chooseCity, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+          }, 60000)
+        }
+        let DBCprice1 = await dbcPriceOcw()
+        this.dbc_price = DBCprice1/1000000
+        let online_block = await getBlockTime();
+        const GPUPrice = await standardGPUPointPrice()
+        this.GPUPointPrice = GPUPrice ? GPUPrice.gpu_price/1000000 : this.GPUPointPrice
+        online_block = online_block.replace(/,/gi, '');
+        this.Machine_info = res.content.list
+        this.total = res.content.total
+        this.Machine_info.map( (el) => {
+          el.online = this.minsToHourMins(Math.floor((online_block-el.bonding_height)/2))
+        })
+      })
+    },
+    // 机房分类
+    getroom(){
+      getRoomnum().then(res => {
+        if (res.success) {
+          this.active = res.content[0]
+          this.roomData = res.content
+          this.chooseRoomnum = res.content[0]
+        } else {
+          this.roomData = []
+        }
+        this.getRoomList(this.chooseRoomnum, this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
+      })
+    },
+    getRoomList(roomnum, status = '', num = '', type , pageNum = 1, pageSize = 20 ) {
+      this.isIndeterminate = false;
+      this.checkedCities = [];
+      this.checkAll = false;
+      this.openCheck = false;
+      let data = {
+        roomnum,
+        status,
+        gpu_num: num,
+        pageNum: pageNum,
+        pageSize: pageSize
+      }
+      getlistByRoom(data).then( async (res) => {
+        res.content.list.map( (el, i) => {
+          el.machine_id = el._id
+          if(el.operator){
+            el.machine_name = this.byteToStr(JSON.parse(el.operator))
+          }
+          el.online = '···'
+        })
+        this.All_Machine = res.content.total
+        this.Idle_Machine = res.content.online
+        if(type == 'first'){
+          if(this.refresh){
+            clearInterval(this.refresh)
+          }
+          this.refresh = setInterval( async () => {
+            let DBCprice1 = await dbcPriceOcw()
+            this.dbc_price = DBCprice1/1000000
+            this.getRoomList(this.chooseRoomnum, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+          }, 60000)
+        }
+        let DBCprice1 = await dbcPriceOcw()
+        this.dbc_price = DBCprice1/1000000
+        let online_block = await getBlockTime();
+        const GPUPrice = await standardGPUPointPrice()
+        this.GPUPointPrice = GPUPrice ? GPUPrice.gpu_price/1000000 : this.GPUPointPrice
+        online_block = online_block.replace(/,/gi, '');
+        this.Machine_info = res.content.list
+        this.total = res.content.total
+        this.Machine_info.map( (el) => {
+          el.online = this.minsToHourMins(Math.floor((online_block-el.bonding_height)/2))
+        })
+      })
+    },
+
     choose(str) {
       this.active = str.type
-      this.Computing_Power = str.power
       this.Idle_Machine = 0
       this.All_Machine = 0
       this.Machine_info = []
       this.Machine_status = ''
       this.GPU_Num = ''
       this.getList(this.active , this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
+    },
+    choosecity(str) {
+      this.Idle_Machine = 0
+      this.All_Machine = 0
+      this.Machine_info = []
+      this.Machine_status = ''
+      this.GPU_Num = ''
+      this.active = str.desc
+      this.chooseCountry = str.country
+      this.chooseCity = str.city
+      this.getCityList(this.chooseCountry, this.chooseCity, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+    },
+    chooseRoom(str) {
+      this.Idle_Machine = 0
+      this.All_Machine = 0
+      this.Machine_info = []
+      this.Machine_status = ''
+      this.GPU_Num = ''
+      this.active = str
+      this.chooseRoomnum = str
+      this.getRoomList(this.chooseRoomnum, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
     },
     byteToStr(arr) {
       if (typeof arr === "string") {
@@ -539,11 +741,24 @@ export default {
     },
     handleChangepageSize(num) {
       this.pageSize = num
-      this.getList(this.active , this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+      if (this.enterType == "gpu") {
+        this.getList(this.active , this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+      } else if (this.enterType == "city") {
+        this.getCityList(this.chooseCountry, this.chooseCity, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+      } else {
+        this.getRoomList(this.chooseRoomnum, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+      }
+      
     },
     handleCurrentChang(num) {
       this.currentPage = num
-      this.getList(this.active , this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+      if (this.enterType == "gpu") {
+        this.getList(this.active , this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+      } else if (this.enterType == "city") {
+        this.getCityList(this.chooseCountry, this.chooseCity, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+      } else {
+        this.getRoomList(this.chooseRoomnum, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+      }
     },
     batch() {
       if (!this.wallet_address) {

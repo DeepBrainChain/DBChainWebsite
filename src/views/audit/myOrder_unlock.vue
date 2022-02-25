@@ -10,11 +10,12 @@
         <div class="order-list">
           <div>{{$t("audit.order")}}: {{item.report_id}}</div>
           <div>
-            <el-button v-if="item.report_info.encrypted_err_info == null" size="small" plain @click="seeDetails(false, item)">{{$t("audit.seeDetails1")}}</el-button>
-            <el-button v-else size="small" plain @click="seeDetails(true, item)" :loading='item.btnloading1'>{{$t("audit.seeDetails2")}}</el-button>
+            <el-button v-if="item.report_info.encrypted_err_info == null && item.report_info.order_status != 'Finished'" size="small" plain @click="seeDetails(false, item)">{{$t("audit.seeDetails1")}}</el-button>
+            <el-button v-else-if="item.report_info.order_status != 'Finished'" size="small" plain @click="seeDetails(true, item)" :loading='item.btnloading1'>{{$t("audit.seeDetails2")}}</el-button>
           </div>
-          <el-button class="button" v-if="item.report_info.hash_time == 0" size="small" plain @click="start(1, item)">{{$t("audit.verification1")}}</el-button>
-          <el-button class="button" :disabled='item.report_info.order_status == "Finished"' v-else size="small" plain @click="start(2, item)">{{$t("audit.verification2")}}</el-button>
+          <el-button class="button" v-if="item.report_info.hash_time == 0 && item.report_info.order_status != 'Finished'" size="small" plain @click="start(1, item)">{{$t("audit.verification1")}}</el-button>
+          <el-button class="button" v-else-if="item.report_info.order_status != 'Finished'" size="small" plain @click="start(2, item)">{{$t("audit.verification2")}}</el-button>
+          <el-button class="button" disabled v-else size="small" plain>{{$t("audit.verification5")}}</el-button>
         </div>
         <div class="order-list mt20">
           <div>{{$t("audit.hasNum")}}:{{ item.report_order.booked_committee.length }}</div>

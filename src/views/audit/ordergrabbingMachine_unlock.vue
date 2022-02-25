@@ -14,11 +14,13 @@
             <el-button v-else-if="item.status == 1" size="small" plain @click="seeDetails(false)">{{$t("audit.seeDetails1")}}</el-button>
             <el-button v-else size="small" plain @click="seeDetails(true)">{{$t("audit.seeDetails2")}}</el-button>
           </div> -->
-          <div v-if="item.first_book_time != ''">订单倒计时：{{item.first_book_time}}</div>
+          <div v-if="item.first_book_time != ''">{{$t("audit.countdown")}}: {{item.first_book_time}}</div>
           <!-- <div v-if="item.booked_committee.length != 0">抢单倒计时：</div> -->
           <div>{{$t("audit.hasNum")}}: {{item.booked_committee.length}}</div>
-          <div>{{$t("audit.status")}}:{{$t("audit.status1")}}</div>
+          <div v-if="item.booked_committee.length < 3">{{$t("audit.status")}}:{{$t("audit.status1")}}</div>
+          <div v-else>{{$t("audit.status")}}:{{$t("audit.status2")}}</div>
           <el-button class="button" v-if="(item.report_status == 'Reported' || item.report_status == 'WaitingBook')" size="small" :loading="item.btnloading" plain @click="start(item)">{{$t("audit.start")}}</el-button>
+          <el-button class="button" v-else-if="item.report_status == 'CommitteeConfirmed'" size="small" disabled plain>{{$t("audit.start2")}}</el-button>
           <el-button class="button" v-else size="small" disabled plain>{{$t("audit.start1")}}</el-button>
         </div>
       </div>
@@ -98,7 +100,7 @@ export default {
       this.stopInter();
       getOrder().then(async res => {
         this.res_body.content = []
-        res = [...res.bookable_report, ...res.verifying_report, ...res.waiting_raw_report, ...res.finished_report]
+        res = [...res.bookable_report, ...res.verifying_report, ...res.waiting_raw_report]
         let BlockchainTime = await getBlockTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
         res.map((el, index) => {
           let report = { report_id: el, btnloading: false }

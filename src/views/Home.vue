@@ -105,7 +105,12 @@ export default {
         .catch(err => {});
     },
     pushToWallet() {
-      this.$router.push("/virtual");
+      this.$router.push({
+        path:"/virtual",
+        query: {
+          type: 'gpu'
+        }
+      });
       this.$store.commit("setMenuName", "virtual");
     },
     set_image1() {

@@ -51,15 +51,27 @@ export const initNetwork = async (): Promise<Network> => {
     api = await ApiPromise.create({ 
       provider ,
       types: {
-        "Pubkey": "Vec<u8>",
         "ReportId": "u64",
         "SlashId": "u64",
         "BoxPubkey": "[u8; 32]",
         "ReportHash": "[u8; 16]",
         "URL": "Text",
         "MachineId": "Text",
-        "OrderId": "u64",
         "TelecomName": "Text",
+        "FoundationIssueRewards": {
+          "who": "Vec<AccountId>",
+          "left_reward_times": "u32",
+          "first_reward_era": "EraIndex",
+          "reward_interval": "EraIndex",
+          "reward_amount": "Balance"
+        },
+        "TreasuryIssueRewards": {
+          "treasury_account": "AccountId",
+          "left_reward_times": "u32",
+          "first_reward_era": "EraIndex",
+          "reward_interval": "EraIndex",
+          "reward_amount": "Balance"
+        },
         "StandardGpuPointPrice": {
           "gpu_point": "u64",
           "gpu_price": "u64"
@@ -96,9 +108,16 @@ export const initNetwork = async (): Promise<Network> => {
           "total_rent_fee": "Balance",
           "total_burn_fee": "Balance"
         },
-        "UserReonlineStakeInfo": {
+        "UserMutHardwareStakeInfo": {
           "stake_amount": "Balance",
           "offline_time": "BlockNumber"
+        },
+        "MachineRecentRewardInfo": {
+          "machine_stash": "AccountId",
+          "recent_machine_reward": "Vec<Balance>",
+          "recent_reward_sum": "Balance",
+          "reward_committee_deadline": "EraIndex",
+          "reward_committee": "Vec<AccountId>"
         },
         "MachineInfo": {
           "controller": "AccountId",
@@ -131,6 +150,19 @@ export const initNetwork = async (): Promise<Network> => {
             "ReporterReportOffline": "(StashSlashReason, Box<MachineStatus>, AccountId, Vec<AccountId>)",
             "Creating": null,
             "Rented": null
+          }
+        },
+        "StashSlashReason": {
+          "_enum": {
+            "RentedReportOffline": "BlockNumber",
+            "OnlineReportOffline": "BlockNumber",
+            "RentedInaccessible": "BlockNumber",
+            "RentedHardwareMalfunction": "BlockNumber",
+            "RentedHardwareCounterfeit": "BlockNumber",
+            "OnlineRentFailed": "BlockNumber",
+            "CommitteeRefusedOnline": null,
+            "CommitteeRefusedMutHardware": null,
+            "ReonlineShouldReward": null
           }
         },
         "MachineInfoDetail": {
@@ -215,11 +247,7 @@ export const initNetwork = async (): Promise<Network> => {
           "machine_info": "CommitteeUploadInfo"
         },
         "OCMachineStatus": {
-          "_enum": [
-            "Booked",
-            "Hashed",
-            "Confirmed"
-          ]
+          "_enum": ["Booked", "Hashed", "Confirmed"]
         },
         "OCMachineCommitteeList": {
           "book_time": "BlockNumber",
@@ -231,12 +259,33 @@ export const initNetwork = async (): Promise<Network> => {
           "status": "OCVerifyStatus"
         },
         "OCVerifyStatus": {
-          "_enum": [
-            "SubmittingHash",
-            "SubmittingRaw",
-            "Summarizing",
-            "Finished"
-          ]
+          "_enum": ["SubmittingHash", "SubmittingRaw", "Summarizing", "Finished"]
+        },
+        "OCPendingSlashInfo": {
+          "machine_id": "MachineId",
+          "machine_stash": "AccountId",
+          "stash_slash_amount": "Balance",
+          "inconsistent_committee": "Vec<AccountId>",
+          "unruly_committee": "Vec<AccountId>",
+          "reward_committee": "Vec<AccountId>",
+          "committee_stake": "Balance",
+          "slash_time": "BlockNumber",
+          "slash_exec_time": "BlockNumber",
+          "book_result": "OCBookResultType",
+          "slash_result": "OCSlashResult"
+        },
+        "OCBookResultType": {
+          "_enum": ["OnlineSucceed", "OnlineRefused", "NoConsensus"]
+        },
+        "OCSlashResult": {
+          "_enum": ["Pending", "Canceled", "Executed"]
+        },
+        "OCPendingSlashReviewInfo": {
+          "applicant": "AccountId",
+          "staked_amount": "Balance",
+          "apply_time": "BlockNumber",
+          "expire_time": "BlockNumber",
+          "reason": "Vec<u8>"
         },
         "ReporterReportList": {
           "processing_report": "Vec<ReportId>",
@@ -257,12 +306,7 @@ export const initNetwork = async (): Promise<Network> => {
           "order_status": "MTOrderStatus"
         },
         "MTOrderStatus": {
-          "_enum": [
-            "WaitingEncrypt",
-            "Verifying",
-            "WaitingRaw",
-            "Finished"
-          ]
+          "_enum": ["WaitingEncrypt", "Verifying", "WaitingRaw", "Finished"]
         },
         "MTCommitteeOrderList": {
           "booked_report": "Vec<ReportId>",
@@ -276,20 +320,30 @@ export const initNetwork = async (): Promise<Network> => {
           "waiting_raw_report": "Vec<ReportId>",
           "finished_report": "Vec<ReportId>"
         },
-        "MTPendingSlashInfo": {
-          "slash_who": "AccountId",
+        "MTReportResultInfo": {
+          "report_id": "ReportId",
+          "reporter": "AccountId",
+          "reporter_stake": "Balance",
+          "inconsistent_committee": "Vec<AccountId>",
+          "unruly_committee": "Vec<AccountId>",
+          "reward_committee": "Vec<AccountId>",
+          "committee_stake": "Balance",
+          "machine_stash": "AccountId",
+          "machine_id": "MachineId",
           "slash_time": "BlockNumber",
-          "slash_amount": "Balance",
           "slash_exec_time": "BlockNumber",
-          "reward_to": "Vec<AccountId>",
-          "slash_reason": "MTReporterSlashReason"
+          "report_result": "ReportResultType",
+          "slash_result": "SlashResult"
         },
-        "MTReporterSlashReason": {
+        "ReportResultType": {
           "_enum": [
+            "ReportSucceed",
             "ReportRefused",
-            "NotSubmitEncryptedInfo"
+            "ReporterNotSubmitEncryptedInfo",
+            "NoConsensus"
           ]
         },
+        "SlashResult": { "_enum": ["Pending", "Canceled", "Executed"] },
         "MTReportInfoDetail": {
           "reporter": "AccountId",
           "report_time": "BlockNumber",
@@ -308,6 +362,13 @@ export const initNetwork = async (): Promise<Network> => {
           "report_status": "ReportStatus",
           "machine_fault_type": "MachineFaultType"
         },
+        "MTPendingSlashReviewInfo": {
+          "applicant": "AccountId",
+          "staked_amount": "Balance",
+          "apply_time": "BlockNumber",
+          "expire_time": "BlockNumber",
+          "reason": "Vec<u8>"
+        },
         "ReportStatus": {
           "_enum": [
             "Reported",
@@ -325,35 +386,28 @@ export const initNetwork = async (): Promise<Network> => {
             "OnlineRentFailed": "(ReportHash, BoxPubkey)"
           }
         },
-        "CMPendingSlashInfo": {
-          "slash_who": "AccountId",
-          "slash_time": "BlockNumber",
-          "slash_amount": "Balance",
-          "slash_exec_time": "BlockNumber",
-          "reward_to": "Vec<AccountId>",
-          "slash_reason": "CMSlashReason"
-        },
-        "CMSlashReason": {
-          "_enum": [
-            "OCNotSubmitHash",
-            "OCNotSubmitRaw",
-            "OCInconsistentSubmit",
-            "MCNotSubmitHash",
-            "MCNotSubmitRaw",
-            "MCInconsistentSubmit"
-          ]
-        },
         "OnlineStakeParamsInfo": {
           "online_stake_per_gpu": "Balance",
           "online_stake_usd_limit": "u64",
-          "reonline_stake": "u64"
+          "reonline_stake": "u64",
+          "slash_review_stake": "Balance"
+        },
+        "PhaseRewardInfoDetail": {
+          "online_reward_start_era": "EraIndex",
+          "first_phase_duration": "EraIndex",
+          "galaxy_on_era": "EraIndex",
+          "phase_0_reward_per_era": "Balance",
+          "phase_1_reward_per_era": "Balance",
+          "phase_2_reward_per_era": "Balance"
         },
         "OPPendingSlashInfo": {
           "slash_who": "AccountId",
+          "machine_id": "MachineId",
           "slash_time": "BlockNumber",
           "slash_amount": "Balance",
-          "slash_exec_time": "Option<BlockNumber>",
-          "reward_to": "Option<Vec<AccountId>>",
+          "slash_exec_time": "BlockNumber",
+          "reward_to_reporter": "Option<AccountId>",
+          "reward_to_committee": "Option<Vec<AccountId>>",
           "slash_reason": "OPSlashReason"
         },
         "OPSlashReason": {
@@ -369,6 +423,17 @@ export const initNetwork = async (): Promise<Network> => {
             "ReonlineShouldReward": null
           }
         },
+        "OPPendingSlashReviewInfo": {
+          "applicant": "AccountId",
+          "staked_amount": "Balance",
+          "apply_time": "BlockNumber",
+          "expire_time": "BlockNumber",
+          "reason": "Vec<u8>"
+        },
+        "AllMachineIdSnapDetail": {
+          "all_machine_id": "Vec<MachineId>",
+          "snap_len": "u64"
+        },
         "RentOrderDetail": {
           "renter": "AccountId",
           "rent_start": "BlockNumber",
@@ -378,11 +443,7 @@ export const initNetwork = async (): Promise<Network> => {
           "rent_status": "RentStatus"
         },
         "RentStatus": {
-          "_enum": [
-            "WaitingVerifying",
-            "Renting",
-            "RentExpired"
-          ]
+          "_enum": ["WaitingVerifying", "Renting", "RentExpired"]
         },
         "CommitteeStakeParamsInfo": {
           "stake_baseline": "Balance",
@@ -483,7 +544,7 @@ export const onTransferBalance = (pair: KeyringPair, toAddress: string, input: s
     // console.log('[发送hash值]->', transferHash.hash.toHex())
     // return transferHash
     let unSubTransfer: () => void;
-    transfer.signAndSend(pair, (result) => {
+    transfer.signAndSend(pair, (result: any) => {
         console.log(`Current status is ${result.status}`);
 
         if (result.status.isInBlock || result.status.isFinalized) {

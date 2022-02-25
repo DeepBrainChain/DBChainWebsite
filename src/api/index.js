@@ -37,7 +37,51 @@ export const getsearch = data => {
   });
 };
 
+/**
+ * @description 获取已有的地区列表
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const getCity = () => {
+  return axios({
+    method: "get",
+    url: nodeHost + "/api/select/getCity",
+  });
+};
 
+/**
+ * @description 通过地区获取机器列表
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const getlistByCity = data => {
+  return axios({
+    method: "post",
+    url: nodeHost + "/api/select/getlistByCity",
+    data: data
+  });
+};
+
+/**
+ * @description 获取已有的机房编号列表
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const getRoomnum = () => {
+  return axios({
+    method: "get",
+    url: nodeHost + "/api/select/getRoomnum",
+  });
+};
+
+/**
+ * @description 通过机房编号获取机器列表
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const getlistByRoom = data => {
+  return axios({
+    method: "post",
+    url: nodeHost + "/api/select/getlistByRoom",
+    data: data
+  });
+};
 
 /**
  * @description 获取待审核列表
