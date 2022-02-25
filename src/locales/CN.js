@@ -344,7 +344,7 @@ export default {
     machineStatus1:'验证中',
     machineStatus2:'已上线',
     machineStatus3:'租用中',
-    machineStatus3:'闲置中',
+    machineStatus4:'闲置中',
     verificationTime: '已验证次数',
     today_profit:'今日收益',
     total_profit:'累计收益',

@@ -343,7 +343,7 @@ export default {
     machineStatus1:'Verifying',
     machineStatus2:'online',
     machineStatus3:'renting',
-    machineStatus3:'idle',
+    machineStatus4:'idle',
     verificationTime: 'Verified times',
     today_profit:'Earnings today',
     total_profit:'Cumulative income',

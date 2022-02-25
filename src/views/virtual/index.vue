@@ -542,8 +542,13 @@ export default {
     // 地区分类
     getcity(){
       getCity().then(res => {
+        this.cityData = []
         if (res.success) {
-          this.cityData = res.content
+          for (let i=0;i<res.content.length; i++) {
+            if(res.content[i].city != '') {
+              this.cityData.push(res.content[i])
+            }
+          }
           this.active = this.cityData[0] ? this.cityData[0].desc : ''
           this.chooseCountry = this.cityData[0].country
           this.chooseCity = this.cityData[0].city
