@@ -11,7 +11,7 @@
           :locale="locale"
           :button-style="myStyle"
           :experience="experienceOptions"
-          env="sandbox"
+          :env="boxEnv"
           v-on:payment-authorized="paymentAuthorized"
           v-on:payment-completed="paymentCompleted"
           v-on:payment-cancelled="paymentCancelled"
@@ -37,9 +37,10 @@ export default {
     return {
       money: String(this.$route.query.usd),
       credentials: {
-        sandbox: 'ARjMsl3vJb4k_5-s4MfSRHzYgg4u2CEdCKGmMd6Q61ugXJpwS3putLp_7L3RrNDJo_yTTSQ_k_sWKS1P',
+        sandbox: 'ARjMsl3vJb4k_5-s4MfSRHzYgg4u2CEdCKGmMd6Q61ugXJpwS3putLp_7L3RrNDJo_yTTSQ_k_sWKS1P', //<sandbox client id>
         production: '<production client id>'
       },
+      boxEnv: 'sandbox', // sandbox, production
       experienceOptions: {
         input_fields: {
           no_shipping: 1
