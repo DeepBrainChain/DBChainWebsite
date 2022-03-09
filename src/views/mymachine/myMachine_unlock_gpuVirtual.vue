@@ -979,6 +979,11 @@ export default {
                     item.task_id === timeData.task_id ? timedQuery.content : item
                   )
                   this.Machine_info[chooseIndex].virtual_info = virarr
+                } else {
+                  let virarr = this.Machine_info[chooseIndex].virtual_info.map(item => 
+                    item.task_id === timeData.task_id ? { task_id: item.task_id, status: 'create error' } : item
+                  )
+                  this.Machine_info[chooseIndex].virtual_info = virarr
                 }
                 if (timedQuery.content.status != 'creating') {
                   clearInterval(timetask)
