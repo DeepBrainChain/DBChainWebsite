@@ -895,7 +895,8 @@ export default {
           this.max_vir_mem = parseInt(res.content.mem.free)
           this.max_cpu_num = Math.floor(res.content.cpu.cores)
           this.max_gpu_num = Math.floor(res.content.gpu.gpu_count - res.content.gpu.gpu_used)
-          this.max_disk_num = parseInt(res.content.disk_data.free)
+          let disk_data_free = parseInt(res.content.disk_data.free)- 350
+          this.max_disk_num = disk_data_free > 0 ? Math.floor(disk_data_free * 0.75) : 0
           this.option = res.content.images
           this.dialogFormVisible1 = true
           this.chooseMac = data
