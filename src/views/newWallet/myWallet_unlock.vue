@@ -44,10 +44,19 @@
       </router-link>
       <span class="f16">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $t('gpu.showDeitailDBC') }}</span>
       <a
-        href="https://www.deepbrainchain.org"
+        href="javascript:void(0);"
         class="f16 cPrimaryColor"
+        target="_blank"
         @click="toCoinWeb"
       >{{ $t('gpu.clickCoinmarktcap') }}</a>
+      <!-- <el-button
+        class="f16 cPrimaryColor"
+        type="text"
+        size="mini"
+        @click="toCoinWeb"
+      >
+        {{ $t('gpu.clickCoinmarktcap') }}
+      </el-button> -->
     </div>
     <div class="pt40 form-input">
       <label>
@@ -335,13 +344,14 @@ export default {
       }
     },
     toCoinWeb() {
+      let herf = ''
       if (this.$i18n.locale === "cn" || this.$i18n.locale === "CN") {
-        location.href =
-          "https://www.feixiaohao.com/currencies/deepbrain-chain/"
+        herf = "https://www.feixiaohao.com/currencies/deepbrain-chain/"
       } else {
-        location.href = "https://coinmarketcap.com/currencies/deepbrain-chain/"
+        herf = "https://coinmarketcap.com/currencies/deepbrain-chain/"
       }
-      window.open(location.href)
+      window.open(herf, '_blank')
+      window.location.href = 'https://www.deepbrainchain.org' 
     },
     closeWallet() {
       closeAc()

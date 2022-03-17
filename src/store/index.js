@@ -119,44 +119,22 @@ export default new Vuex.Store({
       commit,
       state
     }) {
-      getTransactions1(state.address, 0, 10).then(res => {
-        const array = res.data.transfers&&res.data.transfers.map(item => {
-          return {
-            txHash: item.hash,
-            fromAddress: item.from,
-            toAddress: item.to,
-            time: item.block_timestamp,
-            amount: item.amount,
-            result: item.success
-          }
+      if (state.address != '') {
+        getTransactions1(state.address, 0, 10).then(res => {
+          const array = res.data.transfers&&res.data.transfers.map(item => {
+            return {
+              txHash: item.hash,
+              fromAddress: item.from,
+              toAddress: item.to,
+              time: item.block_timestamp,
+              amount: item.amount,
+              result: item.success
+            }
+          })
+          commit('setTransferList', array)
+          commit('setListTotal', res.data.count)
         })
-        commit('setTransferList', array)
-        commit('setListTotal', res.data.count)
-      })
-      /*getTransfer(state.address).then(data => {
-        const recArray = data.received.map(item => {
-          return {
-            txHash: item.tx_hash,
-            fromAddress: item.transfer_address,
-            toAddress: state.address,
-            time: item.timestamp,
-            amount: item.amount
-          }
-        })
-        const sendArray = data.sent.map(item => {
-          return {
-            txHash: item.tx_hash,
-            fromAddress:state.address ,
-            toAddress: item.transfer_address,
-            time: item.timestamp,
-            amount: item.amount
-          }
-        })
-        const array = recArray.concat(sendArray).sort((a, b) => {
-          return b.time - a.time
-        })
-        commit('setTransferList', array)
-      })*/
+      }
     },
     getAccountState({
       commit,
@@ -180,19 +158,21 @@ export default new Vuex.Store({
             }).catch(err => {
   
             })
-            getTransactions1(state.address, 0, 10).then(res => {
-              const array = res.data.transfers&&res.data.transfers.map(item => {
-                return {
-                  txHash: item.txid,
-                  fromAddress: item.address_from,
-                  toAddress: item.address_to,
-                  time: item.time,
-                  amount: item.amount
-                }
+            if (state.address !='') {
+              getTransactions1(state.address, 0, 10).then(res => {
+                const array = res.data.transfers&&res.data.transfers.map(item => {
+                  return {
+                    txHash: item.txid,
+                    fromAddress: item.address_from,
+                    toAddress: item.address_to,
+                    time: item.time,
+                    amount: item.amount
+                  }
+                })
+                commit('setTransferList', array)
+                commit('setListTotal', res.data.count)
               })
-              commit('setTransferList', array)
-              commit('setListTotal', res.data.count)
-            })
+            }
           }
         } else {
           reject('please open wallet')

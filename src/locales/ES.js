@@ -574,7 +574,8 @@ export default {
     tip6: "La cantidad no puede exceder 2000",
     tip7: "La cantidad no puede ser inferior a 1",
     tip8: "Cantidad incorrecta ingresada",
-    tip9: "El saldo de la billetera de contrato inteligente es insuficiente, vuelva a ingresar el monto de la compra"
+    tip9: "El saldo de la billetera de contrato inteligente es insuficiente, vuelva a ingresar el monto de la compra",
+    tip10: "La dirección de la billetera no puede estar vacía"
   },
   // 操作报错原因
   err_reason:{

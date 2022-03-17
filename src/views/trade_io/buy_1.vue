@@ -167,12 +167,16 @@ export default {
   },
   methods: {
     next() {
-      this.$router.push({
-        path: "/trade/buy_2",
-        query: {
-          ...this.$route.query
-        }
-      });
+      if (this.address != '') {
+        this.$router.push({
+          path: "/trade/buy_2",
+          query: {
+            address_user: this.address
+          }
+        });
+      } else {
+        this.$message.error(this.$t('buyDBC.enterwallet'))
+      }
     },
     add_address() {
       this.address = this.$route.query.address_user;

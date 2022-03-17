@@ -38,7 +38,7 @@
         </div>
       </div>
       <div class="trade-bottom-wrap">
-        <el-button class="confirm-btn" type="primary" size="medium" @click="next">{{$t("buyDBC.continue")}}</el-button>
+        <el-button class="confirm-btn" :disabled='cancontinue' type="primary" size="medium" @click="next">{{$t("buyDBC.continue")}}</el-button>
         <span class="service">
           {{$t("buyDBC.support")}}：{{footer_service}} ,{{$t("buyDBC.reply")}}
         </span>
@@ -58,7 +58,8 @@ export default {
       dbc: 0,
       order_id: '',
       address: this.$route.query.address_user,
-      time: null
+      time: null,
+      cancontinue: true
     };
   },
   components: {
@@ -192,6 +193,7 @@ export default {
         if (res.success) {
           this.dbc = res.content.dbc
           this.order_id = res.content._id
+          this.cancontinue = false
         } else {
           if (res.code == -3) {
             this.$message.error(this.$t('buyDBC.tip9'))

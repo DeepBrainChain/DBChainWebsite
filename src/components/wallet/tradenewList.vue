@@ -83,6 +83,9 @@ export default {
   },
   methods: {
     getData(){
+      if (this.address  == '') {
+        return
+      }
       let data = {
         address: this.address,
         page: this.currentPage-1,

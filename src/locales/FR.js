@@ -574,7 +574,8 @@ export default {
     tip6: "Le montant ne peut pas dépasser 2000",
     tip7: "Le montant ne peut pas être inférieur à 1",
     tip8: "Montant saisi incorrect",
-    tip9: "Le solde du portefeuille du contrat intelligent est insuffisant, veuillez saisir à nouveau le montant de l'achat"
+    tip9: "Le solde du portefeuille du contrat intelligent est insuffisant, veuillez saisir à nouveau le montant de l'achat",
+    tip10: "L'adresse du portefeuille ne peut pas être vide"
   },
   // 操作报错原因
   err_reason:{

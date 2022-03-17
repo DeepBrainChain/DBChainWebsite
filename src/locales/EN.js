@@ -574,7 +574,8 @@ export default {
     tip6: "Amount cannot exceed 2000",
     tip7: "Amount cannot be less than 1",
     tip8: "Incorrect amount entered",
-    tip9: "The smart contract wallet balance is insufficient, please re-enter the purchase amount"
+    tip9: "The smart contract wallet balance is insufficient, please re-enter the purchase amount",
+    tip10: "Wallet address cannot be empty"
   },
   // 操作报错原因
   err_reason:{
