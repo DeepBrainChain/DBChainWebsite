@@ -334,6 +334,18 @@ export const GetResultHash = data => {
 };
 
 /**
+ * @description 创建查询网络
+ * @param {object} data {machine_id, gpu, ....}
+ */
+ export const createNetwork = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/rentMachine/createNetwork',
+    data: data
+  });
+};
+
+/**
  * @description 创建虚拟机
  * @param {object} data {machine_id, gpu, ....}
  */
@@ -442,7 +454,17 @@ export const GetResultHash = data => {
   });
 };
 
-
+/**
+ * @description 重启虚拟机
+ * @param {object} data {machine_id, gpu, ....}
+ */
+ export const editVir = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/rentMachine/editVir',
+    data: data
+  });
+};
 
 /**
  * @description 获取累计收益信息
