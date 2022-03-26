@@ -455,7 +455,7 @@ export const GetResultHash = data => {
 };
 
 /**
- * @description 重启虚拟机
+ * @description 修改虚拟机
  * @param {object} data {machine_id, gpu, ....}
  */
  export const editVir = (data) => {

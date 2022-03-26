@@ -435,7 +435,7 @@
         {{$t('myvirtual.tip7')}}
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button class="batch" size="mini" plain :loading='btnloading6' @click="editVirtual">{{$t('myvirtual.Confirm_create')}}</el-button>
+        <el-button class="batch" size="mini" plain :loading='btnloading6' @click="editVirtual">{{$t('myvirtual.Confirm_edit')}}</el-button>
         <el-button class="batch" size="mini" plain @click="dialogFormVisible4 = false;btnloading6 = false">{{$t('virtual.cancal')}}</el-button>
       </div>
     </el-dialog>
@@ -1036,6 +1036,7 @@ export default {
           this.edit_is_ubunto = false
         }
         this.edit_vir_disk_size = 0
+        this.edit_min_disk_num = 0
         item.disks.map(diskitem => {
           if (diskitem.name != 'vda') {
             this.edit_min_disk_num += parseInt(diskitem.size)
@@ -1174,15 +1175,17 @@ export default {
           port_max: this.edit_port_max,
           new_gpu_count: this.edit_vir_gpu_num,
           new_cpu_cores: this.edit_vir_cpu_num,
-          new_mem_size: this.edit_vir_mem,
-          increase_disk_size: parseInt(this.edit_vir_disk_size - this.edit_min_disk_num)
+          new_mem_size: this.edit_vir_mem
+        }
+        if (parseInt(this.edit_vir_disk_size - this.edit_min_disk_num) > 0) {
+          perams.increase_disk_size = parseInt(this.edit_vir_disk_size - this.edit_min_disk_num)
         }
         editVir(perams).then( res=> {
           if(res.success){
             this.$message.success(this.$t('myvirtual.edit_success'))
           }else{
-            this.$message.error(this.$t('myvirtual.edit_fails'))
-            // this.$message.error(res.msg)
+            // this.$message.error(this.$t('myvirtual.edit_fails'))
+            this.$message.error(res.msg)
           }
           this.btnloading6 = false
           this.dialogFormVisible4 = false

@@ -509,6 +509,7 @@ export default {
     pass3:'Veuillez entrer le mot de passe',
     pass4:'Veuillez saisir à nouveau le mot de passe',
     pass5:'Les mots de passe entrés deux fois ne correspondent pas',
+    Confirm_edit: 'Confirmez les modifications',
     change:'Modifier les paramètres de la machine virtuelle',
     edit_success: 'Modifié avec succès',
     edit_fails:'ne parvient pas à modifier',

@@ -510,6 +510,7 @@ export default {
     pass3:'请输入密码',
     pass4:'请再次输入密码',
     pass5:'两次输入密码不一致',
+    Confirm_edit: '确认修改',
     change:'修改虚拟机参数',
     edit_success: '修改成功',
     edit_fails:'修改失败',
