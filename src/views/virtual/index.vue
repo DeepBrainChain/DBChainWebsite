@@ -737,30 +737,28 @@ export default {
       }
     },
     SelectStatus() {
-      this.currentPage = 0
-      this.Idle_Machine = 0
-      this.All_Machine = 0
       this.Machine_info = []
       if (this.enterType == "gpu") {
         this.currentPage = 1
         this.getList(this.active , this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
       } else if (this.enterType == "city") {
+        this.currentPage = 0
         this.getCityList(this.chooseCountry, this.chooseCity, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
       } else {
+        this.currentPage = 0
         this.getRoomList(this.chooseRoomnum, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
       }
     },
     SelectNum() {
-      this.currentPage = 0
-      this.Idle_Machine = 0
-      this.All_Machine = 0
       this.Machine_info = []
       if (this.enterType == "gpu") {
         this.currentPage = 1
         this.getList(this.active , this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
       } else if (this.enterType == "city") {
+        this.currentPage = 0
         this.getCityList(this.chooseCountry, this.chooseCity, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
       } else {
+        this.currentPage = 0
         this.getRoomList(this.chooseRoomnum, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
       }
     },
