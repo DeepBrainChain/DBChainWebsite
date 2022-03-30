@@ -549,7 +549,13 @@ export default {
     vir_status6: '重置中',
     vir_status7: '启动失败',
     vir_status8: '重启失败',
-    vir_status9: '休眠中'
+    vir_status9: '休眠中',
+
+    newTip1: '操作系统和镜像不能为空',
+    newTip2: 'SSH端口号重复，请重新输入',
+    newTip3: 'rdp端口号重复，请重新输入',
+    newTip4: 'vnc端口号重复，请重新输入',
+    newTip5: '开放端口范围重复，请重新输入'
   },
   // 购买DBC
   buyDBC: {

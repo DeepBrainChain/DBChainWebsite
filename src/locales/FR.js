@@ -548,7 +548,13 @@ export default {
     vir_status6: 'réinitialiser',
     vir_status7: 'erreur de démarrage',
     vir_status8: 'erreur de redémarrage',
-    vir_status9: 'pm_suspendu'
+    vir_status9: 'pm_suspendu',
+    
+    newTip1: "Le système d'exploitation et l'image ne peuvent pas être vides",
+    newTip2: 'Numéro de port SSH en double, veuillez le saisir à nouveau',
+    newTip3: 'Le numéro de port rdp est en double, veuillez le saisir à nouveau',
+    newTip4: 'Numéro de port vnc en double, veuillez le saisir à nouveau',
+    newTip5: 'Plage de ports ouverts en double, veuillez saisir à nouveau'
   },
   // 购买DBC
   buyDBC: {

@@ -272,7 +272,7 @@
           <span class="width12 bold">{{$t('myvirtual.mirror_name')}}: </span>
           <el-select class='select' v-model="image_name" size='mini' @change='Selectimage' placeholder="choose">
             <el-option
-              v-for="(item, index) in option"
+              v-for="(item, index) in optiondefault"
               :key="index"
               :label="item"
               :value="item">
@@ -311,13 +311,13 @@
       <div class="useTime" v-show='!is_ubunto'>
         <div>
           <span class="width12 bold">{{$t('myvirtual.ssh_port')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="port_range" :min="5600" :max="5899"></el-input-number>
+          <el-input-number :precision="0" size="mini" v-model="port_range" :min="5600" :max="5899" @change="sshportChange"></el-input-number>
         </div>
       </div>
       <div class="useTime" v-show='is_ubunto'>
         <div>
           <span class="width12 bold">{{$t('myvirtual.rdp_port')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="rdp_port" :min="5600" :max="5899"></el-input-number>
+          <el-input-number :precision="0" size="mini" v-model="rdp_port" :min="5600" :max="5899" @change="rdpportChange"></el-input-number>
         </div>
       </div>
       <div class="fs12">
@@ -329,7 +329,7 @@
       <div class="useTime">
         <div>
           <span class="width12 bold">{{$t('myvirtual.vnc_port')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="vnc_port" :min="5900" :max="5999"></el-input-number>
+          <el-input-number :precision="0" size="mini" v-model="vnc_port" :min="5900" :max="5999" @change="vncportChange"></el-input-number>
         </div>
       </div>
       <div class="fs12">
@@ -399,13 +399,13 @@
       <div class="useTime" v-show='edit_is_ubunto'>
         <div>
           <span class="width12 bold">{{$t('myvirtual.ssh_port')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="edit_port_range" :min="5600" :max="5899"></el-input-number>
+          <el-input-number :precision="0" size="mini" v-model="edit_port_range" :min="5600" :max="5899" @change="sshportChange"></el-input-number>
         </div>
       </div>
       <div class="useTime" v-show='!edit_is_ubunto'>
         <div>
           <span class="width12 bold">{{$t('myvirtual.rdp_port')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="edit_rdp_port" :min="5600" :max="5899"></el-input-number>
+          <el-input-number :precision="0" size="mini" v-model="edit_rdp_port" :min="5600" :max="5899" @change="rdpportChange"></el-input-number>
         </div>
       </div>
       <div class="fs12">
@@ -417,7 +417,7 @@
       <div class="useTime">
         <div>
           <span class="width12 bold">{{$t('myvirtual.vnc_port')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="edit_vnc_port" :min="5900" :max="5999"></el-input-number>
+          <el-input-number :precision="0" size="mini" v-model="edit_vnc_port" :min="5900" :max="5999" @change="vncportChange"></el-input-number>
         </div>
       </div>
       <div class="fs12">
@@ -613,6 +613,7 @@ export default {
       dialogFormVisible1: false,
       dialogFormVisible4: false,
       option: [],
+      optiondefault: [],
       image_name: '',
       multicast:'224.0.0.0',
       operation_system: '',
@@ -660,7 +661,8 @@ export default {
       GPUPointPrice: 0.028229,
       DBCPercentage: 0,
       startConfirm: false,
-      is_ubunto: false
+      is_ubunto: false,
+      hasPort: []
     };
   },
   filters: {
@@ -974,32 +976,60 @@ export default {
     },
     changeOp(val){
       console.log(val, 'val')
+      this.image_name = ''
       if (val == 'ubuntu') {
         this.bios_mode = 'legacy'
         this.is_ubunto = false
-        this.port_range = ''
+        this.port_range = this.hasPort.length*10 + 5600
+        this.optiondefault = this.option.filter(el => {
+          console.log(el, 'el');
+          if (el.indexOf('ubuntu') != -1 || el.indexOf('win') == -1){
+            return el
+          }
+        })
       } else {
         this.bios_mode = 'uefi'
         this.is_ubunto = true
-        this.rdp_port = ''
+        this.rdp_port = this.hasPort.length*10 + 5600
+        this.optiondefault = this.option.filter(el => {
+          if (el.indexOf('win') != -1 || el.indexOf('ubuntu') == -1) return el
+        })
       }
+    },
+    sshportChange(newvalue, oldvalue) {
+      
+    },
+    rdpportChange(newvalue, oldvalue) {
+
+    },
+    vncportChange(newvalue, oldvalue) {
+      
     },
     // 创建 虚拟机
     operateVirtual(str, data) {
-      getMachineInfo({machine_id: data.machine_id}).then(res => {
+      console.log(data);
+      getMachineInfo({machine_id: data.machine_id, id: data._id}).then(res => {
         console.log(res, 'res');
         if (res.success) {
-          this.max_vir_mem = parseInt(res.content.mem.free)
-          this.max_cpu_num = Math.floor(res.content.cpu.cores)
-          this.max_gpu_num = Math.floor(res.content.gpu.gpu_count - res.content.gpu.gpu_used)
-          let disk_data_free = parseInt(res.content.disk_data.free)- 350
+          let info = res.content.info
+          this.max_vir_mem = parseInt(info.mem.free)
+          this.max_cpu_num = Math.floor(info.cpu.cores)
+          this.max_gpu_num = Math.floor(info.gpu.gpu_count - info.gpu.gpu_used)
+          let disk_data_free = parseInt(info.disk_data.free)- 350
           this.max_disk_num = disk_data_free > 0 ? Math.floor(disk_data_free * 0.75) : 0
-          this.option = res.content.images
+          this.option = info.images
           this.dialogFormVisible1 = true
           this.chooseMac = data
           this.vir_mem = this.max_vir_mem/2
           this.vir_cpu_num = this.max_cpu_num/2
           this.vir_disk_size = this.max_disk_num/2
+          this.hasPort = res.content.taskInfo
+          this.port_range = this.hasPort.length*10 + 5600
+          this.rdp_port = this.hasPort.length*10 + 5600
+          this.vnc_port = this.hasPort.length*10 +5900
+          let averageValue = Math.floor(54000/info.gpu.gpu_count)
+          this.port_min = this.hasPort.length*averageValue + 6000 + (this.hasPort.length?1:0)
+          this.port_max = (this.hasPort.length+1)*averageValue + 6000
         } else {
           this.$message.error(res.msg)
         }
@@ -1014,14 +1044,16 @@ export default {
     operateVirtual1(el, item) {
       this.edit_chooseMac = {}
       if (item.status == 'closed') {
-        getMachineInfo({machine_id: el.machine_id}).then(res => {
+        getMachineInfo({machine_id: el.machine_id, id: el._id}).then(res => {
           if (res.success) {
-            this.max_vir_mem = parseInt(res.content.mem.free)
-            this.max_cpu_num = Math.floor(res.content.cpu.cores)
-            this.max_gpu_num = Math.floor(res.content.gpu.gpu_count - res.content.gpu.gpu_used)
-            let disk_data_free = parseInt(res.content.disk_data.free)- 350
+            let info = res.content.info
+            this.max_vir_mem = parseInt(info.mem.free)
+            this.max_cpu_num = Math.floor(info.cpu.cores)
+            this.max_gpu_num = Math.floor(info.gpu.gpu_count - info.gpu.gpu_used)
+            let disk_data_free = parseInt(info.disk_data.free)- 350
             this.max_disk_num = disk_data_free > 0 ? Math.floor(disk_data_free * 0.75) : 0
             this.dialogFormVisible4 = true
+            this.hasPort = res.content.taskInfo
           } else {
             this.$message.error(res.msg)
           }
@@ -1060,6 +1092,29 @@ export default {
       
     },
     Createvirtual(){
+      if (this.image_name == '' || this.operation_system == '') {
+        this.$message.error(this.$t('myvirtual.newTip1'))
+        return false
+      }
+      for(let i= 0; i< this.hasPort.length; i ++) {
+        let el = this.hasPort[i]
+        if (el.ssh_port !='' && this.port_range == el.ssh_port) {
+        this.$message.error(this.$t('myvirtual.newTip2'))
+          return false
+        }
+        if (el.rdp_port !='' && this.rdp_port == el.rdp_port) {
+        this.$message.error(this.$t('myvirtual.newTip3'))
+          return false
+        }
+        if (this.vnc_port == el.vnc_port) {
+        this.$message.error(this.$t('myvirtual.newTip4'))
+          return false
+        }
+        if (!(this.port_min > el.port_max || this.port_max < el.port_min)) {
+        this.$message.error(this.$t('myvirtual.newTip5'))
+          return false
+        }
+      }
       this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
         confirmButtonText: this.$t('confirm'),
         cancelButtonText:  this.$t('cancel'),
@@ -1162,6 +1217,27 @@ export default {
     },
     editVirtual() {
       // console.log('编辑'); editVir
+      for(let i= 0; i< this.hasPort.length; i ++) {
+        let el = this.hasPort[i]
+        if (el.status != "closed") {
+          if (el.ssh_port !='' && this.edit_port_range == el.ssh_port) {
+            this.$message.error(this.$t('myvirtual.newTip2'))
+            return false
+          }
+          if (el.rdp_port !='' && this.edit_rdp_port == el.rdp_port) {
+            this.$message.error(this.$t('myvirtual.newTip3'))
+            return false
+          }
+          if (this.edit_vnc_port == el.vnc_port) {
+            this.$message.error(this.$t('myvirtual.newTip4'))
+            return false
+          }
+          if (!(this.edit_port_min > el.port_max || this.edit_port_max < el.port_min)) {
+            this.$message.error(this.$t('myvirtual.newTip5'))
+            return false
+          }
+        }
+      }
       try {
         this.btnloading6 = true
         let perams = {

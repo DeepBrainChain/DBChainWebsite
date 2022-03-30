@@ -548,7 +548,13 @@ export default {
     vir_status6: 'resetting',
     vir_status7: 'start error',
     vir_status8: 'restart error',
-    vir_status9: 'pm_suspended'
+    vir_status9: 'pm_suspended',
+
+    newTip1: 'Operating system and image cannot be empty',
+    newTip2: 'Duplicate SSH port number, please re-enter',
+    newTip3: 'The rdp port number is duplicated, please re-enter',
+    newTip4: 'Duplicate vnc port number, please re-enter',
+    newTip5: 'Duplicate open port range, please re-enter'
   },
   // 购买DBC
   buyDBC: {

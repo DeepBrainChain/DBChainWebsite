@@ -812,7 +812,7 @@ export default {
       this.chooseMac = el;
       getMachineInfo({machine_id: el.machine_id}).then(res => {
         if (res.success) {
-          this.max_vir_mem = parseInt(res.content.mem.free)
+          this.max_vir_mem = parseInt(res.content.info.mem.free)
         }
       })
       this.useTime = 1;
