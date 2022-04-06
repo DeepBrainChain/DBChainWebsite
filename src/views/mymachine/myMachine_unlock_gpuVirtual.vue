@@ -106,7 +106,7 @@
                   plain
                   class="tool-btn"
                   size="mini"
-                  v-if="el.orderStatus == 3 && item.status == 'closed' || item.status == 'start error'"
+                  v-if="el.orderStatus == 3 && item.status == 'closed' || item.status == 'start error' || item.status == 'pm_suspended'"
                   @click="startVir(item, el)"
                   >{{ $t("myvirtual.start") }}</el-button
                 >
