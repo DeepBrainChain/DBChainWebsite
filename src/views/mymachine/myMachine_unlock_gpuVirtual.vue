@@ -159,7 +159,7 @@
               <span >{{$t('myvirtual.vir_cpu_num')}}: {{item.cpu_cores}}</span>
               <span >{{$t('myvirtual.vnc_port')}}: {{item.vnc_port}}</span>
               <span >{{$t('myvirtual.open_port_range')}}: {{item.port_min}} - {{item.port_max}}</span>
-              <span >{{$t('myvirtual.multicast')}}: {{item.multicast? item.multicast.toString(): ''}}</span>
+              <!-- <span >{{$t('myvirtual.multicast')}}: {{item.multicast? item.multicast.toString(): ''}}</span> -->
               <span style="width: 50%">{{$t('myvirtual.local_address')}}: {{item.local_address? item.local_address.toString(): ''}}</span>
             </div>
           </div>
@@ -274,8 +274,8 @@
             <el-option
               v-for="(item, index) in optiondefault"
               :key="index"
-              :label="item"
-              :value="item">
+              :label="item.image_name"
+              :value="item.image_name">
             </el-option>
           </el-select>
         </div>
@@ -859,6 +859,14 @@ export default {
             type: 'success',
             message: this.$t('myvirtual.rental_success')
           });
+          if (el.network_name == null || el.network_name == '') {
+            let perams = {
+              id: el._id,
+            }
+            createNetwork(perams).then(res => {
+              console.log(res, 'createNetwork');
+            })
+          }
         })
         .catch((err)=>{
           this.si = setInterval( ()=> {
@@ -980,19 +988,17 @@ export default {
       if (val == 'ubuntu') {
         this.bios_mode = 'legacy'
         this.is_ubunto = false
-        this.port_range = this.hasPort.length*10 + 5600
         this.optiondefault = this.option.filter(el => {
           console.log(el, 'el');
-          if (el.indexOf('ubuntu') != -1 || el.indexOf('win') == -1){
+          if (el.image_name.indexOf('ubuntu') != -1 || el.image_name.indexOf('win') == -1){
             return el
           }
         })
       } else {
         this.bios_mode = 'uefi'
         this.is_ubunto = true
-        this.rdp_port = this.hasPort.length*10 + 5600
         this.optiondefault = this.option.filter(el => {
-          if (el.indexOf('win') != -1 || el.indexOf('ubuntu') == -1) return el
+          if (el.image_name.indexOf('win') != -1 || el.image_name.indexOf('ubuntu') == -1) return el
         })
       }
     },
@@ -1007,9 +1013,15 @@ export default {
     },
     // 创建 虚拟机
     operateVirtual(str, data) {
-      console.log(data);
+      if (data.network_name == null || data.network_name == '') {
+        let perams = {
+          id: data._id,
+        }
+        createNetwork(perams).then(res => {
+          console.log(res, 'createNetwork');
+        })
+      }
       getMachineInfo({machine_id: data.machine_id, id: data._id}).then(res => {
-        console.log(res, 'res');
         if (res.success) {
           let info = res.content.info
           this.max_vir_mem = parseInt(info.mem.free)
@@ -1024,12 +1036,44 @@ export default {
           this.vir_cpu_num = this.max_cpu_num/2
           this.vir_disk_size = this.max_disk_num/2
           this.hasPort = res.content.taskInfo
-          this.port_range = this.hasPort.length*10 + 5600
-          this.rdp_port = this.hasPort.length*10 + 5600
-          this.vnc_port = this.hasPort.length*10 +5900
+          let sshOrrdp = 5600
+          let VncPort = 5900
+          let portMin = 6000
+          let use_sshOrrdp = []
+          let use_VncPort = []
+          let use_portMin = []
           let averageValue = Math.floor(54000/info.gpu.gpu_count)
-          this.port_min = this.hasPort.length*averageValue + 6000 + (this.hasPort.length?1:0)
-          this.port_max = (this.hasPort.length+1)*averageValue + 6000
+          res.content.taskInfo.map(el => {
+            use_sshOrrdp.push(el.ssh_port == "" ? Number(el.rdp_port) : Number(el.ssh_port))
+            use_VncPort.push(Number(el.vnc_port))
+            use_portMin.push(Number(el.port_min))
+          })
+          while (sshOrrdp < 5899) {
+            if (use_sshOrrdp.indexOf(sshOrrdp) != -1) {
+              sshOrrdp += 10
+            } else {
+              this.port_range = sshOrrdp
+              this.rdp_port = sshOrrdp
+              break
+            }
+          }
+          while (VncPort < 5999) {
+            if (use_VncPort.indexOf(VncPort) != -1) {
+              VncPort += 10
+            } else {
+              this.vnc_port = VncPort
+              break
+            }
+          }
+          while (portMin < 60000) {
+            if (use_portMin.indexOf(portMin) != -1) {
+              portMin += averageValue
+            } else {
+              this.port_min = portMin
+              this.port_max = portMin + averageValue - 1
+              break
+            }
+          }
         } else {
           this.$message.error(res.msg)
         }
@@ -1126,20 +1170,6 @@ export default {
           let nonce = await randomWord()
           let sign = await CreateSignature(nonce, value)
           this.btnloading1 = true
-          let multicastArr;
-          if (this.multicast == ''){
-            multicastArr = []
-          } else {
-            multicastArr = this.multicast.split(',').map(el => {
-              el = el+':5558'
-              return el
-            })
-          }
-          // let networkInfo = await createNetwork({wallet: this.wallet_address})
-          // let network_name = ''
-          // if (networkInfo.success) {
-          //   network_name = networkInfo.content
-          // }
           let perams = {
             id: this.chooseMac._id,
             machine_id: this.chooseMac.machine_id,
@@ -1155,11 +1185,10 @@ export default {
             rdp_port: this.is_ubunto ? this.rdp_port : '',
             operation_system: this.operation_system,
             bios_mode: this.bios_mode,
-            multicast: JSON.stringify(multicastArr),
+            network_name: this.chooseMac.network_name,
             nonce: nonce,
             sign: sign,
-            wallet: this.wallet_address,
-            // network_name: network_name
+            wallet: this.wallet_address
           }
           Create_VMS(perams).then( res=> {
             if(res.success){
@@ -1284,6 +1313,14 @@ export default {
         inputValue: this.passward
       })
       .then( async ({ value }) => {
+        if (el.network_name == null || el.network_name == '') {
+          let perams = {
+            id: el._id,
+          }
+          createNetwork(perams).then(res => {
+            console.log(res, 'createNetwork');
+          })
+        }
         try {
           let nonce = await randomWord()
           let sign = await CreateSignature(nonce, value)

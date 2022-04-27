@@ -58,7 +58,7 @@ export default {
     virtual: "Louer une machine virtuelle GPU",
     gputype: "Type de GPU",
     area: "zone géographique",
-    room: "salle des moteurs",
+    room: "ID du centre de données",
     mymachine: "Ma Machine",
     mywallet: "Mon Portefeuille",
     help: 'Aide',

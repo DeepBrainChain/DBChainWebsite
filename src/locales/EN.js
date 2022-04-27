@@ -58,7 +58,7 @@ export default {
     virtual: "Rent GPU Virtual Machine",
     gputype: "GPU type",
     area: "engine room",
-    room: "Room ID",
+    room: "Datacenter ID",
     mymachine: "MyMachine",
     mywallet: "MyWallet",
     help: 'Help',
