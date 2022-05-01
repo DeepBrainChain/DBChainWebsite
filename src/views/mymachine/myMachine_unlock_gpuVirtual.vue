@@ -290,7 +290,7 @@
       <div class="useTime">
         <div>
           <span class="width12 bold">{{$t('myvirtual.vir_cpu_num')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="vir_cpu_num" :min="4" :max="Number(max_cpu_num - max_cpu_num%4)" :step="4" step-strictly></el-input-number>
+          <el-input-number :precision="0" size="mini" v-model="vir_cpu_num" :min="2" :max="Number(max_cpu_num - max_cpu_num%2)" :step="2" step-strictly></el-input-number>
         </div>
         <div>{{$t('myvirtual.max_set')}}: {{max_cpu_num}}</div>
       </div>
@@ -378,7 +378,7 @@
       <div class="useTime">
         <div>
           <span class="width12 bold">{{$t('myvirtual.vir_cpu_num')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="edit_vir_cpu_num" :min="4" :max="Number(max_cpu_num - max_cpu_num%4)" :step="4" step-strictly></el-input-number>
+          <el-input-number :precision="0" size="mini" v-model="edit_vir_cpu_num" :min="2" :max="Number(max_cpu_num - max_cpu_num%2)" :step="2" step-strictly></el-input-number>
         </div>
         <div>{{$t('myvirtual.max_set')}}: {{max_cpu_num}}</div>
       </div>

@@ -218,7 +218,7 @@ export default {
       active: '',
       Computing_Power: 0,
       dbc_price: 0,
-      currentPage: 0,
+      currentPage: 1,
       pageSize: 20,
       total: 0,
       btnloading: false,
@@ -491,10 +491,7 @@ export default {
       })
     },
     getList(str = '', status = '', num = '', type , pageNum = 1, pageSize = 20 ) {
-      this.isIndeterminate = false;
-      this.checkedCities = [];
-      this.checkAll = false;
-      this.openCheck = false;
+      
       let data = {
         gpu_type: str,
         machine_status: status,
@@ -513,6 +510,10 @@ export default {
           el.online = '···'
         })
         if(type == 'first'){
+          this.isIndeterminate = false;
+          this.checkedCities = [];
+          this.checkAll = false;
+          this.openCheck = false;
           Count_Details({ gpu_type: str }).then( res1 => {
             this.All_Machine = res1.count[str]?res1.count[str]:0
             this.Idle_Machine = res1.sum[str]?res1.sum[str]:0
@@ -558,17 +559,17 @@ export default {
         this.getCityList(this.chooseCountry, this.chooseCity, this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
       })
     },
-    getCityList(country, city, status = '', num = '', type , pageNum = 0, pageSize = 20 ) {
-      this.isIndeterminate = false;
-      this.checkedCities = [];
-      this.checkAll = false;
-      this.openCheck = false;
+    getCityList(country, city, status = '', num = '', type , pageNum = 1, pageSize = 20 ) {
+      // this.isIndeterminate = false;
+      // this.checkedCities = [];
+      // this.checkAll = false;
+      // this.openCheck = false;
       let data = {
         country,
         city,
         status,
         gpu_num: Number(num),
-        pageNum: pageNum,
+        pageNum: pageNum - 1,
         pageSize: pageSize
       }
       getlistByCity(data).then( async (res) => {
@@ -585,6 +586,10 @@ export default {
           if(this.refresh){
             clearInterval(this.refresh)
           }
+          this.isIndeterminate = false;
+          this.checkedCities = [];
+          this.checkAll = false;
+          this.openCheck = false;
           this.refresh = setInterval( async () => {
             let DBCprice1 = await dbcPriceOcw()
             this.dbc_price = DBCprice1/1000000
@@ -617,16 +622,16 @@ export default {
         this.getRoomList(this.chooseRoomnum, this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
       })
     },
-    getRoomList(roomnum, status = '', num = '', type , pageNum = 0, pageSize = 20 ) {
-      this.isIndeterminate = false;
-      this.checkedCities = [];
-      this.checkAll = false;
-      this.openCheck = false;
+    getRoomList(roomnum, status = '', num = '', type , pageNum = 1, pageSize = 20 ) {
+      // this.isIndeterminate = false;
+      // this.checkedCities = [];
+      // this.checkAll = false;
+      // this.openCheck = false;
       let data = {
         roomnum,
         status,
         gpu_num: Number(num),
-        pageNum: pageNum,
+        pageNum: pageNum - 1,
         pageSize: pageSize
       }
       getlistByRoom(data).then( async (res) => {
@@ -640,6 +645,10 @@ export default {
         this.All_Machine = res.content.total
         this.Idle_Machine = res.content.online
         if(type == 'first'){
+          this.isIndeterminate = false;
+          this.checkedCities = [];
+          this.checkAll = false;
+          this.openCheck = false;
           if(this.refresh){
             clearInterval(this.refresh)
           }
@@ -681,7 +690,7 @@ export default {
       this.active = str.desc
       this.chooseCountry = str.country
       this.chooseCity = str.city
-      this.getCityList(this.chooseCountry, this.chooseCity, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+      this.getCityList(this.chooseCountry, this.chooseCity, this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
     },
     chooseRoom(str) {
       this.Idle_Machine = 0
@@ -691,7 +700,7 @@ export default {
       this.GPU_Num = ''
       this.active = str
       this.chooseRoomnum = str
-      this.getRoomList(this.chooseRoomnum, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+      this.getRoomList(this.chooseRoomnum, this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
     },
     byteToStr(arr) {
       if (typeof arr === "string") {
@@ -738,49 +747,45 @@ export default {
     },
     SelectStatus() {
       this.Machine_info = []
+      this.currentPage = 1
       if (this.enterType == "gpu") {
-        this.currentPage = 1
-        this.getList(this.active , this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+        this.getList(this.active , this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
       } else if (this.enterType == "city") {
-        this.currentPage = 0
-        this.getCityList(this.chooseCountry, this.chooseCity, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+        this.getCityList(this.chooseCountry, this.chooseCity, this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
       } else {
-        this.currentPage = 0
-        this.getRoomList(this.chooseRoomnum, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+        this.getRoomList(this.chooseRoomnum, this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
       }
     },
     SelectNum() {
       this.Machine_info = []
+      this.currentPage = 1
       if (this.enterType == "gpu") {
-        this.currentPage = 1
-        this.getList(this.active , this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+        this.getList(this.active , this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
       } else if (this.enterType == "city") {
-        this.currentPage = 0
-        this.getCityList(this.chooseCountry, this.chooseCity, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+        this.getCityList(this.chooseCountry, this.chooseCity, this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
       } else {
-        this.currentPage = 0
-        this.getRoomList(this.chooseRoomnum, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+        this.getRoomList(this.chooseRoomnum, this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
       }
     },
     handleChangepageSize(num) {
       this.pageSize = num
       if (this.enterType == "gpu") {
-        this.getList(this.active , this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+        this.getList(this.active , this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
       } else if (this.enterType == "city") {
-        this.getCityList(this.chooseCountry, this.chooseCity, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+        this.getCityList(this.chooseCountry, this.chooseCity, this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
       } else {
-        this.getRoomList(this.chooseRoomnum, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+        this.getRoomList(this.chooseRoomnum, this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
       }
       
     },
     handleCurrentChang(num) {
       this.currentPage = num
       if (this.enterType == "gpu") {
-        this.getList(this.active , this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+        this.getList(this.active , this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
       } else if (this.enterType == "city") {
-        this.getCityList(this.chooseCountry, this.chooseCity, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+        this.getCityList(this.chooseCountry, this.chooseCity, this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
       } else {
-        this.getRoomList(this.chooseRoomnum, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+        this.getRoomList(this.chooseRoomnum, this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
       }
     },
     batch() {
