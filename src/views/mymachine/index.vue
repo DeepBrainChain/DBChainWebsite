@@ -46,7 +46,8 @@ export default {
         "myMachine_unlock",
         "myMachine_unlock_cpu",
         "myMachine_unlock_stopped",
-        "myMachine_unlock_gpuVirtual"
+        "myMachine_unlock_gpuVirtual",
+        "mySignle_unlock_GpuVirtual"
       ],
       curNavIndex: 3,
       menus: [
@@ -54,6 +55,12 @@ export default {
           title: undefined, //this.$t("gpu.machineList"),
           to: "myMachine_gpuVirtual",
           index: 3,
+          iconClass: "iconmachine",
+        },
+        {
+          title: undefined, //this.$t("gpu.machineList"),
+          to: "mySignle_gpuVirtual",
+          index: 5,
           iconClass: "iconmachine",
         }
       ],
@@ -97,8 +104,9 @@ export default {
   methods: {
     init_menus() {
       this.menus[0].title = this.$t("gpu.myMachine_gpuVirtual");
-      if (this.menus[1]) {
-        this.menus[1].title = this.$t("gpu.myVerify_gpuVirtual");
+      this.menus[1].title = this.$t("gpu.myMachine_gpuVirtual1");
+      if (this.menus[2]) {
+        this.menus[2].title = this.$t("gpu.myVerify_gpuVirtual");
       }
       // if (this.$t("website_name") === "congTuCloud") {
       //   this.menus.splice(2, 1);

@@ -38,10 +38,20 @@ const router = new Router({
       name: 'network',
       component: resolve => require(['./views/network'] , resolve)
     },
+    // {
+    //   path: '/virtual',
+    //   name: 'virtual',
+    //   component: resolve => require(['./views/virtual'] , resolve),
+    // },
     {
-      path: '/virtual',
-      name: 'virtual',
+      path: '/wholeVirtual',
+      name: 'wholeVirtual',
       component: resolve => require(['./views/virtual'] , resolve),
+    },
+    {
+      path: '/signleVirtual',
+      name: 'signleVirtual',
+      component: resolve => require(['./views/virtual/signleVirtual'] , resolve),
     },
     // 审核机器
     {
@@ -131,10 +141,24 @@ const router = new Router({
         },
         {
           meta: {
+            menuIndex: 5
+          },
+          path: 'mySignle_gpuVirtual',
+          component: resolve => require(['./views/mymachine/mySignle_GpuVirtual'] , resolve)
+        },
+        {
+          meta: {
             menuIndex: 3
           },
           path: 'myMachineUnlockGpuVirtual',
           component: resolve => require(['./views/mymachine/myMachine_unlock_gpuVirtual'] , resolve)
+        },
+        {
+          meta: {
+            menuIndex: 5
+          },
+          path: 'mySignleUnlockGpuVirtual',
+          component: resolve => require(['./views/mymachine/mySignle_unlock_GpuVirtual'] , resolve)
         },
       ]
     },

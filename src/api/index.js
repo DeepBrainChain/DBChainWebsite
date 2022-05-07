@@ -517,3 +517,181 @@ export const changeStatus = data => {
     data: data
   });
 };
+
+
+// 租用单个虚拟机
+/**
+ * @description 获取Gpu列表
+ * @param 
+ */
+
+ export const getsignlegpuType = data => {
+  return axios({
+    method: "get",
+    url: nodeHost + '/api/selectsignle/getgpuType'
+  });
+};
+
+
+/**
+ * @description 获取单个Gpu详细信息
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const getsignlelistByGpu = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + "/api/selectsignle/getlistByGpu",
+    data: data
+  });
+};
+
+
+/**
+ * @description 获取已有的地区列表
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const getsignleCity = (perams) => {
+  return axios({
+    method: "get",
+    url: nodeHost + '/api/selectsignle/getCity'
+  });
+};
+
+/**
+ * @description 通过地区获取机器列表
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const getsignlelistByCity = data => {
+  return axios({
+    method: "post",
+    url: nodeHost + "/api/selectsignle/getlistByCity",
+    data: data
+  });
+};
+
+/**
+ * @description 获取已有的机房编号列表
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const getsignleRoomnum = (perams) => {
+  return axios({
+    method: "get",
+    url: nodeHost + '/api/selectsignle/getRoomnum'
+  });
+};
+
+/**
+ * @description 通过机房编号获取机器列表
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const getsignlelistByRoom = data => {
+  return axios({
+    method: "post",
+    url: nodeHost + "/api/selectsignle/getlistByRoom",
+    data: data
+  });
+};
+
+/**
+ * @description 获取机器信息
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const getsignleMachineInfo = data => {
+  return axios({
+    method: "post",
+    url: nodeHost + "/api/selectsignle/getMachineInfo",
+    data: data
+  });
+};
+
+
+// 单个虚拟机-查询已有端口
+export const getPort = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/signlerent/getPort',
+    data: data
+  });
+};
+
+// 单个虚拟机创建临时钱包 
+export const createSignleWallet = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/signlerent/createSignleWallet',
+    data: data
+  });
+};
+
+// 单个虚拟机-创建单个虚拟的订单信息
+export const createSignleVirOrder = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/signlerent/createSignleVirOrder',
+    data: data
+  });
+};
+
+
+// 单个虚拟机-查询单个虚拟的订单信息
+export const getSignleVirtual = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/signlerent/getSignleVirtual',
+    data: data
+  });
+};
+
+// 单个虚拟机-定时查询虚拟机 
+export const timedQuerySignleTask = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/signlerent/timedQuerySignleTask',
+    data: data
+  });
+};
+
+// 修改虚拟机订单状态
+export const changeSignleVirStatus = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/signlerent/changeSignleVirStatus',
+    data: data
+  });
+};
+
+// 单个虚拟机-停止虚拟机
+export const stopSignleVir = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/signlerent/stopSignleVir',
+    data: data
+  });
+};
+
+// 单个虚拟机-启动虚拟机 
+export const startSignleVir = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/signlerent/startSignleVir',
+    data: data
+  });
+};
+
+// 单个虚拟机-重启虚拟机 
+export const restartSignleVir = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/signlerent/restartSignleVir',
+    data: data
+  });
+};
+
+// 单个虚拟机-续费
+export const renewRentSignle = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/signlerent/renewRentSignle',
+    data: data
+  });
+};

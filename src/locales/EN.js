@@ -55,7 +55,8 @@ export default {
   dbcChange_tips: "DBC 24hours price change",
   heads: {
     home: 'Home',
-    virtual: "Rent GPU Virtual Machine",
+    virtual: "Rent GPU Entire Machine",
+    virtual1: "Rent GPU Virtual Machine",
     gputype: "GPU type",
     area: "engine room",
     room: "Datacenter ID",
@@ -70,7 +71,8 @@ export default {
   },
   gpu: {
     myWallet: 'My Wallet',
-    myMachine_gpuVirtual: "my GPU virtual machine",
+    myMachine_gpuVirtual: "my whole GPU",
+    myMachine_gpuVirtual1: "my GPU virtual machine",
     myVerify_gpuVirtual: "My validation GPU VM",
     walletAddress: 'Wallet Address',
     notice_1: 'Please keep your private key safe, once a private key is lost, no one can retrieve your DBC asset for you!',
@@ -410,6 +412,7 @@ export default {
     Machine_ID:'machine ID',
     Room_number:'Room number',
     Machine_sta:'Machine state',
+    Machine_onlineNum:'剩余空闲GPU数',
     All:'All',
     Rented:'Rented',
     Idle:'Idle',
@@ -464,6 +467,7 @@ export default {
     tip14: 'Are you sure you want to stop the virtual machine?',
     tip15: 'Are you sure you want to start the virtual machine?',
     tip16: 'Are you sure to modify the virtual machine? Please stop the virtual machine first',
+    tip17: 'Reminder: The current machine can be rented for up to {hour} hours, and the shortest is 1 hour',
     title: 'my rental machine',
     tower: 'tower',
     confirm_time: 'Confirm rental countdown',
@@ -555,6 +559,23 @@ export default {
     newTip3: 'The rdp port number is duplicated, please re-enter',
     newTip4: 'Duplicate vnc port number, please re-enter',
     newTip5: 'Duplicate open port range, please re-enter'
+  },
+  // 单个虚拟机
+  signleVir: {
+    title: 'my rented virtual machine',
+    orderId: "Order ID",
+    machineId: 'Machine ID',
+    remainingGPU:'Number of available GPUs remaining',
+    order_status1: 'Creating, please wait',
+    order_status2: 'During the deduction, please do not operate the page',
+    order_status3: 'In use',
+    order_status4: 'Transfer failed, please re-rent',
+    order_status5: 'Lease has expired',
+    order_status6: 'Creation failed, please re-lease',
+    virStatus: 'virtual machine state',
+    tip1: 'The minimum lease renewal time is 1 hour, and the longest is {maxTime} hours',
+    tip2: 'Insufficient account balance, please recharge and rent',
+    tip3: 'Failed to get temporary wallet address'
   },
   // 购买DBC
   buyDBC: {

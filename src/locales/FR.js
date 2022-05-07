@@ -55,7 +55,8 @@ export default {
   dbcChange_tips: "Changement du prix DBC les 24 dernières heures",
   heads: {
     home: 'Aceuille',
-    virtual: "Louer une machine virtuelle GPU",
+    virtual: "Location de la machine complète du GPU",
+    virtual1: "Louer une machine virtuelle GPU",
     gputype: "Type de GPU",
     area: "zone géographique",
     room: "ID du centre de données",
@@ -70,7 +71,8 @@ export default {
   },
   gpu: {
     myWallet: 'Mon Portefeuille',
-    myMachine_gpuVirtual: "ma machine virtuelle GPU",
+    myMachine_gpuVirtual: "tout mon GPU",
+    myMachine_gpuVirtual1: "ma machine virtuelle GPU",
     myVerify_gpuVirtual: "ma machine de vérification",
     walletAddress: 'Adresse du portefeuille',
     notice_1: "Veuillez conserver votre clé privée en lieu sûr, une fois qu'une clé privée est perdue, personne ne peut récupérer votre actif DBC pour vous !",
@@ -410,6 +412,7 @@ export default {
     Machine_ID:'ID de la machine',
     Room_number:'Numéro de la room',
     Machine_sta:'État de la machine',
+    Machine_onlineNum:'剩余空闲GPU数',
     All:'Tout',
     Rented:'loué',
     Idle:'Innactif',
@@ -464,6 +467,7 @@ export default {
     tip14: 'Voulez-vous vraiment arrêter la machine virtuelle ?',
     tip15: 'Voulez-vous vraiment démarrer la machine virtuelle ?',
     tip16: "Êtes-vous sûr de vouloir modifier la machine virtuelle ? Veuillez d'abord arrêter la machine virtuelle",
+    tip17: "Rappel : La machine actuelle peut être louée jusqu'à {hour} heures, et la durée la plus courte est de 1 heure",
     title: 'Ma machine de location',
     tower: 'Tour',
     confirm_time: 'Confirmer le compte à rebours de la location',
@@ -555,6 +559,23 @@ export default {
     newTip3: 'Le numéro de port rdp est en double, veuillez le saisir à nouveau',
     newTip4: 'Numéro de port vnc en double, veuillez le saisir à nouveau',
     newTip5: 'Plage de ports ouverts en double, veuillez saisir à nouveau'
+  },
+  // 单个虚拟机
+  signleVir: {
+    title: 'ma machine virtuelle louée',
+    orderId: "numéro de commande",
+    machineId: 'ID de la machine',
+    remainingGPU:'Nombre de GPU disponibles restants',
+    order_status1: 'Création, veuillez patienter',
+    order_status2: 'Pendant la déduction, veuillez ne pas utiliser la page',
+    order_status3: 'utilisé',
+    order_status4: 'Échec du transfert, veuillez relouer',
+    order_status5: 'Le bail a expiré',
+    order_status6: 'Échec de la création, veuillez relouer',
+    virStatus: 'état de la machine virtuelle',
+    tip1: "La durée minimale de renouvellement du bail est d'une heure et la plus longue est de {maxTime} heures",
+    tip2: 'Solde de compte insuffisant, veuillez recharger et louer',
+    tip3: "Échec de l'obtention de l'adresse de portefeuille temporaire"
   },
   // 购买DBC
   buyDBC: {

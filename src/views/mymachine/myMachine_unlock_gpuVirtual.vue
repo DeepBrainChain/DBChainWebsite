@@ -690,7 +690,7 @@ export default {
     })
     getPercentage().then(res => {
       if (res.success) {
-        this.DBCPercentage = res.content.percentage / 100
+        this.DBCPercentage = res.content.percentage_whole/100
       }
     })
   },

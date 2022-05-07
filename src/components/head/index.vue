@@ -10,11 +10,24 @@
         >{{$t('heads.home')}}</a>
         <el-dropdown
           class="item"
-          trigger="click"
+          v-on:command="drop_home1"
+        >
+          <span class="el-dropdown-link">
+            <span class="item" :class="{active: this.$store.state.menuName === 'signleVirtual'}">{{$t('heads.virtual1')}}</span>
+            <i class="el-icon-caret-bottom ml5"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="gpu">{{$t('heads.gputype')}}</el-dropdown-item>
+            <el-dropdown-item command="city">{{$t('heads.area')}}</el-dropdown-item>
+            <el-dropdown-item command="room">{{$t('heads.room')}}</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <el-dropdown
+          class="item"
           v-on:command="drop_home"
         >
           <span class="el-dropdown-link">
-            <span class="item" :class="{active: this.$store.state.menuName === 'virtual'}">{{$t('heads.virtual')}}</span>
+            <span class="item" :class="{active: this.$store.state.menuName === 'wholeVirtual'}">{{$t('heads.virtual')}}</span>
             <i class="el-icon-caret-bottom ml5"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
@@ -550,9 +563,18 @@ export default {
       this.$router.push("/preview");
     },
     drop_home(name) {
-      this.$store.commit("setMenuName", 'virtual');
+      this.$store.commit("setMenuName", 'wholeVirtual');
       this.$router.push({
-        path:"/virtual",
+        path:"/wholeVirtual",
+        query: {
+          type: name
+        }
+      });
+    },
+    drop_home1(name) {
+      this.$store.commit("setMenuName", 'signleVirtual');
+      this.$router.push({
+        path:"/signleVirtual",
         query: {
           type: name
         }

@@ -55,7 +55,8 @@ export default {
   dbcChange_tips: "DBC 24hours price change   24 horas cambio de precio DBC",
   heads: {
     home: 'Home',
-    virtual: "Alquilar Máquina virtual GPU",
+    virtual: "Alquilar GPU máquina completa",
+    virtual1: "Alquilar Máquina virtual GPU",
     gputype: "tipo gpu",
     area: "sala de máquinas",
     room: "ID del centro de datos",
@@ -70,7 +71,8 @@ export default {
   },
   gpu: {
     myWallet: 'Mi Billetera',
-    myMachine_gpuVirtual: "Mi máquina virtual GPU",
+    myMachine_gpuVirtual: "toda mi GPU",
+    myMachine_gpuVirtual1: "Mi máquina virtual GPU",
     myVerify_gpuVirtual: "Mi GPU de validación",
     walletAddress: ' Dirección de Billetera',
     notice_1: 'Por favor mantenga su clave a salvo, si una clave se pierde nadie puede recuperar los activos DBC por usted',
@@ -410,6 +412,7 @@ export default {
     Machine_ID:'machine Identificador de máquina',
     Room_number:'Número de cuarto',
     Machine_sta:'Estado de la máquina',
+    Machine_onlineNum:'剩余空闲GPU数',
     All:'Todo',
     Rented:'Alquilada',
     Idle:'Activa',                 
@@ -464,6 +467,7 @@ export default {
     tip14: '¿Estás seguro de que quieres detener la máquina virtual?',
     tip15: '¿Está seguro de que desea iniciar la máquina virtual?',
     tip16: '¿Estás seguro de modificar la máquina virtual? Por favor, detenga la máquina virtual primero',
+    tip17: 'Recordatorio: la máquina actual se puede alquilar por hasta {hour} horas, y el tiempo más corto es de 1 hora',
     title: 'mi máquina de alquiler',
     tower: 'Torre',
     confirm_time: 'Confirmar cuenta regresiva de alquiler',
@@ -555,6 +559,23 @@ export default {
     newTip3: 'El número de puerto rdp está duplicado, vuelva a ingresar',
     newTip4: 'Número de puerto vnc duplicado, vuelva a ingresar',
     newTip5: 'Rango de puerto abierto duplicado, vuelva a ingresar'
+  },
+  // 单个虚拟机
+  signleVir: {
+    title: 'mi máquina virtual alquilada',
+    orderId: "Solicitar ID",
+    machineId: 'Identificador de máquina',
+    remainingGPU:'Número de GPU disponibles restantes',
+    order_status1: 'Creando, por favor espere',
+    order_status2: 'Durante la deducción, por favor no opere la página',
+    order_status3: 'en uso',
+    order_status4: 'Transferencia fallida, vuelve a alquilar',
+    order_status5: 'El arrendamiento ha expirado',
+    order_status6: 'La creación falló, vuelva a arrendar',
+    virStatus: 'estado de la máquina virtual',
+    tip1: 'El tiempo mínimo de renovación del contrato de arrendamiento es de 1 hora y el más largo es de {maxTime} horas',
+    tip2: 'Saldo de cuenta insuficiente, recargue y alquile',
+    tip3: 'No se pudo obtener la dirección de la billetera temporal'
   },
   // 购买DBC
   buyDBC: {

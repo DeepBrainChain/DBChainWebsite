@@ -55,7 +55,8 @@ export default {
   dbcChange_tips: "DBC 24小时价格变化",
   heads: {
     home: "首页",
-    virtual: "租用GPU虚拟机",
+    virtual: "租用GPU整机",
+    virtual1: "租用GPU虚拟机",
     gputype: "GPU类型",
     area: "地理区域",
     room: "数据中心ID",
@@ -70,7 +71,8 @@ export default {
   },
   gpu: {
     myWallet: "我的钱包",
-    myMachine_gpuVirtual: "我的GPU虚拟机", //2021 9.14
+    myMachine_gpuVirtual: "我的GPU整机", //2021 9.14
+    myMachine_gpuVirtual1: "我的GPU虚拟机", //2021 9.14
     myVerify_gpuVirtual: "我的验证GPU虚拟机", //2021 12.2
     walletAddress: "钱包地址",
     notice_1: "请保管好私钥信息，私钥丢失，任何人都将无法帮你找回DBC资产!",
@@ -408,9 +410,11 @@ export default {
     All_Gpu:'GPU总数',
     Idle_Gpu: '空闲GPU数',
     Daily_Rent: '日租金',
+    Hours_Rent: '单卡每小时租金',
     Machine_ID:'机器ID',
     Room_number:'数据中心编号',
     Machine_sta:'机器状态',
+    Machine_onlineNum:'剩余空闲GPU数',
     All:'全部',
     Rented:'被租用',
     Idle:'空闲',
@@ -465,6 +469,7 @@ export default {
     tip14: '确认停止虚拟机吗？',
     tip15: '确认启动虚拟机吗？',
     tip16: '确认修改虚拟机？请先停止虚拟机运行',
+    tip17: '温馨提示：当前机器最长可以租用{hour}小时，最短1个小时',
     title: '我租用的机器',
     tower: '台',
     confirm_time: '确认租用倒计时',
@@ -556,6 +561,23 @@ export default {
     newTip3: 'rdp端口号重复，请重新输入',
     newTip4: 'vnc端口号重复，请重新输入',
     newTip5: '开放端口范围重复，请重新输入'
+  },
+  // 单个虚拟机
+  signleVir: {
+    title: '我租用的虚拟机',
+    orderId: "订单ID",
+    machineId: '机器ID',
+    remainingGPU:'剩余可用GPU数量',
+    order_status1: '正在创建，请稍后',
+    order_status2: '扣款中，请勿操作页面',
+    order_status3: '正在使用中',
+    order_status4: '转账失败，请重新租用',
+    order_status5: '租用已到期',
+    order_status6: '创建失败，请重新租用',
+    virStatus: '虚拟机状态',
+    tip1: '最短续租时间为1个小时,最长为{maxTime}小时',
+    tip2: '账户余额不足，请充值后在租用',
+    tip3: '获取临时钱包地址失败'
   },
   // 购买DBC
   buyDBC: {

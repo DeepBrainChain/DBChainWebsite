@@ -368,8 +368,10 @@ export function getHref(url){
   const urlstr = url.toLocaleLowerCase()
   if (urlstr.indexOf('gpu') != -1) { // gpu
     return 'gpu'
-  }else if (urlstr.indexOf('virtual') != -1) { // miner
-    return 'virtual'
+  }else if (urlstr.indexOf('wholevirtual') != -1) { // miner
+    return 'wholeVirtual'
+  }else if (urlstr.indexOf('signlevirtual') != -1) { // miner
+    return 'signleVirtual'
   }else if (urlstr.indexOf('miner') != -1) { // miner
     return 'miner'
   } else if (urlstr.indexOf('machine') != -1) { // mymachine
