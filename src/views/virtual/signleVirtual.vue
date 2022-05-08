@@ -1039,7 +1039,7 @@ export default {
             if (res.code == -5 ) {
               data.vnc_port ++
             }
-            this.createSignleVir(data)
+            this.createSignleVir(data, walletInfo)
           } else {
             this.btnloading1 = false;
             this.startConfirm = false;

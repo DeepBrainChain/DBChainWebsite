@@ -527,7 +527,7 @@ export default {
                 }
                 el.singleCardHour = this.getnum2((Number(el.calc_point)/100*this.GPUPointPrice * (1 + this.DBCPercentage)/this.dbc_price)/el.gpu_num/24)
                 timedQuery.content.singleCardHour = el.singleCardHour
-                this.$set(res.content, index, timedQuery.content)
+                this.$set(res.content, i, timedQuery.content)
               }
               let timetask = null
               timetask = setInterval( async () => {
@@ -535,7 +535,7 @@ export default {
                 if (timedQuery1.success) {
                   el.singleCardHour = this.getnum2((Number(el.calc_point)/100*this.GPUPointPrice * (1 + this.DBCPercentage)/this.dbc_price)/el.gpu_num/24)
                   timedQuery1.content.singleCardHour = el.singleCardHour
-                  this.$set(res.content, index, timedQuery1.content)
+                  this.$set(res.content, i, timedQuery1.content)
                 }
                 if (timedQuery1.content.status != 'creating') {
                   clearInterval(timetask)
