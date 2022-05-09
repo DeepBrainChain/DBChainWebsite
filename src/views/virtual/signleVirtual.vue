@@ -991,18 +991,18 @@ export default {
             transfer(walletInfo.wallet, `${this.totalDBC}`, value, (res2) => {
               console.log(res2, 'transfer');
               if(res2.success){
-                this.$message.success(this.$t('myvirtual.Build_success'))
+                // this.$message.success(this.$t('myvirtual.Build_success'))
                 this.btnloading1 = false
                 this.startConfirm = false;
                 this.dialogFormVisible1 = false
                 setTimeout(() => {
                   this.$router.push('mymachine/mySignleUnlockGpuVirtual')
-                }, 2000);
+                }, 1000);
               }else{
                 this.btnloading1 = false;
                 this.startConfirm = false;
                 let perams = {
-                  id: this.chooseMac.machine_id+this.account,
+                  id: res.content,
                   machine_id: this.chooseMac.machine_id,
                   account: this.account,
                   status: 4
@@ -1022,7 +1022,7 @@ export default {
             this.startConfirm = false;
             console.log('取消下单');
             let perams = {
-              id: this.chooseMac.machine_id+this.account,
+              id: res.content,
               machine_id: this.chooseMac.machine_id,
               account: this.account,
               status: 4
