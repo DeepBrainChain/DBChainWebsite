@@ -284,7 +284,7 @@ export default {
   /**
    * hz 新增单词
    */
-  startVir: "开始租用GPU虚拟机",
+  startVir: "开始租用GPU整机",
   home_intr: "GPU租用按照天计费，机器租用到期之前也可以按天续租",
   result: '结果',
   verifyPassward: "请输入账户密码",
@@ -470,6 +470,7 @@ export default {
     tip15: '确认启动虚拟机吗？',
     tip16: '确认修改虚拟机？请先停止虚拟机运行',
     tip17: '温馨提示：当前机器最长可以租用{hour}小时，最短1个小时',
+    tip18: '用户名密码输入不正确，请重新确认后提交',
     title: '我租用的机器',
     tower: '台',
     confirm_time: '确认租用倒计时',
@@ -510,6 +511,8 @@ export default {
     start_success: '启动虚拟机成功',
     start_fails: '启动虚拟机失败',
     reset:'重置密码',
+    user:'用户名',
+    user1: '请输入用户名',
     pass1:'新密码：',
     pass2:'再次确认：',
     pass3:'请输入密码',

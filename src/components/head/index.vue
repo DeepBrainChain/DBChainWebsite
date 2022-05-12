@@ -41,11 +41,11 @@
           :class="{active: menuName === 'virtual'}"
           @click="pushMenu('virtual')"
         >{{$t('heads.virtual')}}</a> -->
-        <a
+        <!-- <a
           class="item"
           :class="{active: menuName === 'audit'}"
           @click="pushMenu('audit')"
-        >{{$t('heads.audit')}}</a>
+        >{{$t('heads.audit')}}</a> -->
         <a
           class="item"
           :class="{active: menuName === 'mymachine'}"
@@ -58,7 +58,7 @@
         >{{$t('heads.mywallet')}}</a>
         <a
           target="_blank"
-          href="https://deepbrainchain.github.io/DBC-Wiki/dbc-introduction/rentVirtual.html"
+          href="https://deepbrainchain.github.io/DBC-Wiki/dbc-introduction/rent-virtual.html"
           class="item"
         >{{$t('heads.help')}}</a>
         <a
@@ -660,7 +660,6 @@ export default {
   .drop-lang {
     cursor: pointer;
   }
-
   .el-dropdown-link {
     .icon-language {
       display: inline-block;
@@ -701,7 +700,7 @@ export default {
         justify-content: flex-start;
         align-items: center;
         .item {
-          margin-right: 25px;
+          margin-right: 50px;
           .item {
             margin-right: 0;
           }

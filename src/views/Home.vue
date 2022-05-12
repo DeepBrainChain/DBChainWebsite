@@ -106,12 +106,12 @@ export default {
     },
     pushToWallet() {
       this.$router.push({
-        path:"/virtual",
+        path:"/wholeVirtual",
         query: {
           type: 'gpu'
         }
       });
-      this.$store.commit("setMenuName", "virtual");
+      this.$store.commit("setMenuName", "wholeVirtual");
     },
     set_image1() {
       this.image1 = require("../assets/imgs/building@1x.png");

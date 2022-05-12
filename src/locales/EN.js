@@ -284,7 +284,7 @@ export default {
   /**
    * hz 新增单词
    */
-  startVir: "Start renting GPU virtual machines",
+  startVir: "Start renting a GPU machine",
   home_intr: "The GPU lease is billed on a daily basis, and the machine lease can also be renewed on a daily basis before the machine lease expires.",
   result: 'result',
   verifyPassward: "Please enter account password",
@@ -468,6 +468,7 @@ export default {
     tip15: 'Are you sure you want to start the virtual machine?',
     tip16: 'Are you sure to modify the virtual machine? Please stop the virtual machine first',
     tip17: 'Reminder: The current machine can be rented for up to {hour} hours, and the shortest is 1 hour',
+    tip18: 'Username and password entered incorrectly, please re-confirm and submit',
     title: 'my rental machine',
     tower: 'tower',
     confirm_time: 'Confirm rental countdown',
@@ -508,6 +509,8 @@ export default {
     start_success: 'Start the virtual machine successfully',
     start_fails: 'Failed to start virtual machine',
     reset:'Reset Password',
+    user:'Username',
+    user1: 'please enter user name',
     pass1:'new password:',
     pass2:'double confirm:',
     pass3:'Please enter password',

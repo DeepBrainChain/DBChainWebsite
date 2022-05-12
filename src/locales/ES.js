@@ -284,7 +284,7 @@ export default {
   /**
    * hz 新增单词
    */
-  startVir: " Comience a alquilar máquinas virtuales con GPU",
+  startVir: "Comience a alquilar una máquina GPU",
   home_intr: " El arrendamiento de GPU se factura diariamente y el arrendamiento de la máquina también se puede renovar diariamente antes de que caduque el arrendamiento de la máquina.",
   result: 'Resultado',
   verifyPassward: "Por favor ingrese la contraseña de la cuenta",
@@ -468,6 +468,7 @@ export default {
     tip15: '¿Está seguro de que desea iniciar la máquina virtual?',
     tip16: '¿Estás seguro de modificar la máquina virtual? Por favor, detenga la máquina virtual primero',
     tip17: 'Recordatorio: la máquina actual se puede alquilar por hasta {hour} horas, y el tiempo más corto es de 1 hora',
+    tip18: 'Nombre de usuario y contraseña ingresados ​​incorrectamente, reconfirme y envíe',
     title: 'mi máquina de alquiler',
     tower: 'Torre',
     confirm_time: 'Confirmar cuenta regresiva de alquiler',
@@ -507,7 +508,9 @@ export default {
     start: 'Inicie la máquina virtual',
     start_success: 'Inicie la máquina virtual con éxito',
     start_fails: 'No se pudo iniciar la máquina virtual',
-    reset:'Restablecer la contraseña',
+    reset: 'Restablecer la contraseña',
+    user: 'nombre de usuario',
+    user1: 'por favor ingrese el nombre de usuario',
     pass1:'Nueva contraseña:',
     pass2:'doble confirmación:',
     pass3:'Por favor, ingrese contraseña',

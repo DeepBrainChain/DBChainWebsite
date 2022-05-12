@@ -8,7 +8,7 @@ const host = "https://identifiertest.congtu.cloud";
 // http://localhost:8090
 // 审核机器新增
 
-const nodeHost = 'http://114.115.219.202:8090'
+const nodeHost = 'http://localhost:8090'
 
 
 // 获得dbc的价格等信息
@@ -462,6 +462,18 @@ export const GetResultHash = data => {
   return axios({
     method: "post",
     url: nodeHost + '/api/rentMachine/editVir',
+    data: data
+  });
+};
+
+/**
+ * @description 修改虚拟机
+ * @param {object} data {machine_id, gpu, ....}
+ */
+ export const editpasswd = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/rentMachine/editpasswd',
     data: data
   });
 };

@@ -284,7 +284,7 @@ export default {
   /**
    * hz 新增单词
    */
-  startVir: "Commencez à louer des machines virtuelles GPU",
+  startVir: "Commencer à louer une machine GPU",
   home_intr: "Le bail du GPU est facturé quotidiennement et le bail de la machine peut également être renouvelé quotidiennement avant l'expiration du bail de la machine.",
   result: 'resultat',
   verifyPassward: "Veuillez entrer le mot de passe du compte",
@@ -468,6 +468,7 @@ export default {
     tip15: 'Voulez-vous vraiment démarrer la machine virtuelle ?',
     tip16: "Êtes-vous sûr de vouloir modifier la machine virtuelle ? Veuillez d'abord arrêter la machine virtuelle",
     tip17: "Rappel : La machine actuelle peut être louée jusqu'à {hour} heures, et la durée la plus courte est de 1 heure",
+    tip18: "Nom d'utilisateur et mot de passe saisis incorrectement, veuillez reconfirmer et soumettre",
     title: 'Ma machine de location',
     tower: 'Tour',
     confirm_time: 'Confirmer le compte à rebours de la location',
@@ -508,6 +509,8 @@ export default {
     start_success: 'Démarrer la machine virtuelle avec succès',
     start_fails: 'Impossible de démarrer la machine virtuelle',
     reset:'Réinitialiser le mot de passe',
+    user: "Nom d'utilisateur",
+    user1: "veuillez entrer le nom d'utilisateur",
     pass1:'Nouveau mot de passe :',
     pass2:'vérifié et revérifié:',
     pass3:'Veuillez entrer le mot de passe',

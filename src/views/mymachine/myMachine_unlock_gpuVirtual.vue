@@ -126,14 +126,14 @@
                   @click="delect(item, el)"
                   >{{ $t("myvirtual.delect") }}</el-button
                 >
-                <!-- <el-button
+                <el-button
                   plain
                   class="tool-btn"
                   size="mini"
-                  v-if="el.orderStatus == '正在使用中' || el.orderStatus == '待确认支付' "
-                  @click="reset(el)"
+                  v-if="el.orderStatus == 3 && item.status == 'running'"
+                  @click="reset(item, el)"
                   >{{ $t("myvirtual.reset") }}</el-button
-                > -->
+                >
                 <el-button
                   plain
                   class="tool-btn"
@@ -442,6 +442,9 @@
     <!-- 重置密码 -->
     <el-dialog width='30%' :title="$t('myvirtual.reset')" :visible.sync="dialogFormVisible2">
       <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="ruleForm">
+        <el-form-item :label="$t('myvirtual.user')" prop="user">
+          <el-input class="ruleForm_input" :disabled='editUser' type="text" v-model="ruleForm.user" autocomplete="off"></el-input>
+        </el-form-item>
         <el-form-item :label="$t('myvirtual.pass1')" prop="pass">
           <el-input class="ruleForm_input" type="password" v-model="ruleForm.pass" show-password autocomplete="off"></el-input>
         </el-form-item>
@@ -450,8 +453,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button class="batch" size="mini" plain :loading='btnloading2' @click="dialogFormVisible2 = false">{{$t('confirm')}}</el-button>
-        <el-button class="batch" size="mini" plain  @click="resetForm('ruleForm')">{{$t('virtual.cancal')}}</el-button>
+        <el-button class="batch" size="mini" plain :loading='btnloading2' @click="resetForm('ruleForm')">{{$t('confirm')}}</el-button>
+        <el-button class="batch" size="mini" plain @click="dialogFormVisible2 = false">{{$t('virtual.cancal')}}</el-button>
       </div>
     </el-dialog>
     <!-- 订单详情 -->
@@ -535,7 +538,8 @@ import {
   deleteVir,
   stopVir,
   startVir,
-  editVir
+  editVir,
+  editpasswd
 } from "@/api";
 
 import {
@@ -564,6 +568,13 @@ export default {
         callback(new Error(this.$t('myvirtual.pass4')));
       } else if (value !== this.ruleForm.pass) {
         callback(new Error(this.$t('myvirtual.pass5')));
+      } else {
+        callback();
+      }
+    };
+    var validatePass3 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error(this.$t('myvirtual.user1')));
       } else {
         callback();
       }
@@ -642,13 +653,18 @@ export default {
       vnc_port: 5900,
       edit_vnc_port: 0,
       Vir_info: [],
-      // 充值密码
+      // 修改密码
+      editUser: true,
       dialogFormVisible2: false,
       ruleForm: {
+        user: '',
         pass: '',
         checkPass: '',
       },
       rules: {
+        user: [
+          { validator: validatePass3, trigger: 'blur' }
+        ],
         pass: [
           { validator: validatePass, trigger: 'blur' }
         ],
@@ -1321,6 +1337,12 @@ export default {
             console.log(res, 'createNetwork');
           })
         }
+        let chooseIndex;
+        this.Machine_info.map((ele, index) => {
+          if (ele._id == el._id) {
+            chooseIndex = index
+          }
+        })
         try {
           let nonce = await randomWord()
           let sign = await CreateSignature(nonce, value)
@@ -1330,14 +1352,16 @@ export default {
             if (!VMS_Info.content.length) {
               this.$message.error(this.$t('myvirtual.err_msg'))
             }
-            el.virtual_info = []
-            el.virtual_info = VMS_Info.content
+            // el.virtual_info = []
+            // el.virtual_info = VMS_Info.content
+            this.Machine_info[chooseIndex].virtual_info = []
+            this.Machine_info[chooseIndex].virtual_info = VMS_Info.content
           }else{
             this.$message.error(VMS_Info.msg)
           }
-          el.btnloading4 = false
+          this.Machine_info[chooseIndex].btnloading4 = false
         } catch (err) {
-          el.btnloading4 = false
+          this.Machine_info[chooseIndex].btnloading4 = false
           this.$message({
             showClose: true,
             message: err.message,
@@ -1583,22 +1607,75 @@ export default {
       });
     },
     // 重置密码
-    reset(){
+    reset(item, el){
+      this.chooseMac = item
+      this.chooseMac.machine_id = el.machine_id
+      this.ruleForm.user = item.user_name
+      this.ruleForm.pass = item.login_password
+      this.ruleForm.checkPass = item.login_password
+      if (item.user_name == "" || item.user_name == "N/A") {
+        this.editUser = false
+      } else {
+        this.editUser = true
+      }
       this.dialogFormVisible2 = true
     },
-    submitForm(formName) {
+    resetForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
+          let data = {
+            id: this.chooseMac.belong,
+            task_id: this.chooseMac.task_id,
+            machine_id: this.chooseMac.machine_id,
+            username: this.ruleForm.user,
+            password: this.ruleForm.pass
+          }
+          editpasswd(data).then( async (res) => {
+            if (res.success) {
+              this.$message({
+                type: 'success',
+                message: this.$t('myvirtual.edit_success')
+              });
+              this.dialogFormVisible2 = false
+              let timeData = {
+                id: this.chooseMac.belong,
+                machine_id: this.chooseMac.machine_id,
+                task_id: this.chooseMac.task_id
+              }
+              let timedQuery1 = await timedQueryTask(timeData)
+              let chooseIndex1;
+              this.Machine_info.map((ele, index) => {
+                if (ele._id == this.chooseMac.belong) {
+                  chooseIndex1 = index
+                }
+              })
+              if (timedQuery1.success) {
+                let virarr1 = this.Machine_info[chooseIndex1].virtual_info.map(ele => 
+                  ele.task_id === timeData.task_id ? timedQuery1.content : ele
+                )
+                this.Machine_info[chooseIndex1].virtual_info = virarr1
+              }
+            } else {
+              if (res.msg.indexOf('child process has failed to set user password') != -1) {
+                this.$message({
+                  type: 'error',
+                  message: this.$t('myvirtual.tip18')
+                });
+              } else {
+                this.$message({
+                  type: 'error',
+                  message: res.msg
+                });
+              }
+            }
+          })
         } else {
           console.log('error submit!!');
           return false;
         }
       });
-    },
-    resetForm(formName) {
-      this.dialogFormVisible2 = false
-      this.$refs[formName].resetFields();
+      // this.dialogFormVisible2 = false
+      // this.$refs[formName].resetFields();
     },
     // 订单详情
     orderDetails() {
