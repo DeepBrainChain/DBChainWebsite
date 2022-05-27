@@ -168,7 +168,7 @@
       </div>
       <div class="fs12">{{$t('virtual.tip1')}}</div>
       <div>
-        <p v-if="!openCheck"><span class="bold">{{$t('virtual.Max_disk_Num')}}:</span> {{Number(chooseMac.data_disk)}}T</p>
+        <p v-if="!openCheck"><span class="bold">{{$t('virtual.Max_disk_Num')}}:</span> {{Number(chooseMac.data_disk)}}G</p>
         <p v-if="!openCheck"><span class="bold">{{$t('virtual.Max_Mem')}}:</span> <span style="color: #f56c6c;">{{max_vir_mem ? max_vir_mem : Math.ceil(Number(chooseMac.mem_num))}} </span>G</p>
         <p><span class="bold">{{$t('virtual.total')}}:</span> {{totalMoney}} $</p>
         <p><span class="bold">{{$t('virtual.equivalent')}}:</span> {{totalDbc}}</p>

@@ -404,6 +404,22 @@ function getdate(time) {
   return (m < 10 ? "0" + m : m) + "/" + (d < 10 ? "0" + d : d) + " " + (h < 10 ? "0" + h : h) +':'+(s < 10 ? "0" + s : s)
 }
 
+
+/**
+ * getdate 返回时间格式 YY/MM/DD HH:SS:mm
+ * @param time 时间戳
+ */
+
+ export const getdate1 = (time) => {
+  let now = new Date(time),
+  y = now.getFullYear(),
+  m = now.getMonth() + 1,
+  d = now.getDate(),
+  h = now.getHours(),
+  s = now.getMinutes(),
+  s1 = now.getSeconds();;
+  return y +  '-' +(m < 10 ? "0" + m : m) + "-" + (d < 10 ? "0" + d : d) + " " + (h < 10 ? "0" + h : h) +':'+(s < 10 ? "0" + s : s)+':'+(s1 < 10 ? "0" + s1 : s1)
+}
 /**
  * getBlockchainTime 区块验证时间换算，返回派单验证时间段  以30S一个块计算
  * @param arr 开始时间时间块数组
@@ -485,7 +501,7 @@ export const GetRTime = (t) => {
 
 
 /**
- * getComputing_Power 时间戳倒计时 天 时分秒
+ * getComputing_Power 
  * 整机算力值=(25*（卡数）+内存/3.5+(√(cuda数量)*√（显存/10））*卡数)*地域系数
  * @param Gpu_Num 卡数
  * @param Mem 内存

@@ -148,6 +148,13 @@ const router = new Router({
         },
         {
           meta: {
+            menuIndex: 6
+          },
+          path: 'mySecurityGroup',
+          component: resolve => require(['./views/mymachine/mySecurityGroup'] , resolve)
+        },
+        {
+          meta: {
             menuIndex: 3
           },
           path: 'myMachineUnlockGpuVirtual',
@@ -159,6 +166,20 @@ const router = new Router({
           },
           path: 'mySignleUnlockGpuVirtual',
           component: resolve => require(['./views/mymachine/mySignle_unlock_GpuVirtual'] , resolve)
+        },
+        {
+          meta: {
+            menuIndex: 6
+          },
+          path: 'myUnlockSecurityGroup',
+          component: resolve => require(['./views/mymachine/my_unlock_SecurityGroup'] , resolve)
+        },
+        {
+          meta: {
+            menuIndex: 6
+          },
+          path: 'myUnlockSGrule',
+          component: resolve => require(['./views/mymachine/my_unlock_SGrule'] , resolve)
         },
       ]
     },

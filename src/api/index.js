@@ -8,7 +8,7 @@ const host = "https://identifiertest.congtu.cloud";
 // http://localhost:8090
 // 审核机器新增
 
-const nodeHost = 'http://localhost:8090'
+const nodeHost = 'http://114.115.219.202:8090'
 
 
 // 获得dbc的价格等信息
@@ -346,6 +346,18 @@ export const GetResultHash = data => {
 };
 
 /**
+ * @description 查询ip信息
+ * @param {object} data {machine_id, gpu, ....}
+ */
+ export const searchRoomIp = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/rentMachine/searchRoomIp',
+    data: data
+  });
+};
+
+/**
  * @description 创建虚拟机
  * @param {object} data {machine_id, gpu, ....}
  */
@@ -467,7 +479,7 @@ export const GetResultHash = data => {
 };
 
 /**
- * @description 修改虚拟机
+ * @description 修改密码
  * @param {object} data {machine_id, gpu, ....}
  */
  export const editpasswd = (data) => {
@@ -477,6 +489,26 @@ export const GetResultHash = data => {
     data: data
   });
 };
+
+/**
+ * @description 新增磁盘
+ * @param {object} data {machine_id, gpu, ....}
+ */
+ export const addVMDisk = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/rentMachine/addDisk',
+    data: data
+  });
+};
+
+
+
+
+
+
+
+
 
 /**
  * @description 获取累计收益信息
@@ -704,6 +736,70 @@ export const renewRentSignle = (data) => {
   return axios({
     method: "post",
     url: nodeHost + '/api/signlerent/renewRentSignle',
+    data: data
+  });
+};
+
+
+// 创建规则 
+export const createSecurity = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/security/createSecurity',
+    data: data
+  });
+};
+
+// 查询 
+export const getSecurity = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/security/getSecurity',
+    data: data
+  });
+};
+
+// 修改名称
+export const changeName = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/security/changeName',
+    data: data
+  });
+};
+
+// 删除安全组
+export const deleteSG = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/security/deleteSG',
+    data: data
+  });
+};
+
+// 克隆安全组
+export const cloneSG = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/security/cloneSG',
+    data: data
+  });
+};
+
+// 删除安全组规则
+export const deleteSGRule = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/security/deleteSGRule',
+    data: data
+  });
+};
+
+// 修改安全组规则
+export const editSGRule = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/security/editSGRule',
     data: data
   });
 };

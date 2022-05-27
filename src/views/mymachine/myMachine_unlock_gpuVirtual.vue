@@ -10,6 +10,10 @@
             <span class="Machine_id">{{$t('virtual.Machine_ID')}}: {{el.machine_id}}</span>
             <span class="time_left" v-if="el.orderStatus == 3">{{$t('myvirtual.time_left')}}: {{el.time_left}} </span>
           </div>
+          <div v-if="el.orderStatus == 4">
+            <div v-if="!el.hasdelectVm" class="fs14"><span class="bold">{{$t('myvirtual.vmdelectTime')}}</span>: {{el.vmdelectTime}}</div>
+            <div v-else class="fs14"><span class="bold">{{$t('myvirtual.vmdelect')}}</span></div>
+          </div>
           <div class="countTime" v-if="el.orderStatus == 2">
             <div class="fs14"><span class="bold">{{$t('myvirtual.confirm_time')}}</span>: {{el.confirmTime}}</div>
             <div>{{$t('myvirtual.tip1')}}</div>
@@ -73,7 +77,7 @@
                 <span v-show="item.status == 'creating'">{{$t('myvirtual.vir_status1')}}</span>
                 <span v-show="item.status == 'running'">{{$t('myvirtual.vir_status2')}}</span>
                 <span v-show="item.status == 'starting'">{{$t('myvirtual.vir_status3')}}</span>
-                <span v-show="item.status == 'stopping'">{{$t('myvirtual.vir_status4')}}</span>
+                <span v-show="item.status == 'being poweroff'">{{$t('myvirtual.vir_status4')}}</span>
                 <span v-show="item.status == 'restarting'">{{$t('myvirtual.vir_status5')}}</span>
                 <span v-show="item.status == 'resetting'">{{$t('myvirtual.vir_status6')}}</span>
                 <span v-show="item.status == 'start error'">{{$t('myvirtual.vir_status7')}}</span>
@@ -139,6 +143,14 @@
                   class="tool-btn"
                   size="mini"
                   v-if="el.orderStatus == 3"
+                  @click="changeDisk(item, el)"
+                  >{{ $t("myvirtual.editDisk") }}</el-button
+                >
+                <el-button
+                  plain
+                  class="tool-btn"
+                  size="mini"
+                  v-if="el.orderStatus == 3"
                   @click="operateVirtual1(el, item)"
                   >{{ $t("myvirtual.change") }}</el-button
                 >
@@ -147,20 +159,38 @@
             <div v-if="item.status == 'running'"  class="li-bottom">
               <span>{{$t('myvirtual.mirror_name')}}: {{item.images}}</span>
               <span>{{$t('myvirtual.IP_address')}}: {{item.ssh_ip}}</span>
+              <span v-show="item.network_sec">{{$t('myvirtual.security')}}: {{item.network_sec}}</span>
               <span>{{$t('myvirtual.user_name')}}: {{item.user_name}}</span>
               <span>{{$t('myvirtual.password')}}: {{item.login_password}}</span>
-              <span v-if="item.os == 'ubuntu'">{{$t('myvirtual.ssh_port')}}: {{item.ssh_port}}</span>
-              <span v-if="item.os != 'ubuntu'">{{$t('myvirtual.rdp_port')}}: {{item.rdp_port? item.rdp_port: ''}}</span>
+              <span v-if="item.os == 'linux'">{{$t('myvirtual.ssh_port')}}: {{item.ssh_port}}</span>
+              <span v-if="item.os != 'linux'">{{$t('myvirtual.rdp_port')}}: {{item.rdp_port? item.rdp_port: ''}}</span>
               <!-- <span>{{$t('myvirtual.port_range')}}: 600~6000</span> -->
               <span>{{$t('myvirtual.vir_mem')}}: {{item.mem_size}}</span>
-              <span >{{$t('myvirtual.vir_sys')}}: {{item.disk_system}}</span>
-              <span>{{$t('myvirtual.vir_data')}}: {{item.disks | getDiskData}}</span>
+              <template v-for="diskitem in item.disks">
+                <span v-if="diskitem.name == 'vda'" :key="diskitem.name">{{$t('myvirtual.vir_sys')}}{{diskitem.name}}: {{diskitem.size}}</span>
+                <span v-else :key="diskitem.name">{{$t('myvirtual.vir_data')}}{{diskitem.name}}: {{diskitem.size}}</span>
+              </template>
+              <!-- <span >{{$t('myvirtual.vir_sys')}}: {{item.disk_system}}</span>
+              <span>{{$t('myvirtual.vir_data')}}: {{item.disks | getDiskData}}</span> -->
               <span>{{$t('myvirtual.vir_gpu_num')}}: {{item.gpu_count}}</span>
               <span >{{$t('myvirtual.vir_cpu_num')}}: {{item.cpu_cores}}</span>
               <span >{{$t('myvirtual.vnc_port')}}: {{item.vnc_port}}</span>
-              <span >{{$t('myvirtual.open_port_range')}}: {{item.port_min}} - {{item.port_max}}</span>
+              <span v-if="item.network_filters&&item.network_filters.length">
+                {{$t('myvirtual.securityPort')}}: 
+                <span v-for="(filters, idx) in item.network_filters" :key="idx">
+                  <span v-show='idx != 0'>/</span>{{filters.split(',')[2]}}
+                </span>
+              </span>
+              <span v-else>{{$t('myvirtual.open_port_range')}}: {{item.port_min}} - {{item.port_max}}</span>
               <!-- <span >{{$t('myvirtual.multicast')}}: {{item.multicast? item.multicast.toString(): ''}}</span> -->
-              <span style="width: 50%">{{$t('myvirtual.local_address')}}: {{item.local_address? item.local_address.toString(): ''}}</span>
+              <span >{{$t('myvirtual.mac_address')}}: 
+                <template v-if="item.interface.length">
+                  <span v-for="(mac, idx) in item.interface" :key="idx">
+                    <span v-show='idx != 0'>/</span>{{mac.mac_address}}
+                  </span>
+                </template>
+              </span>
+              <span>{{$t('myvirtual.local_address')}}: {{item.local_address? item.local_address.toString(): ''}}</span>
             </div>
           </div>
         </div>
@@ -260,7 +290,7 @@
           <span class="width12 bold">{{$t('myvirtual.operation')}}: </span>
           <el-select class='select' v-model="operation_system" size='mini' @change='changeOp' placeholder="choose">
             <el-option label='windows' value='windows'></el-option>
-            <el-option label='ubuntu' value='ubuntu'></el-option>
+            <el-option label='linux' value='linux'></el-option>
           </el-select>
         </div>
       </div>
@@ -276,6 +306,34 @@
               :key="index"
               :label="item.image_name"
               :value="item.image_name">
+            </el-option>
+          </el-select>
+        </div>
+      </div>
+      <!-- 添加安全组 -->
+      <div class="useTime">
+        <div>
+          <span class="width12 bold">{{$t('security.name')}}: </span>
+          <el-select class='select' v-model="network_sec" size='mini' @change='SelectSecurity' placeholder="choose">
+            <el-option
+              v-for="(item, index) in security"
+              :key="index"
+              :label="item.SGname"
+              :value="item.SGname">
+            </el-option>
+          </el-select>
+        </div>
+      </div>
+      <div class="useTime" v-if="iplist.length">
+        <div>
+          <span class="width12 bold">{{$t('myvirtual.publicIp')}}: </span>
+          <el-select class='select' v-model="public_ip" size='mini' @change='chooseIp' placeholder="choose">
+            <el-option
+              v-for="(item, index) in iplist"
+              :key="index"
+              :label="item.ip"
+              :value="item.ip"
+              :disabled="item.disabled">
             </el-option>
           </el-select>
         </div>
@@ -297,7 +355,7 @@
       <div class="useTime">
         <div>
           <span class="width12 bold">{{$t('myvirtual.vir_gpu_num')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="vir_gpu_num" :min="1" :max="Number(max_gpu_num)"></el-input-number>
+          <el-input-number :precision="0" size="mini" v-model="vir_gpu_num" :min="0" :max="Number(max_gpu_num)"></el-input-number>
         </div>
         <div>{{$t('myvirtual.max_set')}}: {{max_gpu_num}}</div>
       </div>
@@ -368,6 +426,36 @@
       </div>
     </el-dialog>
     <el-dialog width='30%' :title="title" :visible.sync="dialogFormVisible4">
+      <!-- 修改安全组 -->
+      <div class="useTime">
+        <div>
+          <span class="width12 bold">{{$t('security.name')}}: </span>
+          <el-select class='select' v-model="edit_network_sec" size='mini' @change='SelectSecurity' placeholder="choose">
+            <el-option
+              v-for="(item, index) in security"
+              :key="index"
+              :label="item.SGname"
+              :value="item.SGname">
+            </el-option>
+            <el-option :label="$t('myvirtual.label2')" value=""></el-option>
+          </el-select>
+        </div>
+      </div>
+      <div class="useTime" v-if="iplist.length">
+        <div>
+          <span class="width12 bold">{{$t('myvirtual.publicIp')}}: </span>
+          <el-select class='select' v-model="edit_public_ip" size='mini' @change='chooseIp' placeholder="choose">
+            <el-option
+              v-for="(item, index) in iplist"
+              :key="index"
+              :label="item.ip"
+              :value="item.ip"
+              :disabled="item.disabled">
+            </el-option>
+            <el-option :label="$t('myvirtual.label1')" value=""></el-option>
+          </el-select>
+        </div>
+      </div>
       <div class="useTime">
         <div>
           <span class="width12 bold">{{$t('myvirtual.vir_mem')}}: </span>
@@ -385,16 +473,9 @@
       <div class="useTime">
         <div>
           <span class="width12 bold">{{$t('myvirtual.vir_gpu_num')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="edit_vir_gpu_num" :min="1" :max="Number(max_gpu_num)"></el-input-number>
+          <el-input-number :precision="0" size="mini" v-model="edit_vir_gpu_num" :min="0" :max="Number(max_gpu_num)"></el-input-number>
         </div>
         <div>{{$t('myvirtual.max_set')}}: {{max_gpu_num}}</div>
-      </div>
-      <div class="useTime">
-        <div>
-          <span class="width12 bold">{{$t('myvirtual.vir_data')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="edit_vir_disk_size" :min="edit_min_disk_num" :max="Number(max_disk_num)"></el-input-number> G
-        </div>
-        <div>{{$t('myvirtual.max_set')}}: {{max_disk_num}}G</div>
       </div>
       <div class="useTime" v-show='edit_is_ubunto'>
         <div>
@@ -426,9 +507,9 @@
       <div class="useTime">
         <div>
           <span class="width12 bold">{{$t('myvirtual.open_port_range')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="edit_port_min" :min="6000" :max="port_max-1"></el-input-number>
+          <el-input-number :precision="0" size="mini" v-model="edit_port_min" :min="6000" :max="edit_port_max-1"></el-input-number>
            -
-          <el-input-number :precision="0" size="mini" v-model="edit_port_max" :min="port_min+1" :max="60000"></el-input-number>
+          <el-input-number :precision="0" size="mini" v-model="edit_port_max" :min="edit_port_min+1" :max="60000"></el-input-number>
         </div>
       </div>
       <div class="fs12">
@@ -517,6 +598,66 @@
         />
       </div>
     </el-dialog>
+    <!-- 修改硬盘大小 -->
+    <el-dialog width='30%' :title="$t('myvirtual.editDisk')" :visible.sync="dialogFormVisible5">
+      <div class="useTime">
+        <div>
+          <span class="width12 bold">{{$t('myvirtual.driveletter')}}: </span>
+          <el-select class='select' v-model="disk_name" size='mini' @change='chooseDisk' placeholder="choose">
+            <el-option
+              v-for="(item, index) in DiskName"
+              :key="index"
+              :label="item.name"
+              :value="item.name">
+            </el-option>
+          </el-select>
+        </div>
+      </div>
+      <div class="useTime">
+        <div>
+          <span class="width12 bold">{{$t('myvirtual.diskSize')}}: </span>
+          <el-input-number :precision="0" size="mini" v-model="edit_vir_disk_size" :min="edit_min_disk_num" :max="Number(max_disk_num)"></el-input-number> G
+        </div>
+        <div>{{$t('myvirtual.max_set')}}: {{max_disk_num}}G</div>
+      </div>
+      <div class="useTime">
+        <el-button class="batch" size="mini" plain @click="addnewdisk">{{$t('myvirtual.addDisk')}}</el-button>
+        <p style="font-size: 12px">{{$t('myvirtual.addDiskTip')}}</p>
+      </div>
+      <el-dialog
+        width="30%"
+        :title="$t('myvirtual.addDisk')"
+        :visible.sync="innerVisible"
+        append-to-body>
+        <div class="useTime">
+          <div>
+            <span class="width12 bold">{{$t('myvirtual.chooseDisk')}}: </span>
+            <el-select class='select' v-model="mount_dir" size='mini' @change='chooseDir' placeholder="choose">
+              <el-option
+                v-for="(item, index) in mountDirArr"
+                :key="index"
+                :label="item.path"
+                :value="item.path">
+              </el-option>
+            </el-select>
+          </div>
+        </div>
+        <div class="useTime">
+          <div>
+            <span class="width12 bold">{{$t('myvirtual.chooseDisk1')}}: </span>
+            <el-input-number :precision="0" size="mini" v-model="edit_new_disk_size" :min="1" :max="Number(max_new_disk_num)"></el-input-number> G
+          </div>
+          <div>{{$t('myvirtual.max_set')}}: {{max_new_disk_num}}G</div>
+        </div>
+        <div slot="footer" class="dialog-footer">
+          <el-button class="batch" size="mini" plain @click="confirmNewDisk()">{{$t('confirm')}}</el-button>
+        </div>
+      </el-dialog>
+      <div slot="footer" class="dialog-footer">
+        <el-button class="batch" size="mini" plain @click="addDisk('ruleForm')">{{$t('confirm')}}</el-button>
+        <el-button class="batch" size="mini" plain @click="dialogFormVisible5 = false">{{$t('virtual.cancal')}}</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -539,7 +680,11 @@ import {
   stopVir,
   startVir,
   editVir,
-  editpasswd
+  editpasswd,
+  searchRoomIp,
+  editDisk,
+  addVMDisk,
+  getSecurity
 } from "@/api";
 
 import {
@@ -636,7 +781,6 @@ export default {
       vir_gpu_num: 1,
       edit_vir_gpu_num: 0,
       vir_disk_size: 1,
-      edit_vir_disk_size: 0,
       max_vir_mem: 0,
       max_cpu_num: 0,
       max_gpu_num: 0,
@@ -653,6 +797,16 @@ export default {
       vnc_port: 5900,
       edit_vnc_port: 0,
       Vir_info: [],
+      iplist: [],
+      public_ip:'',
+      edit_public_ip: '',
+      security: [],
+      network_sec: '',
+      network_Id: '',
+      network_filters: [],
+      edit_network_sec: '',
+      edit_network_Id: '',
+      edit_network_filters: [],
       // 修改密码
       editUser: true,
       dialogFormVisible2: false,
@@ -678,7 +832,18 @@ export default {
       DBCPercentage: 0,
       startConfirm: false,
       is_ubunto: false,
-      hasPort: []
+      hasPort: [],
+      // 修改数据盘
+      dialogFormVisible5: false,
+      innerVisible: false,
+      edit_vir_disk_size: 0,
+      DiskName: [],
+      machine_disk_data: [],
+      disk_name: '',
+      mount_dir: '',
+      mountDirArr: [],
+      edit_new_disk_size: 0,
+      max_new_disk_num: 0,
     };
   },
   filters: {
@@ -799,6 +964,12 @@ export default {
               res.content[i].time_left = '0h0m'
               res.content[i].userTime = this.minsToHourMins(Math.ceil((endTime - res.content[i].time)/60000))
               res.content[i].Actual_cost = res.content[i].dbc
+              if (endTime + 777600000 - nowTime > 0 ) {
+                res.content[i].hasdelectVm = false
+                res.content[i].vmdelectTime = this.minsToHourMins(Math.ceil(((endTime + 777600000) - nowTime)/60000))
+              } else {
+                res.content[i].hasdelectVm = true
+              }
             }
             res.content[i].confirmTime = (res.content[i].time+1800000 -nowTime)/1000
             if(this.firstLoading){
@@ -1001,7 +1172,7 @@ export default {
     changeOp(val){
       console.log(val, 'val')
       this.image_name = ''
-      if (val == 'ubuntu') {
+      if (val == 'linux') {
         this.bios_mode = 'legacy'
         this.is_ubunto = false
         this.optiondefault = this.option.filter(el => {
@@ -1034,16 +1205,35 @@ export default {
           id: data._id,
         }
         createNetwork(perams).then(res => {
-          console.log(res, 'createNetwork');
+          if (res.success) {
+            data.network_name = res.content
+          }
         })
       }
+      searchRoomIp({machine_id: data.machine_id}).then(res => {
+        if (res.success) {
+          this.iplist = res.content
+        } else {
+          this.iplist = []
+        }
+      })
+      
+      getSecurity({ wallet: this.wallet_address }).then(res => {
+        this.security = res.success ? res.content : []
+      })
+      
       getMachineInfo({machine_id: data.machine_id, id: data._id}).then(res => {
         if (res.success) {
           let info = res.content.info
           this.max_vir_mem = parseInt(info.mem.free)
           this.max_cpu_num = Math.floor(info.cpu.cores)
           this.max_gpu_num = Math.floor(info.gpu.gpu_count - info.gpu.gpu_used)
-          let disk_data_free = parseInt(info.disk_data.free)- 350
+          let disk_data_free = 0
+          // info.disk_data.map(disk => {
+          //   disk_data_free += parseInt(disk.free)
+          // })
+          disk_data_free = parseInt(info.disk_data[0].free)
+          disk_data_free = disk_data_free - 350
           this.max_disk_num = disk_data_free > 0 ? Math.floor(disk_data_free * 0.75) : 0
           this.option = info.images
           this.dialogFormVisible1 = true
@@ -1058,11 +1248,13 @@ export default {
           let use_sshOrrdp = []
           let use_VncPort = []
           let use_portMin = []
+          let use_ip = []
           let averageValue = Math.floor(54000/info.gpu.gpu_count)
           res.content.taskInfo.map(el => {
             use_sshOrrdp.push(el.ssh_port == "" ? Number(el.rdp_port) : Number(el.ssh_port))
             use_VncPort.push(Number(el.vnc_port))
             use_portMin.push(Number(el.port_min))
+            use_ip.push(el.ssh_ip)
           })
           while (sshOrrdp < 5899) {
             if (use_sshOrrdp.indexOf(sshOrrdp) != -1) {
@@ -1090,6 +1282,17 @@ export default {
               break
             }
           }
+          this.iplist.map((ip, idx) => {
+            if (use_ip.indexOf(ip) == -1) {
+              this.iplist[idx] = { ip: ip }
+              this.public_ip = ip
+            } else {
+              this.iplist[idx] = {
+                ip: ip,
+                disabled: true
+              }
+            }
+          })
         } else {
           this.$message.error(res.msg)
         }
@@ -1104,21 +1307,45 @@ export default {
     operateVirtual1(el, item) {
       this.edit_chooseMac = {}
       if (item.status == 'closed') {
+        searchRoomIp({machine_id: el.machine_id}).then(res => {
+          if (res.success) {
+            this.iplist = res.content
+          } else {
+            this.iplist = []
+          }
+        })
+        
+        getSecurity({ wallet: this.wallet_address }).then(res => {
+          this.security = res.success ? res.content : []
+        })
+        
         getMachineInfo({machine_id: el.machine_id, id: el._id}).then(res => {
           if (res.success) {
             let info = res.content.info
             this.max_vir_mem = parseInt(info.mem.free)
             this.max_cpu_num = Math.floor(info.cpu.cores)
             this.max_gpu_num = Math.floor(info.gpu.gpu_count - info.gpu.gpu_used)
-            let disk_data_free = parseInt(info.disk_data.free)- 350
-            this.max_disk_num = disk_data_free > 0 ? Math.floor(disk_data_free * 0.75) : 0
             this.dialogFormVisible4 = true
             this.hasPort = res.content.taskInfo
+            let use_ip = []
+            res.content.taskInfo.map(el => {
+              use_ip.push(el.ssh_ip)
+            })
+            this.iplist.map((ip, idx) => {
+              if (use_ip.indexOf(ip) == -1) {
+                this.iplist[idx] = { ip: ip }
+              } else {
+                this.iplist[idx] = {
+                  ip: ip,
+                  disabled: true
+                }
+              }
+            })
           } else {
             this.$message.error(res.msg)
           }
         })
-        if (item.os == 'ubuntu') {
+        if (item.os == 'linux') {
           this.edit_rdp_port = ''
           this.edit_port_range = item.ssh_port
           this.edit_is_ubunto = true
@@ -1127,14 +1354,9 @@ export default {
           this.edit_rdp_port = item.rdp_port
           this.edit_is_ubunto = false
         }
-        this.edit_vir_disk_size = 0
-        this.edit_min_disk_num = 0
-        item.disks.map(diskitem => {
-          if (diskitem.name != 'vda') {
-            this.edit_min_disk_num += parseInt(diskitem.size)
-            this.edit_vir_disk_size += parseInt(diskitem.size)
-          }
-        })
+        this.edit_network_Id = item.network_Id ? item.network_Id: ''
+        this.edit_network_sec = item.network_sec ? item.network_sec: ''
+        this.edit_public_ip = item.ssh_ip
         this.edit_port_max = item.port_max
         this.edit_port_min = item.port_min
         this.edit_vir_cpu_num = item.cpu_cores
@@ -1151,6 +1373,12 @@ export default {
     Selectimage(val) {
       
     },
+    chooseIp(val) {
+
+    },
+    SelectSecurity() {
+
+    },
     Createvirtual(){
       if (this.image_name == '' || this.operation_system == '') {
         this.$message.error(this.$t('myvirtual.newTip1'))
@@ -1158,11 +1386,11 @@ export default {
       }
       for(let i= 0; i< this.hasPort.length; i ++) {
         let el = this.hasPort[i]
-        if (el.ssh_port !='' && this.port_range == el.ssh_port) {
+        if (el.ssh_port !='' && !this.is_ubunto && this.port_range == el.ssh_port) {
         this.$message.error(this.$t('myvirtual.newTip2'))
           return false
         }
-        if (el.rdp_port !='' && this.rdp_port == el.rdp_port) {
+        if (el.rdp_port !='' && this.is_ubunto && this.rdp_port == el.rdp_port) {
         this.$message.error(this.$t('myvirtual.newTip3'))
           return false
         }
@@ -1175,6 +1403,18 @@ export default {
           return false
         }
       }
+
+      this.network_filters = []
+      this.security.map(el => {
+        if (el.SGname == this.network_sec) {
+          this.network_Id = el._id
+          this.network_filters = []
+          el.rule.map(el1 => {
+            let str = `${el1.direction},${el1.protocol},${el1.port},${el1.object},accept`
+            this.network_filters.push(str)
+          })
+        }
+      })
       this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
         confirmButtonText: this.$t('confirm'),
         cancelButtonText:  this.$t('cancel'),
@@ -1202,6 +1442,10 @@ export default {
             operation_system: this.operation_system,
             bios_mode: this.bios_mode,
             network_name: this.chooseMac.network_name,
+            public_ip: this.public_ip,
+            network_sec: this.network_sec,
+            network_Id: this.network_Id,
+            network_filters: this.network_filters,
             nonce: nonce,
             sign: sign,
             wallet: this.wallet_address
@@ -1265,11 +1509,11 @@ export default {
       for(let i= 0; i< this.hasPort.length; i ++) {
         let el = this.hasPort[i]
         if (el.status != "closed") {
-          if (el.ssh_port !='' && this.edit_port_range == el.ssh_port) {
+          if (el.ssh_port !='' && this.edit_is_ubunto && this.edit_port_range == el.ssh_port) {
             this.$message.error(this.$t('myvirtual.newTip2'))
             return false
           }
-          if (el.rdp_port !='' && this.edit_rdp_port == el.rdp_port) {
+          if (el.rdp_port !='' && !this.edit_is_ubunto && this.edit_rdp_port == el.rdp_port) {
             this.$message.error(this.$t('myvirtual.newTip3'))
             return false
           }
@@ -1283,6 +1527,18 @@ export default {
           }
         }
       }
+      this.edit_network_filters = []
+      this.edit_network_Id = ''
+      this.security.map(el => {
+        if (el.SGname == this.edit_network_sec) {
+          this.edit_network_Id = el._id
+          this.edit_network_filters = []
+          el.rule.map(el1 => {
+            let str = `${el1.direction},${el1.protocol},${el1.port},${el1.object},accept`
+            this.edit_network_filters.push(str)
+          })
+        }
+      })
       try {
         this.btnloading6 = true
         let perams = {
@@ -1296,14 +1552,39 @@ export default {
           port_max: this.edit_port_max,
           new_gpu_count: this.edit_vir_gpu_num,
           new_cpu_cores: this.edit_vir_cpu_num,
-          new_mem_size: this.edit_vir_mem
+          new_mem_size: this.edit_vir_mem,
+          // new_public_ip:  this.edit_public_ip,   
+          // new_network_filters: this.edit_network_filters
         }
-        if (parseInt(this.edit_vir_disk_size - this.edit_min_disk_num) > 0) {
-          perams.increase_disk_size = parseInt(this.edit_vir_disk_size - this.edit_min_disk_num)
+        if (this.edit_chooseMac.ssh_ip != this.edit_public_ip) {
+          perams.new_public_ip = this.edit_public_ip // 公网ip地址
         }
-        editVir(perams).then( res=> {
+        if (this.edit_chooseMac.network_Id != this.edit_network_Id) {
+          perams.new_network_filters = this.edit_network_filters
+          perams.network_Id = this.edit_network_Id
+          perams.network_sec = this.edit_network_sec
+        }
+        editVir(perams).then( async res=> {
           if(res.success){
             this.$message.success(this.$t('myvirtual.edit_success'))
+            let timeData = {
+              id: this.edit_chooseMac.belong,
+              machine_id: this.edit_chooseMac.machine_id,
+              task_id: this.edit_chooseMac.task_id
+            }
+            let timedQuery1 = await timedQueryTask(timeData)
+            let chooseIndex1;
+            this.Machine_info.map((ele, index) => {
+              if (ele._id == this.edit_chooseMac.belong) {
+                chooseIndex1 = index
+              }
+            })
+            if (timedQuery1.success) {
+              let virarr1 = this.Machine_info[chooseIndex1].virtual_info.map(ele => 
+                ele.task_id === timeData.task_id ? timedQuery1.content : ele
+              )
+              this.Machine_info[chooseIndex1].virtual_info = virarr1
+            }
           }else{
             // this.$message.error(this.$t('myvirtual.edit_fails'))
             this.$message.error(res.msg)
@@ -1676,6 +1957,133 @@ export default {
       });
       // this.dialogFormVisible2 = false
       // this.$refs[formName].resetFields();
+    },
+    // 修改硬盘
+    changeDisk(item, data) {
+      if (item.status == 'closed') {
+        this.edit_vir_disk_size = 0
+        this.edit_min_disk_num = 0
+        this.disk_name = ''
+        this.DiskName = item.disks
+        getMachineInfo({machine_id: data.machine_id, id: data._id}).then(res => {
+          if (res.success) {
+            let info = res.content.info
+            // let disk_data_free = 0
+            this.mountDirArr = []
+            info.disk_data.map(disk => {
+              if (disk.path != '/data') {
+                this.mountDirArr.push(disk)
+              }
+              // disk_data_free += parseInt(disk.free)
+            })
+            // disk_data_free = disk_data_free - 350
+            // this.max_disk_num = disk_data_free > 0 ? Math.floor(disk_data_free * 0.75) : 0
+            this.machine_disk_data = info.disk_data
+            this.dialogFormVisible5 = true
+            this.chooseMac = item
+            this.chooseMac.machine_id = data.machine_id
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      } else {
+        this.$message.error(this.$t('myvirtual.errTip'))
+      }
+    },
+    chooseDisk(val) {
+      this.DiskName.map(diskitem => {
+        let source_file = ''
+        if (diskitem.name == val) {
+          this.edit_min_disk_num = parseInt(diskitem.size)
+          this.edit_vir_disk_size = parseInt(diskitem.size)
+          source_file = '/' + diskitem.source_file.split('/')[1]
+        }
+        console.log(source_file, 'source_file');
+        this.machine_disk_data.map(el => {
+          if (el.path == source_file) {
+            let disk_data_free = 0
+            if (el.path == '/data') {
+              disk_data_free = parseInt(el.free) - 350
+            } else {
+              disk_data_free = parseInt(el.free)
+            }
+            this.max_disk_num = disk_data_free > 0 ? Math.floor(disk_data_free * 0.75) : 0
+          }
+        })
+      })
+    },
+    addDisk() {
+      let data = {
+        id: this.chooseMac.belong,
+        task_id: this.chooseMac.task_id,
+        machine_id: this.chooseMac.machine_id,
+        disk_name: this.disk_name
+      }
+      if (parseInt(this.edit_vir_disk_size - this.edit_min_disk_num) > 0) {
+        data.disk_num = parseInt(this.edit_vir_disk_size - this.edit_min_disk_num)
+      }
+      editDisk(data).then( async res => {
+        if (res.success) {
+          this.$message({
+            type: 'success',
+            message: this.$t('myvirtual.addDisksuccess')
+          });
+          this.dialogFormVisible5 = false
+          let timeData = {
+            id: this.chooseMac.belong,
+            machine_id: this.chooseMac.machine_id,
+            task_id: this.chooseMac.task_id
+          }
+          let timedQuery1 = await timedQueryTask(timeData)
+          let chooseIndex1;
+          this.Machine_info.map((ele, index) => {
+            if (ele._id == this.chooseMac.belong) {
+              chooseIndex1 = index
+            }
+          })
+          if (timedQuery1.success) {
+            let virarr1 = this.Machine_info[chooseIndex1].virtual_info.map(ele => 
+              ele.task_id === timeData.task_id ? timedQuery1.content : ele
+            )
+            this.Machine_info[chooseIndex1].virtual_info = virarr1
+          }
+        } else {
+          this.$message({
+            type: 'error',
+            message: res.msg
+          });
+        }
+      })
+    },
+    addnewdisk() {
+      this.innerVisible = true
+      this.mount_dir = ''
+      this.edit_new_disk_size = 1
+    },
+    chooseDir(val) {
+      this.mountDirArr.map(el => {
+        if (el.path == val) {
+          this.edit_new_disk_size = 0
+          this.max_new_disk_num = parseInt(el.free)
+        }
+      })
+    },
+    confirmNewDisk() {
+      let data = {
+        id: this.chooseMac.belong,
+        task_id: this.chooseMac.task_id,
+        machine_id: this.chooseMac.machine_id,
+        mount_dir: this.mount_dir,
+        size: this.edit_new_disk_size
+      }
+      addVMDisk(data).then(res => {
+        console.log(res, 'res');
+        if (res.success) {
+          this.innerVisible = false
+          this.dialogFormVisible5 = false
+          this.$message.success(this.$t('myvirtual.addDisksuccess'))
+        }
+      })
     },
     // 订单详情
     orderDetails() {

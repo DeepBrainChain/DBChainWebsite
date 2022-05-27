@@ -196,9 +196,13 @@ export default {
           this.cancontinue = false
         } else {
           if (res.code == -3) {
-            this.$message.error(this.$t('buyDBC.tip9'))
-            this.usd = 1
-            this.getOrder(this.usd)
+            if (this.usd = 1) {
+              this.$message.error(this.$t('buyDBC.tip10'))
+            } else {
+              this.$message.error(this.$t('buyDBC.tip9'))
+              this.usd = 1
+              this.getOrder(this.usd)
+            }
           } else if (res.code == -2) {
             this.$message.error(this.$t("buyDBC.tip8"))
           } else {
