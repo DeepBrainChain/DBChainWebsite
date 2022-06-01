@@ -355,7 +355,9 @@ export default {
     },
     closeWallet() {
       closeAc()
-      removePair(this.pair.address)
+      if (this.pair && this.pair.address) {
+        removePair(this.pair.address)
+      }
       this.$store.commit('setNewWallet', '')
       localStorage.removeItem('isNewWallet')
       this.$router.push(`/mywallet/myWallet`)

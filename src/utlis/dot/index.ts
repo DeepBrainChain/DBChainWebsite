@@ -618,6 +618,10 @@ export const getCurrentPair = (): KeyringPair | null => {
 
 // 导入keystore
 export const importAccountFromKeystore = (file: File): Promise<KeyringPair> => {
+  const pairs = keyring.getPairs()
+  if (pairs.length > 0) {
+    keyring.removePair(pairs[0].address)
+  }
   return new Promise(resolve => {
     const reader = new FileReader()
     reader.readAsText(file)

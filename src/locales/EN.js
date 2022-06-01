@@ -617,7 +617,7 @@ export default {
     confirmName: 'Confirm modification',
     cName_err: 'Modification failed',
     cName_err1: 'Security group name already exists',
-    clone: ​​'Clone security group',
+    clone: 'Clone security group',
     rule: 'corresponding rule',
     addrule: 'Add a new security group rule',
     editrule: 'Modify security group rules',
