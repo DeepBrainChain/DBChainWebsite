@@ -451,6 +451,8 @@ export default {
     equivalent: "Cantidad DBC equivalente",
     confirm: 'Confirmar pago',
     cancal: 'Cancelar',
+
+    dedicated: 'Soporta múltiples IP'
   },
   // 订单列表
   myvirtual:{
@@ -569,6 +571,8 @@ export default {
     newTip6: 'Vacío es liberar ip',
     label1: 'liberar ip',
     label2: 'Liberar grupo de seguridad',
+    label3: 'Borrar grupo de seguridad',
+    label4: 'No utilice',
     publicIp: 'IP Pública',
     security: 'Grupo de seguridad de la aplicación actual',
     securityPort: 'Puerto de aplicación del grupo de seguridad',
@@ -580,10 +584,15 @@ export default {
     diskSize: 'tamaño',
     addDisk: 'Agregar disco',
     chooseDisk: 'Elegir directorio de disco',
-    elegirDisk1: 'Aumentar el tamaño del disco',
+    chooseDisk1: 'Aumentar el tamaño del disco',
+    max_set_new:'Se puede sumar hasta',
     addDiskTip: 'Si la capacidad restante del disco no es suficiente, haga clic en el botón Agregar disco para agregar un nuevo disco de datos',
     addDisksuccess: 'Agregado con éxito',
+    addTip: '¡El directorio del disco no puede estar vacío!',
     errTip: '¿Está seguro de modificar el tamaño del disco? Por favor, detenga la máquina virtual primero',
+
+    clearMem: 'borrar memoria de la máquina',
+    clearMem_success: 'Limpiado con éxito',
   },
   // 单个虚拟机
   signleVir: {
@@ -651,7 +660,7 @@ export default {
     err_reason2: 'Clonación fallida',
     err_reason3: 'Existe una máquina virtual enlazada y no se puede eliminar',
     err_reason4: 'Borrado fallido',
-    err_reason4: 'Modificación fallida',
+    err_reason5: 'Modificación fallida',
   },
   // 购买DBC
   buyDBC: {

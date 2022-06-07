@@ -502,10 +502,42 @@ export const GetResultHash = data => {
   });
 };
 
+/**
+ * @description 新增磁盘
+ * @param {object} data {machine_id, gpu, ....}
+ */
+ export const editDisk = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/rentMachine/editDisk',
+    data: data
+  });
+};
 
+/**
+ * @description 清楚机器内存
+ * @param {object} data {machine_id, id}
+ */
+ export const clearMem = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/rentMachine/clearMem',
+    data: data
+  });
+};
 
+/**
+ * @description 获取机器中是否包含ip
+ * @param {object} params {machine_id, gpu, ....}
+ */
 
-
+ export const getMacIp = params => {
+  return axios({
+    method: "get",
+    url: nodeHost + '/api/select/getMacIp',
+    params
+  });
+};
 
 
 

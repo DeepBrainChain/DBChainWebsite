@@ -451,6 +451,8 @@ export default {
     equivalent:"Equivalent DBC Quantity",
     confirm: 'confirm payment',
     cancal: 'cancel',
+
+    dedicated: 'Support multiple IP'
   },
   // 订单列表
   myvirtual:{
@@ -569,6 +571,8 @@ export default {
     newTip6: 'Empty is to release ip',
     label1: 'release ip',
     label2: 'Release security group',
+    label3: 'Clear security group',
+    label4: 'Do not use',
     publicIp: 'Public IP',
     security: 'Current application security group',
     securityPort: 'Security group application port',
@@ -581,9 +585,14 @@ export default {
     addDisk: 'Add Disk',
     chooseDisk: 'Choose disk directory',
     chooseDisk1: 'Increase disk size',
+    max_set_new:'Can be added up to',
     addDiskTip: 'If the remaining disk capacity is not enough, click the Add Disk button to add a new data disk',
     addDisksuccess: 'Added successfully',
+    addTip: 'Disk directory cannot be empty!',
     errTip: 'Are you sure to modify the disk size? Please stop the virtual machine first',
+
+    clearMem: 'clear machine memory',
+    clearMem_success: 'Cleaned up successfully',
   },
   // 单个虚拟机
   signleVir: {
@@ -651,7 +660,7 @@ export default {
     err_reason2: 'Cloning failed',
     err_reason3: 'A bound virtual machine exists and cannot be deleted',
     err_reason4: 'Deletion failed',
-    err_reason4: 'Modification failed',
+    err_reason5: 'Modification failed',
   },
   // 购买DBC
   buyDBC: {

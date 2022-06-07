@@ -209,7 +209,7 @@ export default {
           if (res.success) {
             this.getDate()
           } else {
-            this.$message.error(this.$t('security.err_reason4'))
+            this.$message.error(this.$t('security.err_reason5'))
           }
           this.btnloading = false
           this.dialogFormVisible = false

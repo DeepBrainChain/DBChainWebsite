@@ -175,7 +175,7 @@
               <span>{{$t('myvirtual.vir_gpu_num')}}: {{item.gpu_count}}</span>
               <span >{{$t('myvirtual.vir_cpu_num')}}: {{item.cpu_cores}}</span>
               <span >{{$t('myvirtual.vnc_port')}}: {{item.vnc_port}}</span>
-              <span v-if="item.network_filters&&item.network_filters.length">
+              <span v-if="item.network_Id&&item.network_filters&&item.network_filters.length">
                 {{$t('myvirtual.securityPort')}}: 
                 <span v-for="(filters, idx) in item.network_filters" :key="idx">
                   <span v-show='idx != 0'>/</span>{{filters.split(',')[2]}}
@@ -207,6 +207,15 @@
               v-if="el.orderStatus == 2"
               @click="Confirm_rental(el)"
               >{{ $t("myvirtual.Confirm_rental") }}</el-button
+            >
+            <el-button
+              plain
+              class="tool-btn"
+              size="mini"
+              :loading='el.btnloading5'
+              v-if="el.orderStatus == 3"
+              @click="clearMem(el)"
+              >{{ $t("myvirtual.clearMem") }}</el-button
             >
             <el-button
               plain
@@ -321,6 +330,7 @@
               :label="item.SGname"
               :value="item.SGname">
             </el-option>
+            <el-option :label="$t('myvirtual.label3')" value=""></el-option>
           </el-select>
         </div>
       </div>
@@ -335,6 +345,7 @@
               :value="item.ip"
               :disabled="item.disabled">
             </el-option>
+            <el-option :label="$t('myvirtual.label4')" value=""></el-option>
           </el-select>
         </div>
       </div>
@@ -393,7 +404,7 @@
       <div class="fs12">
         {{$t('myvirtual.tip9')}}
       </div>
-      <div class="useTime">
+      <div class="useTime" v-if="network_sec == ''">
         <div>
           <span class="width12 bold">{{$t('myvirtual.open_port_range')}}: </span>
           <el-input-number :precision="0" size="mini" v-model="port_min" :min="6000" :max="port_max-1"></el-input-number>
@@ -401,7 +412,7 @@
           <el-input-number :precision="0" size="mini" v-model="port_max" :min="port_min+1" :max="60000"></el-input-number>
         </div>
       </div>
-      <div class="fs12">
+      <div class="fs12" v-if="network_sec == ''">
         {{$t('myvirtual.tip7')}}
       </div>
       <!-- <div class="useTime">
@@ -504,7 +515,7 @@
       <div class="fs12">
         {{$t('myvirtual.tip9')}}
       </div>
-      <div class="useTime">
+      <div class="useTime" v-if="edit_network_sec == ''">
         <div>
           <span class="width12 bold">{{$t('myvirtual.open_port_range')}}: </span>
           <el-input-number :precision="0" size="mini" v-model="edit_port_min" :min="6000" :max="edit_port_max-1"></el-input-number>
@@ -512,7 +523,7 @@
           <el-input-number :precision="0" size="mini" v-model="edit_port_max" :min="edit_port_min+1" :max="60000"></el-input-number>
         </div>
       </div>
-      <div class="fs12">
+      <div class="fs12" v-if="edit_network_sec == ''">
         {{$t('myvirtual.tip7')}}
       </div>
       <div slot="footer" class="dialog-footer">
@@ -618,13 +629,35 @@
           <span class="width12 bold">{{$t('myvirtual.diskSize')}}: </span>
           <el-input-number :precision="0" size="mini" v-model="edit_vir_disk_size" :min="edit_min_disk_num" :max="Number(max_disk_num)"></el-input-number> G
         </div>
-        <div>{{$t('myvirtual.max_set')}}: {{max_disk_num}}G</div>
+        <div>{{$t('myvirtual.max_set_new')}}: {{max_disk_num}}G</div>
       </div>
       <div class="useTime">
         <el-button class="batch" size="mini" plain @click="addnewdisk">{{$t('myvirtual.addDisk')}}</el-button>
         <p style="font-size: 12px">{{$t('myvirtual.addDiskTip')}}</p>
       </div>
-      <el-dialog
+
+      <div class="useTime">
+        <div>
+          <span class="width12 bold">{{$t('myvirtual.chooseDisk')}}: </span>
+          <el-select class='select' v-model="mount_dir" size='mini' @change='chooseDir' placeholder="choose">
+            <el-option
+              v-for="(item, index) in mountDirArr"
+              :key="index"
+              :label="item.path"
+              :value="item.path">
+            </el-option>
+          </el-select>
+        </div>
+      </div>
+      <div class="useTime">
+        <div>
+          <span class="width12 bold">{{$t('myvirtual.chooseDisk1')}}: </span>
+          <el-input-number :precision="0" size="mini" v-model="edit_new_disk_size" :min="1" :max="Number(max_new_disk_num)"></el-input-number> G
+        </div>
+        <div>{{$t('myvirtual.max_set')}}: {{max_new_disk_num}}G</div>
+      </div>
+      
+      <!-- <el-dialog
         width="30%"
         :title="$t('myvirtual.addDisk')"
         :visible.sync="innerVisible"
@@ -652,7 +685,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button class="batch" size="mini" plain @click="confirmNewDisk()">{{$t('confirm')}}</el-button>
         </div>
-      </el-dialog>
+      </el-dialog> -->
       <div slot="footer" class="dialog-footer">
         <el-button class="batch" size="mini" plain @click="addDisk('ruleForm')">{{$t('confirm')}}</el-button>
         <el-button class="batch" size="mini" plain @click="dialogFormVisible5 = false">{{$t('virtual.cancal')}}</el-button>
@@ -684,7 +717,8 @@ import {
   searchRoomIp,
   editDisk,
   addVMDisk,
-  getSecurity
+  getSecurity,
+  clearMem
 } from "@/api";
 
 import {
@@ -955,9 +989,10 @@ export default {
             res.content[i].btnloading2 = false
             res.content[i].btnloading3 = false
             res.content[i].btnloading4 = false
+            res.content[i].btnloading5 = false
             res.content[i].time = startTime
             if(endTime - nowTime > 0 ){
-              res.content[i].time_left = this.minsToHourMins(Math.ceil((endTime - nowTime)/60000))
+              res.content[i].time_left = this.minsToHourMins(Math.ceil((endTime - nowTime)/60000) - 1)
               res.content[i].userTime = this.minsToHourMins(Math.ceil((nowTime - res.content[i].time)/60000))
               res.content[i].Actual_cost = Math.ceil((Number(res.content[i].dbc)/Number(res.content[i].day)/24/60)*((nowTime - res.content[i].time)/60000))
             }else{
@@ -1964,6 +1999,8 @@ export default {
         this.edit_vir_disk_size = 0
         this.edit_min_disk_num = 0
         this.disk_name = ''
+        this.mount_dir = ''
+        this.edit_new_disk_size = 1
         this.DiskName = item.disks
         getMachineInfo({machine_id: data.machine_id, id: data._id}).then(res => {
           if (res.success) {
@@ -1998,7 +2035,6 @@ export default {
           this.edit_vir_disk_size = parseInt(diskitem.size)
           source_file = '/' + diskitem.source_file.split('/')[1]
         }
-        console.log(source_file, 'source_file');
         this.machine_disk_data.map(el => {
           if (el.path == source_file) {
             let disk_data_free = 0
@@ -2007,7 +2043,7 @@ export default {
             } else {
               disk_data_free = parseInt(el.free)
             }
-            this.max_disk_num = disk_data_free > 0 ? Math.floor(disk_data_free * 0.75) : 0
+            this.max_disk_num = disk_data_free > 0 ? Math.floor(disk_data_free * 0.75) + this.edit_min_disk_num : this.edit_min_disk_num
           }
         })
       })
@@ -2056,9 +2092,40 @@ export default {
       })
     },
     addnewdisk() {
-      this.innerVisible = true
-      this.mount_dir = ''
-      this.edit_new_disk_size = 1
+      let data = {
+        id: this.chooseMac.belong,
+        task_id: this.chooseMac.task_id,
+        machine_id: this.chooseMac.machine_id,
+        mount_dir: this.mount_dir,
+        size: this.edit_new_disk_size
+      }
+      if (this.mount_dir == '') {
+        this.$message.error(this.$t('myvirtual.addTip'))
+        return false
+      }
+      addVMDisk(data).then( async res => {
+        console.log(res, 'res');
+        if (res.success) {
+          // this.innerVisible = false
+          // this.dialogFormVisible5 = false
+          this.$message.success(this.$t('myvirtual.addDisksuccess'))
+          let timeData = {
+            id: this.chooseMac.belong,
+            machine_id: this.chooseMac.machine_id,
+            task_id: this.chooseMac.task_id
+          }
+          let timedQuery1 = await timedQueryTask(timeData)
+          // let chooseIndex1;
+          // this.Machine_info.map((ele, index) => {
+          //   if (ele._id == this.chooseMac.belong) {
+          //     chooseIndex1 = index
+          //   }
+          // })
+          if (timedQuery1.success) {
+            this.DiskName = timedQuery1.content.disks
+          }
+        }
+      })
     },
     chooseDir(val) {
       this.mountDirArr.map(el => {
@@ -2068,20 +2135,32 @@ export default {
         }
       })
     },
-    confirmNewDisk() {
-      let data = {
-        id: this.chooseMac.belong,
-        task_id: this.chooseMac.task_id,
-        machine_id: this.chooseMac.machine_id,
-        mount_dir: this.mount_dir,
-        size: this.edit_new_disk_size
-      }
-      addVMDisk(data).then(res => {
-        console.log(res, 'res');
+    // confirmNewDisk() {
+    //   let data = {
+    //     id: this.chooseMac.belong,
+    //     task_id: this.chooseMac.task_id,
+    //     machine_id: this.chooseMac.machine_id,
+    //     mount_dir: this.mount_dir,
+    //     size: this.edit_new_disk_size
+    //   }
+    //   if (this.mount_dir == '') {
+    //     return false
+    //   }
+    //   addVMDisk(data).then(res => {
+    //     console.log(res, 'res');
+    //     if (res.success) {
+    //       this.innerVisible = false
+    //       this.dialogFormVisible5 = false
+    //       this.$message.success(this.$t('myvirtual.addDisksuccess'))
+    //     }
+    //   })
+    // },
+    clearMem(el) {
+      clearMem({machine_id: el.machine_id, id: el._id}).then(res => {
         if (res.success) {
-          this.innerVisible = false
-          this.dialogFormVisible5 = false
-          this.$message.success(this.$t('myvirtual.addDisksuccess'))
+          this.$message.success(this.$t('myvirtual.clearMem_success'))
+        } else {
+          this.$message.error(res.msg)
         }
       })
     },

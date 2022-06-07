@@ -451,6 +451,8 @@ export default {
     equivalent:"Quantité DBC équivalente",
     confirm: 'confirmer le paiement',
     cancal: 'Annuler',
+
+    dedicated: 'Prend en charge plusieurs IP'
   },
   // 订单列表
   myvirtual:{
@@ -569,6 +571,8 @@ export default {
     newTip6: "Vider c'est libérer l'ip",
     label1: "libérer l'adresse IP",
     label2: 'Libérer le groupe de sécurité',
+    label3: 'Effacer le groupe de sécurité',
+    label4: 'Ne pas utiliser',
     publicIp: 'IP publique',
     security: "Groupe de sécurité de l'application actuelle",
     securityPort: "Port d'application du groupe de sécurité",
@@ -581,9 +585,14 @@ export default {
     addDisk: 'Ajouter un disque',
     chooseDisk: 'Choisir le répertoire du disque',
     chooseDisk1: 'Augmenter la taille du disque',
+    max_set_new: "peut être ajouté jusqu'à",
     addDiskTip: "Si la capacité restante du disque n'est pas suffisante, cliquez sur le bouton Ajouter un disque pour ajouter un nouveau disque de données",
     addDisksuccess: 'Ajouté avec succès',
+    addTip: 'Le répertoire du disque ne peut pas être vide !',
     errTip: "Êtes-vous sûr de vouloir modifier la taille du disque ? Veuillez d'abord arrêter la machine virtuelle",
+
+    clearMem: 'effacer la mémoire de la machine',
+    clearMem_success: 'Nettoyé avec succès',
   },
   // 单个虚拟机
   signleVir: {
@@ -651,7 +660,7 @@ export default {
     err_reason2: 'Le clonage a échoué',
     err_reason3: 'Une machine virtuelle liée existe et ne peut pas être supprimée',
     err_reason4: 'La suppression a échoué',
-    err_reason4: 'La modification a échoué',
+    err_reason5: 'La modification a échoué',
   },
   // 购买DBC
   buyDBC: {

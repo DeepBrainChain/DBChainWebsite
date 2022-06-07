@@ -96,6 +96,7 @@
                       <el-checkbox v-if="openCheck" :disabled="el.machine_status != 'online'" :label="el.machine_id" :key="el.machine_id">{{''}}</el-checkbox>
                       <span class="Machine_id">{{$t('virtual.Machine_ID')}}: {{el.machine_id}}</span>
                     </div>
+                     <span v-if="el.hasIP">{{$t('virtual.dedicated')}}</span>
                     <span v-if="el.server_room" :title="el.server_room">{{$t('virtual.Room_number')}}: {{String(el.server_room).substring(0,10)+'...'}}</span>
                     <span>{{$t('virtual.Machine_sta')}}: {{el.machine_status != 'online'?$t('virtual.Rented'):$t('virtual.Idle')}}</span>
                     <span v-if="!openCheck">
@@ -209,6 +210,7 @@ import {
   getlistByCity,
   getRoomnum,
   getlistByRoom,
+  getMacIp
 } from "@/api"
 export default {
   name: "virtual",
@@ -422,7 +424,8 @@ export default {
       enterType: this.$route.query.type ? this.$route.query.type : 'gpu',
       chooseCity: '',
       chooseCountry: '',
-      chooseRoomnum: ''
+      chooseRoomnum: '',
+      MacIpList: []
     };
   },
   beforeMount() {
@@ -430,6 +433,9 @@ export default {
       if (res.success) {
         this.DBCPercentage = res.content.percentage_whole/100
       }
+    })
+    getMacIp().then(res => {
+      this.MacIpList = res.success ? res.content : []
     })
   },
   mounted() {
@@ -504,6 +510,9 @@ export default {
       }
       GetMachine_Details(data).then( async (res) => {
         res.list.map( (el, i) => {
+          if (this.MacIpList.indexOf(el.machine_id) != -1) {
+            el.hasIP = true
+          }
           if(el.operator){
             el.machine_name = this.byteToStr(JSON.parse(el.operator))
           }

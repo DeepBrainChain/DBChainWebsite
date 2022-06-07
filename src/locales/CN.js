@@ -451,6 +451,8 @@ export default {
     equivalent:"等值DBC数量",
     confirm: '确认支付',
     cancal: '取消',
+
+    dedicated: '支持多IP'
   },
   // 订单列表
   myvirtual:{
@@ -569,6 +571,8 @@ export default {
     newTip6: '清空即为释放ip',
     label1: '释放ip',
     label2: '释放安全组',
+    label3: '不使用安全组',
+    label4: '不使用公网IP',
     publicIp: '公网IP',
     security: '当前应用安全组',
     securityPort: '安全组应用端口',
@@ -581,9 +585,14 @@ export default {
     addDisk: '添加磁盘',
     chooseDisk: '选择磁盘目录',
     chooseDisk1: '增加磁盘大小',
+    max_set_new:'最大可以新增至',
     addDiskTip: '如剩余磁盘容量不够，点击添加磁盘按钮可添加新的数据盘',
     addDisksuccess: '添加成功',
+    addTip: '磁盘目录不能为空！',
     errTip: '确认修改磁盘大小？请先停止虚拟机运行',
+
+    clearMem: '清理机器内存',
+    clearMem_success: '清理成功',
   },
   // 单个虚拟机
   signleVir: {
@@ -651,7 +660,7 @@ export default {
     err_reason2: '克隆失败',
     err_reason3: '存在绑定的虚拟机，无法删除',
     err_reason4: '删除失败',
-    err_reason4: '修改失败',
+    err_reason5: '修改失败',
   },
   // 购买DBC
   buyDBC: {
