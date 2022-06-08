@@ -1235,6 +1235,10 @@ export default {
     },
     // 创建 虚拟机
     operateVirtual(str, data) {
+      this.network_sec = ''
+      this.public_ip = ''
+      this.operation_system = ''
+      this.image_name = ''
       if (data.network_name == null || data.network_name == '') {
         let perams = {
           id: data._id,
@@ -1422,21 +1426,21 @@ export default {
       for(let i= 0; i< this.hasPort.length; i ++) {
         let el = this.hasPort[i]
         if (el.ssh_port !='' && !this.is_ubunto && this.port_range == el.ssh_port) {
-        this.$message.error(this.$t('myvirtual.newTip2'))
+          this.$message.error(this.$t('myvirtual.newTip2'))
           return false
         }
         if (el.rdp_port !='' && this.is_ubunto && this.rdp_port == el.rdp_port) {
-        this.$message.error(this.$t('myvirtual.newTip3'))
+          this.$message.error(this.$t('myvirtual.newTip3'))
           return false
         }
         if (this.vnc_port == el.vnc_port) {
-        this.$message.error(this.$t('myvirtual.newTip4'))
+          this.$message.error(this.$t('myvirtual.newTip4'))
           return false
         }
-        if (!(this.port_min > el.port_max || this.port_max < el.port_min)) {
-        this.$message.error(this.$t('myvirtual.newTip5'))
-          return false
-        }
+        // if (!(this.port_min > el.port_max || this.port_max < el.port_min)) {
+        //   this.$message.error(this.$t('myvirtual.newTip5'))
+        //   return false
+        // }
       }
 
       this.network_filters = []
