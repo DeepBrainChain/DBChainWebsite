@@ -85,18 +85,20 @@ export default {
   },
   created() {
     // const curRoute = this.$route.matched.find(item => item.path === this.$route.path)
-    getCommitteeList(this.wallet_address).then(res => {
-      if (res) {
-        this.menus.push({
-          title: undefined, //this.$t("gpu.machineList"),
-          to: "myVerify_gpuVirtual",
-          index: 4,
-          iconClass: "iconmachine",
-        })
-      }
+    // getCommitteeList(this.wallet_address).then(res => {
+    //   if (res) {
+    //     this.menus.push({
+    //       title: undefined, //this.$t("gpu.machineList"),
+    //       to: "myVerify_gpuVirtual",
+    //       index: 4,
+    //       iconClass: "iconmachine",
+    //     })
+    //   }
+    //   this.curNavIndex = this.$route.meta.menuIndex;
+    //   this.init_menus();
+    // })
       this.curNavIndex = this.$route.meta.menuIndex;
       this.init_menus();
-    })
   },
   mounted() {
     if (this.$t("website_name") === "congTuCloud") {
@@ -113,9 +115,9 @@ export default {
       this.menus[0].title = this.$t("gpu.myMachine_gpuVirtual");
       this.menus[1].title = this.$t("gpu.myMachine_gpuVirtual1");
       this.menus[2].title = this.$t("gpu.mySecurityGroup");
-      if (this.menus[3]) {
-        this.menus[3].title = this.$t("gpu.myVerify_gpuVirtual");
-      }
+      // if (this.menus[3]) {
+      //   this.menus[3].title = this.$t("gpu.myVerify_gpuVirtual");
+      // }
       // if (this.$t("website_name") === "congTuCloud") {
       //   this.menus.splice(2, 1);
       // }
