@@ -320,7 +320,7 @@
         </div>
       </div>
       <!-- 添加安全组 -->
-      <div class="useTime">
+      <div class="useTime" v-if="iplist.length">
         <div>
           <span class="width12 bold">{{$t('security.name')}}: </span>
           <el-select class='select' v-model="network_sec" size='mini' @change='SelectSecurity' placeholder="choose">
@@ -438,7 +438,7 @@
     </el-dialog>
     <el-dialog width='30%' :title="title" :visible.sync="dialogFormVisible4">
       <!-- 修改安全组 -->
-      <div class="useTime">
+      <div class="useTime" v-if="iplist.length">
         <div>
           <span class="width12 bold">{{$t('security.name')}}: </span>
           <el-select class='select' v-model="edit_network_sec" size='mini' @change='SelectSecurity' placeholder="choose">
