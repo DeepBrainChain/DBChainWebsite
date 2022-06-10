@@ -1449,7 +1449,7 @@ export default {
           this.network_Id = el._id
           this.network_filters = []
           el.rule.map(el1 => {
-            let str = `${el1.direction},${el1.protocol},${el1.port},${el1.object},accept`
+            let str = `${el1.direction},${el1.protocol},${el1.port},${el1.object},${el1.strategy}`
             this.network_filters.push(str)
           })
         }
@@ -1573,7 +1573,7 @@ export default {
           this.edit_network_Id = el._id
           this.edit_network_filters = []
           el.rule.map(el1 => {
-            let str = `${el1.direction},${el1.protocol},${el1.port},${el1.object},accept`
+            let str = `${el1.direction},${el1.protocol},${el1.port},${el1.object},${el1.strategy}`
             this.edit_network_filters.push(str)
           })
         }
