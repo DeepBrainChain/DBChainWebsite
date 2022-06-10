@@ -34,9 +34,16 @@
           </el-table-column>
           <el-table-column
             align="center"
+            :label="$t('security.label6')">
+            <template slot-scope="scope">
+              <div>{{scope.row.strategy == 'accept'? $t('security.status1') : $t('security.status2')}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
             :label="$t('security.label5')">
             <template slot-scope="scope">
-              <div>{{scope.row.action == 'allow'? $t('security.status1') : $t('security.status2')}}</div>
+              <div>{{scope.row.action == 'allow'? $t('security.status3') : $t('security.status4')}}</div>
             </template>
           </el-table-column>
           <el-table-column
@@ -81,15 +88,22 @@
             <el-option :label="$t('security.option3')" value="tcp"></el-option>
             <el-option :label="$t('security.option4')" value="udp"></el-option>
             <el-option :label="$t('security.option5')" value="icmp"></el-option>
+            <el-option label="ALL" value="all"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('security.label3')" :label-width="formLabelWidth" prop="port">
-          <el-input style="width: 221px" v-model="form.port"></el-input>
+          <el-input :disabled='form.protocol == "all"' style="width: 221px" v-model="form.port"></el-input>
           <div style="font-size: 12px;line-height: 25px;">{{$t('security.addtip')}}</div>
         </el-form-item>
         <el-form-item :label="$t('security.label4')" :label-width="formLabelWidth" prop="object">
           <el-select v-model="form.object" :placeholder="$t('security.label4')">
             <el-option label="0.0.0.0/0" value="0.0.0.0/0"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item :label="$t('security.label6')" :label-width="formLabelWidth" prop="object">
+          <el-select v-model="form.strategy" :placeholder="$t('security.label6')">
+            <el-option :label="$t('security.status1')" value="accept"></el-option>
+            <el-option :label="$t('security.status2')" value="drop"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -131,21 +145,22 @@ export default {
         direction: 'in',
         protocol: 'tcp',
         port: '',
-        object: '0.0.0.0/0'
+        object: '0.0.0.0/0',
+        strategy: 'accept'
       },
       rules: {
-        direction: [
-          { required: true, message: this.$t('security.addtip1'), trigger: 'change' }
-        ],
-        protocol: [
-          { required: true, message: this.$t('security.addtip2'), trigger: 'change' }
-        ],
-        port: [
-          { required: true, message: this.$t('security.addtip3'), trigger: 'blur' }
-        ],
-        object: [
-          { required: true, message: this.$t('security.addtip4'), trigger: 'change' }
-        ]
+        // direction: [
+        //   { required: true, message: this.$t('security.addtip1'), trigger: 'change' }
+        // ],
+        // protocol: [
+        //   { required: true, message: this.$t('security.addtip2'), trigger: 'change' }
+        // ],
+        // port: [
+        //   { required: true, message: this.$t('security.addtip3'), trigger: 'blur' }
+        // ],
+        // object: [
+        //   { required: true, message: this.$t('security.addtip4'), trigger: 'change' }
+        // ]
       },
       formLabelWidth: '80px',
       editRuleId: ''
@@ -190,6 +205,10 @@ export default {
       })
     },
     addRule() {
+      this.form.direction = 'in'
+      this.form.protocol = 'tcp'
+      this.form.port = ''
+      this.form.strategy = 'accept'
       this.title = this.$t('security.addrule')
       this.dialogFormVisible = true
       this.isEdit = false
@@ -202,8 +221,9 @@ export default {
           ruleId: this.editRuleId, 
           direction: this.form.direction,
           protocol: this.form.protocol,
-          port: this.form.port,
-          object: this.form.object
+          port: this.form.port == '' ? 'all': this.form.port,
+          object: this.form.object,
+          strategy: this.form.strategy
         }
         editSGRule(data).then(res => {
           if (res.success) {
@@ -220,8 +240,9 @@ export default {
           wallet: this.wallet_address,
           direction: this.form.direction,
           protocol: this.form.protocol,
-          port: this.form.port,
-          object: this.form.object
+          port: this.form.port == '' ? 'all': this.form.port,
+          object: this.form.object,
+          strategy: this.form.strategy
         }
         createSecurity(data).then(res => {
           if (res.success) {
@@ -231,7 +252,7 @@ export default {
             } else {
               setTimeout(() => {
                 this.$router.replace({path: "myUnlockSecurityGroup"});
-              }, 2000)
+              }, 1000)
             }
           } else {
             this.$message.error(this.$t('security.addtip6'))
