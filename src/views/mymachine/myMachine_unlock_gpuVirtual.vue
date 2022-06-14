@@ -1345,7 +1345,7 @@ export default {
     // 修改 虚拟机
     operateVirtual1(el, item) {
       this.edit_chooseMac = {}
-      if (item.status == 'closed') {
+      if (item.status == 'closed' || item.status == 'start error') {
         searchRoomIp({machine_id: el.machine_id}).then(res => {
           if (res.success) {
             this.iplist = res.content
@@ -1868,11 +1868,18 @@ export default {
       }).then(() => {
         startVir({ task_id: item.task_id, id: item.belong, machine_id: el.machine_id}).then( async (res) => {
           if(!res.success){
-            this.$message({
-              type: 'error',
-              message: res.msg
-            });
-          }else{
+            if (res.msg == 'check gpu failed') {
+              this.$message({
+                type: 'error',
+                message: res.msg
+              });
+            } else {
+              this.$message({
+                type: 'error',
+                message: res.msg
+              });
+            }
+          } else {
             let timeData = {
               id: item.belong,
               machine_id: el.machine_id,
@@ -2047,7 +2054,7 @@ export default {
             } else {
               disk_data_free = parseInt(el.free)
             }
-            this.max_disk_num = disk_data_free > 0 ? Math.floor(disk_data_free * 0.75) + this.edit_min_disk_num : this.edit_min_disk_num
+            this.max_disk_num = disk_data_free > 0 ? Math.floor(disk_data_free * 0.75) : this.edit_min_disk_num
           }
         })
       })
