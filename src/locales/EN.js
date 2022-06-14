@@ -593,6 +593,7 @@ export default {
 
     clearMem: 'clear machine memory',
     clearMem_success: 'Cleaned up successfully',
+    GpuFailed: 'Insufficient GPU allocation, please restart the virtual machine after modifying the number of GPUs',
   },
   // 单个虚拟机
   signleVir: {

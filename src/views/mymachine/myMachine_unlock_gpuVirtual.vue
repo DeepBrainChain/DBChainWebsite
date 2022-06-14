@@ -1871,7 +1871,7 @@ export default {
             if (res.msg == 'check gpu failed') {
               this.$message({
                 type: 'error',
-                message: res.msg
+                message: this.$t('myvirtual.GpuFailed')
               });
             } else {
               this.$message({

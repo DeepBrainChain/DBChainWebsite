@@ -593,6 +593,7 @@ export default {
 
     clearMem: 'effacer la mémoire de la machine',
     clearMem_success: 'Nettoyé avec succès',
+    GpuFailed: 'Allocation de GPU insuffisante, veuillez redémarrer la machine virtuelle après avoir modifié le nombre de GPU',
   },
   // 单个虚拟机
   signleVir: {

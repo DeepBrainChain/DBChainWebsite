@@ -593,6 +593,7 @@ export default {
 
     clearMem: '清理机器内存',
     clearMem_success: '清理成功',
+    GpuFailed: 'GPU分配不足，请修改GPU数量后重新启动虚拟机',
   },
   // 单个虚拟机
   signleVir: {

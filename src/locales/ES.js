@@ -593,6 +593,7 @@ export default {
 
     clearMem: 'borrar memoria de la máquina',
     clearMem_success: 'Limpiado con éxito',
+    GpuFailed: 'Asignación de GPU insuficiente, reinicie la máquina virtual después de modificar la cantidad de GPU',
   },
   // 单个虚拟机
   signleVir: {
