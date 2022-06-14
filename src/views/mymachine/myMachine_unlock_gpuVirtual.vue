@@ -373,7 +373,7 @@
       <div class="useTime">
         <div>
           <span class="width12 bold">{{$t('myvirtual.vir_data')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="vir_disk_size" :min="1" :max="Number(max_disk_num)"></el-input-number> G
+          <el-input-number :precision="0" size="mini" v-model="vir_disk_size" :min="0" :max="Number(max_disk_num)"></el-input-number> G
         </div>
         <div>{{$t('myvirtual.max_set')}}: {{max_disk_num}}G</div>
       </div>

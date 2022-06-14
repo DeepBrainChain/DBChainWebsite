@@ -977,14 +977,16 @@ export default {
                     res[j].success ? i ++ : e ++
                   }
                   if (i) {
-                    this.$message({
+                    let msg = this.$message({
                       showClose: true,
                       message: this.$t('virtual.tip7') + i + this.$t('virtual.tip8'),
                       type: "success",
                     });
+                    this.dialogFormVisible = false
                     setTimeout(() => {
+                      msg.close()
                       this.$router.push('/mymachine/myMachine_gpuVirtual')
-                    }, 2000);
+                    }, 1000);
                   } else {
                     this.$message({
                       showClose: true,
@@ -1061,14 +1063,16 @@ export default {
                             type: "error",
                           });
                         } else {
-                          this.$message({
+                          let msg = this.$message({
                             showClose: true,
                             message: this.$t('virtual.tip4'),
                             type: "success",
                           });
+                          this.dialogFormVisible = false
                           setTimeout(() => {
+                            msg.close()
                             this.$router.push('/mymachine/myMachine_gpuVirtual')
-                          }, 2000);
+                          }, 1000);
                         }
                         this.btnloading = false;
                         this.startConfirm = false;
