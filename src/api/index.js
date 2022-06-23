@@ -37,6 +37,83 @@ export const getsearch = data => {
   });
 };
 
+
+
+
+/**
+ * @description 查询Gpu信息
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const getGPUList = () => {
+  return axios({
+    method: "get",
+    url: host + "/getGPU",
+  });
+};
+
+
+/**
+ * @description 获取Gpu列表
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const GetGpu_Info = () => {
+  return axios({
+    method: "get",
+    url: host + "/GetGpu_Info",
+  });
+};
+
+
+/**
+ * @description 获取单个Gpu详细信息
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const GetMachine_Details = (params) => {
+  return axios({
+    method: "get",
+    url: host + "/GetMachine_Details",
+    params
+  });
+};
+
+/**
+ * @description 获取单个Gpu下机器总和
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const Count_Details = (params) => {
+  return axios({
+    method: "get",
+    url: host + "/Count_Details",
+    params
+  });
+};
+
+/**
+ * @description 保存抢单机器hash
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const Save_GrabbingHash = params => {
+  return axios({
+    method: "post",
+    url: host + "/Save_GrabbingHash",
+    params
+  });
+};
+
+/**
+ * @description  获取抢单机器hash提交原始值
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const GetGrabbingHash = params => {
+  return axios({
+    method: "post",
+    url: host + "/GetGrabbingHash",
+    params
+  });
+};
+
+
+
 /**
  * @description 获取已有的地区列表
  * @param {object} params {machine_id, gpu, ....}
@@ -94,45 +171,6 @@ export const getMachineList = params => {
     params
   });
 };
-
-
-
-/**
- * @description 查询Gpu信息
- * @param {object} params {machine_id, gpu, ....}
- */
- export const getGPUList = () => {
-  return axios({
-    method: "get",
-    url: host + "/getGPU",
-  });
-};
-
-
-/**
- * @description 保存抢单机器hash
- * @param {object} params {machine_id, gpu, ....}
- */
- export const Save_GrabbingHash = params => {
-  return axios({
-    method: "post",
-    url: host + "/Save_GrabbingHash",
-    params
-  });
-};
-
-/**
- * @description  获取抢单机器hash提交原始值
- * @param {object} params {machine_id, gpu, ....}
- */
- export const GetGrabbingHash = params => {
-  return axios({
-    method: "post",
-    url: host + "/GetGrabbingHash",
-    params
-  });
-};
-
 
 
 /**
@@ -220,42 +258,6 @@ export const GetResultHash = data => {
     method: "post",
     url: nodeHost + "/api/audit/getVerifyVir",
     data: data
-  });
-};
-
-/**
- * @description 获取Gpu列表
- * @param {object} params {machine_id, gpu, ....}
- */
- export const GetGpu_Info = () => {
-  return axios({
-    method: "get",
-    url: host + "/GetGpu_Info",
-  });
-};
-
-
-/**
- * @description 获取单个Gpu详细信息
- * @param {object} params {machine_id, gpu, ....}
- */
- export const GetMachine_Details = (params) => {
-  return axios({
-    method: "get",
-    url: host + "/GetMachine_Details",
-    params
-  });
-};
-
-/**
- * @description 获取单个Gpu下机器总和
- * @param {object} params {machine_id, gpu, ....}
- */
- export const Count_Details = (params) => {
-  return axios({
-    method: "get",
-    url: host + "/Count_Details",
-    params
   });
 };
 
@@ -527,6 +529,31 @@ export const GetResultHash = data => {
 };
 
 /**
+ * @description reportErr 用户报错
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const reportErr = data => {
+  return axios({
+    method: "post",
+    url: nodeHost + "/api/rentMachine/reportErr",
+    data: data
+  });
+}
+
+/**
+ * @description reportCancel 用户取消举报
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const reportCancel = data => {
+  return axios({
+    method: "post",
+    url: nodeHost + "/api/rentMachine/reportCancel",
+    data: data
+  });
+}
+
+
+/**
  * @description 获取机器中是否包含ip
  * @param {object} params {machine_id, gpu, ....}
  */
@@ -594,6 +621,31 @@ export const changeStatus = data => {
   });
 };
 
+/**
+ * @description 获取支付宝订单内容
+ * @param {object} data {machine_id, gpu, ....}
+ */
+
+ export const createPayByAli = data => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/paypal/createPayByAli',
+    data: data
+  });
+};
+
+/**
+ * @description 校验是否支付成功
+ * @param {object} data {machine_id, gpu, ....}
+ */
+
+ export const checkPayByAli = data => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/paypal/checkPayByAli',
+    data: data
+  });
+};
 
 // 租用单个虚拟机
 /**

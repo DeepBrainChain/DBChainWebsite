@@ -671,7 +671,7 @@ export const StartGrabbing = async (publicKey: Uint8Array): Promise<any> => {
   return de?.toHuman()
 }
 /**
- * bookFaultOrder 开始抢单
+ * committeeBookReport 开始抢单
  * @param reportid: number 订单号
  * @return [] 抢单列表
  * 
@@ -691,7 +691,7 @@ export const bookFaultOrder = async (reportid: number, passward:string, callback
   }
   await cryptoWaitReady()
   await api!.tx.maintainCommittee
-  .bookFaultOrder(reportid)
+  .committeeBookReport(reportid)
   .signAndSend( kering! , ( { events = [], status  } ) => {
     returnFun(status, events, callback)
   })
@@ -806,15 +806,14 @@ export const submitConfirmRaw = async ( permas: any, passward: string, callback:
 }
 
 
-export const reportMachineFault = async ( callback: (data: Object) => void ) => {
-  let type = 'RentedHardwareMalfunction',
-  Hash = '0x2c897da6721be20b23417833bee44aab06f8bf909ae0891ecde64bddc25cadc5',
-  Pub = '0xe8f2957daa5be320b0a384f258da1339a07a0da3605149f4e0ec3a253a42f96c';
-  let perams: any = {};
+export const reportMachineFault = async ( permas: any, passward: string, callback: (data: Object) => void) => {
+  // let type = 'RentedHardwareMalfunction',
+  // Hash = '0x2c897da6721be20b23417833bee44aab06f8bf909ae0891ecde64bddc25cadc5',
+  // Pub = '0xe8f2957daa5be320b0a384f258da1339a07a0da3605149f4e0ec3a253a42f96c';
   await GetApi();
-  let kering = await getCurrentPair()
+  let kering = getCurrentPair()
   try {
-    await kering!.unlock('lynn123123')
+    kering!.unlock(passward)
   } catch (e: any) {
     CallBack_data1 = {
       msg: e.message,
@@ -823,10 +822,10 @@ export const reportMachineFault = async ( callback: (data: Object) => void ) => 
     callback(CallBack_data1)
     return;
   }
-  perams[type] = `(${Hash}, ${Pub})`
+  // perams[type] = `(${Hash}, ${Pub})`
   await cryptoWaitReady();
   await api!.tx.maintainCommittee
-  .reportMachineFault(perams)
+  .reportMachineFault(permas)
   .signAndSend( kering! , ( { events = [], status  } ) => {
     returnFun(status, events, callback)
   })
@@ -838,7 +837,6 @@ export const reportMachineFault = async ( callback: (data: Object) => void ) => 
     callback(CallBack_data1)
   })
 }
-
 
 
 /**

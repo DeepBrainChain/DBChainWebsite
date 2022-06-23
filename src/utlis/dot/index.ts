@@ -804,29 +804,6 @@ export function naclOpen (sealed: Uint8Array, nonce: Uint8Array, senderBoxPublic
  * @returns true or false
 */
 
-// let message = 'ceshiyixia'
-// 自己签名并验证
-// export const CreateSignature = async (message: string | Uint8Array , password: string ) => {
-//   let jsonStr4 = JSON.parse(localStorage.getItem('pair')!)
-//   let signUrl = keyring.addFromJson(jsonStr4);
-//   signUrl.unlock(password)
-//   await cryptoWaitReady();
-//   const signature = signUrl.sign(message);
-//   console.log(signature, 'signature');
-//   console.log(signUrl.verify(message, signature, signUrl.publicKey));
-// }
-// CreateSignature(message, '123456789');
-
-// const verify = async ()=> {
-//   const MNEMONIC11 = 'artefact pull input weird erosion glare neck refuse burst nature paddle insect';
-//   await cryptoWaitReady()
-//   const pair111 = keyring.addFromMnemonic(MNEMONIC11);
-//   console.log(pair111, 'pair111');
-//   const signature11 = pair111.sign('test message')
-//   console.log(u8aToHex(signature11), 'u8aToHex(signature11)' , signatureVerify( 'test message', u8aToHex(signature11), '5HL92dTnQrZSJZy7ckDVYVt9mMX3NsjShWsYDquB3eB3yb5R' ));
-// }
-// verify()
-
 // 自己签名，别人验证
 export const CreateSignature = async (message: string , password: string ): Promise<string> => {
   let jsonStr4 = JSON.parse(localStorage.getItem('pair')!)
@@ -836,48 +813,11 @@ export const CreateSignature = async (message: string , password: string ): Prom
   const signature = signUrl.sign(stringToU8a(message));
   return u8aToHex(signature)
 }
-// CreateSignature('33333333333333fffff', 'lynn123123').then(res=>{
-//   console.log( res, 'ers');
-// })
-// CreateSignature(message, '123456789').then((res)=>{
-  
-// })
-// addFromUri addFromSeed
-// const Create = async (mes: string, seed: string) => {
-//   await cryptoWaitReady();
-//   let signUrl = keyring.addFromUri(seed);
-//   const signature = signUrl.sign(stringToU8a(mes));
-//   return u8aToHex(signature)
-// }
-// Create('1111111', '0x3b60f97f51a31fe87493d8c33b8c504da39e04431065b3a8763e301f644453c5').then(res=>{
-//   console.log( res, 'wwwwwwwww');
-// })
 
-// const Verify = async (msg: string, sign: string, wallet: string, ver: string) => {
-//   await cryptoWaitReady();
-//   console.log(signatureVerify( msg, sign, wallet ), ver );
-// }
-// Verify(
-//   'test message',
-//   '0x2000e5a4b71b388539437c1a9b3fe145f4a1ea7a96f5d82b7ed866f0e094ee725ffe6348e7d6371f92de84a93c6c15a577bff4ff807fdd230a7b4f453180ac89',
-//   '5HL92dTnQrZSJZy7ckDVYVt9mMX3NsjShWsYDquB3eB3yb5R',
-//   'Verify1'
-// )
 /**
  * 生成HASH值
  * blake2AsHex(data: Uint8Array | string, bitLength?: number = 128)
  */
-
-// let machine_id = "222222222222222222222222222222222",
-// reporter_rand_str='1',
-// err_reason = "测试Bug,通过一下"
-
-// let raw_input = (
-//     machine_id
-//     + reporter_rand_str
-//     + err_reason
-// )
-// console.log(blake2AsHex(raw_input ,128), 'raw_input ,256');
 
 let machine_id = "222222222222222222222222222222222",
 reporter_rand_str= "1",
@@ -885,7 +825,5 @@ committee_rand_str = '1',
 support_report= "1",
 err_reason= "测试Bug,通过一下",
 extra_err_info = "";
-
-
 
 console.log( blake2AsHex((machine_id+reporter_rand_str+committee_rand_str+support_report+err_reason+extra_err_info) ,128), 'raw_input ,256');

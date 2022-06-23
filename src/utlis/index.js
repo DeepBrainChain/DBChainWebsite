@@ -324,7 +324,7 @@ export function checkCookie(){
 // 获取美元兑人民币价格
 export function getUsdToRmb(){
   // 暂时固定
-  return 6.6;
+  return 6.4;
 }
 // 获取GPU订单前缀
 export function getCongtuGpuOrderIdPrefix(){
@@ -462,11 +462,13 @@ export const getCountDown = async ( type, srt, BlockchainTime) => {
   let str1 = parseFloat(srt.replace(/,/g, ''))
   // let nowDate = Date.parse(new Date()) // 获取当前时间的秒数
   let timeend // 获取结束时间的块高
-  if( type === 1 ){
+  if ( type === 1 ) {
     timeend = str1+115
-  }else if(type === 2){
+  } else if (type === 2) {
     timeend = str1+360
-  }else{
+  } else if (type === 6) {
+    timeend = str1+20
+  } else {
     timeend = str1
   }
   let endTime = (timeend - BlockchainTime)*30 // 获取秒数倒计时

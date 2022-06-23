@@ -65,7 +65,7 @@
                 <span v-show="el.status == 'creating'">{{$t('myvirtual.vir_status1')}}</span>
                 <span v-show="el.status == 'running'">{{$t('myvirtual.vir_status2')}}</span>
                 <span v-show="el.status == 'starting'">{{$t('myvirtual.vir_status3')}}</span>
-                <span v-show="el.status == 'stopping'">{{$t('myvirtual.vir_status4')}}</span>
+                <span v-show="el.status == 'being poweroff'">{{$t('myvirtual.vir_status4')}}</span>
                 <span v-show="el.status == 'restarting'">{{$t('myvirtual.vir_status5')}}</span>
                 <span v-show="el.status == 'resetting'">{{$t('myvirtual.vir_status6')}}</span>
                 <span v-show="el.status == 'start error'">{{$t('myvirtual.vir_status7')}}</span>
@@ -132,8 +132,8 @@
               <span>{{$t('myvirtual.IP_address')}}: {{el.ssh_ip}}</span>
               <span>{{$t('myvirtual.user_name')}}: {{el.user_name}}</span>
               <span>{{$t('myvirtual.password')}}: {{el.login_password}}</span>
-              <span v-if="el.os == 'ubuntu'">{{$t('myvirtual.ssh_port')}}: {{el.ssh_port}}</span>
-              <span v-if="el.os != 'ubuntu'">{{$t('myvirtual.rdp_port')}}: {{el.rdp_port? el.rdp_port: ''}}</span>
+              <span v-if="el.os == 'linux'">{{$t('myvirtual.ssh_port')}}: {{el.ssh_port}}</span>
+              <span v-if="el.os != 'linux'">{{$t('myvirtual.rdp_port')}}: {{el.rdp_port? el.rdp_port: ''}}</span>
               <!-- <span>{{$t('myvirtual.port_range')}}: 600~6000</span> -->
               <span>{{$t('myvirtual.vir_mem')}}: {{el.mem_size}}</span>
               <span >{{$t('myvirtual.vir_sys')}}: {{el.disk_system}}</span>
@@ -629,7 +629,7 @@ export default {
     },
     changeOp(val){
       this.image_name = ''
-      if (val == 'ubuntu') {
+      if (val == 'linux') {
         this.bios_mode = 'legacy'
         this.is_ubunto = false
         this.port_range = this.hasPort.length*10 + 5600
@@ -665,7 +665,7 @@ export default {
             this.$message.error(res.msg)
           }
         })
-        if (item.os == 'ubuntu') {
+        if (item.os == 'linux') {
           this.edit_rdp_port = ''
           this.edit_port_range = item.ssh_port
           this.edit_is_ubunto = true

@@ -679,6 +679,7 @@ export default {
     quantity: 'corresponding quantity',
     seePrice: "Click to view the price:",
     enterAmount: "Please enter the amount",
+    payNum: 'Amount to be paid',
     payBy: 'Please select mode of payment:',
     status1: "Inquiring...",
     status2: "The DBC transfer is successful. It will take about a few minutes to arrive at the account. Please check the wallet address.",

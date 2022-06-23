@@ -679,6 +679,7 @@ export default {
     quantity: 'cantidad correspondiente',
     seePrice: "Haga clic para ver el precio:",
     enterAmount: "Por favor ingrese la cantidad",
+    payNum: 'El monto a pagar',
     payBy: 'Por favor seleccione modo de pago:',
     status1: "preguntando...",
     status2: "La transferencia DBC es exitosa. Tardará unos minutos en llegar a la cuenta. Verifique la dirección de la billetera.",

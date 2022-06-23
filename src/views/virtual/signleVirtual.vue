@@ -135,7 +135,7 @@
           <span class="width12 bold">{{$t('myvirtual.operation')}}: </span>
           <el-select class='select' v-model="operation_system" size='mini' @change='changeOp' placeholder="choose">
             <el-option label='windows' value='windows'></el-option>
-            <el-option label='ubuntu' value='ubuntu'></el-option>
+            <el-option label='linux' value='linux'></el-option>
           </el-select>
         </div>
       </div>
@@ -825,7 +825,7 @@ export default {
     },
     changeOp(val){
       this.image_name = ''
-      if (val == 'ubuntu') {
+      if (val == 'linux') {
         this.bios_mode = 'legacy'
         this.is_ubunto = false
         this.port_range = 5600
