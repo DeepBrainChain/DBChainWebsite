@@ -49,13 +49,16 @@
 
 <script>
 import Step from "@/components/trade_io/stepNavi";
+import { getUsdToRmb } from '@/utlis/index'
 import { createBuyOd } from '@/api'
 export default {
   name: "buy_2",
   data() {
     return {
+      price: getUsdToRmb(),
       usd: 0.00,
       dbc: 0,
+      rmb: 0.00,
       order_id: '',
       address: this.$route.query.address_user,
       time: null,
@@ -184,10 +187,12 @@ export default {
   },
   methods: {
     getOrder(num) {
+      this.rmb = Math.ceil(Number(this.usd) * this.price * 100) / 100
       let data = {
         wallet: this.address,
         order_num: this.order_id,
-        usd: num
+        usd: num,
+        rmb: this.rmb
       }
       createBuyOd(data).then(res => {
         if (res.success) {
@@ -268,6 +273,7 @@ export default {
             path: "/trade/buy_3",
             query: {
               usd: this.usd,
+              rmb: this.rmb,
               order_id: this.order_id,
               ...this.$route.query
             }
