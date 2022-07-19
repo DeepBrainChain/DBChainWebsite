@@ -395,7 +395,14 @@ export default {
     verify_msg: 'Creando, por favor haga clic en el botón Ver Máquina Virtual después de 5 a 10 minutos para ver el resultado de la creación',
     verify_msg1: 'Error al crear, intente nuevamente por favor, o rechace que la máquina se conecte',
     verify_msg2: 'Error al consultar la información de la máquina virtual, por favor confirme si desea crear',
-    verify_msg3: 'No se pudo crear una máquina virtual, por favor confirme si la máquina se ha creado o rechace directamente conectarse'
+    verify_msg3: 'No se pudo crear una máquina virtual, por favor confirme si la máquina se ha creado o rechace directamente conectarse',
+  
+    report_id: 'Solicitar ID',
+    report_err: 'Motivo de la denuncia',
+    report_info: 'Sin acceso después de alquilar',
+    report_info1: 'Otras fallas',
+    ogMachine_tips1: 'Cuando el informe de error es que no se puede acceder a la máquina después de alquilarla, la regla de verificación se cambia para enviar el valor hash del resultado de la verificación dentro de los 5 minutos posteriores a que el primer validador tome el pedido. Los validadores pueden enviar la información original después de 5 minutos. , y la validación se completará en 10 minutos',
+    
   },
   // 租用虚拟机
   virtual: {
@@ -594,6 +601,31 @@ export default {
     clearMem: 'borrar memoria de la máquina',
     clearMem_success: 'Limpiado con éxito',
     GpuFailed: 'Asignación de GPU insuficiente, reinicie la máquina virtual después de modificar la cantidad de GPU',
+
+    mac_err: 'Reportar un problema',
+    mac_err_cancel: 'Cancelar informe',
+    mac_err_submsg: 'Enviar información encriptada',
+    mac_err_t: 'Reportar problema con la máquina',
+    mac_err_label: 'Seleccionar causa de falla',
+    mac_err_label1: 'Crear excepción de máquina virtual',
+    mac_err_label2: 'Fallo de hardware',
+    mac_err_label3: 'La información del hardware es incorrecta',
+    mac_err_label4: 'Descripción detallada de la información de la falla',
+    mac_err_msg1: 'Cancelar correctamente, no se pudo liberar DBC',
+    mac_err_msg2: 'Cancelar falló',
+    mac_err_msg3: 'Verificación, no se puede cancelar',
+    mac_err_msg4: 'Informe exitoso',
+    mac_err_msg5: 'Informe fallido',
+    mac_err_msg6: 'Falló el reembolso de DBC, comuníquese con el servicio al cliente para su procesamiento',
+    mac_err_msg7: 'DBC ha sido devuelto a la cuenta original',
+    mac_err_msg8: 'La cancelación fue exitosa, la liberación de la promesa DBC fue exitosa',
+    mac_err_msg9: 'Enviar con éxito',
+    mac_err_msg10: 'Envío fallido',
+    mac_err_msg11: 'Error al obtener información cifrada',
+    mac_err_tip1: 'Nota: para informar esta falla, debe comprometer 20000DBC y pagar la tarifa de informe de 10DBC, y antes de que expire el arrendamiento de la máquina, si nadie toma el pedido, debe cancelar manualmente el informe para evitar sanciones por verificación inoportuna . ',
+    mac_err_tip2: 'Nota: para informar esta falla, debe aportar 20000DBC y pagar la tarifa de informe de 10DBC, y tres horas antes de que expire el arrendamiento de la máquina, si nadie toma el pedido, debe cancelar manualmente el informe para evitar sanciones por no verificar a tiempo. Cuando alguien toma el pedido, la información encriptada debe enviarse dentro de media hora, de lo contrario, se deducirán 1000 monedas de compromiso',
+    mac_err_tip3: "Si la información no se procesa a tiempo, se informa el castigo. Después de deducir el DBC del castigo, el estado del castigo finaliza (después de 48 ~ 72 horas) y se reembolsará el DBC restante prometido",
+    mac_err_tip4: "El informe se procesó y se espera que el DBC restante comprometido se reembolse después de 48 ~ 72 horas. Si no hay reembolso, comuníquese con el servicio al cliente para su procesamiento"
   },
   // 单个虚拟机
   signleVir: {

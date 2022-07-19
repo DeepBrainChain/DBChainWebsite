@@ -18,7 +18,7 @@
 <script>
 import Step from "@/components/trade_io/stepNavi";
 import TradeList from "@/components/wallet/tradeList";
-import { confirmPayment } from "@/api";
+import { confirmPayment, checkPayByAli } from "@/api";
 export default {
   name: "buy_3",
   data() {
@@ -155,26 +155,43 @@ export default {
   },
   methods: {
     dbc_is_ok() {
-      confirmPayment({
-        orderId: this.$route.query.order_id,
-        payId: this.$route.query.pay_id,
-        wallet: this.$route.query.address_user
-      }).then(res => {
-        console.log(res, 'res')
-        if (res.success) {
-          this.display_text = this.$t("buyDBC.status2")
-        } else {
-          if (res.code == -5 && res.code == -6) {
-            this.display_text = this.$t("buyDBC.status3")
-          } else if (res.code == -4 || res.code == -3 || res.code == -2) {
-            this.display_text = this.$t("buyDBC.status4")
-          } else if (res.code == -7) {
-            this.display_text = this.$t("buyDBC.status5")
+      if (this.$route.query.payType == 'paypal') {
+        confirmPayment({
+          orderId: this.$route.query.order_id,
+          payId: this.$route.query.pay_id,
+          wallet: this.$route.query.address_user
+        }).then(res => {
+          if (res.success) {
+            this.display_text = this.$t("buyDBC.status2")
           } else {
-            this.$message.error(res.msg)
+            if (res.code == -5 || res.code == -6) {
+              this.display_text = this.$t("buyDBC.status3")
+            } else if (res.code == -4 || res.code == -3 || res.code == -2) {
+              this.display_text = this.$t("buyDBC.status4")
+            } else if (res.code == -7) {
+              this.display_text = this.$t("buyDBC.status5")
+            } else {
+              this.$message.error(res.msg)
+            }
           }
-        }
-      });
+        });
+      } else {
+        checkPayByAli({ orderId: this.order_id, wallet: this.$route.query.address_user }).then(res => {
+          if (res.success) {
+            this.display_text = this.$t("buyDBC.status2")
+          } else {
+            if (res.code == -5 && res.code == -6) {
+              this.display_text = this.$t("buyDBC.status3")
+            } else if (res.code == -4 || res.code == -3 || res.code == -2) {
+              this.display_text = this.$t("buyDBC.status4")
+            } else if (res.code == -7) {
+              this.display_text = this.$t("buyDBC.status5")
+            } else {
+              this.$message.error(res.msg)
+            }
+          }
+        })
+      }
     }
   },
   components: {

@@ -41,11 +41,11 @@
           :class="{active: menuName === 'virtual'}"
           @click="pushMenu('virtual')"
         >{{$t('heads.virtual')}}</a> -->
-        <!-- <a
+        <a
           class="item"
           :class="{active: menuName === 'audit'}"
           @click="pushMenu('audit')"
-        >{{$t('heads.audit')}}</a> -->
+        >{{$t('heads.audit')}}</a>
         <a
           class="item"
           :class="{active: menuName === 'mymachine'}"

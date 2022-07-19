@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="order_tips ">{{$t('audit.ogMachine_tips')}}</div>
+    <div class="order_tips ">{{$t('audit.ogMachine_tips1')}}</div>
     <template v-if="res_body.content.length > 0">
       <div
         v-for="(item, index) in res_body.content"
@@ -14,6 +15,8 @@
             <el-button v-else-if="item.status == 1" size="small" plain @click="seeDetails(false)">{{$t("audit.seeDetails1")}}</el-button>
             <el-button v-else size="small" plain @click="seeDetails(true)">{{$t("audit.seeDetails2")}}</el-button>
           </div> -->
+          <div v-if="'RentedInaccessible' in item.machine_fault_type">{{$t("audit.report_err")}}:{{$t("audit.report_info")}}</div>
+          <div v-else>{{$t("audit.report_err")}}:{{$t("audit.report_info1")}}</div>
           <div v-if="item.first_book_time != ''">{{$t("audit.countdown")}}: {{item.first_book_time}}</div>
           <!-- <div v-if="item.booked_committee.length != 0">抢单倒计时：</div> -->
           <div>{{$t("audit.hasNum")}}: {{item.booked_committee.length}}</div>
@@ -99,27 +102,31 @@ export default {
     getOrderList(){
       this.stopInter();
       getOrder().then(async res => {
-        this.res_body.content = []
         res = [...res.bookable_report, ...res.verifying_report, ...res.waiting_raw_report]
         let BlockchainTime = await getBlockTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
-        res.map((el, index) => {
-          let report = { report_id: el, btnloading: false }
-          reportInfo(el).then( async (res1) => {
-            res1.first_book_time = await getCountDown(2, res1.first_book_time, BlockchainTime)
-            this.res_body.content.push(
+        let OrderArr = []
+        for (let i= 0; i< res.length; i++) {
+          let report = { report_id: res[i], btnloading: false }
+          reportInfo(res[i]).then( async (res1) => {
+            if ('RentedInaccessible' in res1.machine_fault_type) {
+              res1.first_book_time = await getCountDown(6, res1.first_book_time, BlockchainTime)
+            } else {
+              res1.first_book_time = await getCountDown(2, res1.first_book_time, BlockchainTime)
+            }
+            OrderArr.push(
               {...report, ...res1}
             )
             if(res1.first_book_time > 0){
-              this.count(res1.first_book_time, index, (msg)=>{
-                this.res_body.content[index].first_book_time = msg
+              this.count(res1.first_book_time, i, (msg)=>{
+                OrderArr[i].first_book_time = msg
               })
             }else{
-              this.res_body.content[index].first_book_time = ''
+              OrderArr[i].first_book_time = ''
             }
           })
-        })
+        }
+        this.res_body.content = OrderArr
       });
-      console.log(this.res_body.content, 'this.res_body.content');
     },
     // 开时抢单
     start(item){

@@ -454,7 +454,7 @@ export const getBlockchainTime = async (BlockchainTime, arr) => {
 
 /**
  * getHashCountDown 获取链上时间，返回抢单倒计时  以30S一个块计算
- * @param type 对应时间戳类型 1：hash倒计时 2：订单结束倒计时 3：提交原始结果倒计时
+ * @param type 对应时间戳类型 1：hash倒计时 2：订单结束倒计时 3：提交原始结果倒计时 6: 订单结束10分钟倒计时 7：hash倒计时
  * @param srt 抢单的时间块高
  */
 export const getCountDown = async ( type, srt, BlockchainTime) => {
@@ -468,6 +468,8 @@ export const getCountDown = async ( type, srt, BlockchainTime) => {
     timeend = str1+360
   } else if (type === 6) {
     timeend = str1+20
+  } else if (type === 7) {
+    timeend = str1+10
   } else {
     timeend = str1
   }
@@ -486,14 +488,14 @@ export const GetRTime = (t) => {
   iner = setInterval( ()=> {
     let d = 0, h = 0, m = 0, s = 0
     let time_str = ''
-    if(t>=0){
+    if(t>=0){
       d=Math.floor(t/60/60/24);
-      h=Math.floor(t/60/60%24);
-      m=Math.floor(t/60%60);
-      s=Math.floor(t%60);
+      h=Math.floor(t/60/60%24);
+      m=Math.floor(t/60%60);
+      s=Math.floor(t%60);
       --t
       time_str = (d>0?d + 'Day ' : "") + (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s)
-    }else{
+    }else{
       time_str = '00:00:00'
       clearInterval(iner)
     }

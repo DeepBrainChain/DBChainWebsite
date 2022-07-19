@@ -1,6 +1,6 @@
 import { ApiPromise, WsProvider } from '@polkadot/api'
 import { cryptoWaitReady, blake2AsHex, randomAsU8a } from '@polkadot/util-crypto'
-import { formatBalance, BN_TEN, isHex, stringToU8a, u8aToHex, hexToU8a, stringToHex } from '@polkadot/util';
+import { formatBalance, BN_TEN, isHex, stringToU8a, u8aToHex, hexToU8a, stringToHex, hexToString } from '@polkadot/util';
 import { getCurrentPair } from './index' // 获取kerPair
 import BN from 'bn.js'
 import { initNetwork } from './index'
@@ -517,6 +517,17 @@ export const getBlockTime = async (): Promise<any> => {
   return de?.toJSON()
 }
 
+
+// export const unhandledReportResult = async (): Promise<any> => {
+//   await GetApi()
+//   let de = await api?.query.maintainCommittee.reportResult.entries();
+//   de?.forEach(([{ args: [era, nominatorId] }, value]) => {
+//     console.log(value.toJSON());
+//   });
+//   // return de
+// }
+// unhandledReportResult()
+
 /**
  * getAccountBalance 查询账户余额
  * 
@@ -541,7 +552,12 @@ export const getCommitteeList = async (wallet: string): Promise<any> => {
   return isCommit
 }
 
-
+// 查询理事会的公钥
+export const getCommitteePub = async (wallet: string): Promise<any> => {
+  await GetApi();
+  let de: any = await api!.query.committee.committeeStake(wallet)
+  return de.toHuman()
+}
 
 /**
  * ConfirmHash 派单 提交hash信息 
@@ -726,21 +742,17 @@ export const committeeOps = async (AccountId: number, ReportId:number):Promise<a
 
 
 
-
 /**
- * StartGrabbing 抢单 提交hash信息
+ * committeeSubmitVerifyHash 抢单 提交hash信息
  * @param  submitConfirmHash(report_id, hash)  passward: string 密码（可从vuex中获取）
  * @return callback 回调函数，返回数组信息
  */
-export const submitConfirmHash = async ( permas: any,  passward: string, callback: (data: Object) => void) => {
-  let { report_id, machine_id, reporter_rand_str, committee_rand_str, err_reason, extra_err_info, support_report } = permas
+ export const committeeSubmitVerifyHash = async ( permas: any,  passward: string, callback: (data: Object) => void) => {
+  let { report_id, committee_rand_str, support_report } = permas
   let raw_input = blake2AsHex(
-    machine_id
-    + reporter_rand_str
+    report_id
     + committee_rand_str
     + support_report
-    + err_reason
-    + extra_err_info
     , 128)
   await GetApi();
   let kering = await getCurrentPair()
@@ -757,7 +769,7 @@ export const submitConfirmHash = async ( permas: any,  passward: string, callbac
   await cryptoWaitReady();
   console.log(report_id, raw_input, 'raw_input');
   await api!.tx.maintainCommittee
-  .submitConfirmHash( report_id, raw_input )
+  .committeeSubmitVerifyHash( report_id, raw_input )
   .signAndSend( kering! , ( { events = [], status  } ) => {
     returnFun(status, events, callback)
   })
@@ -770,6 +782,74 @@ export const submitConfirmHash = async ( permas: any,  passward: string, callbac
   })
 }
 
+/**
+ * StartGrabbing 抢单 提交原始信息
+ * @param permas
+ * @return callback 回调函数，返回数组信息
+ */
+ export const committeeSubmitInaccessibleRaw = async ( permas: any, passward: string, callback: (data: Object) => void) => {
+  let { report_id, committee_rand_str, support_report } = permas
+  await GetApi();
+  let kering = await getCurrentPair()
+  try {
+    await kering!.unlock(passward)
+  } catch (e: any) {
+    CallBack_data1 = {
+      msg: e.message,
+      success: false
+    };
+    callback(CallBack_data1)
+    return;
+  }
+  await cryptoWaitReady();
+  await api?.tx.maintainCommittee
+  .committeeSubmitInaccessibleRaw(report_id, committee_rand_str, support_report )
+  .signAndSend( kering! , ( { events = [], status  } ) => {
+    returnFun(status, events, callback)
+  })
+  .catch((res)=>{
+    CallBack_data1 = {
+      msg: res.message,
+      success: false
+    };
+    callback(CallBack_data1)
+  })
+}
+
+/**
+ * StartGrabbing 抢单 提交hash信息
+ * @param  submitConfirmHash(report_id, hash)  passward: string 密码（可从vuex中获取）
+ * @return callback 回调函数，返回数组信息
+ */
+ export const submitConfirmHash = async ( permas: any,  passward: string, callback: (data: Object) => void) => {
+  let { report_id, machine_id, reporter_rand_str, committee_rand_str, err_reason, support_report } = permas
+  let raw_input = blake2AsHex(machine_id + reporter_rand_str + committee_rand_str + support_report + err_reason, 128)
+  await GetApi();
+  let kering = await getCurrentPair()
+  try {
+    await kering!.unlock(passward)
+  } catch (e: any) {
+    CallBack_data1 = {
+      msg: e.message,
+      success: false
+    };
+    callback(CallBack_data1)
+    return;
+  }
+  await cryptoWaitReady();
+  await api!.tx.maintainCommittee
+  .committeeSubmitVerifyHash( report_id, raw_input )
+  .signAndSend( kering! , ( { events = [], status  } ) => {
+    returnFun(status, events, callback)
+  })
+  .catch((res)=>{
+    CallBack_data1 = {
+      msg: res.message,
+      success: false
+    };
+    callback(CallBack_data1)
+  })
+}
 
 /**
  * StartGrabbing 抢单 提交原始信息
@@ -792,7 +872,7 @@ export const submitConfirmRaw = async ( permas: any, passward: string, callback:
   }
   await cryptoWaitReady();
   await api?.tx.maintainCommittee
-  .submitConfirmRaw(report_id, machine_id, reporter_rand_str, committee_rand_str, err_reason, extra_err_info, support_report )
+  .committeeSubmitVerifyRaw(report_id, machine_id, reporter_rand_str, committee_rand_str, stringToHex(err_reason), stringToHex(extra_err_info), Number(support_report))
   .signAndSend( kering! , ( { events = [], status  } ) => {
     returnFun(status, events, callback)
   })
@@ -874,6 +954,7 @@ export const currentEra = async ():Promise<any> => {
   console.log(nowDay.toHuman(), 'currentEra')
   return nowDay.toHuman()
 }
+
 /**
  * 查询机器在指定的某天获得的具体收益
  * erasMachineReleasedReward

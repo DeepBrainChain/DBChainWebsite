@@ -74,7 +74,7 @@
           <div class="td">
             <span class="fs16">
               {{$t("audit.Dhd_space")}}：
-              <a class="cPrimaryColor">{{ item.disk_data && parseInt(item.disk_data.size) }}G</a>
+              <a class="cPrimaryColor">{{ item.disk_data.length ? parseInt(item.disk_data[0].size) : parseInt(item.disk_data.size) }}G</a>
             </span>
           </div>
         </div>
@@ -375,7 +375,7 @@ export default {
     this.queryMc();
     // this.queryMail();
     getGPUList().then(res=>{
-      this.GPUmodelList = res
+      this.GPUmodelList = res.content
     })
     getCoefficient().then(res => {
       this.Coefficient = res.content
@@ -474,7 +474,7 @@ export default {
         this.select1 = false
         this.choosecoe = false
         this.formInline.machine_id = item.machine_id
-        this.formInline.data_disk = item.disk_data && parseInt(item.disk_data.size)
+        this.formInline.data_disk = item.disk_data.length ? parseInt(item.disk_data[0].size) : parseInt(item.disk_data.size)
         this.formInline.cpu_type =  item.cpu && item.cpu.type
         this.formInline.gpu_num = item.gpu && item.gpu.gpu_count
         this.formInline.cpu_core_num =  item.cpu && parseInt(item.cpu.cores)

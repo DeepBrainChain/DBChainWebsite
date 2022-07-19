@@ -31,6 +31,8 @@
           <!-- <div><span>{{$t('gpu.gpuBilling')}}</span>: {{el.gpu_price?el.gpu_price:0}}$</div> -->
           <!-- <div><span>{{$t('memory_space')}}</span>: 0</div> -->
           <div><span>{{$t('gpu.userTime')}}</span>: {{el.userTime}}</div>
+          <div class="color" v-show="el.report_be_punish">{{$t('myvirtual.mac_err_tip3')}}</div>
+          <div class="color" v-show="el.reportErr == 'ending-over'">{{$t('myvirtual.mac_err_tip4')}}</div>
           <!-- <div><span>{{$t('gpu.actualPrice')}}</span>: {{el.Actual_cost}}</div> -->
           <!-- <div><span>{{$t('diskspace_remaining')}}</span>: 0</div> -->
           <!-- <div><span>{{$t('gpu.currentRemaining')}}</span>: 0</div> -->
@@ -39,7 +41,7 @@
         <div class="li_list2">
           <span class="bold">{{$t('virtual.GPU_Num')}}: {{el.gpu_num}}</span>
           <span class="bold">{{$t('virtual.GPU_memory')}}: {{el.gpu_mem}}G</span>
-          <span class="width30 bold">{{$t('virtual.GPU_type')}}: {{el.gpu_type}}</span>
+          <span class="width30 bold">{{$t('virtual.GPU_type')}}: {{el.gpuType}}</span>
           <span class="width30 bold">{{$t('virtual.Daily_Rent')}}: 
             <i class="color"> {{getnum2(Number(el.calc_point)/100*GPUPointPrice * (1 + DBCPercentage))}}$≈{{getnum2(Number(el.calc_point)/100*GPUPointPrice * (1 + DBCPercentage)/dbc_price)}}DBC </i>
           </span>
@@ -66,7 +68,7 @@
           <span>{{$t('virtual.Bandwidth2')}}: {{el.download_net}}Mbps</span>
           <span>{{$t('virtual.CPU_cores')}}: {{el.cpu_core_num}}</span>
           <span>{{$t('virtual.CPU_frequency')}}: {{getnum2(Number(el.cpu_rate)/1000)}}Ghz</span>
-          <span class="width40">{{$t('virtual.CPU_type')}}: {{el.cpu_type}}</span>
+          <span class="width40">{{$t('virtual.CPU_type')}}: {{el.cpuType}}</span>
         </div>
         <div class="virtual" v-if="el.virtual_info&&el.virtual_info.length">
           <div class="v-list"  v-for="item in el.virtual_info" :key="item.task_id">
@@ -199,6 +201,33 @@
             <!-- {{$t('myvirtual.tip2')}} -->
           </div>
           <div class="r-warp">
+            <el-button
+              plain
+              class="tool-btn"
+              size="mini"
+              :loading='el.btnloading6'
+              v-if="el.orderStatus == 3 && el.reportErr !='ending-over' && el.reportErr !='processing'"
+              @click="mac_err(el)"
+              >{{ $t("myvirtual.mac_err") }}</el-button
+            >
+            <el-button
+              plain
+              class="tool-btn"
+              size="mini"
+              :loading='el.btnloading6'
+              v-if="el.reportErr =='processing'"
+              @click="mac_err_cancel(el)"
+              >{{ $t("myvirtual.mac_err_cancel") }}</el-button
+            >
+            <el-button
+              plain
+              class="tool-btn"
+              size="mini"
+              :loading='el.btnloading7'
+              v-if="el.orderStatus == 3 && el.reportErr =='processing' && el.submitInfo"
+              @click="mac_err_submsg(el)"
+              >{{ $t("myvirtual.mac_err_submsg") }}</el-button
+            >
             <el-button
               plain
               class="tool-btn"
@@ -656,39 +685,38 @@
         </div>
         <div>{{$t('myvirtual.max_set')}}: {{max_new_disk_num}}G</div>
       </div>
-      
-      <!-- <el-dialog
-        width="30%"
-        :title="$t('myvirtual.addDisk')"
-        :visible.sync="innerVisible"
-        append-to-body>
-        <div class="useTime">
-          <div>
-            <span class="width12 bold">{{$t('myvirtual.chooseDisk')}}: </span>
-            <el-select class='select' v-model="mount_dir" size='mini' @change='chooseDir' placeholder="choose">
-              <el-option
-                v-for="(item, index) in mountDirArr"
-                :key="index"
-                :label="item.path"
-                :value="item.path">
-              </el-option>
-            </el-select>
-          </div>
-        </div>
-        <div class="useTime">
-          <div>
-            <span class="width12 bold">{{$t('myvirtual.chooseDisk1')}}: </span>
-            <el-input-number :precision="0" size="mini" v-model="edit_new_disk_size" :min="1" :max="Number(max_new_disk_num)"></el-input-number> G
-          </div>
-          <div>{{$t('myvirtual.max_set')}}: {{max_new_disk_num}}G</div>
-        </div>
-        <div slot="footer" class="dialog-footer">
-          <el-button class="batch" size="mini" plain @click="confirmNewDisk()">{{$t('confirm')}}</el-button>
-        </div>
-      </el-dialog> -->
       <div slot="footer" class="dialog-footer">
         <el-button class="batch" size="mini" plain @click="addDisk('ruleForm')">{{$t('confirm')}}</el-button>
         <el-button class="batch" size="mini" plain @click="dialogFormVisible5 = false">{{$t('virtual.cancal')}}</el-button>
+      </div>
+    </el-dialog>
+    <!-- 举报机器问题 -->
+    <el-dialog width='30%' :title="$t('myvirtual.mac_err_t')" :visible.sync="dialogFormVisible6">
+      <div class="useTime">
+        <div>
+          <span class="bold">{{$t('myvirtual.mac_err_label')}}: </span>
+          <el-select class='select' v-model="err_info" size='mini' placeholder="choose">
+            <el-option :label="$t('myvirtual.mac_err_label1')" value="RentedInaccessible"></el-option>
+            <el-option :label="$t('myvirtual.mac_err_label2')" value="RentedHardwareMalfunction"></el-option>
+            <el-option :label="$t('myvirtual.mac_err_label3')" value="RentedHardwareCounterfeit"></el-option>
+          </el-select>
+        </div>
+      </div>
+      <div class="" v-if="err_info != 'RentedInaccessible'">
+        <div>
+          <span class="bold">{{$t('myvirtual.mac_err_label4')}}: </span>
+          <el-input autosize type="textarea" v-model="err_desc"></el-input>
+        </div>
+      </div>
+      <div class="fs12" v-if="err_info == 'RentedInaccessible'">
+        {{$t('myvirtual.mac_err_tip1')}}
+      </div>
+      <div class="fs12" v-else>
+        {{$t('myvirtual.mac_err_tip2')}}
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button class="batch" size="mini" :loading='btnloading7' plain @click="reportErr()">{{$t('confirm')}}</el-button>
+        <el-button class="batch" size="mini" plain @click="dialogFormVisible6 = false; btnloading7 = false">{{$t('virtual.cancal')}}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -718,7 +746,12 @@ import {
   editDisk,
   addVMDisk,
   getSecurity,
-  clearMem
+  clearMem,
+  reportErr,
+  reportCancel,
+  reportFinish,
+  reportRefund,
+  reportSubmitMsg
 } from "@/api";
 
 import {
@@ -726,7 +759,7 @@ import {
   getUsdToRmb,
   randomWord
 } from "@/utlis";
-import { transfer, getAccountBalance, standardGPUPointPrice, dbcPriceOcw } from '@/utlis/dot/api';
+import { transfer, getAccountBalance, standardGPUPointPrice, dbcPriceOcw, getOrder, reportInfo, getCommitteePub } from '@/utlis/dot/api';
 import { getCurrentPair, CreateSignature } from "@/utlis/dot"
 import { mapState, mapMutations } from "vuex"
 export default {
@@ -878,6 +911,12 @@ export default {
       mountDirArr: [],
       edit_new_disk_size: 0,
       max_new_disk_num: 0,
+      // 举报问题
+      dialogFormVisible6: false,
+      btnloading7: false,
+      err_info: 'RentedInaccessible',
+      errMac: {},
+      err_desc: ''
     };
   },
   filters: {
@@ -981,7 +1020,7 @@ export default {
             let startTime = res.content[i].createTime
             let endTime = ''
             if (res.content[i].orderStatus == 5 || res.content[i].orderStatus == 6) {
-              endTime = startTime + 30*60*1000
+              endTime = startTime + 15*60*1000
             } else {
               endTime = startTime + res.content[i].day*24*60*60*1000
             }
@@ -990,12 +1029,14 @@ export default {
             res.content[i].btnloading3 = false
             res.content[i].btnloading4 = false
             res.content[i].btnloading5 = false
+            res.content[i].btnloading6 = false
+            res.content[i].btnloading7 = false
             res.content[i].time = startTime
-            if(endTime - nowTime > 0 ){
+            if (endTime - nowTime > 0) {
               res.content[i].time_left = this.minsToHourMins(Math.ceil((endTime - nowTime)/60000) - 1)
               res.content[i].userTime = this.minsToHourMins(Math.ceil((nowTime - res.content[i].time)/60000))
               res.content[i].Actual_cost = Math.ceil((Number(res.content[i].dbc)/Number(res.content[i].day)/24/60)*((nowTime - res.content[i].time)/60000))
-            }else{
+            } else {
               res.content[i].time_left = '0h0m'
               res.content[i].userTime = this.minsToHourMins(Math.ceil((endTime - res.content[i].time)/60000))
               res.content[i].Actual_cost = res.content[i].dbc
@@ -1006,20 +1047,49 @@ export default {
                 res.content[i].hasdelectVm = true
               }
             }
-            res.content[i].confirmTime = (res.content[i].time+1800000 -nowTime)/1000
-            if(this.firstLoading){
+            res.content[i].confirmTime = (res.content[i].time+900000 -nowTime)/1000
+            if (this.firstLoading) {
               res.content[i].virtual_info = []
-            }else{
-              if(this.Machine_info[i].virtual_info.length){
+            } else {
+              if (this.Machine_info[i].virtual_info.length) {
                 res.content[i].virtual_info = this.Machine_info[i].virtual_info
-              }else{
+              } else {
                 res.content[i].virtual_info = []
+              }
+            }
+            if (res.content[i].orderStatus == 3 && res.content[i].reportErr == 'processing') {
+              let reportArr = []
+              const order = await getOrder()
+              let orderArr = [...order.bookable_report, ...order.verifying_report, ...order.waiting_raw_report, ...order.finished_report]
+              // order.finished_report
+              for (let i = 0; i< orderArr.length; i++) {
+                let Info = await reportInfo(orderArr[i])
+                Info.report_id = orderArr[i]
+                reportArr.push(Info)
+              }
+              let walletInfo = await CreateWallet({ id: res.content[i]._id })
+              let newArr = reportArr.filter(res1 => {
+                if (res.content[i].errType == 'RentedInaccessible') {
+                  return res1.reporter == walletInfo.content.wallet && res1.machine_id == res.content[i].machine_id
+                } else {
+                  return res1.reporter == walletInfo.content.wallet && res1.machine_fault_type[res.content[i].errType][0] == res.content[i].ReportHash
+                }
+              })
+              if (newArr.length) {
+                for (let k= 0; k< newArr.length; k++ ) {
+                  if (newArr[k].report_status == 'CommitteeConfirmed') {
+                    await reportFinish({id: res.content[i]._id, status: 'end'})
+                  }
+                  res.content[i].submitInfo = newArr[k].booked_committee.length != newArr[k].get_encrypted_info_committee.length ? true : false
+                }
+              } else if (newArr.length && res.content[i].reportErr == 'processing') {
+                await reportFinish({id: res.content[i]._id, status: 'error'})
               }
             }
           }
           let DBCprice1 = await dbcPriceOcw()
           this.dbc_price = DBCprice1/1000000
-          if(this.firstLoading){
+          if (this.firstLoading) {
             loadingInstance.close();
             const GPUPrice = await standardGPUPointPrice()
             this.GPUPointPrice = GPUPrice? GPUPrice.gpu_price/1000000 : this.GPUPointPrice
@@ -1029,16 +1099,16 @@ export default {
           this.orderNumber = res.content.length
           this.total = res.content.length
           this.Machine_info.map((el, index) => {
-            if(el.confirmTime  > 0){
+            if (el.confirmTime  > 0) {
               this.count( el.confirmTime, index, (msg)=>{
                 this.$set(this.Machine_info[index], 'confirmTime', msg)
               })
-            }else{
+            } else {
               el.confirmTime = '00:00'
             }
           })
         } else {
-          if(this.firstLoading){
+          if (this.firstLoading) {
             loadingInstance.close();
             this.$message.error(this.$t('myvirtual.err_msg1'))
           }
@@ -1072,23 +1142,30 @@ export default {
         }
         ConFirm_Rent(perams).then(res => {
           console.log(res, 'res');
-          this.getMyVirtual();
-          this.si = setInterval( ()=> {
-            this.getMyVirtual()
-          }, 60000)
-          el.btnloading1 = false
-          this.$message({
-            type: 'success',
-            message: this.$t('myvirtual.rental_success')
-          });
-          if (el.network_name == null || el.network_name == '') {
-            let perams = {
-              id: el._id,
+          if (res.success) {
+            this.getMyVirtual();
+            this.si = setInterval( ()=> {
+              this.getMyVirtual()
+            }, 60000)
+            this.$message({
+              type: 'success',
+              message: this.$t('myvirtual.rental_success')
+            });
+            if (el.network_name == null || el.network_name == '') {
+              let perams = {
+                id: el._id,
+              }
+              createNetwork(perams).then(res => {
+                console.log(res, 'createNetwork');
+              })
             }
-            createNetwork(perams).then(res => {
-              console.log(res, 'createNetwork');
-            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: this.$t('myvirtual.rental_fails')
+            });
           }
+          el.btnloading1 = false
         })
         .catch((err)=>{
           this.si = setInterval( ()=> {
@@ -1271,7 +1348,7 @@ export default {
           // info.disk_data.map(disk => {
           //   disk_data_free += parseInt(disk.free)
           // })
-          disk_data_free = parseInt(info.disk_data[0].free)
+          disk_data_free = parseInt(info.disk_data[0]?info.disk_data[0].free:info.disk_data.free)
           disk_data_free = disk_data_free - 350
           this.max_disk_num = disk_data_free > 0 ? Math.floor(disk_data_free * 0.75) : 0
           this.option = info.images
@@ -1290,7 +1367,7 @@ export default {
           let use_ip = []
           let averageValue = Math.floor(54000/info.gpu.gpu_count)
           res.content.taskInfo.map(el => {
-            use_sshOrrdp.push(el.ssh_port == "" ? Number(el.rdp_port) : Number(el.ssh_port))
+            use_sshOrrdp.push(Number(el.ssh_port ? el.ssh_port : el.rdp_port))
             use_VncPort.push(Number(el.vnc_port))
             use_portMin.push(Number(el.port_min))
             use_ip.push(el.ssh_ip)
@@ -2146,32 +2223,184 @@ export default {
         }
       })
     },
-    // confirmNewDisk() {
-    //   let data = {
-    //     id: this.chooseMac.belong,
-    //     task_id: this.chooseMac.task_id,
-    //     machine_id: this.chooseMac.machine_id,
-    //     mount_dir: this.mount_dir,
-    //     size: this.edit_new_disk_size
-    //   }
-    //   if (this.mount_dir == '') {
-    //     return false
-    //   }
-    //   addVMDisk(data).then(res => {
-    //     console.log(res, 'res');
-    //     if (res.success) {
-    //       this.innerVisible = false
-    //       this.dialogFormVisible5 = false
-    //       this.$message.success(this.$t('myvirtual.addDisksuccess'))
-    //     }
-    //   })
-    // },
     clearMem(el) {
+      el.btnloading5 = true
       clearMem({machine_id: el.machine_id, id: el._id}).then(res => {
         if (res.success) {
           this.$message.success(this.$t('myvirtual.clearMem_success'))
         } else {
           this.$message.error(res.msg)
+        }
+        el.btnloading5 = false
+      })
+    },
+
+    // 举报机器
+    mac_err(el) {
+      this.dialogFormVisible6 = true
+      this.errMac = el
+    },
+    async mac_err_cancel(el) {
+      el.btnloading6 = true
+      let reportArr = []
+      const order = await getOrder()
+      let orderArr = [...order.bookable_report, ...order.verifying_report, ...order.waiting_raw_report]
+      for (let i = 0; i< orderArr.length; i++) {
+        let Info = await reportInfo(orderArr[i])
+        Info.report_id = orderArr[i]
+        reportArr.push(Info)
+      }
+      let walletInfo = await CreateWallet({ id: el.machine_id+this.wallet_address })
+      let newArr = reportArr.filter(res1 => {
+        if (el.errType == 'RentedInaccessible') {
+          return res1.reporter == walletInfo.content.wallet && res1.machine_id == el.machine_id
+        } else {
+          return res1.reporter == walletInfo.content.wallet && res1.machine_fault_type[el.errType][0] == el.ReportHash
+        }
+      })
+      if (newArr.length && newArr[0].report_status == "Reported") {
+        let data = {
+          id: el._id,
+          machine_id: el.machine_id,
+          report_id: newArr[0].report_id
+        }
+        reportCancel(data).then(res => {
+          if (res.success) {
+            if (res.content == 'unstake-fail') {
+              this.$message.success(this.$t('myvirtual.mac_err_msg1'))
+              el.btnloading6 = false
+            } else {
+              reportRefund({ id: el._id, wallet: this.wallet_address }).then(res => {
+                if (res.success) {
+                  this.getMyVirtual()
+                  this.$message.success(this.$t('myvirtual.mac_err_msg7'))
+                } else {
+                  this.$message.error(this.$t('myvirtual.mac_err_msg6'))
+                }
+                el.btnloading6 = false
+              })
+            }
+          } else {
+            el.btnloading6 = false
+            this.$message.error(this.$t('myvirtual.mac_err_msg2'))
+          }
+        })
+      } else {
+        el.btnloading6 = false
+        this.$message.error(this.$t('myvirtual.mac_err_msg3'))
+      }
+    },
+    async mac_err_submsg(el) {
+      el.btnloading7 = true
+      let reportArr = []
+      const order = await getOrder()
+      let orderArr = [...order.bookable_report, ...order.verifying_report, ...order.waiting_raw_report]
+      for (let i = 0; i< orderArr.length; i++) {
+        let Info = await reportInfo(orderArr[i])
+        Info.report_id = orderArr[i]
+        reportArr.push(Info)
+      }
+      let walletInfo = await CreateWallet({ id: el.machine_id+this.wallet_address })
+      let newArr = reportArr.filter(res1 => {
+        if (el.errType == 'RentedInaccessible') {
+          return res1.reporter == walletInfo.content.wallet && res1.machine_id == el.machine_id
+        } else {
+          return res1.reporter == walletInfo.content.wallet && res1.machine_fault_type[el.errType][0] == el.ReportHash
+        }
+      })
+      if (newArr.length && newArr[0].report_status == "Verifying") {
+        let B = newArr[0].booked_committee.filter((item) => !newArr[0].get_encrypted_info_committee.includes(item))
+        let getpub = await getCommitteePub(B[0])
+        let data = {
+          id: el._id,
+          machine_id: el.machine_id,
+          report_id: newArr[0].report_id,
+          toWallet: B[0],
+          toPub: getpub.box_pubkey
+        }
+        reportSubmitMsg(data).then(res => {
+          if (res.success) {
+            this.$message.success(this.$t('myvirtual.mac_err_msg9'))
+            this.getMyVirtual()
+          } else {
+            this.$message.error(this.$t('myvirtual.mac_err_msg10'))
+          }
+          el.btnloading7 = false
+        })
+      } else {
+        el.btnloading7 = false
+      }
+    },
+    reportErr() {
+      this.btnloading7 = true
+      CreateWallet({ id: this.errMac.machine_id+this.wallet_address } ).then(res=> {
+        if (res.success) {
+          console.log(`向${res.content.wallet}转账20010DBC`);
+          this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
+            confirmButtonText: this.$t('confirm'),
+            cancelButtonText:  this.$t('cancel'),
+            inputType:'password',
+            inputValue: this.passward
+          })
+          .then( ({ value }) => {
+            this.setPassWard(value)
+            transfer(res.content.wallet, `20010`, value, (res1) => {
+              if (res1.success) {
+                let data;
+                if (this.err_info == 'RentedInaccessible') {
+                  data = {
+                    id: this.errMac._id,
+                    machine_id: this.errMac.machine_id,
+                    errType: this.err_info,
+                    wallet: this.wallet_address
+                  }
+                } else {
+                  data = {
+                    id: this.errMac._id,
+                    machine_id: this.errMac.machine_id,
+                    errType: this.err_info,
+                    err_desc: this.err_desc,
+                    wallet: this.wallet_address
+                  }
+                }
+                reportErr(data).then(res2 => {
+                  console.log(res2, 'res2');
+                  if (res2.success) {
+                    this.getMyVirtual()
+                    this.btnloading7 = false
+                    this.dialogFormVisible6 = false
+                    this.$message.success(this.$t('myvirtual.mac_err_msg4'))
+                  } else {
+                    reportRefund({ id: this.errMac._id, wallet: this.wallet_address }).then(res => {
+                      if (res.success) {
+                        this.$message.success(this.$t('myvirtual.mac_err_msg7'))
+                      } else {
+                        this.$message.error(this.$t('myvirtual.mac_err_msg6'))
+                      }
+                      this.btnloading7 = false
+                    })
+                  }
+                })
+              } else {
+                this.btnloading7 = false
+                this.$message({
+                  showClose: true,
+                  message: res1.msg,
+                  type: "error",
+                });
+              }
+            })
+          }).catch(() => {
+            this.btnloading7 = false
+            console.log(this.$t('cancel'));
+          });
+        } else {
+          this.btnloading7 = false
+          this.$message({
+            showClose: true,
+            message: this.$t('virtual.tip6'),
+            type: "error",
+          });
         }
       })
     },
@@ -2336,6 +2565,10 @@ export default {
       div{
         width: 33%;
         font-size: 14px;
+      }
+      .color {
+        line-height: 1.2;
+        color: #f56c6c;
       }
     }
     .li_list2{

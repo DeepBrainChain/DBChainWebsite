@@ -395,7 +395,14 @@ export default {
     verify_msg: 'Création, veuillez cliquer sur le bouton Afficher la machine virtuelle après 5 à 10 minutes pour afficher le résultat de la création',
     verify_msg1: 'Échec de la création, veuillez réessayer ou simplement refuser à la machine de se connecter',
     verify_msg2: 'Échec de la requête des informations sur la machine virtuelle, veuillez confirmer si vous souhaitez créer',
-    verify_msg3: "Échec de la création d'une machine virtuelle, veuillez confirmer si la machine a été créée ou refuser directement d'aller en ligne"
+    verify_msg3: "Échec de la création d'une machine virtuelle, veuillez confirmer si la machine a été créée ou refuser directement d'aller en ligne",
+  
+    report_id: 'numéro de commande',
+    report_err: 'Raison du signalement',
+    report_info: "Pas d'accès après la location",
+    report_info1: 'Autres défauts',
+    ogMachine_tips1: "Lorsque le rapport d'erreur indique que la machine n'est pas accessible après avoir été louée, la règle de vérification est modifiée pour soumettre la valeur de hachage du résultat de la vérification dans les 5 minutes suivant la saisie de la commande par le premier valideur. Les validateurs sont autorisés à soumettre les informations d'origine après 5 minutes , et la validation sera terminée dans les 10 minutes",
+    
   },
   // 租用虚拟机
   virtual: {
@@ -594,6 +601,31 @@ export default {
     clearMem: 'effacer la mémoire de la machine',
     clearMem_success: 'Nettoyé avec succès',
     GpuFailed: 'Allocation de GPU insuffisante, veuillez redémarrer la machine virtuelle après avoir modifié le nombre de GPU',
+
+    mac_err: 'Signaler un problème',
+    mac_err_cancel: 'Annuler le rapport',
+    mac_err_submsg: 'Soumettre des informations cryptées',
+    mac_err_t: 'Signaler un problème de machine',
+    mac_err_label: "Sélectionner la cause de l'échec",
+    mac_err_label1: 'Créer une exception de machine virtuelle',
+    mac_err_label2: 'Défaillance matérielle',
+    mac_err_label3: 'Les informations sur le matériel sont erronées',
+    mac_err_label4: 'Description détaillée des informations sur le défaut',
+    mac_err_msg1: 'Annulation réussie, échec de la libération de DBC',
+    mac_err_msg2: "L'annulation a échoué",
+    mac_err_msg3: "Vérification, impossible d'annuler",
+    mac_err_msg4: 'Rapport réussi',
+    mac_err_msg5: 'Le rapport a échoué',
+    mac_err_msg6: 'Le remboursement DBC a échoué, veuillez contacter le service client pour le traitement',
+    mac_err_msg7: "DBC a été renvoyé au compte d'origine",
+    mac_err_msg8: "L'annulation a réussi, la libération du DBC de pledge a réussi",
+    mac_err_msg9: 'Envoi réussi',
+    mac_err_msg10: "L'envoi a échoué",
+    mac_err_msg11: "Impossible d'obtenir les informations cryptées",
+    mac_err_tip1: "Remarque: pour signaler ce défaut, vous devez mettre en gage 20000DBC et payer les frais de déclaration de 10DBC, et avant l'expiration du bail de la machine, si personne ne saisit la commande, vous devez annuler manuellement le rapport pour éviter des pénalités pour vérification intempestive.",
+    mac_err_tip2: "Remarque : Pour signaler ce défaut, vous devez mettre en gage 20000DBC et payer les frais de rapport de 10DBC, et trois heures avant l'expiration de la location de la machine, si personne ne saisit la commande, vous devez annuler manuellement le rapport pour éviter des pénalités pour retard. vérification. Lorsque quelqu'un saisit la commande, les informations cryptées doivent être envoyées dans la demi-heure, sinon 1000 pièces de gage seront déduites",
+    mac_err_tip3: "Si les informations ne sont pas traitées à temps, la punition est signalée. Une fois le DBC de punition déduit, l'état de punition prend fin (après 48 à 72heures) et le DBC restant sera remboursé",
+    mac_err_tip4: "Le rapport a été traité et le DBC restant promis devrait être remboursé après 48 à 72heures. S'il n'y a pas de remboursement, veuillez contacter le service client pour le traitement"
   },
   // 单个虚拟机
   signleVir: {

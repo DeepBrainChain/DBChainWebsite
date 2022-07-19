@@ -395,7 +395,14 @@ export default {
     verify_msg: '创建中,请在5~10分钟后点击查看虚拟机按钮，查看创建结果',
     verify_msg1: '创建失败，请重试或直接拒绝该机器上线',
     verify_msg2: '查询虚拟机信息失败，请确认是否创建',
-    verify_msg3: '创建虚拟机失败，请确认是否已创建或直接拒绝该机器上线'
+    verify_msg3: '创建虚拟机失败，请确认是否已创建或直接拒绝该机器上线',
+
+    report_id: '订单ID',
+    report_err: '举报原因',
+    report_info: '租用后无法访问',
+    report_info1: '其他故障',
+    ogMachine_tips1:'当错误报告为 机器被租用后无法访问故障 时，验证规则改变为 在第一个验证人抢单之后，5 分钟内提交验证结果Hash值，所有抢单的委员会都提交了 Hash 或者 距离首次抢单5分钟 后才允许验证人提交原始信息，10 分钟内结束验证',
+    
   },
   // 租用虚拟机
   virtual: {
@@ -597,18 +604,28 @@ export default {
 
     mac_err: '报告问题',
     mac_err_cancel: '取消报告',
+    mac_err_submsg: '提交加密信息',
     mac_err_t: '举报机器问题',
     mac_err_label: '选择故障原因',
     mac_err_label1: '创建虚拟机异常',
     mac_err_label2: '硬件故障',
     mac_err_label3: '硬件信息不对',
-    mac_err_msg1: '取消成功',
+    mac_err_label4: '故障信息详细描述',
+    mac_err_msg1: '取消成功，解除质押DBC失败',
     mac_err_msg2: '取消失败',
     mac_err_msg3: '验证中，无法取消',
     mac_err_msg4: '举报成功',
     mac_err_msg5: '举报失败',
+    mac_err_msg6: 'DBC退币失败，请联系客服处理',
+    mac_err_msg7: 'DBC已退回原账户',
+    mac_err_msg8: '取消成功，解除质押DBC成功',
+    mac_err_msg9: '发送成功',
+    mac_err_msg10: '发送失败',
+    mac_err_msg11: '获取加密信息失败',
     mac_err_tip1: '注意：举报此故障需要质押20000DBC并支付10DBC的举报费用，且在机器租用到期前，如无人抢单，需手动取消举报，避免验证不及时受到处罚。',
     mac_err_tip2: '注意：举报此故障需要质押20000DBC并支付10DBC的举报费用，且在机器租用到期三小时前，如无人抢单，需手动取消举报，避免验证不及时受到处罚。当有人抢单时,需要在半小时内发送加密信息,否则将扣除1000质押币',
+    mac_err_tip3: '未及时处理信息，举报惩罚中，扣除惩罚DBC后，惩罚状态结束(48~72小时以后)，退还剩余质押DBC',
+    mac_err_tip4: '举报以处理完毕，质押剩余DBC预计48~72小时以后退还,若无退还，请联系客服处理'
   },
   // 单个虚拟机
   signleVir: {

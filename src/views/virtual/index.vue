@@ -9,10 +9,10 @@
               <li v-for="(item,idx) in tableData" :key="idx">
                 <el-button
                   class="lg naviBtn"
-                  :class="{active: active === item.type}"
+                  :class="{active: active === item}"
                   v-on:click="choose(item)"
                 >
-                  <span>{{String(item.type).slice(7)}}</span>
+                  <span>{{String(item).slice(7)}}</span>
                 </el-button>
               </li>
             </ul>
@@ -108,7 +108,7 @@
                   <div class="li_list2">
                     <span class="bold">{{$t('virtual.GPU_Num')}}: {{el.gpu_num}}</span>
                     <span class="bold">{{$t('virtual.GPU_memory')}}: {{el.gpu_mem}}G</span>
-                    <span class="width30 bold">{{$t('virtual.GPU_type')}}: {{el.gpu_type}}</span>
+                    <span class="width30 bold">{{$t('virtual.GPU_type')}}: {{el.gpuType}}</span>
                     <span class="width30 bold">{{$t('virtual.Daily_Rent')}}: 
                       <i class="color"> {{getnum2(Number(el.calc_point)/100*GPUPointPrice * (1 + DBCPercentage))}}$≈{{getnum2(Number(el.calc_point)/100*GPUPointPrice * (1 + DBCPercentage)/dbc_price)}}DBC </i>
                     </span>
@@ -135,7 +135,7 @@
                     <span>{{$t('virtual.Bandwidth2')}}: {{el.download_net}}Mbps</span>
                     <span>{{$t('virtual.CPU_cores')}}: {{el.cpu_core_num}}</span>
                     <span>{{$t('virtual.CPU_frequency')}}: {{getnum2(Number(el.cpu_rate)/1000)}}Ghz</span>
-                    <span class="width40">{{$t('virtual.CPU_type')}}: {{el.cpu_type}}</span>
+                    <span class="width40">{{$t('virtual.CPU_type')}}: {{el.cpuType}}</span>
                   </div>
                 </div>
               </el-checkbox-group>
@@ -198,9 +198,8 @@ import { getAccount, getBalance } from "@/utlis";
 import { mapState, mapMutations } from "vuex";
 import { transfer, getBlockTime, batchTransfer, standardGPUPointPrice, dbcPriceOcw } from '@/utlis/dot/api';
 import { 
-  GetGpu_Info,
-  GetMachine_Details,
-  Count_Details,
+  getgpuType,
+  getlistByGpu,
   CreateWallet,
   createVirOrder,
   rentmachine,
@@ -481,55 +480,52 @@ export default {
     // gpu显示
     getGpuList(){
       this.tableData = []
-      GetGpu_Info().then(res => {
-        for (let i=0; i< this.Gpu_Type.length; i++) {
-          for (let k=0; k< res.length; k++) {
-            if(res[k] == this.Gpu_Type[i].type) {
-              this.tableData.push(this.Gpu_Type[i])
-            }
-          }
-        }
-        if ( !this.tableData.length ) {
-          this.tableData = this.tableDataDefulat
-        }
-        this.active = this.tableData[0] ? this.tableData[0].type : ''
+      getgpuType().then(res => {
+        this.tableData = res.content
+        this.active = this.tableData.length ? this.tableData[0] : ''
         this.getList(this.active , this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
       })
     },
     getList(str = '', status = '', num = '', type , pageNum = 1, pageSize = 20 ) {
-      
       let data = {
         gpu_type: str,
-        machine_status: status,
-        gpu_num: num,
-        pageNum: pageNum,
-        pageSize: pageSize
+        status: status,
+        gpu_num: Number(num),
+        pageNum: pageNum - 1,
+        pageSize: pageSize,
+        signle: 0
       }
-      if(status == ''){
-        delete data['machine_status']
-      }
-      GetMachine_Details(data).then( async (res) => {
-        res.list.map( (el, i) => {
-          if (this.MacIpList.indexOf(el.machine_id) != -1) {
-            el.hasIP = true
-          }
+      getlistByGpu(data).then( async (res) => {
+        if (!res.success) {
+          return
+        }
+        res.content.list.map( (el, i) => {
           if(el.operator){
             el.machine_name = this.byteToStr(JSON.parse(el.operator))
           }
+          if (this.MacIpList.indexOf(el.machine_id) != -1) {
+            el.hasIP = true
+          }
           el.online = '···'
         })
+        this.All_Machine = res.content.total?res.content.total:0
+        this.Idle_Machine = res.content.online?res.content.online:0
+        // if(type == 'first'){
+        //   if(this.refresh){
+        //     clearInterval(this.refresh)
+        //   }
+        //   this.refresh = setInterval( async () => {
+        //     this.getList(this.active , this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
+        //   }, 60000)
+        // }
         if(type == 'first'){
+          if(this.refresh){
+            clearInterval(this.refresh)
+          }
           this.isIndeterminate = false;
           this.checkedCities = [];
           this.checkAll = false;
           this.openCheck = false;
-          Count_Details({ gpu_type: str }).then( res1 => {
-            this.All_Machine = res1.count[str]?res1.count[str]:0
-            this.Idle_Machine = res1.sum[str]?res1.sum[str]:0
-          })
-          if(this.refresh){
-            clearInterval(this.refresh)
-          }
           this.refresh = setInterval( async () => {
             let DBCprice1 = await dbcPriceOcw()
             this.dbc_price = DBCprice1/1000000
@@ -542,8 +538,8 @@ export default {
         const GPUPrice = await standardGPUPointPrice()
         this.GPUPointPrice = GPUPrice ? GPUPrice.gpu_price/1000000 : this.GPUPointPrice
         online_block = online_block.replace(/,/gi, '');
-        this.Machine_info = res.list
-        this.total = res.total
+        this.Machine_info = res.content.list
+        this.total = res.content.typeTotal
         this.Machine_info.map( (el) => {
           el.online = this.minsToHourMins(Math.floor((online_block-el.bonding_height)/2))
         })
@@ -688,7 +684,7 @@ export default {
     },
 
     choose(str) {
-      this.active = str.type
+      this.active = str
       this.Idle_Machine = 0
       this.All_Machine = 0
       this.Machine_info = []

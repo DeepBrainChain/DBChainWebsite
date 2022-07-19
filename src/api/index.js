@@ -1,14 +1,10 @@
 import axios from "@/utlis/axios";
-import qs from 'qs'
 
-// 聪图云转发后台（测试环境）
-const host = "https://identifiertest.congtu.cloud";
-
-// http://114.115.219.202:8090
+// 'http://8.219.75.114:8090'
 // http://localhost:8090
 // 审核机器新增
 
-const nodeHost = 'http://114.115.219.202:8090'
+const nodeHost = 'http://localhost:8090'
 
 
 // 获得dbc的价格等信息
@@ -38,81 +34,28 @@ export const getsearch = data => {
 };
 
 
-
-
-/**
- * @description 查询Gpu信息
- * @param {object} params {machine_id, gpu, ....}
- */
- export const getGPUList = () => {
-  return axios({
-    method: "get",
-    url: host + "/getGPU",
-  });
-};
-
-
 /**
  * @description 获取Gpu列表
- * @param {object} params {machine_id, gpu, ....}
+ * @param 
  */
- export const GetGpu_Info = () => {
+ export const getgpuType = () => {
   return axios({
     method: "get",
-    url: host + "/GetGpu_Info",
+    url: nodeHost + `/api/select/getgpuType`,
   });
 };
-
 
 /**
  * @description 获取单个Gpu详细信息
  * @param {object} params {machine_id, gpu, ....}
  */
- export const GetMachine_Details = (params) => {
-  return axios({
-    method: "get",
-    url: host + "/GetMachine_Details",
-    params
-  });
-};
-
-/**
- * @description 获取单个Gpu下机器总和
- * @param {object} params {machine_id, gpu, ....}
- */
- export const Count_Details = (params) => {
-  return axios({
-    method: "get",
-    url: host + "/Count_Details",
-    params
-  });
-};
-
-/**
- * @description 保存抢单机器hash
- * @param {object} params {machine_id, gpu, ....}
- */
- export const Save_GrabbingHash = params => {
+ export const getlistByGpu = (data) => {
   return axios({
     method: "post",
-    url: host + "/Save_GrabbingHash",
-    params
+    url: nodeHost + "/api/select/getlistByGpu",
+    data: data
   });
 };
-
-/**
- * @description  获取抢单机器hash提交原始值
- * @param {object} params {machine_id, gpu, ....}
- */
- export const GetGrabbingHash = params => {
-  return axios({
-    method: "post",
-    url: host + "/GetGrabbingHash",
-    params
-  });
-};
-
-
 
 /**
  * @description 获取已有的地区列表
@@ -172,6 +115,16 @@ export const getMachineList = params => {
   });
 };
 
+/**
+ * @description 查询Gpu信息
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const getGPUList = () => {
+  return axios({
+    method: "get",
+    url: nodeHost + "/api/audit/getGpuList",
+  });
+};
 
 /**
  * @description 保存派单列表hash
@@ -197,6 +150,32 @@ export const GetResultHash = data => {
     data: data
   });
 };
+
+
+/**
+ * @description 保存抢单机器hash
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const saveOrderHash = data => {
+  return axios({
+    method: "post",
+    url: nodeHost + "/api/audit/saveOrderHash",
+    data
+  });
+};
+
+/**
+ * @description  获取抢单机器hash提交原始值
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const getOrderHash = data => {
+  return axios({
+    method: "post",
+    url: nodeHost + "/api/audit/getOrderHash",
+    data
+  });
+};
+
 
 
 /**
@@ -548,6 +527,42 @@ export const GetResultHash = data => {
   return axios({
     method: "post",
     url: nodeHost + "/api/rentMachine/reportCancel",
+    data: data
+  });
+}
+
+/**
+ * @description reportCancel 用户取消举报
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const reportFinish = data => {
+  return axios({
+    method: "post",
+    url: nodeHost + "/api/rentMachine/reportFinish",
+    data: data
+  });
+}
+
+/**
+ * @description reportCancel 用户提交加密信息
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const reportSubmitMsg = data => {
+  return axios({
+    method: "post",
+    url: nodeHost + "/api/rentMachine/reportSubmitMsg",
+    data: data
+  });
+}
+
+/**
+ * @description reportCancel 举报退币
+ * @param {object} params {machine_id, gpu, ....}
+ */
+ export const reportRefund = data => {
+  return axios({
+    method: "post",
+    url: nodeHost + "/api/rentMachine/reportRefund",
     data: data
   });
 }

@@ -11,7 +11,7 @@ import {
   naclBoxKeypairFromSecret,
   signatureVerify,
   blake2AsHex} from '@polkadot/util-crypto'
-import { BN_TEN, formatBalance, isHex, stringToU8a , u8aToHex, hexToU8a, hexToString, stringToHex } from '@polkadot/util';
+import { BN_TEN, formatBalance, isHex, stringToU8a , u8aToHex, u8aToString, hexToU8a, hexToString, stringToHex } from '@polkadot/util';
 import { decodePair } from "@polkadot/keyring/pair/decode";
 import BN from 'bn.js'
 import { KeyringPair, KeyringPair$Json } from '@polkadot/keyring/types'
@@ -20,6 +20,7 @@ import type { ChainProperties } from '@polkadot/types/interfaces';
 import { getFormatBalance } from './tools'
 import FileSaver from 'file-saver'
 import nacl from 'tweetnacl'
+import { GetApi } from './api';
 
 const node = {
   polkadot: 'wss://rpc.polkadot.io',
@@ -696,6 +697,14 @@ export function getRand_str(){
 }
 
 
+export const getStake = async (wallet: string) => {
+  await GetApi()
+  let de = await api?.query.maintainCommittee.reporterStake(wallet);
+  return de?.toHuman();
+}
+
+// getStake('5EspPzPFnKi7UnpfFBRktfBwDJ21USmcm9rrizxHSmh3ovTt')
+
 /**
  * dbcPriceOcw 获取链上DBC的实时价格
  * 
@@ -746,19 +755,24 @@ export const getKeypair = ( password : string ): Kerpair => {
     const pair = JSON.parse(jsonStr1?jsonStr1:'{}')
     let NewKeyPair = decodePair( password , base64Decode(pair.encoded), pair.encoding.type );
     let NewKeyPair1 = naclBoxKeypairFromSecret(NewKeyPair.secretKey)
+    console.log(u8aToHex(NewKeyPair1.secretKey), u8aToHex(NewKeyPair1.publicKey), 'NewKeyPair1');
     return NewKeyPair1
   } else {
     return {}
     // throw Error ('pair is not define')
   }
 }
+
+// getKeypair('123456')
+
 //  0xb75b54a9c6b819acf9fbb00614be9d62f68599909e5fb25e0ab081ad581f8a0b publicKey
 //  0xc8c275687a435f58471111e4dc5412a3edb9e7158aea981e38733eefc195005b secretKey
 // console.log(u8aToHex(getKeypair('123456789').publicKey), u8aToHex(getKeypair('123456789').secretKey),'NewKeyPair1');
 // 通过助记词获取密钥对
-// const MNEMONIC = 'unfold tackle winner comfort child hammer build recall regular lucky inform remain';
+// const MNEMONIC = 'team copy swallow diamond detail loud power goat upon session fancy raven';
 
 // const seedAlice = mnemonicToMiniSecret(MNEMONIC);
+// console.log(u8aToHex(seedAlice), 'seedAlice');
 
 // 通过助记词生成 Uint8Array格式的私钥
 // console.log(u8aToHex(seedAlice), 'seedAlice');
@@ -770,13 +784,13 @@ export const getKeypair = ( password : string ): Kerpair => {
 // 验证通过私钥生成的 Uint8Array 是否与 助记词获取的一致
 // console.log(hexToU8a('0xf2ea52af98446cefa3e884353dd760e25d7f39386d0caa26be600c00425d10da'));
 // 验证通过私钥生成的 Uint8Array 生成的新的密钥对是否可用
-// console.log(naclBoxKeypairFromSecret(hexToU8a('0xf2ea52af98446cefa3e884353dd760e25d7f39386d0caa26be600c00425d10da')),'naclBoxKeypairFromSecret(hexToU8a)');
-
+// let keys = naclBoxKeypairFromSecret(hexToU8a('0xf44f80791a45b70a350dcf3d838bfc6bb485377059842e16339a10f7cab10f61'))
+// console.log(u8aToHex(keys.secretKey), u8aToHex(keys.publicKey),'naclBoxKeypairFromSecret(hexToU8a)');
 // 验证通过助记词获取生成的 secretKey 生成的新的密钥对是否 与 上面的密钥对一致
 // console.log(naclBoxKeypairFromSecret(secretKey),'naclBoxKeypairFromSecret(secretKey)');
 
 // 验证地址转 publicKey：Uint8Array 及  publicKey：Uint8Array 转地址是否一致
-// console.log(decodeAddress('5GkLkFKcYpPfbdBwVWrCyae5uJkkXtqkkYXSbm8znSZDiFpC'), encodeAddress(publicKey, 42),'encodeAddress->publicKey');
+// console.log(u8aToHex(decodeAddress('5GkLkFKcYpPfbdBwVWrCyae5uJkkXtqkkYXSbm8znSZDiFpC')), encodeAddress('0xcf2baf5cdf07372f2007aee66706db62db1e0c8eefc69d6fa233959f38f1af9f', 42),'encodeAddress->publicKey');
 // 生成加密信息
 export function naclSeal (message: Uint8Array, senderBoxSecret: Uint8Array, receiverBoxPublic: Uint8Array, nonce: Uint8Array): Sealed {
   return {
@@ -789,7 +803,6 @@ export function naclSeal (message: Uint8Array, senderBoxSecret: Uint8Array, rece
 export function naclOpen (sealed: Uint8Array, nonce: Uint8Array, senderBoxPublic: Uint8Array, receiverBoxSecret: Uint8Array): Uint8Array | null {
   return nacl.box.open(sealed, nonce, senderBoxPublic, receiverBoxSecret ) || null;
 }
-
 
 /**
  * 生成签名信息
@@ -813,17 +826,3 @@ export const CreateSignature = async (message: string , password: string ): Prom
   const signature = signUrl.sign(stringToU8a(message));
   return u8aToHex(signature)
 }
-
-/**
- * 生成HASH值
- * blake2AsHex(data: Uint8Array | string, bitLength?: number = 128)
- */
-
-let machine_id = "222222222222222222222222222222222",
-reporter_rand_str= "1",
-committee_rand_str = '1',
-support_report= "1",
-err_reason= "测试Bug,通过一下",
-extra_err_info = "";
-
-console.log( blake2AsHex((machine_id+reporter_rand_str+committee_rand_str+support_report+err_reason+extra_err_info) ,128), 'raw_input ,256');

@@ -395,7 +395,14 @@ export default {
     verify_msg: 'Creating, please click the View Virtual Machine button after 5~10 minutes to view the creation result',
     verify_msg1: 'Failed to create, please try again or simply refuse the machine to go online',
     verify_msg2: 'Failed to query virtual machine information, please confirm whether to create',
-    verify_msg3: 'Failed to create a virtual machine, please confirm whether the machine has been created or directly refuse to go online'
+    verify_msg3: 'Failed to create a virtual machine, please confirm whether the machine has been created or directly refuse to go online',
+  
+    report_id: 'Order Id',
+    report_err: 'Reason for reporting',
+    report_info: 'No access after renting',
+    report_info1: 'Other faults',
+    ogMachine_tips1:'When the error report is that the machine cannot be accessed after being rented, the verification rule is changed to submit the hash value of the verification result within 5 minutes after the first validator grabs the order. Validators are allowed to submit original information after 5 minutes, and the validation will be completed within 10 minutes',
+    
   },
   // 租用虚拟机
   virtual: {
@@ -594,6 +601,31 @@ export default {
     clearMem: 'clear machine memory',
     clearMem_success: 'Cleaned up successfully',
     GpuFailed: 'Insufficient GPU allocation, please restart the virtual machine after modifying the number of GPUs',
+
+    mac_err: 'Report a problem',
+    mac_err_cancel: 'Cancel report',
+    mac_err_submsg: 'Submit encrypted information',
+    mac_err_t: 'Report machine problem',
+    mac_err_label: 'Select failure cause',
+    mac_err_label1: 'Create virtual machine exception',
+    mac_err_label2: 'Hardware failure',
+    mac_err_label3: 'The hardware information is wrong',
+    mac_err_label4: 'Fault information detailed description',
+    mac_err_msg1: 'Cancel successful, failed to release DBC',
+    mac_err_msg2: 'Cancel failed',
+    mac_err_msg3: 'Verification, cannot cancel',
+    mac_err_msg4: 'Report successful',
+    mac_err_msg5: 'Report failed',
+    mac_err_msg6: 'DBC refund failed, please contact customer service for processing',
+    mac_err_msg7: 'DBC has been returned to the original account',
+    mac_err_msg8: 'Cancellation is successful, the release of the pledge DBC is successful',
+    mac_err_msg9: 'Send successfully',
+    mac_err_msg10: 'Send failed',
+    mac_err_msg11: 'Failed to obtain encrypted information',
+    mac_err_tip1: 'Note: To report this fault, you need to pledge 20000DBC and pay the reporting fee of 10DBC, and before the machine lease expires, if no one grabs the order, you need to manually cancel the report to avoid penalties for untimely verification. ',
+    mac_err_tip2: 'Note: To report this fault, you need to pledge 20000DBC and pay the reporting fee of 10DBC, and three hours before the machine lease expires, if no one grabs the order, you need to manually cancel the report to avoid penalties for not verifying in time. When someone grabs the order, the encrypted information needs to be sent within half an hour, otherwise 1000 pledge coins will be deducted',
+    mac_err_tip3: 'If the information is not processed in time, the punishment is being reported. After the punishment DBC is deducted, the punishment status ends (after 48~72 hours), and the remaining pledged DBC will be refunded',
+    mac_err_tip4: 'The report has been processed, and the remaining DBC pledged is expected to be refunded after 48~72 hours. If there is no refund, please contact customer service for processing'
   },
   // 单个虚拟机
   signleVir: {
