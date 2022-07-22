@@ -1151,14 +1151,14 @@ export default {
               type: 'success',
               message: this.$t('myvirtual.rental_success')
             });
-            if (el.network_name == null || el.network_name == '') {
-              let perams = {
-                id: el._id,
-              }
-              createNetwork(perams).then(res => {
-                console.log(res, 'createNetwork');
-              })
+            let perams = {
+              machine_id: el.machine_id,
+              wallet: this.wallet_address,
+              server_room: el.server_room
             }
+            createNetwork(perams).then(res => {
+              console.log(res, 'createNetwork');
+            })
           } else {
             this.$message({
               type: 'error',
@@ -1316,16 +1316,16 @@ export default {
       this.public_ip = ''
       this.operation_system = ''
       this.image_name = ''
-      if (data.network_name == null || data.network_name == '') {
-        let perams = {
-          id: data._id,
-        }
-        createNetwork(perams).then(res => {
-          if (res.success) {
-            data.network_name = res.content
-          }
-        })
+      let perams = {
+        machine_id: data.machine_id,
+        wallet: this.wallet_address,
+        server_room: data.server_room
       }
+      createNetwork(perams).then(res => {
+        if (res.success) {
+          data.network_name = res.content
+        }
+      })
       searchRoomIp({machine_id: data.machine_id}).then(res => {
         if (res.success) {
           this.iplist = res.content
@@ -1726,14 +1726,14 @@ export default {
         inputValue: this.passward
       })
       .then( async ({ value }) => {
-        if (el.network_name == null || el.network_name == '') {
-          let perams = {
-            id: el._id,
-          }
-          createNetwork(perams).then(res => {
-            console.log(res, 'createNetwork');
-          })
+        let perams = {
+          machine_id: el.machine_id,
+          wallet: this.wallet_address,
+          server_room: el.server_room
         }
+        createNetwork(perams).then(res => {
+          console.log(res, 'createNetwork');
+        })
         let chooseIndex;
         this.Machine_info.map((ele, index) => {
           if (ele._id == el._id) {
