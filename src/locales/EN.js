@@ -185,7 +185,7 @@ export default {
   },
   help: {
     'title': 'How to buy DBC',
-    "3": "1.Buy DBC directly with PayPal (can be invoiced)",
+    "3": "1.Buy DBC directly with PayPal or Alipay (invoicing is possible)",
     '4': '2.Buy DBC from gate.io',
     '5': '3.Transfer DBC to your account from other wallets that support DBC, such as',
     reloadWallet: 'Deposit and enter wallet account',

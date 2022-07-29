@@ -1544,6 +1544,7 @@ export default {
           this.btnloading1 = true
           let perams = {
             id: this.chooseMac._id,
+            networkId: this.chooseMac.server_room + this.wallet_address,
             machine_id: this.chooseMac.machine_id,
             ssh_port: !this.is_ubunto ? this.port_range : '',
             image_name: this.image_name,
@@ -1557,7 +1558,7 @@ export default {
             rdp_port: this.is_ubunto ? this.rdp_port : '',
             operation_system: this.operation_system,
             bios_mode: this.bios_mode,
-            network_name: this.chooseMac.network_name,
+            // network_name: this.chooseMac.network_name,
             public_ip: this.public_ip,
             network_sec: this.network_sec,
             network_Id: this.network_Id,
@@ -1726,14 +1727,16 @@ export default {
         inputValue: this.passward
       })
       .then( async ({ value }) => {
-        let perams = {
-          machine_id: el.machine_id,
-          wallet: this.wallet_address,
-          server_room: el.server_room
+        if (el.orderStatus == 2 || el.orderStatus == 3) {
+          let perams = {
+            machine_id: el.machine_id,
+            wallet: this.wallet_address,
+            server_room: el.server_room
+          }
+          createNetwork(perams).then(res => {
+            console.log(res, 'createNetwork');
+          })
         }
-        createNetwork(perams).then(res => {
-          console.log(res, 'createNetwork');
-        })
         let chooseIndex;
         this.Machine_info.map((ele, index) => {
           if (ele._id == el._id) {

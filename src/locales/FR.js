@@ -185,7 +185,7 @@ export default {
   },
   help: {
     'title': 'Comment acheter des DBC',
-    "3": "1. Acheter DBC directement avec PayPal (peut être facturé)",
+    "3": "1. Achetez DBC directement avec PayPal ou Alipay (la facturation est possible)",
     '4': '2. Acheter des DBC sur gate.io',
     '5': "3. Transférez des DBC sur votre compte à partir d'autres portefeuilles prenant en charge des DBC, tels que",
     reloadWallet: 'Déposer et entrer dans un compte portefeuille',

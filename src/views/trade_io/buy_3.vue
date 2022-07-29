@@ -220,25 +220,26 @@ export default {
     
     // 支付宝支付
     alipay() {
-      createPayByAli({ money: this.rmb, orderId: this.aliPayId }).then(res => {
+      createPayByAli({ money: this.rmb, orderId: this.aliPayId, wallet: this.$route.query.address_user }).then(res => {
         if (res.success) {
-          window.open(res.content.result)
-          this.$confirm(
-            "请在新打开的页面完成支付，支付完成前请不要关闭窗口。",
-            "支付确认",
-            {
-              confirmButtonText: "支付完成",
-              cancelButtonText: "更换支付方式"
-            }
-          ).then(() => {
-            this.$router.push({
-              path: "/trade/buy_4",
-              query: {
-                payType: 'zfb',
-                ...this.$route.query
-              }
-            });
-          }).catch(() => {});
+          window.location.href = res.content.result
+          // window.open(res.content.result)
+          // this.$confirm(
+          //   "请在新打开的页面完成支付，支付完成前请不要关闭窗口。",
+          //   "支付确认",
+          //   {
+          //     confirmButtonText: "支付完成",
+          //     cancelButtonText: "更换支付方式"
+          //   }
+          // ).then(() => {
+          //   this.$router.push({
+          //     path: "/trade/buy_4", 
+          //     query: {
+          //       payType: 'zfb',
+          //       ...this.$route.query
+          //     }
+          //   });
+          // }).catch(() => {});
         }
       })
     }

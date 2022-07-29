@@ -185,7 +185,7 @@ export default {
   },
   help: {
     title: "如何购买DBC", 
-    "3": "1.直接用PayPal购买DBC(可以开发票)",
+    "3": "1.直接用PayPal或者支付宝购买DBC(可以开发票)",
     "4": "2.从Gate.io购买DBC",
     "5": "3.从其他支持DBC的钱包转账到钱包账号，比如",
     reloadWallet: "充值进入钱包账号",
