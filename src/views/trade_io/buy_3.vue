@@ -19,7 +19,7 @@
           >
         </PayPal>
 
-        <div class="item" @click="alipay">
+        <div class="item" v-if="showAliPay == '1'" @click="alipay">
           <div class="logo-wrap">
             <i class="iconfont iconzhifubao"></i>
             <span>支付宝</span>
@@ -49,6 +49,7 @@ export default {
       money: String(this.$route.query.usd),
       rmb: String(this.$route.query.rmb),
       aliPayId: this.$route.query.order_id,
+      showAliPay: this.$t('showAliPay'),
       credentials: {
         sandbox: 'ARjMsl3vJb4k_5-s4MfSRHzYgg4u2CEdCKGmMd6Q61ugXJpwS3putLp_7L3RrNDJo_yTTSQ_k_sWKS1P', //<sandbox client id>
         production: '<production client id>'
@@ -80,6 +81,8 @@ export default {
     } else {
       this.locale = 'en_US'
     }
+  },
+  mounted() {
   },
   computed: {
     footer_service() {

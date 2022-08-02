@@ -185,7 +185,8 @@ export default {
   },
   help: {
     'title': '¿Cómo comprar DBC?',
-    "3": "1.Compre DBC directamente con PayPal o Alipay (es posible la facturación)",
+    "3": "1.Compre DBC directamente con PayPal o Alipay (se puede facturar)",
+    "3-1": "1.Compre DBC directamente con PayPal (se puede facturar)",
     '4': '2. Compre DBC en gate.io ',
     '5': '3. Transfiera DBC a su cuenta desde otras billeteras que admitan DBC, como',
     'reloadWallet': ' Deposite e ingrese a la cuenta de la billetera ',
@@ -768,5 +769,7 @@ export default {
     SlashIdNotExist: 'El identificador de la penalización no existe',
     NotPendingReviewSlash: 'Penalización por no solicitar la revisión del comité técnico',
     NotSlashed: 'No castigado ',
-  }
+  },
+
+  showAliPay: '1' // 是否显示支付宝支付 1 显示 0 不显示
 }

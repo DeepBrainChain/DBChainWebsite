@@ -24,7 +24,8 @@
       </h3> -->
 
       <h3>
-        {{$t('help.3')}}，
+        <span v-if="$t('showAliPay') == '1'">{{$t('help.3')}}</span>
+        <span v-else>{{$t('help.3-1')}}</span>
         <a href="javascript:" @click="tradedbcHref">{{$t('help.enter')}}</a>
       </h3>
 
