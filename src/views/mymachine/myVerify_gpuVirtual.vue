@@ -64,7 +64,7 @@
           <div class="td">
             <span class="fs16">
               {{$t("audit.Dhd_space")}}：
-              <a class="cPrimaryColor">{{ item.disk_data && item.disk_data.size }}</a>
+              <a class="cPrimaryColor">{{ item.disk_data[0] && item.disk_data[0].size }}</a>
             </span>
           </div>
         </div>
@@ -113,7 +113,7 @@
               <span>{{$t('myvirtual.ssh_port')}}: {{el.ssh_port}}</span>
               <span>{{$t('myvirtual.vir_mem')}}: {{el.mem_size}}</span>
               <span >{{$t('myvirtual.vir_sys')}}: {{el.disk_system}}</span>
-              <span>{{$t('myvirtual.vir_data')}}: {{el.disk_data}}</span>
+              <span>{{$t('myvirtual.vir_data')}}: {{el.disks[1].size}}</span>
               <span>{{$t('myvirtual.vir_gpu_num')}}: {{el.gpu_count}}</span>
               <span >{{$t('myvirtual.vir_cpu_num')}}: {{el.cpu_cores}}</span>
             </div>
@@ -258,7 +258,7 @@ export default {
         this.allListedMachine = []
         if (res.success) {
           for(let i=0; i< res.content.length; i++){
-            let original = res.content[i].original
+            let original = res.content[i].original.mainnet ? res.content[i].original.mainnet : res.content[i].original
             let newel = Object.assign(
               { submit: true, canConfirm: true, btnloading1: false}, 
               res.content[i],
@@ -358,13 +358,14 @@ export default {
         try {
           let nonce = await randomWord()
           let sign = await CreateSignature(nonce, value)
+          console.log(el.images, 'el.images');
           let perams = {
             machine_id: el.machine_id,
-            image_name: el.images.length?el.images[0]:'ubuntu.qcow2',
+            image_name: 'ubuntu.qcow2',
             gpu_count: el.gpu.gpu_count,
             cpu_cores: el.cpu.cores,
             mem_size: parseFloat(el.mem.free) > 10 ? 10 : parseFloat(el.mem.free),
-            disk_size: parseFloat(el.disk_data.free) > 10 ? 10 : parseFloat(el.disk_data.free),
+            disk_size: parseFloat(el.disk_data[0].free) > 10 ? 10 : parseFloat(el.disk_data[0].free),
             wallet: this.wallet_address,
             sign,
             nonce

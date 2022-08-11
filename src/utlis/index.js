@@ -514,7 +514,7 @@ export const GetRTime = (t) => {
  */
  
 export const getComputing_Power = (Gpu_Num, Mem, Cuda, M_value, coe) => {
-  var num = Math.floor(((Gpu_Num*25+ Mem/3.5 + Math.sqrt(Cuda) * Math.sqrt(M_value/10)*Gpu_Num)*coe) * 100) / 100
+  var num = Math.round(((Gpu_Num*25+ Mem/3.5 + Math.sqrt(Cuda) * Math.sqrt(M_value/10)*Gpu_Num)*coe) * 100) / 100
   return num
 }
 

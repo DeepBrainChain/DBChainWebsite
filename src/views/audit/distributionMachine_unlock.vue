@@ -212,8 +212,8 @@
           <span style="display: block;font-size: 12px;line-height: 20px;color: red">{{ $t('responseTip') }}</span>
         </el-form-item>
         <el-form-item class="dlg-bottom">
-          <el-button class="dlg-bttn" :loading="btnloading" plain size="small" @click="commit">{{$t('confirm')}}</el-button>
           <el-button class="dlg-bn" plain size="small" @click="cancel1">{{$t('cancel')}}</el-button>
+          <el-button class="dlg-bttn" plain :loading="btnloading" type="primary" size="small" @click="commit">{{$t('confirm')}}</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -412,7 +412,7 @@ export default {
         if (res.success) {
           for(let i=0; i< res.content.length; i++){
             // res.content[i].lcOpsEntity = { ...res.content[i].booked_machine, HashSize: res.content[i].HashSize, btnloading1: false }
-            let original = res.content[i].original
+            let original = res.content[i].original.mainnet ? res.content[i].original.mainnet : res.content[i].original
             let newel = Object.assign(
               { submit: true, canConfirm: true, btnloading1: false}, 
               res.content[i],

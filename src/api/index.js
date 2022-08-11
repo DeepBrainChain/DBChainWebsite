@@ -5,7 +5,7 @@ import axios from "@/utlis/axios";
 // http://localhost:8090
 // 审核机器新增
 
-const nodeHost = 'http://localhost:8090'
+const nodeHost = 'http://10.1.9.107:8090'
 
 
 // 获得dbc的价格等信息
