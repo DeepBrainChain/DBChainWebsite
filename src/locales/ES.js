@@ -444,7 +444,7 @@ export default {
     Bandwidth2: 'Ancho de banda de enlace descendente',
     lable_two2: 'Nombre del operador',
     tip0: ' Primero seleccione la máquina a alquilar, por favor',
-    tip1: 'Recordatorio: La máquina actual se puede alquilar por un máximo de 90 días y un mínimo de 1 día',
+    tip1: 'Recordatorio: La máquina actual se puede alquilar por un máximo de 60 días y un mínimo de 1 día',
     tip2: 'Si hay un problema con la máquina durante el uso, puede enviar un informe y una apelación, y puede obtener una compensación de DBC si la apelación es exitosa.',
     tip3: 'El proceso de alquiler incurrirá en una tarifa de alquiler de 10 DBC, que no se reembolsará independientemente de si el alquiler final se realiza correctamente o no',
     tip4: 'El pedido es exitoso y será redirigido a la página de mi máquina',

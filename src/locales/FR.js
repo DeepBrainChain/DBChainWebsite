@@ -444,7 +444,7 @@ export default {
     Bandwidth2:'Bande passante descendante',
     lable_two2:"Nom de l'opérateur",
     tip0:"Veuillez d'abord sélectionner la machine à louer",
-    tip1:'Rappel : La machine actuelle peut être louée pour un maximum de 90 jours et un minimum de 1 jour',
+    tip1:'Rappel : La machine actuelle peut être louée pour un maximum de 60 jours et un minimum de 1 jour',
     tip2:"S'il y a un problème avec la machine pendant l'utilisation, vous pouvez soumettre un rapport et faire appel, et vous pouvez obtenir une compensation en DBC si l'appel est fructueux.",
     tip3:'Le processus de location entraînera des frais de location de 10 DBC, qui ne seront pas remboursés, que la location finale soit réussie ou non',
     tip4:'La commande est réussie et sera redirigée vers ma page machine',

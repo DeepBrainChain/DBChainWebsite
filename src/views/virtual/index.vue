@@ -162,7 +162,7 @@
       <div class="useTime">
         <div>
           <span class="bold">{{$t('virtual.useTime')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="useTime" @change="inputNum" :min="1" :max="90"></el-input-number>
+          <el-input-number :precision="0" size="mini" v-model="useTime" @change="inputNum" :min="1" :max="60"></el-input-number>
            {{$t('day')}}
         </div>
         <div v-if="!openCheck">{{$t('virtual.Daily_Rent')}}: <span class="color">{{getnum2(Number(chooseMac.calc_point)/100*GPUPointPrice * (1 + DBCPercentage))}}$≈{{getnum2(Number(chooseMac.calc_point)/100*GPUPointPrice * (1 + DBCPercentage)/dbc_price)}}DBC</span></div>

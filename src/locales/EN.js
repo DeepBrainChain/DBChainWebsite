@@ -444,7 +444,7 @@ export default {
     Bandwidth2:'Downlink bandwidth',
     lable_two2:'Operator name',
     tip0:'Please select the machine to rent first',
-    tip1:'Reminder: The current machine can be rented for a maximum of 90 days and a minimum of 1 day',
+    tip1:'Reminder: The current machine can be rented for a maximum of 60 days and a minimum of 1 day',
     tip2:'If there is a problem with the machine during use, you can submit a report and appeal, and you can get dbc compensation if the appeal is successful.',
     tip3:'The rental process will incur a rental fee of 10 DBC, which will not be refunded regardless of whether the final rental is successful or not',
     tip4:'The order is successful, and will be redirected to my machine page',

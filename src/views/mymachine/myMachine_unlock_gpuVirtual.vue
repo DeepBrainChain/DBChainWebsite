@@ -301,7 +301,7 @@
       <div class="useTime">
         <div>
           <span class="bold">{{$t('myvirtual.renew_time')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="useTime" @change="inputNum" :min="1" :max="90"></el-input-number>
+          <el-input-number :precision="0" size="mini" v-model="useTime" @change="inputNum" :min="1" :max="timeMax"></el-input-number>
            {{$t('day')}}
         </div>
         <div>{{$t('virtual.Daily_Rent')}}: <span class="color">{{getnum2(Number(chooseMac.calc_point)/100*GPUPointPrice * (1 + DBCPercentage))}}$≈{{getnum2(Number(chooseMac.calc_point)/100*GPUPointPrice * (1 + DBCPercentage)/dbc_price)}}DBC</span></div>
@@ -817,6 +817,7 @@ export default {
       total: 0,
       orderNumber: 0,
       Machine_info: [],
+      timeMax: 60,
       // 续费
       dialogFormVisible: false,
       useTime: 1,
@@ -1190,6 +1191,8 @@ export default {
       // getBalance().then((res) => {
       //   this.balance = res.balance;
       // });
+      this.timeMax = 60-Math.floor((el.createTime+el.day*24*60*60*1000 - new Date())/(24*60*60*1000))
+      console.log(this.timeMax);
       el.btnloading2 = true
       this.unsubBalance = await getAccountBalance(this.wallet_address)
       this.balance = this.getnum1(this.unsubBalance.data.free)
