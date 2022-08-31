@@ -1021,7 +1021,7 @@ export default {
             let startTime = res.content[i].createTime
             let endTime = ''
             if (res.content[i].orderStatus == 5 || res.content[i].orderStatus == 6) {
-              endTime = startTime + 15*60*1000
+              endTime = startTime + 30*60*1000
             } else {
               endTime = startTime + res.content[i].day*24*60*60*1000
             }
