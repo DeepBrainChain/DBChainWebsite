@@ -24,7 +24,6 @@ export default new Vuex.Store({
     balance: 0,
     gasbalance: 0,
     dbcChange: 0,
-    dbcPrice: 0,
     rpcClient: undefined,
     accountState: undefined,
     privateKey: '',
@@ -72,9 +71,6 @@ export default new Vuex.Store({
     setdbcToUS(state, data) {
       state.dbcToUS = data
     },
-    setDbcPrice(state, data) {
-      state.dbcPrice = data
-    },
     setDbcChange(state, data) {
       state.dbcChange = data
     },
@@ -100,17 +96,16 @@ export default new Vuex.Store({
       state
     }) {
       const language = "CN";
-      dbc_info({
+      // dbc_info({
 
-        language
-      }).then(res => {
+      //   language
+      // }).then(res => {
 
-        commit('setDbcPrice', res.content.dbc_price)
-        commit('setDbcChange', res.content.percent_change_24h)
+      //   commit('setDbcChange', res.content.percent_change_24h)
 
-      }).catch(err => {
+      // }).catch(err => {
 
-      })
+      // })
 
 
     },

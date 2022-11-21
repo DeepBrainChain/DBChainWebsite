@@ -170,7 +170,7 @@
               <span>{{$t('myvirtual.vir_mem')}}: {{item.mem_size}}</span>
               <template v-for="diskitem in item.disks">
                 <span v-if="diskitem.name == 'vda'" :key="diskitem.name">{{$t('myvirtual.vir_sys')}}{{diskitem.name}}: {{diskitem.size}}</span>
-                <span v-else :key="diskitem.name">{{$t('myvirtual.vir_data')}}{{diskitem.name}}: {{diskitem.size}}</span>
+                <span v-else>{{$t('myvirtual.vir_data')}}{{diskitem.name}}: {{diskitem.size}}</span>
               </template>
               <!-- <span >{{$t('myvirtual.vir_sys')}}: {{item.disk_system}}</span>
               <span>{{$t('myvirtual.vir_data')}}: {{item.disks | getDiskData}}</span> -->
@@ -725,7 +725,6 @@
 <script>
 import BigNumber from "bignumber.js";
 import {
-  dbc_info,
   get_Virtual,
   Create_VMS,
   createNetwork,
@@ -940,9 +939,6 @@ export default {
     if (this.$t("website_name") === "congTuCloud") {
       this.styleHidden.visibility = "hidden";
     }
-    dbc_info().then( res => {
-      this.dbc_price = res.content.dbc_price
-    })
     getPercentage().then(res => {
       if (res.success) {
         this.DBCPercentage = res.content.percentage_whole/100
@@ -1139,7 +1135,8 @@ export default {
         clearInterval(this.si);
         let perams = {
           id: el._id,
-          machine_id: el.machine_id
+          machine_id: el.machine_id,
+          rent_order: el.OrderId
         }
         ConFirm_Rent(perams).then(res => {
           console.log(res, 'res');
@@ -1155,7 +1152,8 @@ export default {
             let perams = {
               machine_id: el.machine_id,
               wallet: this.wallet_address,
-              server_room: el.server_room
+              server_room: el.server_room,
+              rent_order: el.OrderId
             }
             createNetwork(perams).then(res => {
               console.log(res, 'createNetwork');
@@ -1229,10 +1227,10 @@ export default {
               if(res1.success){
                 let permas = {
                   id: this.chooseMac.machine_id+this.wallet_address,
-                  machine_id: this.chooseMac.machine_id,
                   add_day: this.useTime,
                   dbc: this.totalDbc,
-                  wallet: this.wallet_address
+                  wallet: this.wallet_address,
+                  rent_order: this.chooseMac.OrderId
                 }
                 console.log(permas, 'permas');
                 Renew_Rent(permas).then(res2 => {
@@ -1322,7 +1320,8 @@ export default {
       let perams = {
         machine_id: data.machine_id,
         wallet: this.wallet_address,
-        server_room: data.server_room
+        server_room: data.server_room,
+        rent_order: data.OrderId
       }
       createNetwork(perams).then(res => {
         if (res.success) {
@@ -1352,7 +1351,7 @@ export default {
           //   disk_data_free += parseInt(disk.free)
           // })
           disk_data_free = parseInt(info.disk_data[0]?info.disk_data[0].free:info.disk_data.free)
-          disk_data_free = disk_data_free - 350
+          disk_data_free = disk_data_free
           this.max_disk_num = disk_data_free > 0 ? Math.floor(disk_data_free * 0.75) : 0
           this.option = info.images
           this.dialogFormVisible1 = true
@@ -1485,6 +1484,7 @@ export default {
         this.title = this.$t('myvirtual.change')
         this.edit_chooseMac = item
         this.edit_chooseMac.machine_id = el.machine_id
+        this.edit_chooseMac.OrderId = el.OrderId
       } else {
         this.$message.error(this.$t('myvirtual.tip16'))
       }
@@ -1568,7 +1568,8 @@ export default {
             network_filters: this.network_filters,
             nonce: nonce,
             sign: sign,
-            wallet: this.wallet_address
+            wallet: this.wallet_address,
+            rent_order: this.chooseMac.OrderId
           }
           Create_VMS(perams).then( res=> {
             if(res.success){
@@ -1583,7 +1584,8 @@ export default {
               let timeData = {
                 id: this.Machine_info[chooseIndex]._id,
                 machine_id: this.Machine_info[chooseIndex].machine_id,
-                task_id: res.content.task_id
+                task_id: res.content.task_id,
+                rent_order: this.chooseMac.OrderId
               }
               let timetask = null
               timetask = setInterval( async () => {
@@ -1599,7 +1601,7 @@ export default {
                   )
                   this.Machine_info[chooseIndex].virtual_info = virarr
                 }
-                if (timedQuery.content.status != 'creating') {
+                if (timedQuery.content && timedQuery.content.status != 'creating') {
                   clearInterval(timetask)
                   timetask = null
                 }
@@ -1674,7 +1676,8 @@ export default {
           new_cpu_cores: this.edit_vir_cpu_num,
           new_mem_size: this.edit_vir_mem,
           // new_public_ip:  this.edit_public_ip,   
-          // new_network_filters: this.edit_network_filters
+          // new_network_filters: this.edit_network_filters,
+          rent_order: this.edit_chooseMac.OrderId
         }
         if (this.edit_chooseMac.ssh_ip != this.edit_public_ip) {
           perams.new_public_ip = this.edit_public_ip // 公网ip地址
@@ -1690,7 +1693,8 @@ export default {
             let timeData = {
               id: this.edit_chooseMac.belong,
               machine_id: this.edit_chooseMac.machine_id,
-              task_id: this.edit_chooseMac.task_id
+              task_id: this.edit_chooseMac.task_id,
+              rent_order: this.edit_chooseMac.OrderId
             }
             let timedQuery1 = await timedQueryTask(timeData)
             let chooseIndex1;
@@ -1734,7 +1738,8 @@ export default {
           let perams = {
             machine_id: el.machine_id,
             wallet: this.wallet_address,
-            server_room: el.server_room
+            server_room: el.server_room,
+            rent_order: el.OrderId
           }
           createNetwork(perams).then(res => {
             console.log(res, 'createNetwork');
@@ -1749,7 +1754,7 @@ export default {
         try {
           let nonce = await randomWord()
           let sign = await CreateSignature(nonce, value)
-          let VMS_Info = await VMS_details({ id: el._id, machine_id: el.machine_id, nonce, sign, wallet: this.wallet_address })
+          let VMS_Info = await VMS_details({ id: el._id, machine_id: el.machine_id, nonce, sign, wallet: this.wallet_address, rent_order: el.OrderId })
           this.setPassWard(value)
           if(VMS_Info.success){
             if (!VMS_Info.content.length) {
@@ -1785,7 +1790,7 @@ export default {
         cancelButtonText: this.$t('cancel'),
         type: 'warning'
       }).then(() => {
-        VMS_restart({ task_id: item.task_id, id: item.belong, machine_id: el.machine_id}).then( async (res) => {
+        VMS_restart({ task_id: item.task_id, id: item.belong, machine_id: el.machine_id, rent_order: el.OrderId}).then( async (res) => {
           if(!res.success){
             this.$message({
               type: 'error',
@@ -1795,7 +1800,8 @@ export default {
             let timeData = {
               id: item.belong,
               machine_id: el.machine_id,
-              task_id: item.task_id
+              task_id: item.task_id,
+              rent_order: el.OrderId
             }
             let timedQuery1 = await timedQueryTask(timeData)
             let chooseIndex1;
@@ -1852,7 +1858,7 @@ export default {
         cancelButtonText: this.$t('cancel'),
         type: 'warning'
       }).then(() => {
-        deleteVir({ task_id: item.task_id, id: item.belong, machine_id: el.machine_id}).then( res => {
+        deleteVir({ task_id: item.task_id, id: item.belong, machine_id: el.machine_id, rent_order: el.OrderId}).then( res => {
           if(!res.success){
             this.$message({
               type: 'error',
@@ -1883,7 +1889,7 @@ export default {
         cancelButtonText: this.$t('cancel'),
         type: 'warning'
       }).then(() => {
-        stopVir({ task_id: item.task_id, id: item.belong, machine_id: el.machine_id}).then( async (res) => {
+        stopVir({ task_id: item.task_id, id: item.belong, machine_id: el.machine_id, rent_order: el.OrderId}).then( async (res) => {
           if(!res.success){
             this.$message({
               type: 'error',
@@ -1893,7 +1899,8 @@ export default {
             let timeData = {
               id: item.belong,
               machine_id: el.machine_id,
-              task_id: item.task_id
+              task_id: item.task_id,
+              rent_order: el.OrderId
             }
             let timedQuery1 = await timedQueryTask(timeData)
             let chooseIndex1;
@@ -1949,7 +1956,7 @@ export default {
         cancelButtonText: this.$t('cancel'),
         type: 'warning'
       }).then(() => {
-        startVir({ task_id: item.task_id, id: item.belong, machine_id: el.machine_id}).then( async (res) => {
+        startVir({ task_id: item.task_id, id: item.belong, machine_id: el.machine_id, rent_order: el.OrderId}).then( async (res) => {
           if(!res.success){
             if (res.msg == 'check gpu failed') {
               this.$message({
@@ -1966,7 +1973,8 @@ export default {
             let timeData = {
               id: item.belong,
               machine_id: el.machine_id,
-              task_id: item.task_id
+              task_id: item.task_id,
+              rent_order: el.OrderId
             }
             let timedQuery1 = await timedQueryTask(timeData)
             let chooseIndex1;
@@ -2020,6 +2028,7 @@ export default {
     reset(item, el){
       this.chooseMac = item
       this.chooseMac.machine_id = el.machine_id
+      this.chooseMac.OrderId = el.OrderId
       this.ruleForm.user = item.user_name
       this.ruleForm.pass = item.login_password
       this.ruleForm.checkPass = item.login_password
@@ -2038,7 +2047,8 @@ export default {
             task_id: this.chooseMac.task_id,
             machine_id: this.chooseMac.machine_id,
             username: this.ruleForm.user,
-            password: this.ruleForm.pass
+            password: this.ruleForm.pass,
+            rent_order: this.chooseMac.OrderId
           }
           editpasswd(data).then( async (res) => {
             if (res.success) {
@@ -2050,7 +2060,8 @@ export default {
               let timeData = {
                 id: this.chooseMac.belong,
                 machine_id: this.chooseMac.machine_id,
-                task_id: this.chooseMac.task_id
+                task_id: this.chooseMac.task_id,
+                rent_order: this.chooseMac.OrderId
               }
               let timedQuery1 = await timedQueryTask(timeData)
               let chooseIndex1;
@@ -2162,7 +2173,8 @@ export default {
           let timeData = {
             id: this.chooseMac.belong,
             machine_id: this.chooseMac.machine_id,
-            task_id: this.chooseMac.task_id
+            task_id: this.chooseMac.task_id,
+            rent_order: this.chooseMac.OrderId
           }
           let timedQuery1 = await timedQueryTask(timeData)
           let chooseIndex1;
@@ -2206,7 +2218,8 @@ export default {
           let timeData = {
             id: this.chooseMac.belong,
             machine_id: this.chooseMac.machine_id,
-            task_id: this.chooseMac.task_id
+            task_id: this.chooseMac.task_id,
+            rent_order: this.chooseMac.OrderId
           }
           let timedQuery1 = await timedQueryTask(timeData)
           // let chooseIndex1;
@@ -2231,7 +2244,7 @@ export default {
     },
     clearMem(el) {
       el.btnloading5 = true
-      clearMem({machine_id: el.machine_id, id: el._id}).then(res => {
+      clearMem({machine_id: el.machine_id, id: el._id, rent_order: el.OrderId}).then(res => {
         if (res.success) {
           this.$message.success(this.$t('myvirtual.clearMem_success'))
         } else {

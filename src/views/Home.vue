@@ -123,8 +123,6 @@ export default {
       "balance",
       "transferList",
       "dbcToUS",
-      "dbcPrice",
-      "dbcChange"
     ]),
     get_text1() {
       if (this.$t("website_name") == "dbchain") {

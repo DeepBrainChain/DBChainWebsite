@@ -78,9 +78,9 @@
                     <span class="Machine_id">{{$t('virtual.Machine_ID')}}: {{el.machine_id}}</span>
                   </div>
                   <span v-if="el.server_room" :title="el.server_room">{{$t('virtual.Room_number')}}: {{String(el.server_room).substring(0,10)+'...'}}</span>
-                  <span class="color">{{$t('virtual.Machine_onlineNum')}}: {{el.canuseGpu}}</span>
+                  <span class="color">{{$t('virtual.Machine_onlineNum')}}: {{el.CanUseGpu}}</span>
                   <span>
-                    <el-button class="batch" :disabled='el.canuseGpu == 0' size="mini" plain @click="batch_Mac(el)">
+                    <el-button class="batch" :disabled='el.CanUseGpu == 0' size="mini" plain @click="batch_Mac(el)">
                       {{ $t('virtual.batch_Mac') }}
                     </el-button>
                   </span>
@@ -162,7 +162,7 @@
       <div class="useTime">
         <div>
           <span class="width12 bold">{{$t('virtual.useTime')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="useTime" @change="inputNum" :min="1" :max="chooseMac.EndTime"></el-input-number>
+          <el-input-number :precision="0" size="mini" v-model="useTime" @change="inputNum" :min="1"></el-input-number>
            {{$t('hour')}}
         </div>
         <div>{{$t('virtual.Hours_Rent')}}: 
@@ -232,7 +232,7 @@
         <div><span class="bold">{{$t('myvirtual.balance')}}:</span> {{balance}}</div>
       </div>
       <div class="useTime">
-        <span class="bold">{{$t("myvirtual.tip17", {hour: chooseMac.EndTime})}}</span>
+        <span class="bold">{{$t("myvirtual.tip17")}}</span>
       </div>
       <!-- <div class="useTime">
         <div><span class="bold">{{$t('virtual.total')}}:</span> {{totalMoney}}$</div>
@@ -265,6 +265,7 @@ import {
   getsignlelistByRoom,
   getsignleMachineInfo,
   createSignleVirOrder,
+  createSignleVir,
   changeSignleVirStatus,
   getPort,
   getPercentage,
@@ -488,7 +489,7 @@ export default {
       image_name: '',
       vir_mem: 0.1,
       edit_vir_mem: 0,
-      vir_cpu_num: 4,
+      vir_cpu_num: 2,
       edit_vir_cpu_num: 0,
       vir_gpu_num: 1,
       edit_vir_gpu_num: 0,
@@ -819,9 +820,15 @@ export default {
     // 创建虚拟机
     inputNum(val){
       this.totalDBC = this.getnum2(Number(this.chooseMac.singleCardHour) * val*this.vir_gpu_num)
+      this.vir_mem = this.max_vir_mem*this.vir_gpu_num/2
+      this.vir_cpu_num = this.max_cpu_num*this.vir_gpu_num/2
+      this.vir_disk_size = this.max_disk_num*this.vir_gpu_num/2
     },
     inputGpuNum(val) {
       this.totalDBC = this.getnum2(Number(this.chooseMac.singleCardHour) * this.useTime*val)
+      this.vir_mem = this.max_vir_mem*this.vir_gpu_num/2
+      this.vir_cpu_num = this.max_cpu_num*this.vir_gpu_num/2
+      this.vir_disk_size = this.max_disk_num*this.vir_gpu_num/2
     },
     changeOp(val){
       this.image_name = ''
@@ -878,8 +885,8 @@ export default {
           let info = res.content
           this.max_vir_mem = parseInt(parseInt(info.mem.free)/el.gpu_num)
           this.max_cpu_num = parseInt(Math.floor(info.cpu.cores)/el.gpu_num)
-          this.max_gpu_num = el.canuseGpu
-          let disk_data_free = parseInt(info.disk_data.free)- 350
+          this.max_gpu_num = el.CanUseGpu
+          let disk_data_free = parseInt(info.disk_data[0]?info.disk_data[0].free:0)
           this.max_disk_num = disk_data_free > 0 ? parseInt(Math.floor(disk_data_free * 0.75)/(el.gpu_num*2)) : 0
           this.option = info.images
           this.vir_mem = this.max_vir_mem/2
@@ -895,7 +902,7 @@ export default {
       })
     },
     Createvirtual(){
-      if ( this.balance < 0.5 || this.balance < this.totalDBC) {
+      if ( Number(this.balance) < 0.5 || Number(this.balance) < Number(this.totalDBC)) {
         this.$message.error(this.$t('signleVir.tip2'))
         return false
       }
@@ -952,7 +959,8 @@ export default {
           rdp_port: this.is_ubunto ? this.rdp_port : '',
           operation_system: this.operation_system,
           bios_mode: this.bios_mode,
-          network_name: this.chooseMac.network_name,
+          // network_name: this.chooseMac.network_name,
+          network_name: '',
           time: this.useTime, 
           dbc: this.totalDBC, 
           account: this.account, 
@@ -962,7 +970,56 @@ export default {
           if (!res.success) {
             this.$message.error(this.$t('signleVir.tip3'))
           } else {
-            this.createSignleVir(perams, res.content)
+            const walletInfo = res.content
+            this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
+              confirmButtonText: this.$t('confirm'),
+              // cancelButtonText:  this.$t('cancel'),
+              inputType:'password',
+              inputValue: this.passward
+            })
+            .then( ({ value }) => {
+              this.setPassWard(value)
+              console.log('transfer-Start');
+              transfer(walletInfo.wallet, `${this.totalDBC}`, value, (res2) => {
+                console.log(res2, 'transfer');
+                if (res2.success) {
+                  createSignleVirOrder(perams).then(res => {
+                    if (res.success) {
+                      let data = {
+                        virOrderId: res.content,
+                        machine_id: this.chooseMac.machine_id,
+                        account: this.account
+                      }
+                      this.createSignleVirmthods(data)
+                    } else {
+                      let msg = ''
+                      if (res.code == -2) {
+                        msg = this.$t('signleVir.tip5')
+                      } else {
+                        msg = this.$t('signleVir.tip4') 
+                      }
+                      this.$message({
+                        showClose: true,
+                        message: msg,
+                        type: "error",
+                      });
+                    }
+                  })
+                } else {
+                  this.btnloading1 = false;
+                  this.startConfirm = false;
+                  this.$message({
+                    showClose: true,
+                    message: res2.msg,
+                    type: "error",
+                  });
+                }
+              })
+            }).catch(() => {
+              this.btnloading = false;
+              this.startConfirm = false;
+            });
+            // this.createSignleVir(perams, res.content)
           }
         })
       } catch (err) {
@@ -975,75 +1032,36 @@ export default {
         });
       }
     },
-    createSignleVir(data, walletInfo){
-      createSignleVirOrder(data).then( res=> {
-        if(res.success){
-          console.log(`向${walletInfo.wallet}转账${this.totalDBC}DBC`);
-          this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
-            confirmButtonText: this.$t('confirm'),
-            // cancelButtonText:  this.$t('cancel'),
-            inputType:'password',
-            inputValue: this.passward
-          })
-          .then( ({ value }) => {
-            this.setPassWard(value)
-            console.log('transfer-Start');
-            transfer(walletInfo.wallet, `${this.totalDBC}`, value, (res2) => {
-              console.log(res2, 'transfer');
-              if(res2.success){
-                // this.$message.success(this.$t('myvirtual.Build_success'))
-                this.btnloading1 = false
-                this.startConfirm = false;
-                this.dialogFormVisible1 = false
-                setTimeout(() => {
-                  this.$router.push('mymachine/mySignleUnlockGpuVirtual')
-                }, 1000);
-              }else{
-                this.btnloading1 = false;
-                this.startConfirm = false;
-                let perams = {
-                  id: res.content,
-                  machine_id: this.chooseMac.machine_id,
-                  account: this.account,
-                  status: 4
-                }
-                changeSignleVirStatus(perams).then(res => {
-                  console.log(res, 'perams');
-                })
-                this.$message({
-                  showClose: true,
-                  message: res2.msg,
-                  type: "error",
-                });
-              }
-            })
-          }).catch(() => {
-            this.btnloading = false;
-            this.startConfirm = false;
-            console.log('取消下单');
-            let perams = {
-              id: res.content,
-              machine_id: this.chooseMac.machine_id,
-              account: this.account,
-              status: 4
-            }
-            changeSignleVirStatus(perams).then(res => {
-              console.log(res, 'perams');
-            })
-          });
-        }else{
+    createSignleVirmthods(data){
+      createSignleVir(data).then( res=> {
+        if (res.success) {
+          this.btnloading1 = false
+          this.startConfirm = false;
+          this.dialogFormVisible1 = false
+          setTimeout(() => {
+            this.$router.push('mymachine/mySignleUnlockGpuVirtual')
+          }, 1000);
+        } else {
           if (res.code == -5 || res.code == -6) {
-            if (res.code == -6) {
-              this.is_ubunto ? data.rdp_port++ : data.ssh_port ++
-            }
-            if (res.code == -5 ) {
-              data.vnc_port ++
-            }
-            this.createSignleVir(data, walletInfo)
+            // if (res.code == -6) {
+            //   this.is_ubunto ? data.rdp_port++ : data.ssh_port ++
+            // }
+            // if (res.code == -5 ) {
+            //   data.vnc_port ++
+            // }
+            this.createSignleVirmthods(data)
           } else {
             this.btnloading1 = false;
             this.startConfirm = false;
             this.$message.error(res.msg)
+            changeSignleVirStatus({virOrderId: data.virOrderId, status: 5}).then(res => {
+              console.log(res, 'res');
+              this.$message({
+                showClose: true,
+                message: this.$t('signleVir.tip6') ,
+                type: "error",
+              });
+            })
           }
         }
       })

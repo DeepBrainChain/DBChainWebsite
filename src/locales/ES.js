@@ -480,7 +480,7 @@ export default {
     tip14: '¿Estás seguro de que quieres detener la máquina virtual?',
     tip15: '¿Está seguro de que desea iniciar la máquina virtual?',
     tip16: '¿Estás seguro de modificar la máquina virtual? Por favor, detenga la máquina virtual primero',
-    tip17: 'Recordatorio: la máquina actual se puede alquilar por hasta {hour} horas, y el tiempo más corto es de 1 hora',
+    tip17: 'Recordatorio: El alquiler mínimo es de 1 hora',
     tip18: 'Nombre de usuario y contraseña ingresados ​​incorrectamente, reconfirme y envíe',
     title: 'mi máquina de alquiler',
     tower: 'Torre',
@@ -635,15 +635,29 @@ export default {
     machineId: 'Identificador de máquina',
     remainingGPU:'Número de GPU disponibles restantes',
     order_status1: 'Creando, por favor espere',
-    order_status2: 'Durante la deducción, por favor no opere la página',
+    order_status2: 'Creando (Espere 1~3 minutos, no opere la página)',
     order_status3: 'en uso',
     order_status4: 'Transferencia fallida, vuelve a alquilar',
     order_status5: 'El arrendamiento ha expirado',
-    order_status6: 'La creación falló, vuelva a arrendar',
+    order_status6: 'Re-arriendo reiniciando, por favor espere',
     virStatus: 'estado de la máquina virtual',
-    tip1: 'El tiempo mínimo de renovación del contrato de arrendamiento es de 1 hora y el más largo es de {maxTime} horas',
+    RentAgain:'alquilar de nuevo',
+    tip1: 'El tiempo mínimo de renovación es de una hora.',
     tip2: 'Saldo de cuenta insuficiente, recargue y alquile',
-    tip3: 'No se pudo obtener la dirección de la billetera temporal'
+    tip3: 'No se pudo obtener la dirección de la billetera temporal',
+
+    
+    tip4: 'No se pudo crear, no se pudo reembolsar, comuníquese con el servicio al cliente para procesar',
+    tip5: 'La creación falló, DBC se ha devuelto a la cuenta original',
+    tip6: 'Si la creación falla, DBC volverá a la cuenta original en 20 minutos',
+
+    
+    tip7: 'La renovación falló, el reembolso de la moneda falló, comuníquese con el servicio al cliente para su procesamiento',
+    tip8: 'La renovación falló, DBC ha vuelto a la cuenta original',
+    tip9: 'La cantidad restante de GPU disponible es menor que la cantidad de GPU del pedido original',
+
+    vmdelectTime: 'cuenta regresiva',
+    vmdelect: 'máquina virtual eliminada',
   },
   // 安全租
   security: {

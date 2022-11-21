@@ -72,7 +72,7 @@
           <span>{{ $t('dbc_price_wallet') }}：</span>
         </el-tooltip>
         <span class="cash-view">{{ Math.round(dbcPrice * 1000000) / 1000000 }}{{ $t('dbc_price_usd') }}</span>
-        <el-tooltip
+        <!-- <el-tooltip
           class="item"
           effect="dark"
           :content="$t('dbcChange_tips')"
@@ -85,7 +85,7 @@
             v-if="dbcChange<0"
             class="cRed"
           >{{ dbcChange }}%</span>
-        </el-tooltip>
+        </el-tooltip> -->
       </label>
     </div>
     <div class="pt40 pb20">
@@ -179,7 +179,7 @@ export default {
   computed: {
     ...mapState([
       "dbcToUS",
-      "dbcChange",
+      // "dbcChange",
     ])
   },
   data() {

@@ -233,8 +233,9 @@ export default {
     // 提交结果
     start(num, item){
       this.formInline.report_id = item.report_id
+      console.log(this.formInline, 'formInline');
       if(num == 1){
-        if (!this.formInline.err_reason) {
+        if (!this.formInline.err_reason && this.formInline.err_reason != '') {
           this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
             confirmButtonText: this.$t('confirm'),
             cancelButtonText:  this.$t('cancel'),

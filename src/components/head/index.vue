@@ -133,8 +133,6 @@ export default {
       "balance",
       "transferList",
       "dbcToUS",
-      "dbcPrice",
-      "dbcChange",
       "menuName",
     ]),
     set_dbctalk() {

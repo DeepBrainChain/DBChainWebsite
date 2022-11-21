@@ -480,7 +480,7 @@ export default {
     tip14: '确认停止虚拟机吗？',
     tip15: '确认启动虚拟机吗？',
     tip16: '确认修改虚拟机？请先停止虚拟机运行',
-    tip17: '温馨提示：当前机器最长可以租用{hour}小时，最短1个小时',
+    tip17: '温馨提示：最短租用为1个小时',
     tip18: '用户名密码输入不正确，请重新确认后提交',
     title: '我租用的机器',
     tower: '台',
@@ -634,16 +634,30 @@ export default {
     orderId: "订单ID",
     machineId: '机器ID',
     remainingGPU:'剩余可用GPU数量',
-    order_status1: '正在创建，请稍后',
-    order_status2: '扣款中，请勿操作页面',
+    order_status1: '等待创建中',
+    order_status2: '正在创建中(需等待1~3分钟，请勿操作页面)',
     order_status3: '正在使用中',
-    order_status4: '转账失败，请重新租用',
-    order_status5: '租用已到期',
-    order_status6: '创建失败，请重新租用',
+    order_status4: '租用已到期',
+    order_status5: '创建失败，订单取消',
+    order_status6: '重新租用重启中，请稍后',
     virStatus: '虚拟机状态',
-    tip1: '最短续租时间为1个小时,最长为{maxTime}小时',
+    RentAgain:'再次租用',
+    tip1: '最短续租时间为1个小时',
     tip2: '账户余额不足，请充值后在租用',
-    tip3: '获取临时钱包地址失败'
+    tip3: '获取临时钱包地址失败',
+
+    
+    tip4: '创建失败，退币失败，请联系客服处理',
+    tip5: '创建失败，DBC已退回原账户',
+    tip6: '创建失败，DBC将在20分钟以内退回原账户',
+
+    
+    tip7: '续费失败，退币失败，请联系客服处理',
+    tip8: '续费失败，DBC已退回原账户',
+    tip9: '剩余可用GPU数量小于原订单GPU数量',
+    
+    vmdelectTime: '重租倒计时',
+    vmdelect: '虚拟机已删除',
   },
   // 安全租
   security: {

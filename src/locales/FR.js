@@ -480,7 +480,7 @@ export default {
     tip14: 'Voulez-vous vraiment arrêter la machine virtuelle ?',
     tip15: 'Voulez-vous vraiment démarrer la machine virtuelle ?',
     tip16: "Êtes-vous sûr de vouloir modifier la machine virtuelle ? Veuillez d'abord arrêter la machine virtuelle",
-    tip17: "Rappel : La machine actuelle peut être louée jusqu'à {hour} heures, et la durée la plus courte est de 1 heure",
+    tip17: "Rappel : La location minimum est de 1 heure",
     tip18: "Nom d'utilisateur et mot de passe saisis incorrectement, veuillez reconfirmer et soumettre",
     title: 'Ma machine de location',
     tower: 'Tour',
@@ -635,15 +635,29 @@ export default {
     machineId: 'ID de la machine',
     remainingGPU:'Nombre de GPU disponibles restants',
     order_status1: 'Création, veuillez patienter',
-    order_status2: 'Pendant la déduction, veuillez ne pas utiliser la page',
+    order_status2: 'Création (Attendez 1 à 3 minutes, veuillez ne pas utiliser la page)',
     order_status3: 'utilisé',
     order_status4: 'Échec du transfert, veuillez relouer',
     order_status5: 'Le bail a expiré',
-    order_status6: 'Échec de la création, veuillez relouer',
+    order_status6: 'Re-bail redémarrage, veuillez patienter',
     virStatus: 'état de la machine virtuelle',
-    tip1: "La durée minimale de renouvellement du bail est d'une heure et la plus longue est de {maxTime} heures",
+    RentAgain:'louer à nouveau',
+    tip1: "Le temps de renouvellement minimum est d'une heure",
     tip2: 'Solde de compte insuffisant, veuillez recharger et louer',
-    tip3: "Échec de l'obtention de l'adresse de portefeuille temporaire"
+    tip3: "Échec de l'obtention de l'adresse de portefeuille temporaire",
+
+    
+    tip4: 'Échec de la création, échec du remboursement, veuillez contacter le service client pour le traitement',
+    tip5: "Échec de la création, DBC a été renvoyé au compte d'origine",
+    tip6: "Si la création échoue, DBC reviendra au compte d'origine dans les 20 minutes",
+
+    
+    tip7: 'Échec du renouvellement, échec du remboursement des pièces, veuillez contacter le service client pour le traitement',
+    tip8: "Échec du renouvellement, DBC est revenu au compte d'origine",
+    tip9: "La quantité de GPU disponible restante est inférieure à la quantité de GPU de la commande d'origine",
+    
+    vmdelectTime: 'Compte à rebours',
+    vmdelect: 'Machine virtuelle supprimée',
   },
   // 安全租
   security: {

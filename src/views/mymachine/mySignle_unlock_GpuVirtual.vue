@@ -4,11 +4,15 @@
       <span>{{$t("signleVir.title")}}：{{ orderNumber }} {{$t("myvirtual.tower")}}</span>
     </div>
     <div class="table">
-      <div class="tableli" v-for="el in Machine_info" :key="el.task_id">
+      <div class="tableli" v-for="el in Machine_info" :key="el._id">
         <div class="li_list1">
           <div>
-            <span class="Machine_id">{{$t('signleVir.orderId')}}: {{el.task_id}}</span>
+            <span class="Machine_id">{{$t('signleVir.orderId')}}: {{el._id}}</span>
             <span class="time_left" v-if="el.orderStatus == 3">{{$t('myvirtual.time_left')}}: {{el.time_left}} </span>
+          </div>
+          <div v-if="el.orderStatus == 4">
+            <div v-if="!el.hasdelectVm" class="fs14"><span class="bold">{{$t('signleVir.vmdelectTime')}}</span>: {{el.vmdelectTime}}</div>
+            <div v-else class="fs14"><span class="bold">{{$t('signleVir.vmdelect')}}</span></div>
           </div>
           <div class="order_status fs14 bold">
             <span v-show="el.orderStatus == 1">{{$t('signleVir.order_status1')}}</span>
@@ -30,9 +34,9 @@
           <!-- <div><span>{{$t('gpu.payPrice')}}</span>: {{ Math.round(el.dbc_price* 1000000)/1000000}}$</div> -->
         </div>
         <div class="li_list2">
-          <span class="width50 bold">{{$t('signleVir.machineId')}}: {{el.belong}}</span>
-          <span class="bold">{{$t('signleVir.remainingGPU')}}: {{el.canuseGpu}}</span>
-          <span class="bold">{{$t('virtual.Daily_Rent')}}: <i class="color">{{el.singleCardHour}} DBC</i></span>
+          <span class="width50 bold">{{$t('signleVir.machineId')}}: {{el.machine_id}}</span>
+          <span class="bold">{{$t('signleVir.remainingGPU')}}: {{el.CanUseGpu}}</span>
+          <span class="bold">{{$t('virtual.Hours_Rent')}}: <i class="color">{{el.singleCardHour}} DBC</i></span>
           <!-- <span class="bold">{{$t('virtual.GPU_Num')}}: {{el.gpu_num}}</span>
           <span class="bold">{{$t('virtual.GPU_memory')}}: {{el.gpu_mem}}G</span> -->
           <!-- <span class="width30 bold">{{$t('virtual.GPU_type')}}: {{el.gpuType}}</span> -->
@@ -161,6 +165,15 @@
               v-if="el.orderStatus == 3"
               >{{ $t("myvirtual.Renew") }}</el-button
             >
+            <el-button
+              plain
+              class="tool-btn"
+              size="mini"
+              :loading='el.btnloading5'
+              @click="RentAgain(el)"
+              v-if="el.orderStatus == 4 && !el.hasdelectVm"
+              >{{ $t("signleVir.RentAgain") }}</el-button
+            >
           </div>
         </div>
       </div>
@@ -184,14 +197,14 @@
       <div class="useTime">
         <div>
           <span class="bold">{{$t('myvirtual.renew_time')}}: </span>
-          <el-input-number :precision="0" size="mini" v-model="useTime" @change="inputNum" :min="1" :max="timeMax"></el-input-number>
+          <el-input-number :precision="0" size="mini" v-model="useTime" @change="inputNum" :min="1"></el-input-number>
            {{$t('hour')}}
         </div>
-        <div>{{$t('virtual.Daily_Rent')}}: 
+        <div>{{$t('virtual.Hours_Rent')}}: 
           <span class="color">{{chooseMac.singleCardHour}} DBC</span>
         </div>
       </div>
-      <div class="fs12">{{$t('signleVir.tip1',{maxTime: timeMax})}}</div>
+      <div class="fs12">{{$t('signleVir.tip1')}}</div>
       <div>
         <p><span class="bold">{{$t('myvirtual.balance')}}:</span> {{balance}}</p>
         <!-- <p><span class="bold">{{$t('virtual.total')}}:</span> {{totalMoney}} $</p> -->
@@ -277,6 +290,32 @@
         <el-button class="batch" size="mini" plain @click="dialogFormVisible4 = false;btnloading6 = false">{{$t('virtual.cancal')}}</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog width='30%' :title="$t('signleVir.RentAgain')" :visible.sync="dialogFormVisible1">
+      <div class="useTime">
+        <div>
+          <span class="bold">{{$t('myvirtual.renew_time')}}: </span>
+          <el-input-number :precision="0" size="mini" v-model="useTime" @change="inputNum" :min="1"></el-input-number>
+           {{$t('hour')}}
+        </div>
+        <div>{{$t('virtual.Hours_Rent')}}: 
+          <span class="color">{{chooseMac.singleCardHour}} DBC</span>
+        </div>
+      </div>
+      <div class="fs12">{{$t('signleVir.tip1')}}</div>
+      <div>
+        <p><span class="bold">{{$t('myvirtual.balance')}}:</span> {{balance}}</p>
+        <!-- <p><span class="bold">{{$t('virtual.total')}}:</span> {{totalMoney}} $</p> -->
+        <p><span class="bold">{{$t('virtual.equivalent')}}:</span> {{totalDBC}}</p>
+      </div>
+      <div v-show="startConfirm">
+        <p style="color: #f56c6c;">{{$t('responseTip')}}</p>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button class="batch" size="mini" plain :loading='btnloading1'  @click="ComRentAgain">{{$t('virtual.confirm')}}</el-button>
+        <el-button class="batch" size="mini" plain  @click="dialogFormVisible1 = false">{{$t('virtual.cancal')}}</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -292,13 +331,16 @@ import {
   getPercentage,
   stopSignleVir,
   startSignleVir,
-  editVir
+  editVir,
+  VirconfirmRent,
+  createSignleWallet,
+  rentagain
 } from "@/api";
-
+import { mapState, mapMutations } from "vuex";
 import { getUsdToRmb } from "@/utlis";
 import { getAccount, getBalance } from "@/utlis";
 import { getCurrentPair } from "@/utlis/dot";
-import { standardGPUPointPrice, dbcPriceOcw } from '@/utlis/dot/api';
+import { transfer, standardGPUPointPrice, dbcPriceOcw } from '@/utlis/dot/api';
 export default {
   name: "mySignleGpuVirtual",
   data() {
@@ -323,7 +365,6 @@ export default {
       // 续费
       dialogFormVisible: false,
       useTime: 1,
-      timeMax: 60,
       chooseMac: {},
       totalMoney: 0,
       totalDBC: 0,
@@ -334,7 +375,6 @@ export default {
       edit_chooseMac: {},
       edit_is_ubunto: true,
       title:'',
-      dialogFormVisible1: false,
       dialogFormVisible4: false,
       option: [],
       optiondefault: [],
@@ -373,7 +413,10 @@ export default {
       DBCPercentage: 0,
       startConfirm: false,
       is_ubunto: false,
-      hasPort: []
+      hasPort: [],
+
+      dialogFormVisible1: false,
+      btnloading1: false,
     };
   },
   filters: {
@@ -439,8 +482,10 @@ export default {
     this.stopAnyInter()
   },
   computed: {
+    ...mapState(["passward"]),
   },
   methods: {
+    ...mapMutations(['setPassWard']),
     // 新增 
     byteToStr(arr) {
       if (typeof arr === "string") {
@@ -491,66 +536,79 @@ export default {
               el.btnloading2 = false
               el.btnloading3 = false
               el.btnloading4 = false
+              el.btnloading5 = false
             }
             let nowTime = + new Date();
-            let endTime = el.startTime + el.time*60*60*1000
+            let endTime = el.createTime + el.time*60*60*1000
             if(endTime - nowTime > 0 ){
               el.time_left = this.minsToHourMins(Math.ceil((endTime - nowTime)/60000))
-              el.userTime = this.minsToHourMins(Math.ceil((nowTime - el.startTime)/60000))
+              el.userTime = this.minsToHourMins(Math.ceil((nowTime - el.createTime)/60000))
             }else{
               el.time_left = '0h0m'
-              el.userTime = this.minsToHourMins(Math.ceil((endTime - el.startTime)/60000))
+              el.userTime = this.minsToHourMins(Math.ceil((endTime - el.createTime)/60000))
+              if (endTime + 604800000 - nowTime > 0 ) {
+                res.content[i].hasdelectVm = false
+                res.content[i].vmdelectTime = this.minsToHourMins(Math.ceil(((endTime + 604800000) - nowTime)/60000))
+              } else {
+                res.content[i].hasdelectVm = true
+              }
             }
             let DBCprice1 = await dbcPriceOcw()
             this.dbc_price = DBCprice1/1000000
             const GPUPrice = await standardGPUPointPrice()
             this.GPUPointPrice = GPUPrice ? GPUPrice.gpu_price/1000000 : this.GPUPointPrice
             el.singleCardHour = this.getnum2((Number(el.calc_point)/100*this.GPUPointPrice * (1 + this.DBCPercentage)/this.dbc_price)/el.gpu_num/24)
-            if (el.status == 'creating' || el.orderStatus == 1 ) {
+            if (el.status == 'creating' || el.orderStatus == 2 ) {
               let timeData = {
+                virOrderId: el._id,
                 machine_id: el.machine_id,
-                task_id: el.task_id
+                task_id: el.task_id,
+                account: this.account
               }
               let timedQuery = await timedQuerySignleTask(timeData)
               if (timedQuery.success) {
                 if (timedQuery.content.status != 'creating') {
-                  timetask = null
-                  let changeData = {
-                    id: el.task_id,
-                    machine_id: el.machine_id,
-                    account: this.account,
-                    status: timedQuery.content.status == 'running' ? 2 : 6,
+                  if (timedQuery.content.status == 'running') {
+                    this.confirmRent({_id: el._id})
+                  } else {
+                    let changeData = {
+                      virOrderId: el._id,
+                      status: timedQuery.content.status == 'running' ? 2 : 5,
+                    }
+                    changeSignleVirStatus(changeData).then( res => {
+                      this.getMyVirtual()
+                    })
                   }
-                  changeSignleVirStatus(changeData).then( res => {
-                    this.getMyVirtual()
-                  })
+                } else {
+                  let timetask = null
+                  timetask = setInterval( async () => {
+                    let timedQuery1 = await timedQuerySignleTask(timeData)
+                    if (timedQuery1.success) {
+                      el.singleCardHour = this.getnum2((Number(el.calc_point)/100*this.GPUPointPrice * (1 + this.DBCPercentage)/this.dbc_price)/el.gpu_num/24)
+                      timedQuery1.content.singleCardHour = el.singleCardHour
+                      this.$set(res.content, i, timedQuery1.content)
+                    }
+                    if (timedQuery1.content.status != 'creating') {
+                      clearInterval(timetask)
+                      timetask = null
+                      if (timedQuery1.content.status == 'running') {
+                        this.confirmRent({_id: el._id})
+                      } else {
+                        let changeData = {
+                          virOrderId: el._id,
+                          status: timedQuery1.content.status == 'running' ? 2 : 5,
+                        }
+                        changeSignleVirStatus(changeData).then( res => {
+                          this.getMyVirtual()
+                        })
+                      }
+                    }
+                  }, 30000)
                 }
                 el.singleCardHour = this.getnum2((Number(el.calc_point)/100*this.GPUPointPrice * (1 + this.DBCPercentage)/this.dbc_price)/el.gpu_num/24)
                 timedQuery.content.singleCardHour = el.singleCardHour
                 this.$set(res.content, i, timedQuery.content)
               }
-              let timetask = null
-              timetask = setInterval( async () => {
-                let timedQuery1 = await timedQuerySignleTask(timeData)
-                if (timedQuery1.success) {
-                  el.singleCardHour = this.getnum2((Number(el.calc_point)/100*this.GPUPointPrice * (1 + this.DBCPercentage)/this.dbc_price)/el.gpu_num/24)
-                  timedQuery1.content.singleCardHour = el.singleCardHour
-                  this.$set(res.content, i, timedQuery1.content)
-                }
-                if (timedQuery1.content.status != 'creating') {
-                  clearInterval(timetask)
-                  timetask = null
-                  let changeData = {
-                    id: el.task_id,
-                    machine_id: el.machine_id,
-                    account: this.account,
-                    status: timedQuery1.content.status == 'running' ? 2 : 6,
-                  }
-                  changeSignleVirStatus(changeData).then( res => {
-                    this.getMyVirtual()
-                  })
-                }
-              }, 30000)
             }
           }
           this.orderNumber = res.content.length
@@ -577,10 +635,38 @@ export default {
     handleCurrentChang(num) {
       this.currentPage = num
     },
+    // 确认租用
+    async confirmRent(data) {
+      let timedQuery = await VirconfirmRent({virOrderId: data._id})
+      if (timedQuery.success) {
+        let changeData = {
+          virOrderId: data._id,
+          status: 2,
+        }
+        changeSignleVirStatus(changeData).then( res => {
+          this.getMyVirtual()
+        })
+      } else {
+        let time = null
+        time = setInterval( async () => {
+          let timedQuery1 = await VirconfirmRent({virOrderId: data._id})
+          if (timedQuery1.success) {
+            clearInterval(time)
+            time = null
+            let changeData = {
+              virOrderId: data._id,
+              status: 2,
+            }
+            changeSignleVirStatus(changeData).then( res => {
+              this.getMyVirtual()
+            })
+          }
+        }, 30000)
+      }
+    },
 
     // 续费
     async Renew(el) {
-      this.timeMax = 60
       el.btnloading2 = true
       let { balance } = await getBalance()
       this.balance = balance.toFixed(2)
@@ -591,39 +677,80 @@ export default {
       el.btnloading2 = false
       this.dialogFormVisible = true
     },
+    
     inputNum(val){
       this.totalDBC = this.chooseMac.singleCardHour ? this.getnum2(Number(this.chooseMac.singleCardHour) * val * this.chooseMac.gpu_count) : 0
     },
     confirmRenew(){
       this.btnloading = true;
       this.startConfirm = true;
-      let permas = {
-        id: this.chooseMac.task_id,
-        machine_id: this.chooseMac.machine_id,
-        add_hour: this.useTime,
-        dbc: this.totalDBC,
-        account: this.account,
-      }
-      renewRentSignle(permas).then(res => {
-        if (res.success) {
-          this.getMyVirtual();
-          this.$message({
-            showClose: true,
-            message: this.$t('myvirtual.renew_success'),
-            type: "success",
-          });
-          this.btnloading = false;
-          this.startConfirm = false;
-          this.dialogFormVisible = false
+      createSignleWallet({id: this.chooseMac.machine_id+this.account}).then(res => {
+        if (!res.success) {
+          this.$message.error(this.$t('signleVir.tip3'))
         } else {
-          this.$message({
-            showClose: true,
-            message: res.msg,
-            type: "error",
+          const walletInfo = res.content
+          this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
+            confirmButtonText: this.$t('confirm'),
+            // cancelButtonText:  this.$t('cancel'),
+            inputType:'password',
+            inputValue: this.passward
+          })
+          .then( ({ value }) => {
+            this.setPassWard(value)
+            console.log('transfer-Start');
+            transfer(walletInfo.wallet, `${this.totalDBC}`, value, (res2) => {
+              console.log(res2, 'transfer');
+              if (res2.success) {
+                let permas = {
+                  virOrderId: this.chooseMac._id,
+                  machine_id: this.chooseMac.machine_id,
+                  add_hour: this.useTime,
+                  dbc: this.totalDBC,
+                  account: this.account,
+                  rent_order: this.chooseMac.OrderId
+                }
+                renewRentSignle(permas).then(res3 => {
+                  if (res3.success) {
+                    this.getMyVirtual();
+                    this.$message({
+                      showClose: true,
+                      message: this.$t('myvirtual.renew_success'),
+                      type: "success",
+                    });
+                    this.btnloading = false;
+                    this.startConfirm = false;
+                    this.dialogFormVisible = false
+                  } else {
+                    let msg;
+                    if (res3.code == -3) {
+                      msg = this.$t('signleVir.tip7')
+                    } else {
+                      msg = this.$t('signleVir.tip8')
+                    }
+                    this.$message({
+                      showClose: true,
+                      message: msg,
+                      type: "error",
+                    });
+                    this.btnloading = false;
+                    this.startConfirm = false;
+                    this.dialogFormVisible = false
+                  }
+                })
+              } else {
+                this.btnloading = false;
+                this.startConfirm = false;
+                this.$message({
+                  showClose: true,
+                  message: res2.msg,
+                  type: "error",
+                });
+              }
+            })
+          }).catch(() => {
+            this.btnloading = false;
+            this.startConfirm = false;
           });
-          this.btnloading = false;
-          this.startConfirm = false;
-          this.dialogFormVisible = false
         }
       })
     },
@@ -647,6 +774,180 @@ export default {
         })
       }
     },
+
+    async RentAgain(el) {
+      if (el.CanUseGpu >= el.gpu_count) {
+        el.btnloading5 = true
+        let { balance } = await getBalance()
+        this.balance = balance.toFixed(2)
+        this.chooseMac = el
+        this.useTime = 1
+        this.time_left = this.chooseMac.time_left
+        this.totalDBC = this.chooseMac.singleCardHour ? this.getnum2(Number(this.chooseMac.singleCardHour) * this.useTime * this.chooseMac.gpu_count) : 0
+        el.btnloading5 = false
+        this.dialogFormVisible1 = true
+      } else {
+        this.$message({
+          showClose: true,
+          message: this.$t('signleVir.tip9'),
+          type: "error",
+        });
+      }
+    },
+    ComRentAgain() {
+      if ( Number(this.balance) < 0.5 || Number(this.balance) < Number(this.totalDBC)) {
+        this.$message.error(this.$t('signleVir.tip2'))
+        return false
+      }
+      createSignleWallet({id: this.chooseMac.machine_id+this.account}).then(res => {
+        if (!res.success) {
+          this.$message.error(this.$t('signleVir.tip3'))
+        } else {
+          this.btnloading1 = true;
+          this.startConfirm = true;
+          const walletInfo = res.content
+          this.$prompt(this.$t('verifyPassward'), this.$t('tips'), {
+            confirmButtonText: this.$t('confirm'),
+            // cancelButtonText:  this.$t('cancel'),
+            inputType:'password',
+            inputValue: this.passward
+          })
+          .then( ({ value }) => {
+            this.setPassWard(value)
+            console.log('transfer-Start');
+            transfer(walletInfo.wallet, `${this.totalDBC}`, value, (res2) => {
+              console.log(res2, 'transfer');
+              if (res2.success) {
+                const perams = {
+                  virOrderId: this.chooseMac._id,
+                  machine_id: this.chooseMac.machine_id,
+                  add_hour: this.useTime,
+                  dbc: this.totalDBC,
+                  account: this.account,
+                  gpu_count: this.chooseMac.gpu_count
+                }
+                rentagain(perams).then(res3 => {
+                  if (res3.success) {
+                    this.getMyVirtual()
+                    this.RestartVir(this.chooseMac)
+                    this.dialogFormVisible1 = false
+                  } else {
+                    let msg = ''
+                    if (res.code == -2) {
+                      msg = this.$t('signleVir.tip5')
+                    } else {
+                      msg = this.$t('signleVir.tip4') 
+                    }
+                    this.$message({
+                      showClose: true,
+                      message: msg,
+                      type: "error",
+                    });
+                  }
+                  this.btnloading1 = false;
+                  this.startConfirm = false;
+                })
+              } else {
+                this.btnloading1 = false;
+                this.startConfirm = false;
+                this.$message({
+                  showClose: true,
+                  message: res2.msg,
+                  type: "error",
+                });
+              }
+            })
+          }).catch(() => {
+            this.btnloading1 = false;
+            this.startConfirm = false;
+          });
+          // this.createSignleVir(perams, res.content)
+        }
+      }).catch(() => {
+        this.$message.error(this.$t('signleVir.tip3'))
+      });
+    },
+    // 租用以后重启机器并修改机器状态
+    RestartVir(el) {
+      let requestdata = {
+        virOrderId: el._id,
+        task_id: el.task_id,
+        machine_id: el.machine_id,
+        account: this.account
+      }
+      startSignleVir(requestdata).then( async (res) => {
+        if (!res.success) {
+          this.$message({
+            type: 'error',
+            message: res.msg
+          });
+        } else {
+          let timeData = {
+            virOrderId: el._id,
+            machine_id: el.machine_id,
+            task_id: el.task_id,
+            account: this.account
+          }
+          let timedQuery = await timedQuerySignleTask(timeData)
+          if (timedQuery.success) {
+            if (timedQuery.content.status != 'starting') {
+              if (timedQuery.content.status == 'running') {
+                this.confirmRent({_id: el._id})
+              } else {
+                let changeData = {
+                  virOrderId: el._id,
+                  status: timedQuery.content.status == 'running' ? 2 : 5,
+                }
+                changeSignleVirStatus(changeData).then( res => {
+                  this.getMyVirtual()
+                })
+              }
+            } else {
+              let timetask = null
+              timetask = setInterval( async () => {
+                let timedQuery1 = await timedQuerySignleTask(timeData)
+                if (timedQuery1.content.status != 'creating') {
+                  clearInterval(timetask)
+                  timetask = null
+                  if (timedQuery1.content.status == 'running') {
+                    this.confirmRent({_id: el._id})
+                  } else {
+                    let changeData = {
+                      virOrderId: el._id,
+                      status: timedQuery1.content.status == 'running' ? 2 : 5,
+                    }
+                    changeSignleVirStatus(changeData).then( res => {
+                      this.getMyVirtual()
+                    })
+                  }
+                }
+              }, 30000)
+            }
+          } else {
+            let timetask1 = null
+            timetask1 = setInterval( async () => {
+              let timedQuery1 = await timedQuerySignleTask(timeData)
+              if (timedQuery1.content.status != 'creating') {
+                clearInterval(timetask1)
+                timetask1 = null
+                if (timedQuery1.content.status == 'running') {
+                  this.confirmRent({_id: el._id})
+                } else {
+                  let changeData = {
+                    virOrderId: el._id,
+                    status: timedQuery1.content.status == 'running' ? 2 : 5,
+                  }
+                  changeSignleVirStatus(changeData).then( res => {
+                    this.getMyVirtual()
+                  })
+                }
+              }
+            }, 30000)
+          }
+        }
+      })
+    },
+
     // 修改 虚拟机
     operateVirtual1(el, item) {
       this.edit_chooseMac = {}
@@ -760,7 +1061,13 @@ export default {
     // 重启虚拟机
     reboot(item) {
       item.btnloading3 = true
-      restartSignleVir({ task_id: item.task_id, machine_id: item.machine_id}).then( async (res) => {
+      let requestdata = {
+        virOrderId: item._id,
+        task_id: item.task_id,
+        machine_id: item.machine_id,
+        account: this.account
+      }
+      restartSignleVir(requestdata).then( async (res) => {
         if(!res.success){
           this.$message({
             type: 'error',
@@ -768,8 +1075,10 @@ export default {
           });
         }else{
           let timeData = {
+            virOrderId: item._id,
             machine_id: item.machine_id,
-            task_id: item.task_id
+            task_id: item.task_id,
+            account: this.account
           }
           let chooseIndex1;
           this.Machine_info.forEach((ele, index) => {
@@ -780,13 +1089,13 @@ export default {
           let timedQuery = await timedQuerySignleTask(timeData)
           if (timedQuery.success) {
             let nowTime = + new Date();
-            let endTime = item.startTime + item.time*60*60*1000
+            let endTime = item.createTime + item.time*60*60*1000
             if(endTime - nowTime > 0 ){
               timedQuery.content.time_left = this.minsToHourMins(Math.ceil((endTime - nowTime)/60000))
-              timedQuery.content.userTime = this.minsToHourMins(Math.ceil((nowTime - item.startTime)/60000))
+              timedQuery.content.userTime = this.minsToHourMins(Math.ceil((nowTime - item.createTime)/60000))
             }else{
               timedQuery.content.time_left = '0h0m'
-              timedQuery.content.userTime = this.minsToHourMins(Math.ceil((endTime - item.startTime)/60000))
+              timedQuery.content.userTime = this.minsToHourMins(Math.ceil((endTime - item.createTime)/60000))
             }
             timedQuery.content.singleCardHour = this.getnum2((Number(item.calc_point)/100*this.GPUPointPrice * (1 + this.DBCPercentage)/this.dbc_price)/item.gpu_num/24)
             this.$set(this.Machine_info, chooseIndex1, timedQuery.content)
@@ -796,18 +1105,18 @@ export default {
             let timedQuery1 = await timedQuerySignleTask(timeData)
             if (timedQuery1.success) {
               let nowTime = + new Date();
-              let endTime = item.startTime + item.time*60*60*1000
+              let endTime = item.createTime + item.time*60*60*1000
               if(endTime - nowTime > 0 ){
                 timedQuery1.content.time_left = this.minsToHourMins(Math.ceil((endTime - nowTime)/60000))
-                timedQuery1.content.userTime = this.minsToHourMins(Math.ceil((nowTime - item.startTime)/60000))
+                timedQuery1.content.userTime = this.minsToHourMins(Math.ceil((nowTime - item.createTime)/60000))
               }else{
                 timedQuery1.content.time_left = '0h0m'
-                timedQuery1.content.userTime = this.minsToHourMins(Math.ceil((endTime - item.startTime)/60000))
+                timedQuery1.content.userTime = this.minsToHourMins(Math.ceil((endTime - item.createTime)/60000))
               }
               timedQuery1.content.singleCardHour = this.getnum2((Number(item.calc_point)/100*this.GPUPointPrice * (1 + this.DBCPercentage)/this.dbc_price)/item.gpu_num/24)
               this.$set(this.Machine_info, chooseIndex1, timedQuery1.content)
             }
-            if (timedQuery.content.status == 'running' || timedQuery.content.status == 'error') {
+            if (timedQuery1.content.status == 'running' || timedQuery1.content.status == 'error') {
               clearInterval(timetask)
               timetask = null
             }
@@ -822,7 +1131,13 @@ export default {
     },
     stopVir(item) {
       item.btnloading1 = true
-      stopSignleVir({ task_id: item.task_id, machine_id: item.machine_id}).then( async (res) => {
+      let requestdata = {
+        virOrderId: item._id,
+        task_id: item.task_id,
+        machine_id: item.machine_id,
+        account: this.account
+      }
+      stopSignleVir(requestdata).then( async (res) => {
         if(!res.success){
           this.$message({
             type: 'error',
@@ -830,8 +1145,10 @@ export default {
           });
         }else{
           let timeData = {
+            virOrderId: item._id,
             machine_id: item.machine_id,
-            task_id: item.task_id
+            task_id: item.task_id,
+            account: this.account
           }
           let chooseIndex1;
           this.Machine_info.map((ele, index) => {
@@ -842,13 +1159,13 @@ export default {
           let timedQuery = await timedQuerySignleTask(timeData)
           if (timedQuery.success) {
             let nowTime = + new Date();
-            let endTime = item.startTime + item.time*60*60*1000
+            let endTime = item.createTime + item.time*60*60*1000
             if(endTime - nowTime > 0 ){
               timedQuery.content.time_left = this.minsToHourMins(Math.ceil((endTime - nowTime)/60000))
-              timedQuery.content.userTime = this.minsToHourMins(Math.ceil((nowTime - item.startTime)/60000))
+              timedQuery.content.userTime = this.minsToHourMins(Math.ceil((nowTime - item.createTime)/60000))
             }else{
               timedQuery.content.time_left = '0h0m'
-              timedQuery.content.userTime = this.minsToHourMins(Math.ceil((endTime - item.startTime)/60000))
+              timedQuery.content.userTime = this.minsToHourMins(Math.ceil((endTime - item.createTime)/60000))
             }
             timedQuery.content.singleCardHour = this.getnum2((Number(item.calc_point)/100*this.GPUPointPrice * (1 + this.DBCPercentage)/this.dbc_price)/item.gpu_num/24)
             this.$set(this.Machine_info, chooseIndex1, timedQuery.content)
@@ -858,13 +1175,13 @@ export default {
             let timedQuery1 = await timedQuerySignleTask(timeData)
             if (timedQuery1.success) {
               let nowTime = + new Date();
-              let endTime = item.startTime + item.time*60*60*1000
+              let endTime = item.createTime + item.time*60*60*1000
               if(endTime - nowTime > 0 ){
                 timedQuery1.content.time_left = this.minsToHourMins(Math.ceil((endTime - nowTime)/60000))
-                timedQuery1.content.userTime = this.minsToHourMins(Math.ceil((nowTime - item.startTime)/60000))
+                timedQuery1.content.userTime = this.minsToHourMins(Math.ceil((nowTime - item.createTime)/60000))
               }else{
                 timedQuery1.content.time_left = '0h0m'
-                timedQuery1.content.userTime = this.minsToHourMins(Math.ceil((endTime - item.startTime)/60000))
+                timedQuery1.content.userTime = this.minsToHourMins(Math.ceil((endTime - item.createTime)/60000))
               }
               timedQuery1.content.singleCardHour = this.getnum2((Number(item.calc_point)/100*this.GPUPointPrice * (1 + this.DBCPercentage)/this.dbc_price)/item.gpu_num/24)
               this.$set(this.Machine_info, chooseIndex1, timedQuery1.content)
@@ -880,7 +1197,13 @@ export default {
     },
     startVir(item) {
       item.btnloading2 = true
-      startSignleVir({ task_id: item.task_id, machine_id: item.machine_id}).then( async (res) => {
+      let requestdata = {
+        virOrderId: item._id,
+        task_id: item.task_id,
+        machine_id: item.machine_id,
+        account: this.account
+      }
+      startSignleVir(requestdata).then( async (res) => {
         if(!res.success){
           this.$message({
             type: 'error',
@@ -888,8 +1211,10 @@ export default {
           });
         }else{
           let timeData = {
+            virOrderId: item._id,
             machine_id: item.machine_id,
-            task_id: item.task_id
+            task_id: item.task_id,
+            account: this.account
           }
           let chooseIndex1;
           this.Machine_info.forEach((ele, index) => {
@@ -900,13 +1225,13 @@ export default {
           let timedQuery = await timedQuerySignleTask(timeData)
           if (timedQuery.success) {
             let nowTime = + new Date();
-            let endTime = item.startTime + item.time*60*60*1000
+            let endTime = item.createTime + item.time*60*60*1000
             if(endTime - nowTime > 0 ){
               timedQuery.content.time_left = this.minsToHourMins(Math.ceil((endTime - nowTime)/60000))
-              timedQuery.content.userTime = this.minsToHourMins(Math.ceil((nowTime - item.startTime)/60000))
+              timedQuery.content.userTime = this.minsToHourMins(Math.ceil((nowTime - item.createTime)/60000))
             }else{
               timedQuery.content.time_left = '0h0m'
-              timedQuery.content.userTime = this.minsToHourMins(Math.ceil((endTime - item.startTime)/60000))
+              timedQuery.content.userTime = this.minsToHourMins(Math.ceil((endTime - item.createTime)/60000))
             }
             timedQuery.content.singleCardHour = this.getnum2((Number(item.calc_point)/100*this.GPUPointPrice * (1 + this.DBCPercentage)/this.dbc_price)/item.gpu_num/24)
             this.$set(this.Machine_info, chooseIndex1, timedQuery.content)
@@ -916,13 +1241,13 @@ export default {
             let timedQuery1 = await timedQuerySignleTask(timeData)
             if (timedQuery1.success) {
               let nowTime = + new Date();
-              let endTime = item.startTime + item.time*60*60*1000
+              let endTime = item.createTime + item.time*60*60*1000
               if(endTime - nowTime > 0 ){
                 timedQuery1.content.time_left = this.minsToHourMins(Math.ceil((endTime - nowTime)/60000))
-                timedQuery1.content.userTime = this.minsToHourMins(Math.ceil((nowTime - item.startTime)/60000))
+                timedQuery1.content.userTime = this.minsToHourMins(Math.ceil((nowTime - item.createTime)/60000))
               }else{
                 timedQuery1.content.time_left = '0h0m'
-                timedQuery1.content.userTime = this.minsToHourMins(Math.ceil((endTime - item.startTime)/60000))
+                timedQuery1.content.userTime = this.minsToHourMins(Math.ceil((endTime - item.createTime)/60000))
               }
               timedQuery1.content.singleCardHour = this.getnum2((Number(item.calc_point)/100*this.GPUPointPrice * (1 + this.DBCPercentage)/this.dbc_price)/item.gpu_num/24)
               this.$set(this.Machine_info, chooseIndex1, timedQuery1.content)

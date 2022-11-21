@@ -480,7 +480,7 @@ export default {
     tip14: 'Are you sure you want to stop the virtual machine?',
     tip15: 'Are you sure you want to start the virtual machine?',
     tip16: 'Are you sure to modify the virtual machine? Please stop the virtual machine first',
-    tip17: 'Reminder: The current machine can be rented for up to {hour} hours, and the shortest is 1 hour',
+    tip17: 'Reminder: The minimum rental is 1 hour',
     tip18: 'Username and password entered incorrectly, please re-confirm and submit',
     title: 'my rental machine',
     tower: 'tower',
@@ -635,15 +635,29 @@ export default {
     machineId: 'Machine ID',
     remainingGPU:'Number of available GPUs remaining',
     order_status1: 'Creating, please wait',
-    order_status2: 'During the deduction, please do not operate the page',
+    order_status2: 'Creating (wait for 1~3 minutes, please do not operate the page)',
     order_status3: 'In use',
     order_status4: 'Transfer failed, please re-rent',
     order_status5: 'Lease has expired',
-    order_status6: 'Creation failed, please re-lease',
+    order_status6: 'Re-lease restarting, please wait',
     virStatus: 'virtual machine state',
-    tip1: 'The minimum lease renewal time is 1 hour, and the longest is {maxTime} hours',
+    RentAgain:'Rent Again',
+    tip1: 'The minimum lease renewal time is 1 hour',
     tip2: 'Insufficient account balance, please recharge and rent',
-    tip3: 'Failed to get temporary wallet address'
+    tip3: 'Failed to get temporary wallet address',
+
+    
+    tip4: 'Failed to create, failed to refund, please contact customer service for processing',
+    tip5: 'Creation failed, DBC has been returned to the original account',
+    tip6: 'If the creation fails, DBC will return the original account within 20 minutes',
+
+    
+    tip7: 'Renewal failed, coin refund failed, please contact customer service for processing',
+    tip8: 'Renewal failed, DBC has returned to the original account',
+    tip9: 'The remaining available GPU quantity is less than the original order GPU quantity',
+
+    vmdelectTime: 'Relet countdown',
+    vmdelect: 'Virtual machine deleted',
   },
   // 安全租
   security: {

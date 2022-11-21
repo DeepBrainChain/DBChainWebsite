@@ -93,14 +93,14 @@
                 <div class="tableli" v-for="el in Machine_info" :key="el.machine_id">
                   <div class="li_list1">
                     <div>
-                      <el-checkbox v-if="openCheck" :disabled="el.machine_status != 'online'" :label="el.machine_id" :key="el.machine_id">{{''}}</el-checkbox>
+                      <el-checkbox v-if="openCheck" :disabled="el.machine_status != 'online' || el.hasSignle" :label="el.machine_id" :key="el.machine_id">{{''}}</el-checkbox>
                       <span class="Machine_id">{{$t('virtual.Machine_ID')}}: {{el.machine_id}}</span>
                     </div>
                     <span v-if="el.hasIP">{{$t('virtual.dedicated')}}</span>
                     <span v-if="el.server_room" :title="el.server_room">{{$t('virtual.Room_number')}}: {{String(el.server_room).substring(0,10)+'...'}}</span>
                     <span>{{$t('virtual.Machine_sta')}}: {{el.machine_status != 'online'?$t('virtual.Rented'):$t('virtual.Idle')}}</span>
                     <span v-if="!openCheck">
-                      <el-button class="batch" :disabled='el.machine_status != "online"' size="mini" plain @click="batch_Mac(el)">
+                      <el-button class="batch" :disabled='el.machine_status != "online" || el.hasSignle' size="mini" plain @click="batch_Mac(el)">
                         {{ $t('virtual.batch_Mac') }}
                       </el-button>
                     </span>
@@ -862,7 +862,7 @@ export default {
       this.checkedCities = []
       this.Machine_info.map( el => {
         if(val){
-          if(el.machine_status == 'online'){
+          if(el.machine_status == 'online' && !el.hasSignle){
             this.checkedCities.push(el.machine_id)
           }
         }

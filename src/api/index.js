@@ -1,11 +1,11 @@
 import axios from "@/utlis/axios";
 
 // 'https://nodejs.dbchain.ai'
-// 'http://8.219.75.114:8090'
+// 'http://82.157.50.32:8090'
 // http://localhost:8090
 // 审核机器新增
 
-const nodeHost = 'http://10.1.9.107:8090'
+const nodeHost = 'http://localhost:8090'
 
 
 // 获得dbc的价格等信息
@@ -776,6 +776,15 @@ export const createSignleVirOrder = (data) => {
   });
 };
 
+// 单个虚拟机-创建单个虚拟机
+export const createSignleVir = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/signlerent/createSignleVir',
+    data: data
+  });
+};
+
 
 // 单个虚拟机-查询单个虚拟的订单信息
 export const getSignleVirtual = (data) => {
@@ -791,6 +800,15 @@ export const timedQuerySignleTask = (data) => {
   return axios({
     method: "post",
     url: nodeHost + '/api/signlerent/timedQuerySignleTask',
+    data: data
+  });
+};
+
+// 确认租用虚拟机 
+export const VirconfirmRent = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/signlerent/confirmRent',
     data: data
   });
 };
@@ -840,6 +858,15 @@ export const renewRentSignle = (data) => {
   });
 };
 
+
+// 单个虚拟机-续费
+export const rentagain = (data) => {
+  return axios({
+    method: "post",
+    url: nodeHost + '/api/signlerent/rentagain',
+    data: data
+  });
+};
 
 // 创建规则 
 export const createSecurity = (data) => {
