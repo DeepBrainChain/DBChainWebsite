@@ -459,6 +459,7 @@ export const getBlockchainTime = async (BlockchainTime, arr) => {
  */
 export const getCountDown = async ( type, srt, BlockchainTime) => {
   // let BlockchainTime = await getBlockTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
+  srt = String(srt)
   let str1 = parseFloat(srt.replace(/,/g, ''))
   // let nowDate = Date.parse(new Date()) // 获取当前时间的秒数
   let timeend // 获取结束时间的块高

@@ -15,7 +15,7 @@
             <el-button v-else-if="item.status == 1" size="small" plain @click="seeDetails(false)">{{$t("audit.seeDetails1")}}</el-button>
             <el-button v-else size="small" plain @click="seeDetails(true)">{{$t("audit.seeDetails2")}}</el-button>
           </div> -->
-          <div v-if="'RentedInaccessible' in item.machine_fault_type">{{$t("audit.report_err")}}:{{$t("audit.report_info")}}</div>
+          <div v-if="'rentedInaccessible' in item.machine_fault_type">{{$t("audit.report_err")}}:{{$t("audit.report_info")}}</div>
           <div v-else>{{$t("audit.report_err")}}:{{$t("audit.report_info1")}}</div>
           <div v-if="item.first_book_time != ''">{{$t("audit.countdown")}}: {{item.first_book_time}}</div>
           <!-- <div v-if="item.booked_committee.length != 0">抢单倒计时：</div> -->
@@ -108,7 +108,7 @@ export default {
         for (let i= 0; i< res.length; i++) {
           let report = { report_id: res[i], btnloading: false }
           reportInfo(res[i]).then( async (res1) => {
-            if ('RentedInaccessible' in res1.machine_fault_type) {
+            if ('rentedInaccessible' in res1.machine_fault_type) {
               res1.first_book_time = await getCountDown(6, res1.first_book_time, BlockchainTime)
             } else {
               res1.first_book_time = await getCountDown(2, res1.first_book_time, BlockchainTime)

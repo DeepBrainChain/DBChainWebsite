@@ -9,7 +9,7 @@
       >
         <div class="order-list">
           <div>{{$t("audit.order")}}: {{item.report_id}}</div>
-          <div v-if="!('RentedInaccessible' in item.report_order.machine_fault_type)">
+          <div v-if="!('rentedInaccessible' in item.report_order.machine_fault_type)">
             <el-button v-if="item.report_info.encrypted_err_info == null && item.report_info.order_status != 'Finished'" size="small" plain @click="seeDetails(false, item)">{{$t("audit.seeDetails1")}}</el-button>
             <el-button v-else-if="item.report_info.order_status != 'Finished'" size="small" plain @click="seeDetails(true, item)" :loading='item.btnloading1'>{{$t("audit.seeDetails2")}}</el-button>
           </div>
@@ -199,12 +199,13 @@ export default {
     getList(){
       committeeOrder(this.wallet_address).then( async res=> {
         this.res_body.content = []
-        res = [ ...res.booked_report, ...res.hashed_report, ...res.confirmed_report, ...res.finished_report ]
+        res = [ ...res.booked_report, ...res.hashed_report, ...res.confirmed_report ]
         let BlockchainTime = await getBlockTime().then( (res) => { return parseFloat(res.replace(/,/g, '')) }) // 获取链上块时间
         for(let i=0; i< res.length; i++){
           let res1 = await committeeOps(this.wallet_address, res[i])
           let res2 =  await reportInfo(res[i])
-          if ('RentedInaccessible' in res2.machine_fault_type) {
+          console.log(res2, 'res2');
+          if ('rentedInaccessible' in res2.machine_fault_type) {
             res1.booked_time = await getCountDown(7, res2.first_book_time, BlockchainTime)
           } else {
             res1.booked_time = await getCountDown(1, res1.booked_time, BlockchainTime)
@@ -263,13 +264,13 @@ export default {
             if (message[message.length-1] == '}') {
               this.formInline = {...this.formInline, ... JSON.parse(message)}
               this.formInline.report_id = item.report_id
-              if ('RentedInaccessible' in item.report_order.machine_fault_type) {
+              if ('rentedInaccessible' in item.report_order.machine_fault_type) {
                 this.radioDisabled = false
                 this.isHex = true
                 this.dialogTableVisible2 = true
                 this.formInline2.report_id = item.report_id
                 this.formInline2.passward = this.passward
-                this.formInline2.machine_id = item.report_order.machine_fault_type['RentedInaccessible']
+                this.formInline2.machine_id = item.report_order.machine_fault_type['rentedInaccessible'][0]
                 this.formInline2.committee_rand_str = randomWord()
               } else {
                 this.formInline.committee_rand_str = randomWord()
@@ -282,13 +283,13 @@ export default {
             }
           })
         } else {
-          if ('RentedInaccessible' in item.report_order.machine_fault_type) {
+          if ('rentedInaccessible' in item.report_order.machine_fault_type) {
             this.radioDisabled = false
             this.isHex = true
             this.dialogTableVisible2 = true
             this.formInline2.report_id = item.report_id
             this.formInline2.passward = this.passward
-            this.formInline2.machine_id = item.report_order.machine_fault_type['RentedInaccessible']
+            this.formInline2.machine_id = item.report_order.machine_fault_type['rentedInaccessible'][0]
             this.formInline2.committee_rand_str = randomWord()
           } else {
             this.formInline.committee_rand_str = randomWord()
@@ -319,7 +320,7 @@ export default {
             }
             getOrderHash(parmas).then(res1 => {
               if (res1.success) {
-                if ('RentedInaccessible' in item.report_order.machine_fault_type) {
+                if ('rentedInaccessible' in item.report_order.machine_fault_type) {
                   this.formInline2 = {...this.formInline2, ...res1.content}
                   this.formInline2.support_report = res1.content?String(res1.content.support_report):''
                   this.formInline2.passward = this.passward

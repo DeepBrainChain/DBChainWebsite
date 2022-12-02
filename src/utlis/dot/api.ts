@@ -1106,8 +1106,8 @@ export const getOrder = async (): Promise<any> => {
 
 export const reportInfo = async (ReportId: string): Promise<any> => {
   await GetApi();
-  let de = await api?.query.maintainCommittee.reportInfo(ReportId)
-  return de?.toHuman()
+  let de = await api!.query.maintainCommittee.reportInfo(ReportId)
+  return de?.toJSON()
 }
 
 /**
