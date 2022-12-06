@@ -611,7 +611,7 @@ export default {
         this.GPUPointPrice = GPUPrice ? GPUPrice.gpu_price/1000000 : this.GPUPointPrice
         online_block = online_block.replace(/,/gi, '');
         this.Machine_info = res.content.list
-        this.total = res.content.total
+        this.total = res.content.typeTotal
         this.Machine_info.map( (el) => {
           el.online = this.minsToHourMins(Math.floor((online_block-el.bonding_height)/2))
         })
@@ -676,7 +676,7 @@ export default {
         this.GPUPointPrice = GPUPrice ? GPUPrice.gpu_price/1000000 : this.GPUPointPrice
         online_block = online_block.replace(/,/gi, '');
         this.Machine_info = res.content.list
-        this.total = res.content.total
+        this.total = res.content.typeTotal
         this.Machine_info.map( (el) => {
           el.online = this.minsToHourMins(Math.floor((online_block-el.bonding_height)/2))
         })
@@ -690,6 +690,7 @@ export default {
       this.Machine_info = []
       this.Machine_status = ''
       this.GPU_Num = ''
+      this.currentPage = 1
       this.getList(this.active , this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
     },
     choosecity(str) {
@@ -698,6 +699,7 @@ export default {
       this.Machine_info = []
       this.Machine_status = ''
       this.GPU_Num = ''
+      this.currentPage = 1
       this.active = str.desc
       this.chooseCountry = str.country
       this.chooseCity = str.city
@@ -710,6 +712,7 @@ export default {
       this.Machine_status = ''
       this.GPU_Num = ''
       this.active = str
+      this.currentPage = 1
       this.chooseRoomnum = str
       this.getRoomList(this.chooseRoomnum, this.Machine_status, this.GPU_Num, 'first', this.currentPage, this.pageSize)
     },
