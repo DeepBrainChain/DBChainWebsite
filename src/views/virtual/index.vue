@@ -500,9 +500,9 @@ export default {
           return
         }
         res.content.list.map( (el, i) => {
-          if(el.operator){
-            el.machine_name = this.byteToStr(JSON.parse(el.operator))
-          }
+          // if(el.operator){
+          //   el.machine_name = this.byteToStr(JSON.parse(el.operator))
+          // }
           if (this.MacIpList.indexOf(el.machine_id) != -1) {
             el.hasIP = true
           }
@@ -580,9 +580,9 @@ export default {
       getlistByCity(data).then( async (res) => {
         res.content.list.map( (el, i) => {
           el.machine_id = el._id
-          if(el.operator){
-            el.machine_name = this.byteToStr(JSON.parse(el.operator))
-          }
+          // if(el.operator){
+          //   el.machine_name = this.byteToStr(JSON.parse(el.operator))
+          // }
           if (this.MacIpList.indexOf(el.machine_id) != -1) {
             el.hasIP = true
           }
@@ -645,9 +645,9 @@ export default {
       getlistByRoom(data).then( async (res) => {
         res.content.list.map( (el, i) => {
           el.machine_id = el._id
-          if(el.operator){
-            el.machine_name = this.byteToStr(JSON.parse(el.operator))
-          }
+          // if(el.operator){
+          //   el.machine_name = this.byteToStr(JSON.parse(el.operator))
+          // }
           if (this.MacIpList.indexOf(el.machine_id) != -1) {
             el.hasIP = true
           }

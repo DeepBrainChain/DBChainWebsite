@@ -959,7 +959,6 @@ export default {
           rdp_port: this.is_ubunto ? this.rdp_port : '',
           operation_system: this.operation_system,
           bios_mode: this.bios_mode,
-          // network_name: this.chooseMac.network_name,
           network_name: '',
           time: this.useTime, 
           dbc: this.totalDBC, 
