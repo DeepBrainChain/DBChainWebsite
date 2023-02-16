@@ -651,9 +651,13 @@ export default {
             clearInterval(this.refresh)
           }
           this.refresh = setInterval( async () => {
+            let DBCprice1 = await dbcPriceOcw()
+            this.dbc_price = DBCprice1/1000000
             this.getCityList(this.chooseCountry, this.chooseCity, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
           }, 60000)
         }
+        let DBCprice1 = await dbcPriceOcw()
+        this.dbc_price = DBCprice1/1000000
         let online_block = await getBlockTime();
         const GPUPrice = await standardGPUPointPrice()
         this.GPUPointPrice = GPUPrice ? GPUPrice.gpu_price/1000000 : this.GPUPointPrice
@@ -702,9 +706,13 @@ export default {
             clearInterval(this.refresh)
           }
           this.refresh = setInterval( async () => {
+            let DBCprice1 = await dbcPriceOcw()
+            this.dbc_price = DBCprice1/1000000
             this.getRoomList(this.chooseRoomnum, this.Machine_status, this.GPU_Num, '', this.currentPage, this.pageSize)
           }, 60000)
         }
+        let DBCprice1 = await dbcPriceOcw()
+        this.dbc_price = DBCprice1/1000000  
         let online_block = await getBlockTime();
         const GPUPrice = await standardGPUPointPrice()
         this.GPUPointPrice = GPUPrice ? GPUPrice.gpu_price/1000000 : this.GPUPointPrice
@@ -982,6 +990,13 @@ export default {
               transfer(walletInfo.wallet, `${this.totalDBC}`, value, (res2) => {
                 console.log(res2, 'transfer');
                 if (res2.success) {
+                  this.btnloading1 = false;
+                  this.startConfirm = false;
+                  this.$router.push({
+                    name: "loading",
+                    params: perams
+                  });
+                  return false;
                   createSignleVirOrder(perams).then(res => {
                     if (res.success) {
                       let data = {

@@ -658,6 +658,9 @@ export default {
     
     vmdelectTime: '重租倒计时',
     vmdelect: '虚拟机已删除',
+
+    createVmInfo: '创建虚拟机信息',
+    loading: '机器租用创建中，请等待1~3分钟，不要刷新、关闭页面'
   },
   // 安全租
   security: {

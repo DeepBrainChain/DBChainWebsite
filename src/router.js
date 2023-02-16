@@ -53,6 +53,12 @@ const router = new Router({
       name: 'signleVirtual',
       component: resolve => require(['./views/virtual/signleVirtual'] , resolve),
     },
+    ,
+    {
+      path: '/loading',
+      name: 'loading',
+      component: resolve => require(['./views/virtual/loading'] , resolve),
+    },
     // 审核机器
     {
       path: '/audit',
