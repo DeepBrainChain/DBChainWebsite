@@ -480,7 +480,7 @@ export default {
     tip14: '¿Estás seguro de que quieres detener la máquina virtual?',
     tip15: '¿Está seguro de que desea iniciar la máquina virtual?',
     tip16: '¿Estás seguro de modificar la máquina virtual? Por favor, detenga la máquina virtual primero',
-    tip17: 'Recordatorio: El alquiler mínimo es de 1 hora',
+    tip17: 'Recordatorio: el alquiler mínimo es de 1 hora y se deducirán 10 DBC por cada transacción',
     tip18: 'Nombre de usuario y contraseña ingresados ​​incorrectamente, reconfirme y envíe',
     title: 'mi máquina de alquiler',
     tower: 'Torre',

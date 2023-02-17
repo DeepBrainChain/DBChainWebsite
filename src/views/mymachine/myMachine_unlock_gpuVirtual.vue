@@ -1585,7 +1585,7 @@ export default {
                 id: this.Machine_info[chooseIndex]._id,
                 machine_id: this.Machine_info[chooseIndex].machine_id,
                 task_id: res.content.task_id,
-                rent_order: this.chooseMac.OrderId
+                rent_order: this.Machine_info[chooseIndex].OrderId
               }
               let timetask = null
               timetask = setInterval( async () => {
@@ -1760,10 +1760,37 @@ export default {
             if (!VMS_Info.content.length) {
               this.$message.error(this.$t('myvirtual.err_msg'))
             }
-            // el.virtual_info = []
-            // el.virtual_info = VMS_Info.content
             this.Machine_info[chooseIndex].virtual_info = []
             this.Machine_info[chooseIndex].virtual_info = VMS_Info.content
+            for (let i = 0; i < VMS_Info.content.length; i ++) {
+              if (VMS_Info.content[i].status && VMS_Info.content[i].status == 'creating' ) {
+                let timeData = {
+                  id: this.Machine_info[chooseIndex]._id,
+                  machine_id: this.Machine_info[chooseIndex].machine_id,
+                  task_id: VMS_Info.content[i].task_id,
+                  rent_order: this.Machine_info[chooseIndex].OrderId
+                }
+                let timetask1 = null
+                timetask1 = setInterval( async () => {
+                  let timedQuery = await timedQueryTask(timeData)
+                  if (timedQuery.success) {
+                    let virarr = this.Machine_info[chooseIndex].virtual_info.map(item => 
+                      item.task_id === timeData.task_id ? timedQuery.content : item
+                    )
+                    this.Machine_info[chooseIndex].virtual_info = virarr
+                  } else {
+                    let virarr = this.Machine_info[chooseIndex].virtual_info.map(item => 
+                      item.task_id === timeData.task_id ? { task_id: item.task_id, status: 'create error' } : item
+                    )
+                    this.Machine_info[chooseIndex].virtual_info = virarr
+                  }
+                  if (timedQuery.content && timedQuery.content.status != 'creating') {
+                    clearInterval(timetask1)
+                    timetask1 = null
+                  }
+                }, 60000)
+              }
+            }
           }else{
             this.$message.error(VMS_Info.msg)
           }

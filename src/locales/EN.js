@@ -480,7 +480,7 @@ export default {
     tip14: 'Are you sure you want to stop the virtual machine?',
     tip15: 'Are you sure you want to start the virtual machine?',
     tip16: 'Are you sure to modify the virtual machine? Please stop the virtual machine first',
-    tip17: 'Reminder: The minimum rental is 1 hour',
+    tip17: 'Reminder: The minimum rental is 1 hour, and 10 DBC will be deducted for each transaction',
     tip18: 'Username and password entered incorrectly, please re-confirm and submit',
     title: 'my rental machine',
     tower: 'tower',

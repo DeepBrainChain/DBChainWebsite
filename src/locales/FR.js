@@ -480,7 +480,7 @@ export default {
     tip14: 'Voulez-vous vraiment arrêter la machine virtuelle ?',
     tip15: 'Voulez-vous vraiment démarrer la machine virtuelle ?',
     tip16: "Êtes-vous sûr de vouloir modifier la machine virtuelle ? Veuillez d'abord arrêter la machine virtuelle",
-    tip17: "Rappel : La location minimum est de 1 heure",
+    tip17: "Rappel : La location minimum est de 1 heure, et 10 DBC seront déduits pour chaque transaction",
     tip18: "Nom d'utilisateur et mot de passe saisis incorrectement, veuillez reconfirmer et soumettre",
     title: 'Ma machine de location',
     tower: 'Tour',

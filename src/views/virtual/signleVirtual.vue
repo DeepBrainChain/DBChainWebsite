@@ -827,13 +827,13 @@ export default {
     },
     // 创建虚拟机
     inputNum(val){
-      this.totalDBC = this.getnum2(Number(this.chooseMac.singleCardHour) * val*this.vir_gpu_num)
+      this.totalDBC = this.getnum2(Number(this.chooseMac.singleCardHour) * val*this.vir_gpu_num) - 0 + 10
       this.vir_mem = this.max_vir_mem*this.vir_gpu_num/2
       this.vir_cpu_num = this.max_cpu_num*this.vir_gpu_num/2
       this.vir_disk_size = this.max_disk_num*this.vir_gpu_num/2
     },
     inputGpuNum(val) {
-      this.totalDBC = this.getnum2(Number(this.chooseMac.singleCardHour) * this.useTime*val)
+      this.totalDBC = this.getnum2(Number(this.chooseMac.singleCardHour) * this.useTime*val) - 0 + 10
       this.vir_mem = this.max_vir_mem*this.vir_gpu_num/2
       this.vir_cpu_num = this.max_cpu_num*this.vir_gpu_num/2
       this.vir_disk_size = this.max_disk_num*this.vir_gpu_num/2
@@ -900,7 +900,7 @@ export default {
           this.vir_mem = this.max_vir_mem/2
           this.vir_cpu_num = this.max_cpu_num/2
           this.vir_disk_size = this.max_disk_num/2
-          this.totalDBC = this.chooseMac.singleCardHour ? this.getnum2(Number(this.chooseMac.singleCardHour) * this.useTime * this.vir_gpu_num) : 0
+          this.totalDBC = this.chooseMac.singleCardHour ? this.getnum2(Number(this.chooseMac.singleCardHour) * this.useTime * this.vir_gpu_num) - 0  + 10 : 0
           let { balance } = await getBalance()
           this.balance = balance.toFixed(2)
           this.dialogFormVisible1 = true
