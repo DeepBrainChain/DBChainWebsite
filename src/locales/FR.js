@@ -658,6 +658,9 @@ export default {
     
     vmdelectTime: 'Compte à rebours',
     vmdelect: 'Machine virtuelle supprimée',
+    
+    createVmInfo: 'Créer des informations sur la machine virtuelle',
+    loading: 'La location de machine est en cours de création, veuillez patienter 1 à 3 minutes, ne pas actualiser ou fermer la page'
   },
   // 安全租
   security: {

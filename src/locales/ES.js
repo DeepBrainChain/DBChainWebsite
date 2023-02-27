@@ -658,6 +658,9 @@ export default {
 
     vmdelectTime: 'cuenta regresiva',
     vmdelect: 'máquina virtual eliminada',
+    
+    createVmInfo: 'Crear información de la máquina virtual',
+    loading: 'Se está creando el alquiler de la máquina, espere de 1 a 3 minutos, no actualice ni cierre la página'
   },
   // 安全租
   security: {

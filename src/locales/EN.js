@@ -658,6 +658,9 @@ export default {
 
     vmdelectTime: 'Relet countdown',
     vmdelect: 'Virtual machine deleted',
+
+    createVmInfo: 'Create virtual machine information',
+    loading: 'The machine rental is being created, please wait for 1~3 minutes, do not refresh or close the page'
   },
   // 安全租
   security: {
