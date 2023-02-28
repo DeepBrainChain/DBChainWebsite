@@ -132,22 +132,22 @@
               </div>
             </div>
             <div v-if="el.status == 'running'"  class="li-bottom">
-              <span>{{$t('myvirtual.mirror_name')}}: {{el.images}}</span>
-              <span>{{$t('myvirtual.IP_address')}}: {{el.ssh_ip}}</span>
-              <span>{{$t('myvirtual.user_name')}}: {{el.user_name}}</span>
-              <span>{{$t('myvirtual.password')}}: {{el.login_password}}</span>
-              <span v-if="el.os == 'linux'">{{$t('myvirtual.ssh_port')}}: {{el.ssh_port}}</span>
-              <span v-if="el.os != 'linux'">{{$t('myvirtual.rdp_port')}}: {{el.rdp_port? el.rdp_port: ''}}</span>
-              <!-- <span>{{$t('myvirtual.port_range')}}: 600~6000</span> -->
-              <span>{{$t('myvirtual.vir_mem')}}: {{el.mem_size}}</span>
-              <span >{{$t('myvirtual.vir_sys')}}: {{el.disk_system}}</span>
-              <span>{{$t('myvirtual.vir_data')}}: {{el.disks | getDiskData}}</span>
-              <span>{{$t('myvirtual.vir_gpu_num')}}: {{el.gpu_count}}</span>
-              <span >{{$t('myvirtual.vir_cpu_num')}}: {{el.cpu_cores}}</span>
-              <span >{{$t('myvirtual.vnc_port')}}: {{el.vnc_port}}</span>
-              <span >{{$t('myvirtual.open_port_range')}}: {{el.port_min}} - {{el.port_max}}</span>
-              <!-- <span >{{$t('myvirtual.multicast')}}: {{el.multicast? el.multicast.toString(): ''}}</span> -->
-              <span style="width: 50%">{{$t('myvirtual.local_address')}}: {{el.local_address? el.local_address.toString(): ''}}</span>
+              <p>{{$t('myvirtual.mirror_name')}}: {{el.images}}</p>
+              <p>{{$t('myvirtual.IP_address')}}: {{el.ssh_ip}} <span class="copy" @click="CopyTx(el.ssh_ip)"></span></p>
+              <p>{{$t('myvirtual.user_name')}}: {{el.user_name}} <span class="copy" @click="CopyTx(el.user_name)"></span></p>
+              <p>{{$t('myvirtual.password')}}: {{el.login_password}} <span class="copy" @click="CopyTx(el.login_password)"></span></p>
+              <p v-if="el.os == 'linux'">{{$t('myvirtual.ssh_port')}}: {{el.ssh_port}}</p>
+              <p v-if="el.os != 'linux'">{{$t('myvirtual.rdp_port')}}: {{el.rdp_port? el.rdp_port: ''}}</p>
+              <!-- <p>{{$t('myvirtual.port_range')}}: 600~6000</p> -->
+              <p>{{$t('myvirtual.vir_mem')}}: {{el.mem_size}}</p>
+              <p >{{$t('myvirtual.vir_sys')}}: {{el.disk_system}}</p>
+              <p>{{$t('myvirtual.vir_data')}}: {{el.disks | getDiskData}}</p>
+              <p>{{$t('myvirtual.vir_gpu_num')}}: {{el.gpu_count}}</p>
+              <p >{{$t('myvirtual.vir_cpu_num')}}: {{el.cpu_cores}}</p>
+              <p >{{$t('myvirtual.vnc_port')}}: {{el.vnc_port}}</p>
+              <p >{{$t('myvirtual.open_port_range')}}: {{el.port_min}} - {{el.port_max}}</p>
+              <!-- <p >{{$t('myvirtual.multicast')}}: {{el.multicast? el.multicast.toString(): ''}}</p> -->
+              <p style="width: 50%">{{$t('myvirtual.local_address')}}: {{el.local_address? el.local_address.toString(): ''}}</p>
             </div>
           <!-- </div> -->
         </div>
@@ -435,30 +435,6 @@ export default {
       
     },
   },
-  // activated() {
-  //   console.log(213231);
-  //   getSignlePercentage().then(res => {
-  //     if (res.success) {
-  //       this.DBCPercentage = res.content.percentage_signle/100
-  //     }
-  //   })
-  //   clearInterval(this.si);
-  //   this.stopInter()
-  //   this.stopAnyInter()
-  //   this.getMyVirtual();
-  //   this.si = setInterval( ()=> {
-  //     this.getMyVirtual()
-  //   }, 60000)
-  // },
-  // deactivated() {
-  //   console.log(23132);
-  //   if (this.si) {
-  //     clearInterval(this.si);
-  //     this.si = null
-  //   }
-  //   this.stopInter()
-  //   this.stopAnyInter()
-  // },
   mounted() {
     getPercentage().then(res => {
       if (res.success) {
@@ -1280,6 +1256,12 @@ export default {
       this.$refs[formName].resetFields();
     },
 
+    CopyTx(text) {
+      this.$copyText(String(text)).then(() => {
+        this.$message.success(this.$t('copySuccess'))
+      })
+    },
+
     minsToHourMins(mins){
       if (mins < 60) {
         return mins + 'm'
@@ -1512,9 +1494,10 @@ export default {
           flex-wrap: wrap;
           align-items: center;
           padding-top: 10px;
-          span{
+          p{
             width: 25%;
-            margin-bottom: 6px;
+            margin: 0 0 6px;
+            // margin-bottom: 6px;
             word-break: break-all;
             &.width50{
               width: 60%;
@@ -1528,6 +1511,15 @@ export default {
             &.bold{
               font-size: 18px;
               font-weight: bold;
+            }
+            .copy {
+              width: 16px;
+              height: 16px;
+              cursor: pointer;
+              margin-left: 5px;
+              vertical-align: sub;
+              display: inline-block;
+              background: url(../../assets/imgs/copy.png) no-repeat 100%/100%;
             }
             .color{
               color: #f56c6c;

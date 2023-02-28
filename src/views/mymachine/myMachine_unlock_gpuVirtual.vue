@@ -159,40 +159,36 @@
               </div>
             </div>
             <div v-if="item.status == 'running'"  class="li-bottom">
-              <span>{{$t('myvirtual.mirror_name')}}: {{item.images}}</span>
-              <span>{{$t('myvirtual.IP_address')}}: {{item.ssh_ip}}</span>
-              <span v-show="item.network_sec">{{$t('myvirtual.security')}}: {{item.network_sec}}</span>
-              <span>{{$t('myvirtual.user_name')}}: {{item.user_name}}</span>
-              <span>{{$t('myvirtual.password')}}: {{item.login_password}}</span>
-              <span v-if="item.os == 'linux'">{{$t('myvirtual.ssh_port')}}: {{item.ssh_port}}</span>
-              <span v-if="item.os != 'linux'">{{$t('myvirtual.rdp_port')}}: {{item.rdp_port? item.rdp_port: ''}}</span>
-              <!-- <span>{{$t('myvirtual.port_range')}}: 600~6000</span> -->
-              <span>{{$t('myvirtual.vir_mem')}}: {{item.mem_size}}</span>
+              <p>{{$t('myvirtual.mirror_name')}}: {{item.images}}</p>
+              <p>{{$t('myvirtual.IP_address')}}: {{item.ssh_ip}}<span class="copy" @click="CopyTx(item.ssh_ip)"></span></p>
+              <p v-show="item.network_sec">{{$t('myvirtual.security')}}: {{item.network_sec}}</p>
+              <p>{{$t('myvirtual.user_name')}}: {{item.user_name}}<span class="copy" @click="CopyTx(item.user_name)"></span></p>
+              <p>{{$t('myvirtual.password')}}: {{item.login_password}}<span class="copy" @click="CopyTx(item.login_password)"></span></p>
+              <p v-if="item.os == 'linux'">{{$t('myvirtual.ssh_port')}}: {{item.ssh_port}}</p>
+              <p v-if="item.os != 'linux'">{{$t('myvirtual.rdp_port')}}: {{item.rdp_port? item.rdp_port: ''}}</p>
+              <p>{{$t('myvirtual.vir_mem')}}: {{item.mem_size}}</p>
               <template v-for="diskitem in item.disks">
-                <span v-if="diskitem.name == 'vda'" :key="diskitem.name">{{$t('myvirtual.vir_sys')}}{{diskitem.name}}: {{diskitem.size}}</span>
-                <span v-else>{{$t('myvirtual.vir_data')}}{{diskitem.name}}: {{diskitem.size}}</span>
+                <p v-if="diskitem.name == 'vda'" :key="diskitem.name">{{$t('myvirtual.vir_sys')}}{{diskitem.name}}: {{diskitem.size}}</p>
+                <p v-else>{{$t('myvirtual.vir_data')}}{{diskitem.name}}: {{diskitem.size}}</p>
               </template>
-              <!-- <span >{{$t('myvirtual.vir_sys')}}: {{item.disk_system}}</span>
-              <span>{{$t('myvirtual.vir_data')}}: {{item.disks | getDiskData}}</span> -->
-              <span>{{$t('myvirtual.vir_gpu_num')}}: {{item.gpu_count}}</span>
-              <span >{{$t('myvirtual.vir_cpu_num')}}: {{item.cpu_cores}}</span>
-              <span >{{$t('myvirtual.vnc_port')}}: {{item.vnc_port}}</span>
-              <span v-if="item.network_Id&&item.network_filters&&item.network_filters.length">
+              <p>{{$t('myvirtual.vir_gpu_num')}}: {{item.gpu_count}}</p>
+              <p >{{$t('myvirtual.vir_cpu_num')}}: {{item.cpu_cores}}</p>
+              <p >{{$t('myvirtual.vnc_port')}}: {{item.vnc_port}}</p>
+              <p v-if="item.network_Id&&item.network_filters&&item.network_filters.length">
                 {{$t('myvirtual.securityPort')}}: 
                 <span v-for="(filters, idx) in item.network_filters" :key="idx">
                   <span v-show='idx != 0'>/</span>{{filters.split(',')[2]}}
                 </span>
-              </span>
-              <span v-else>{{$t('myvirtual.open_port_range')}}: {{item.port_min}} - {{item.port_max}}</span>
-              <!-- <span >{{$t('myvirtual.multicast')}}: {{item.multicast? item.multicast.toString(): ''}}</span> -->
-              <span >{{$t('myvirtual.mac_address')}}: 
+              </p>
+              <p v-else>{{$t('myvirtual.open_port_range')}}: {{item.port_min}} - {{item.port_max}}</p>
+              <p >{{$t('myvirtual.mac_address')}}: 
                 <template v-if="item.interface.length">
                   <span v-for="(mac, idx) in item.interface" :key="idx">
                     <span v-show='idx != 0'>/</span>{{mac.mac_address}}
                   </span>
                 </template>
-              </span>
-              <span>{{$t('myvirtual.local_address')}}: {{item.local_address? item.local_address.toString(): ''}}</span>
+              </p>
+              <p>{{$t('myvirtual.local_address')}}: {{item.local_address? item.local_address.toString(): ''}}</p>
             </div>
           </div>
         </div>
@@ -1122,7 +1118,11 @@ export default {
     handleCurrentChang(num) {
       this.currentPage = num
     },
-
+    CopyTx(text) {
+      this.$copyText(String(text)).then(() => {
+        this.$message.success(this.$t('copySuccess'))
+      })
+    },
     // 确认租用
     Confirm_rental(el) {
       console.log(el, 'el');
@@ -2685,9 +2685,9 @@ export default {
           flex-wrap: wrap;
           align-items: center;
           padding-top: 10px;
-          span{
+          p{
             width: 25%;
-            margin-bottom: 6px;
+            margin: 0 0 6px;
             word-break: break-all;
             &.width50{
               width: 50%;
@@ -2701,6 +2701,15 @@ export default {
             &.bold{
               font-size: 18px;
               font-weight: bold;
+            }
+            .copy {
+              width: 16px;
+              height: 16px;
+              cursor: pointer;
+              margin-left: 5px;
+              vertical-align: sub;
+              display: inline-block;
+              background: url(../../assets/imgs/copy.png) no-repeat 100%/100%;
             }
             .color{
               color: #f56c6c;

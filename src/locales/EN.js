@@ -788,5 +788,6 @@ export default {
     NotSlashed: 'not punished',
   },
 
-  showAliPay: '1' // 是否显示支付宝支付 1 显示 0 不显示
+  showAliPay: '1', // 是否显示支付宝支付 1 显示 0 不显示
+  copySuccess: 'copy successfully'
 }
