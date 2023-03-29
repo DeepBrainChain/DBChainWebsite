@@ -544,7 +544,7 @@ export default {
               let timedQuery = await timedQuerySignleTask(timeData)
               if (timedQuery.success) {
                 if (timedQuery.content.status != 'creating') {
-                  if (timedQuery.content.status == 'running') {
+                  if (timedQuery.content.status == 'running' && !el.confirmRent) {
                     this.confirmRent({_id: el._id})
                   } else {
                     let changeData = {
@@ -567,7 +567,7 @@ export default {
                     if (timedQuery1.content.status != 'creating') {
                       clearInterval(timetask)
                       timetask = null
-                      if (timedQuery1.content.status == 'running') {
+                      if (timedQuery1.content.status == 'running' && !el.confirmRent) {
                         this.confirmRent({_id: el._id})
                       } else {
                         let changeData = {
@@ -585,6 +585,10 @@ export default {
                 timedQuery.content.singleCardHour = el.singleCardHour
                 this.$set(res.content, i, timedQuery.content)
               }
+            }
+            
+            if (el.orderStatus == 6 && el.status == 'closed') {
+              this.RestartVir(el)
             }
           }
           this.orderNumber = res.content.length
@@ -822,6 +826,9 @@ export default {
                   }
                   this.btnloading1 = false;
                   this.startConfirm = false;
+                }).catch(() => {
+                  this.btnloading1 = false;
+                  this.startConfirm = false;
                 })
               } else {
                 this.btnloading1 = false;
@@ -853,10 +860,10 @@ export default {
       }
       startSignleVir(requestdata).then( async (res) => {
         if (!res.success) {
-          this.$message({
-            type: 'error',
-            message: res.msg
-          });
+          // this.$message({
+          //   type: 'error',
+          //   message: res.msg
+          // });
         } else {
           let timeData = {
             virOrderId: el._id,
@@ -867,7 +874,7 @@ export default {
           let timedQuery = await timedQuerySignleTask(timeData)
           if (timedQuery.success) {
             if (timedQuery.content.status != 'starting') {
-              if (timedQuery.content.status == 'running') {
+              if (timedQuery.content.status == 'running' && !el.confirmRent) {
                 this.confirmRent({_id: el._id})
               } else {
                 let changeData = {
@@ -882,10 +889,10 @@ export default {
               let timetask = null
               timetask = setInterval( async () => {
                 let timedQuery1 = await timedQuerySignleTask(timeData)
-                if (timedQuery1.content.status != 'creating') {
+                if (timedQuery1.content.status != 'starting') {
                   clearInterval(timetask)
                   timetask = null
-                  if (timedQuery1.content.status == 'running') {
+                  if (timedQuery1.content.status == 'running' && !el.confirmRent) {
                     this.confirmRent({_id: el._id})
                   } else {
                     let changeData = {
@@ -903,10 +910,10 @@ export default {
             let timetask1 = null
             timetask1 = setInterval( async () => {
               let timedQuery1 = await timedQuerySignleTask(timeData)
-              if (timedQuery1.content.status != 'creating') {
+              if (timedQuery1.content.status != 'starting') {
                 clearInterval(timetask1)
                 timetask1 = null
-                if (timedQuery1.content.status == 'running') {
+                if (timedQuery1.content.status == 'running' && !el.confirmRent) {
                   this.confirmRent({_id: el._id})
                 } else {
                   let changeData = {
@@ -1228,7 +1235,7 @@ export default {
               timedQuery1.content.singleCardHour = this.getnum2((Number(item.calc_point)/100*this.GPUPointPrice * (1 + this.DBCPercentage)/this.dbc_price)/item.gpu_num/24)
               this.$set(this.Machine_info, chooseIndex1, timedQuery1.content)
             }
-            if (timedQuery1.content.status == 'running' || timedQuery1.content.status == 'error' || timedQuery1.content.status == 'start error') {
+            if (timedQuery1.content.status == 'running' || timedQuery1.content.status.indexOf('error') !== -1) {
               clearInterval(timetask)
               timetask = null
             }
