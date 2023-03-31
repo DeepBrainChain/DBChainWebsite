@@ -590,6 +590,15 @@ export default {
             if (el.orderStatus == 6 && el.status == 'closed') {
               this.RestartVir(el)
             }
+            if (el.orderStatus == 6 && el.confirmRent) {
+              let changeData = {
+                virOrderId: el._id,
+                status: el.status == 'running' ? 2 : 5,
+              }
+              changeSignleVirStatus(changeData).then( res => {
+                this.getMyVirtual()
+              })
+            }
           }
           this.orderNumber = res.content.length
           this.Machine_info = res.content
