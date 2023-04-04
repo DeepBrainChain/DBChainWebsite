@@ -26,6 +26,7 @@ import {
   createSignleVir,
   changeSignleVirStatus
 } from "@/api"
+import { claimGas } from "@cityofzion/neon-api";
 export default {
   name: "howBuy",
   data(){
@@ -61,7 +62,8 @@ export default {
     getData() {
       this.defaultdata = this.$route.params
       console.log(this.defaultdata);
-      createSignleVirOrder(this.defaultdata).then(res => {
+      createSignleVirOrder(this.defaultdata)
+      .then(res => {
         if (res.success) {
           let data = {
             virOrderId: res.content,
@@ -110,6 +112,9 @@ export default {
             })
           }
         }
+      })
+      .catch(() => {
+        this.createSignleVirmthods(data)
       })
     }
   }
