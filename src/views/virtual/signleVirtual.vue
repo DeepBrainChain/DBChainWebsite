@@ -891,7 +891,7 @@ export default {
       getsignleMachineInfo({machine_id: el.machine_id, id: el._id}).then( async (res) => {
         if (res.success) {
           let info = res.content
-          this.max_vir_mem = parseInt(parseInt(info.mem.free)/el.gpu_num)
+          this.max_vir_mem = info.mem.free > 0 ? parseInt(parseInt(info.mem.free)/el.gpu_num) : parseInt(parseInt(info.mem.size)/el.gpu_num)
           this.max_cpu_num = parseInt(Math.floor(info.cpu.cores)/el.gpu_num)
           this.max_gpu_num = el.CanUseGpu
           let disk_data_free = parseInt(info.disk_data[0]?info.disk_data[0].free:0)
