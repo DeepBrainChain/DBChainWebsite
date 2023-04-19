@@ -522,9 +522,9 @@ export default {
             }else{
               el.time_left = '0h0m'
               el.userTime = this.minsToHourMins(Math.ceil((endTime - el.createTime)/60000))
-              if (endTime + 604800000 - nowTime > 0 ) {
+              if (endTime + (24*60*60*1000*2) - nowTime > 0 ) {
                 res.content[i].hasdelectVm = false
-                res.content[i].vmdelectTime = this.minsToHourMins(Math.ceil(((endTime + 604800000) - nowTime)/60000))
+                res.content[i].vmdelectTime = this.minsToHourMins(Math.ceil(((endTime + (24*60*60*1000*2)) - nowTime)/60000))
               } else {
                 res.content[i].hasdelectVm = true
               }
