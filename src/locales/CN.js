@@ -286,6 +286,14 @@ export default {
   /**
    * hz 新增单词
    */
+  dbc3: {
+    subtitle: "全球首个面向BOT的AI公链",
+    feature_1: "BOT经济新范式",
+    feature_2: "去中心化AI Agent网络",
+    feature_3: "链上智能自主协作",
+    mystery: "当AI拥有链上身份，一切规则将被重新定义……",
+    stay_tuned: "敬 请 期 待",
+  },
   startVir: "开始租用GPU整机",
   home_intr: "GPU租用按照天计费，机器租用到期之前也可以按天续租",
   result: '结果',

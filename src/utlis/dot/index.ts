@@ -916,6 +916,7 @@ export const initNetwork = async (): Promise<Network> => {
   const tokenSymbol = properties.tokenSymbol.unwrapOrDefault()
   const tokenDecimals = properties.tokenDecimals.unwrapOrDefault()
   formatBalance.setDefaults({
+    // @ts-ignore
     decimals: (tokenDecimals as BN[]).map((b) => b.toNumber()),
     // unit: tokenSymbol[0].toString()  测试注释
   });
@@ -953,11 +954,14 @@ export const inputToBn = (input: string, siPower: BN, basePower: number) => {
     const modString = input.replace(/^\d+\./, '').substr(0, api?.registry.chainDecimals[0]);
     const mod = new BN(modString);
     result = div
+      // @ts-ignore
       .mul(BN_TEN.pow(siPower))
+      // @ts-ignore
       .add(mod.mul(BN_TEN.pow(new BN(basePower - modString.length))));
     console.log('[modString]->', modString)
   } else {
     result = new BN(input.replace(/[^\d]/g, ''))
+      // @ts-ignore
       .mul(BN_TEN.pow(siPower));
   }
 

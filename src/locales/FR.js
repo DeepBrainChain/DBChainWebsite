@@ -286,6 +286,14 @@ export default {
   /**
    * hz 新增单词
    */
+  dbc3: {
+    subtitle: "La première chaîne publique IA au monde pour les BOT",
+    feature_1: "Nouveau paradigme économique BOT",
+    feature_2: "Réseau d'agents IA décentralisé",
+    feature_3: "Collaboration autonome on-chain",
+    mystery: "Quand l'IA a une identité on-chain, toutes les règles seront redéfinies...",
+    stay_tuned: "RESTEZ CONNECTÉ",
+  },
   startVir: "Commencer à louer une machine GPU",
   home_intr: "Le bail du GPU est facturé quotidiennement et le bail de la machine peut également être renouvelé quotidiennement avant l'expiration du bail de la machine.",
   result: 'resultat',

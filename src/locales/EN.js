@@ -286,6 +286,14 @@ export default {
   /**
    * hz 新增单词
    */
+  dbc3: {
+    subtitle: "The World's First AI Public Chain for BOT",
+    feature_1: "New BOT Economy Paradigm",
+    feature_2: "Decentralized AI Agent Network",
+    feature_3: "On-chain Autonomous Collaboration",
+    mystery: "When AI has an on-chain identity, all rules will be redefined...",
+    stay_tuned: "STAY TUNED",
+  },
   startVir: "Start renting a GPU machine",
   home_intr: "The GPU lease is billed on a daily basis, and the machine lease can also be renewed on a daily basis before the machine lease expires.",
   result: 'result',

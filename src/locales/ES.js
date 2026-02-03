@@ -286,6 +286,14 @@ export default {
   /**
    * hz 新增单词
    */
+  dbc3: {
+    subtitle: "La primera cadena pública de IA del mundo para BOT",
+    feature_1: "Nuevo paradigma económico BOT",
+    feature_2: "Red de agentes IA descentralizada",
+    feature_3: "Colaboración autónoma on-chain",
+    mystery: "Cuando la IA tenga identidad on-chain, todas las reglas serán redefinidas...",
+    stay_tuned: "ESTÉN ATENTOS",
+  },
   startVir: "Comience a alquilar una máquina GPU",
   home_intr: " El arrendamiento de GPU se factura diariamente y el arrendamiento de la máquina también se puede renovar diariamente antes de que caduque el arrendamiento de la máquina.",
   result: 'Resultado',

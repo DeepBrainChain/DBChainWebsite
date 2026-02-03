@@ -1,5 +1,32 @@
 <template>
   <div class="home">
+    <!-- DBC 3.0 Announcement Banner -->
+    <div class="dbc3-banner">
+      <div class="dbc3-particles">
+        <span v-for="n in 20" :key="n" class="particle" :style="particleStyle(n)"></span>
+      </div>
+      <div class="dbc3-content">
+        <div class="dbc3-badge">COMING SOON</div>
+        <h1 class="dbc3-title">
+          <span class="dbc3-highlight">DeepBrainChain</span>
+          <span class="dbc3-version">3.0</span>
+        </h1>
+        <p class="dbc3-subtitle">{{ $t('dbc3.subtitle') }}</p>
+        <div class="dbc3-divider"></div>
+        <div class="dbc3-features">
+          <div class="dbc3-feature-item" v-for="(item, idx) in 3" :key="idx">
+            <span class="dbc3-dot"></span>
+            <span>{{ $t('dbc3.feature_' + (idx + 1)) }}</span>
+          </div>
+        </div>
+        <p class="dbc3-mystery">{{ $t('dbc3.mystery') }}</p>
+        <div class="dbc3-cta">
+          <span class="dbc3-stay">{{ $t('dbc3.stay_tuned') }}</span>
+        </div>
+      </div>
+    </div>
+    <!-- End DBC 3.0 Banner -->
+
     <el-row class="wrap1440 mb100">
       <el-col class="flex" :md="12">
         <div class="content">
@@ -115,6 +142,19 @@ export default {
     },
     set_image1() {
       this.image1 = require("../assets/imgs/building@1x.png");
+    },
+    particleStyle(n) {
+      const left = ((n * 37 + 13) % 100);
+      const delay = ((n * 0.3) % 4).toFixed(1);
+      const duration = (3 + (n % 4)).toFixed(1);
+      const size = 2 + (n % 4);
+      return {
+        left: left + '%',
+        animationDelay: delay + 's',
+        animationDuration: duration + 's',
+        width: size + 'px',
+        height: size + 'px'
+      };
     }
   },
   computed: {
@@ -255,6 +295,199 @@ export default {
 .home {
   margin-top: 60px;
 }
+
+/* ===== DBC 3.0 Announcement Banner ===== */
+.dbc3-banner {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0a0e27 0%, #1a1050 30%, #0d1847 60%, #020b1a 100%);
+  padding: 80px 20px;
+  text-align: center;
+  margin-bottom: 60px;
+  border-bottom: 2px solid rgba(0, 200, 255, 0.15);
+}
+
+.dbc3-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  .particle {
+    position: absolute;
+    bottom: -10px;
+    border-radius: 50%;
+    background: rgba(0, 180, 255, 0.6);
+    animation: floatUp 4s ease-in infinite;
+    box-shadow: 0 0 6px rgba(0, 180, 255, 0.4);
+  }
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-500px) scale(0.3);
+    opacity: 0;
+  }
+}
+
+.dbc3-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.dbc3-badge {
+  display: inline-block;
+  padding: 6px 24px;
+  border: 1px solid rgba(0, 200, 255, 0.5);
+  border-radius: 20px;
+  color: #00c8ff;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 4px;
+  margin-bottom: 30px;
+  animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(0, 200, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(0, 200, 255, 0.5);
+  }
+}
+
+.dbc3-title {
+  margin: 0 0 20px;
+  line-height: 1.2;
+  .dbc3-highlight {
+    display: block;
+    font-size: 48px;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 0 30px rgba(0, 150, 255, 0.3);
+  }
+  .dbc3-version {
+    display: inline-block;
+    font-size: 72px;
+    font-weight: 800;
+    background: linear-gradient(90deg, #00c8ff, #7b61ff, #00e5a0);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease infinite;
+    margin-top: 5px;
+  }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% center; }
+  50% { background-position: 100% center; }
+  100% { background-position: 0% center; }
+}
+
+.dbc3-subtitle {
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 30px;
+  font-weight: 400;
+  letter-spacing: 2px;
+}
+
+.dbc3-divider {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00c8ff, transparent);
+  margin: 0 auto 30px;
+}
+
+.dbc3-features {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+
+.dbc3-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 15px;
+}
+
+.dbc3-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00c8ff;
+  box-shadow: 0 0 8px rgba(0, 200, 255, 0.6);
+}
+
+.dbc3-mystery {
+  font-size: 17px;
+  color: rgba(200, 210, 255, 0.6);
+  font-style: italic;
+  margin: 0 0 36px;
+  letter-spacing: 1px;
+}
+
+.dbc3-cta {
+  .dbc3-stay {
+    display: inline-block;
+    padding: 12px 40px;
+    border: 1px solid rgba(0, 200, 255, 0.4);
+    border-radius: 30px;
+    color: #00c8ff;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+    cursor: default;
+    &:hover {
+      background: rgba(0, 200, 255, 0.1);
+      box-shadow: 0 0 20px rgba(0, 200, 255, 0.3);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .dbc3-banner {
+    padding: 50px 16px;
+  }
+  .dbc3-title {
+    .dbc3-highlight {
+      font-size: 30px;
+    }
+    .dbc3-version {
+      font-size: 48px;
+    }
+  }
+  .dbc3-subtitle {
+    font-size: 16px;
+  }
+  .dbc3-features {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+}
+/* ===== End DBC 3.0 Banner ===== */
 
 .grid-content {
   height: 20px;
